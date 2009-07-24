@@ -1,0 +1,11 @@
+## Interface: 30000
+## Title: LogSpells 
+## Notes: LogSpells is a very simple logging addon.
+## Version: 0.1b
+## Author: Jaroslav Merxbauer
+## X-Date: $Date: 2008-01-03 16:40:00 -0400 (Sat, 3 Jan 2009) $
+## X-Category: Logging
+## X-eMail: merxbj@gmail.com
+## SavedVariables: LogSpells
+
+LogSpells.xml

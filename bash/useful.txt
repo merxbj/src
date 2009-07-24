@@ -1,0 +1,2 @@
+// Vycisteni od WMP :)
+find /home/eter/hudba/ -not -regex '.*[mM][pP]3$' -and -not -regex '.*[wW][mM][aA]$' -and -not -regex '.*[oO][gG][gG]$' -and -not -regex '.*[Ww][Aa][Vv]$' -type f -exec rm -f {} \;

@@ -1,0 +1,33 @@
+====================================================================
+
+  Sound Blaster X-Fi Linux 32/64-bit Driver Source Release Readme File
+  September 2008
+
+====================================================================
+
+The purpose of this document is to describe how to build and install the 
+X-Fi Linux device driver.
+
+
+Quick install
+
+=============
+In terminal,
+
+1) Goto source directory
+2) Execute make command as root
+   make
+   make install
+
+Uninstall
+=========
+In terminal,
+1) Goto source directory
+2) Execute make command as root
+   make uninstall
+
+
+Copyright (c) 2008 Creative Technology Ltd. All rights reserved.
+====================================================================
+  End of Readme File
+====================================================================

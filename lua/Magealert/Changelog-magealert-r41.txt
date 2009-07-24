@@ -1,0 +1,92 @@
+------------------------------------------------------------------------
+r41 | yheen | 2008-12-17 02:59:18 +0000 (Wed, 17 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+   M /trunk/magealert.toc
+
+added CHtw & CHzh location
+------------------------------------------------------------------------
+r40 | yheen | 2008-12-15 21:42:53 +0000 (Mon, 15 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+
+frensh missle barrage bug fix
+------------------------------------------------------------------------
+r39 | yheen | 2008-12-15 21:42:06 +0000 (Mon, 15 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+
+frensh fingers of frost bug fix 
+------------------------------------------------------------------------
+r38 | yheen | 2008-12-11 03:25:13 +0000 (Thu, 11 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+
+bug fix 4 hot streak (frensh)
+------------------------------------------------------------------------
+r37 | yheen | 2008-12-09 08:07:25 +0000 (Tue, 09 Dec 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+   M /trunk/magealert.toc
+
+add frensh translation
+------------------------------------------------------------------------
+r36 | yheen | 2008-11-30 19:39:54 +0000 (Sun, 30 Nov 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+   M /trunk/magealert.toc
+
+add option to set fof sound off/on
+------------------------------------------------------------------------
+r35 | yheen | 2008-11-29 09:58:29 +0000 (Sat, 29 Nov 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+
+russian translation added
+------------------------------------------------------------------------
+r34 | yheen | 2008-11-29 09:24:34 +0000 (Sat, 29 Nov 2008) | 3 lines
+Changed paths:
+   M /trunk/magealert.lua
+   M /trunk/magealert.toc
+
+*Russian location
+*flash now fading
+
+------------------------------------------------------------------------
+r33 | yheen | 2008-11-28 21:25:40 +0000 (Fri, 28 Nov 2008) | 2 lines
+Changed paths:
+   M /trunk/magealert.lua
+
+this:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+switch to start function
+------------------------------------------------------------------------
+r32 | yheen | 2008-11-25 13:52:48 +0000 (Tue, 25 Nov 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.lua
+
+fof fix
+------------------------------------------------------------------------
+r31 | yheen | 2008-11-17 03:02:52 +0000 (Mon, 17 Nov 2008) | 1 line
+Changed paths:
+   A /trunk/magealert.lua
+
+change colors
+------------------------------------------------------------------------
+r30 | yheen | 2008-11-17 03:01:20 +0000 (Mon, 17 Nov 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.xml
+
+change colors
+------------------------------------------------------------------------
+r29 | yheen | 2008-11-17 02:58:19 +0000 (Mon, 17 Nov 2008) | 1 line
+Changed paths:
+   D /trunk/magealert.lua
+
+Removed file/folder
+------------------------------------------------------------------------
+r28 | yheen | 2008-11-12 20:14:01 +0000 (Wed, 12 Nov 2008) | 1 line
+Changed paths:
+   M /trunk/magealert.toc
+
+rev 28
+------------------------------------------------------------------------
