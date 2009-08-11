@@ -5,26 +5,44 @@ import game.common.*;
 
 public class ConnectionManager {
 
-    public ConnectionManager(GameShell shell) {
+    public ConnectionManager(ClientShell shell) {
         this.shell = shell;
         sock = new Socket();
     }
 
-    public boolean connect(InetSocketAddress server) {
-
-        boolean success = true;
-
+    public boolean connect(String address, int port) {
         try {
-            shell.log(String.format("Establishing connection to %s", server.toString()));
-            shell.log("Please wait ...");
-
-            sock.connect(server);
-
-            shell.log("Connected to host ...");
-
+            InetAddress addr = InetAddress.getByName(address);
+            InetSocketAddress sockAddr= new InetSocketAddress(addr, port);
+            return connect(sockAddr, shell.maxConnectionRetries);
         } catch (Exception ex) {
             shell.handleException(ex);
-            success = false;
+            return false;
+        }
+    }
+    
+    private boolean connect(InetSocketAddress server, int maxAttempts) {
+
+        boolean success = false;
+        int retries = maxAttempts;
+
+        shell.log(String.format("Establishing connection to %s", server.toString()));
+        shell.log("Please wait ...");
+
+        while (!success && retries-- > 0) {
+            try {
+                
+                shell.log(String.format("Attempt %d of %d", maxAttempts - retries, maxAttempts));
+
+                sock.connect(server);
+                success = true;
+
+                shell.log("Connected to host ...");
+
+            } catch (Exception ex) {
+                if (retries == 0)
+                    shell.handleException(ex);
+            }
         }
 
         return success;
@@ -57,5 +75,5 @@ public class ConnectionManager {
     }
 
     private Socket sock;
-    private GameShell shell;
+    private ClientShell shell;
 }

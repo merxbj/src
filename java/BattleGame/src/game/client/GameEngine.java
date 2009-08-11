@@ -3,20 +3,21 @@ package game.client;
 public class GameEngine {
 
     public GameEngine() {
-        shell = new GameShell();
+        shell = new ClientShell();
         prot = new GameClientProtocol(shell);
     }
 
     public void run() {
 
-        String input = "";
+        GameCommand command = new GameCommand();
         
-        while (shell.requestInput(input)) {
-            prot.processCommand(input);
+        while (shell.requestCommand(command)) {
+            prot.processCommand(command);
+            command.clear();
         }
 
     }
 
-    private GameShell shell;
+    private ClientShell shell;
     private GameClientProtocol prot;
 }
