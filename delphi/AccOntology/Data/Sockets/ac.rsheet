@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResSheet 
+  rdf:about="http://res.i2home.org/chain/ac/ac.rsheet" 
+  xmlns="http://myurc.org/ns/res#" 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/" 
+  xmlns:dcterms="http://purl.org/dc/terms/" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dc.xsd http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dcterms.xsd">
+
+  <dc:creator>Juergen Goerlich, Siemens AG</dc:creator>
+
+  <dc:publisher>Siemens AG, Germany</dc:publisher>
+  <dc:rights>Copyright 2008, Siemens AG</dc:rights>
+  <dc:title xml:lang="en">Resource Sheet for the server@home mobile air conditioner.</dc:title>
+  <dcterms:modified>2008-11-20</dcterms:modified>
+  <dcterms:conformsTo>http://myurc.org/iso24752-5/2007</dcterms:conformsTo>/>
+  <dc:type>Text</dc:type>
+  <dc:format>text/xml</dc:format>
+  <aResDescForDomain rdf:resource="http://res.i2home.org/chain/ac/socket"/>
+  <groupingForDomain rdf:resource="http://res.i2home.org/chain/ac/socket"/>
+  <forLang>en</forLang>
+  
+  <!-- Description of the contained Resources -->
+  
+  <resItems rdf:parseType="Collection">
+
+    <!-- Grouping Description -->
+    
+    <Grouping rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#grouping">
+      <groupingForDomain rdf:resource="http://res.i2home.org/chain/ac/socket"/>
+      <mainGroup rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#mainGroup"/>
+      <groups rdf:parseType="Collection">
+        
+        <Group rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#mainGroup">
+          <cohesion>normal</cohesion>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#remoteEnabled"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceState"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceMode"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceType"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceName"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#programmeChoice"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#targetFanSpeed"/>       
+          <groupRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#tempGroup"/>
+          <groupRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#timerGroup"/>
+          <groupRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#ExpVariableGroup"/>
+          <groupRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#CharacterGroup"/>
+        </Group>
+        
+        <Group rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#tempGroup">
+          <cohesion>normal</cohesion>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#currentTemp"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#targetTemp"/>
+        </Group>
+        
+        <Group rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#timerGroup">
+          <cohesion>normal</cohesion>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#startTime"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#stopTime"/>
+        </Group>
+        
+        <Group rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#ExpVariableGroup">
+          <cohesion>normal</cohesion>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Locality"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#AccurateLocality"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#VoiceControl"/>
+        </Group>        
+	  
+        <Group rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#CharacterGroup">
+          <cohesion>normal</cohesion>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Color"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Material"/>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#ShortCut"/>
+        </Group>
+
+      </groups>
+    </Grouping>
+
+    <!-- Atomic Resources: labels for groups -->
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#mainGroupLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Air Conditioner Values</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#mainGroup"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#tempGroupLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Temperature Values</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#tempGroup"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#timerGroupLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Timer Values</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#timerGroup"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#ExpVariableGroupLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Expansion Variable</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#CharacterGroup"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#CharacterGroupLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Characteristic Values</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/ac.rsheet#CharacterGroup"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <!-- Atomic Resources: label for socket -->
+    
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#socket">
+      <content rdf:parseType="Literal" xml:lang="en">Air Conditioner</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#socket"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    
+    <!-- Atomic Resources: labels and help texts for socket elements -->
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#remoteEnabledLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Remote Control</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#remoteEnabled"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#remoteEnabledLabelTrue">
+      <content rdf:parseType="Literal" xml:lang="en">Enabled</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#remoteEnabled"/>
+          <valRef>true</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#remoteEnabledLabelFalse">
+      <content rdf:parseType="Literal" xml:lang="en">Disabled</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#remoteEnabled"/>
+          <valRef>false</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#deviceStateLabel">
+      <content rdf:parseType="Literal" xml:lang="en">State</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceState"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <!-- Value-specific labels for type definition 'deviceStateType' -->
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceStateTypeLabelOff">
+      <dc:type>Text</dc:type>
+      <dc:format>text/plain</dc:format>
+      <content rdf:parseType="Literal" xml:lang="en">Off</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceStateType"/>
+          <valRef>OFF</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceStateTypeLabelStartDelayed">
+      <dc:type>Text</dc:type>
+      <dc:format>text/plain</dc:format>
+      <content rdf:parseType="Literal" xml:lang="en">Start delayed</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceStateType"/>
+          <valRef>START_DELAYED</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceStateTypeLabelOn">
+      <dc:type>Text</dc:type>
+      <dc:format>text/plain</dc:format>
+      <content rdf:parseType="Literal" xml:lang="en">On</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceStateType"/>
+          <valRef>ON</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceStateTypeLabelPause">
+      <dc:type>Text</dc:type>
+      <dc:format>text/plain</dc:format>
+      <content rdf:parseType="Literal" xml:lang="en">Pause</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceStateType"/>
+          <valRef>PAUSE</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#deviceModeLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Mode</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceMode"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    
+    <!-- Value-specific labels for type definition 'deviceModeType' -->
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceModeTypeLabelOnline">
+      <content rdf:parseType="Literal" xml:lang="en">Online</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceModeType"/>
+          <valRef>ONLINE</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceModeTypeLabelOffline">
+      <content rdf:parseType="Literal" xml:lang="en">Offline</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceModeType"/>
+          <valRef>OFFLINE</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idDeviceModeTypeLabelInitializing">
+      <content rdf:parseType="Literal" xml:lang="en">Initializing</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idDeviceModeType"/>
+          <valRef>INITIALIZING</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#programmeChoiceLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Programme</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#programmeChoice"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <!-- Value-specific labels for type definition 'programmeChoiceType' -->    
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idProgrammeChoiceTypeLabelCooling">
+      <content rdf:parseType="Literal" xml:lang="en">Cooling</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idProgrammeChoiceType"/>
+          <valRef>COOLING</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idProgrammeChoiceTypeLabelAirPurification">
+      <content rdf:parseType="Literal" xml:lang="en">Air purification</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idProgrammeChoiceType"/>
+          <valRef>AIR_PURIFICATION</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idProgrammeChoiceTypeLabelDehumidification">
+      <content rdf:parseType="Literal" xml:lang="en">Dehumidification</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idProgrammeChoiceType"/>
+          <valRef>DEHUMIDIFICATION</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#targetFanSpeedLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Fan Speed</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#targetFanSpeed"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <!-- Value-specific labels for type definition 'fanSpeedType' -->
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelAutoMax">
+      <content rdf:parseType="Literal" xml:lang="en">Auto max</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>AUTO_MAX</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelAutoMin">
+      <content rdf:parseType="Literal" xml:lang="en">Auto min</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>AUTO_MIN</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelLevel1">
+      <content rdf:parseType="Literal" xml:lang="en">Level 1</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>LEVEL_1</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelLevel2">
+      <content rdf:parseType="Literal" xml:lang="en">Level 2</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>LEVEL_2</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelLevel3">
+      <content rdf:parseType="Literal" xml:lang="en">Level 3</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>LEVEL_3</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelLevel4">
+      <content rdf:parseType="Literal" xml:lang="en">Level 4</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>LEVEL_4</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#idFanSpeedTypeLabelLevel5">
+      <content rdf:parseType="Literal" xml:lang="en">Level 5</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#idFanSpeedType"/>
+          <valRef>LEVEL_5</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#targetTempLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Target Temperature</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#targetTemp"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#currentTempLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Current Temperature</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#currentTemp"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#stopTimeLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Stop Time</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#stopTime"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#startTimeLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Start Time</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#startTime"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>    
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#deviceTypeLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Device Type</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceType"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#deviceNameLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Device Name</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#deviceName"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#VoiceControlLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Voice Control</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#VoiceControl"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#VoiceControlLabelTrue">
+      <content rdf:parseType="Literal" xml:lang="en">Enabled</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#VoiceControl"/>
+          <valRef>true</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#VoiceControlLabelFalse">
+      <content rdf:parseType="Literal" xml:lang="en">Disabled</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#VoiceControl"/>
+          <valRef>false</valRef>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#LocalityLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Locality</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Locality"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#AccurateLocalityLabel">
+      <content rdf:parseType="Literal" xml:lang="en">AccurateLocality</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#AccurateLocality"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>	
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#ColorLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Color</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Color"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#MaterialLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Material</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#Material"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#ShortCutLabel">
+      <content rdf:parseType="Literal" xml:lang="en">ShortCut</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#ShortCut"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <!-- Labels for notify 'info' elements -->
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoSetLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Info Set</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#infoSet"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoLabel">
+      <content rdf:parseType="Literal" xml:lang="en">The serve@Home system has raised an info!</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#info"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoIdLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Info Id</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#infoId"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoSenderLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Info Sender</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#infoSender"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoTextLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Info Text</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#infoText"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#infoTimestampLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Info Timestamp</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#infoTimestamp"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+    <!-- Labels for notify 'alert' elements -->
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertSetLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Alert Set</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alertSet"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertLabel">
+      <content rdf:parseType="Literal" xml:lang="en">The serve@Home system has raised an alert!</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alert"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertIdLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Alert Id</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alertId"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertSenderLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Alert Sender</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alertSender"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertTextLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Alert Text</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alertText"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+    <AResDesc rdf:about="http://res.i2home.org/chain/ac/ac.rsheet#alertTimestampLabel">
+      <content rdf:parseType="Literal" xml:lang="en">Alert Timestamp</content>
+      <useFor rdf:parseType="Collection">
+        <Context>
+          <eltRef rdf:resource="http://res.i2home.org/chain/ac/socket#alertTimestamp"/>
+          <role rdf:resource="http://myurc.org/ns/res#label"/>
+        </Context>
+      </useFor>
+    </AResDesc>
+
+  </resItems>
+</ResSheet>

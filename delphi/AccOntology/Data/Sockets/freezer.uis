@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?oxygen SCHSchema="http://myurc.org/ns/uisocketdesc/uisocketdesc.sch"?>
+
+<!-- 
+  User Interface Socket Description (based on ISO/IEC 24752-2) 
+  for CHAIN freezer device. 
+  This User Interface Socket Description is tailored 
+  to the Siemens serve@Home freezer 'GS 36NH30'. 
+-->
+
+<uiSocket 
+  about="http://res.i2home.org/chain/freezer/socket"
+  id="socket" 
+  xmlns="http://myurc.org/ns/uisocketdesc" 
+  xmlns:uis="http://myurc.org/ns/uisocketdesc"
+  xmlns:dc="http://purl.org/dc/elements/1.1/" 
+  xmlns:dcterms="http://purl.org/dc/terms/" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://myurc.org/ns/uisocketdesc http://myurc.org/ns/uisocketdesc 
+    http://purl.org/dc/elements/1.1/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dc.xsd 
+    http://purl.org/dc/terms/ http://dublincore.org/schemas/xmls/qdc/2006/01/06/dcterms.xsd">
+
+  <dc:creator>Philipp Titze, Siemens AG</dc:creator>
+  <dc:contributor>Juergen Goerlich, Siemens AG</dc:contributor>
+  <dc:contributor>Gottfried Zimmermann, ATG</dc:contributor>
+  <dc:publisher>Siemens AG, Germany</dc:publisher>
+  <dc:rights>Copyright 2008, Siemens AG</dc:rights>
+  <dc:title xml:lang="en">User Interface Socket Description for the server@home freezer.</dc:title>
+  <dcterms:conformsTo>http://myurc.org/iso24752-2/2007</dcterms:conformsTo>
+  <dcterms:modified>2008-11-12</dcterms:modified>
+
+  <!-- ===================================================================== -->
+  <!-- Variables                                                             -->
+  <!-- ===================================================================== -->
+
+  <variable id="deviceState" type="deviceStateType">
+    <dc:description>
+      Current device state indicating for example whether the device is is
+      switched on or off (see definition of type 'deviceStateType').
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>false()</write>
+    </dependency>
+  </variable>
+
+  <variable id="deviceMode" type="deviceModeType">
+    <dc:description>
+      Current mode of the device (see definition of type 'deviceModeType').
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>false()</write>
+    </dependency>
+  </variable>
+
+  <variable id="currentTemp" type="tempType">
+    <dc:description>
+      The current temperature of the freezing compartment (freezer) in degree Celsius.
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>false()</write>
+      <!-- Check if it can be set for deactivated freezer -->
+      <minInclusive>-39</minInclusive>
+      <maxInclusive>19</maxInclusive>
+      <step>1</step>
+      <!-- Temperature constraints should be expressed through temp type rather than runtime constraint.  But not possible now since UCH cannot parse schema part of UIS. -->
+    </dependency>
+  </variable>
+
+  <variable id="targetTemp" type="tempType">
+    <dc:description>
+      The user chosen target temperature of the freezing compartment (freezer) in degree Celsius.
+    </dc:description>
+    <dependency>
+      <relevant>not(value('deviceState') eq 'OFF')</relevant>
+      <write>not(value('deviceState') eq 'OFF')</write>
+      <!-- Check if it can be set for deactivated freezer -->
+      <minInclusive>-26</minInclusive>
+      <maxInclusive>-16</maxInclusive>
+      <!-- Temperature constraints should be expressed through temp type rather than runtime constraint.  But not possible now since UCH cannot parse schema part of UIS. -->
+    </dependency>
+  </variable>
+
+  <variable id="superFreezing" type="xsd:boolean">
+    <dc:description>
+      Indicates whether super freezing is active.
+      Switched off automatically if freezing compartment is off.
+    </dc:description>
+    <dependency>
+      <relevant>not(value('deviceState') eq 'OFF')</relevant>
+      <write>not(value('deviceState') eq 'OFF')</write>
+      <!-- Check if it can be set for deactivated freezer -->
+    </dependency>
+  </variable>
+
+  <variable id="deviceType" type="xsd:string">
+    <dc:description>
+      Device type (order ID of the manufacturer namely, e.g. 'GS 36NH30').
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>false()</write>
+    </dependency>
+  </variable>
+
+  <variable id="deviceName" type="xsd:string">
+    <dc:description>
+      Device name.
+    </dc:description>
+    <dependency>
+      <relevant>not(value('deviceState') eq 'OFF')</relevant>
+      <write>not(value('deviceState') eq 'OFF')</write>
+    </dependency>
+  </variable>
+  
+  <variable id="VoiceControl" type="xsd:boolean">
+    <dc:description>
+      Voice Control
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>false()</write>
+    </dependency>
+  </variable>
+  
+  <variable id="Locality" type="xsd:string">
+    <dc:description>
+      Locality
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>true()</write>
+    </dependency>
+  </variable>
+
+  <variable id="AccurateLocality" type="xsd:string">
+    <dc:description>
+      Accurate Locality
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>true()</write>
+    </dependency>
+  </variable>
+
+  <variable id="Color" type="xsd:string">
+    <dc:description>
+      Color
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>true()</write>
+    </dependency>
+  </variable>	
+
+  <variable id="Material" type="xsd:string">
+    <dc:description>
+      Material
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>true()</write>
+    </dependency>
+  </variable>	
+
+  <variable id="ShortCut" type="xsd:string">
+    <dc:description>
+      ShortCut
+    </dc:description>
+    <dependency>
+      <relevant>true()</relevant>
+      <write>true()</write>
+    </dependency>
+  </variable>		
+
+  <!-- ===================================================================== -->
+  <!-- Notifications                                                         -->
+  <!-- ===================================================================== -->
+
+  <set id="infoSet">
+    <notify id="info" category="info" includesRes="true">
+      <dc:description>
+        The serve@Home system raised an spontaneous info event for this
+        device whereon the TA is providing the user with the respective
+        information.
+        NOTE: Unfortunately, the serve@Home system internal event id (see
+        variable 'id' below) does not reveal the type of the event. This
+        makes it difficult to use custom messages for events, therefore
+        we recommend to use the message event text as provided by the
+        serve@Home system (see variable 'message' below).
+      </dc:description>
+      <dependency>
+        <explicitAck>true()</explicitAck>
+      </dependency>
+    </notify>
+    <variable id="infoId" type="xsd:long">
+      <dc:description>
+        The serve@Home system internal event id.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('info') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="infoSender" type="xsd:string">
+      <dc:description>
+        The serve@Home system info sender (e.g. sender ::= i2home.UCH.TAL.saH.WSC.SAHWebReference.DeviceState.name ' ' deviceName).
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('info') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="infoText" type="xsd:string">
+      <dc:description>
+        The serve@Home system info message text.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('info') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="infoTimestamp" type="xsd:dateTime">
+      <dc:description>
+        The time when the event occurred.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('info') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+  </set>
+
+  <set id="alertSet">
+    <notify id="alert" category="alert" includesRes="true">
+      <dc:description>
+        The serve@Home system raised an spontaneous alert event for this
+        device whereon the TA is alerting the user to the respective
+        situation.
+        NOTE: Unfortunately, the serve@Home system internal event id (see
+        variable 'id' below) does not reveal the type of the event. This
+        makes it difficult to use custom messages for events, therefore
+        we recommend to use the message event text as provided by the
+        serve@Home system (see variable 'message' below).
+      </dc:description>
+      <dependency>
+        <explicitAck>true()</explicitAck>
+      </dependency>
+    </notify>
+    <variable id="alertId" type="xsd:long">
+      <dc:description>
+        The serve@Home system internal event id.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('alert') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="alertSender" type="xsd:string">
+      <dc:description>
+        The serve@Home system alert sender (e.g. sender ::= i2home.UCH.TAL.saH.WSC.SAHWebReference.DeviceState.name ' ' deviceName).
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('alert') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="alertText" type="xsd:string">
+      <dc:description>
+        The serve@Home system alert message text.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('alert') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+    <variable id="alertTimestamp" type="xsd:dateTime">
+      <dc:description>
+        The time when the event occurred.
+      </dc:description>
+      <dependency>
+        <relevant>uis:value('alert') eq 'active'</relevant>
+        <write>false()</write>
+      </dependency>
+    </variable>
+  </set>
+
+  <!-- ===================================================================== -->
+  <!-- Types                                                                 -->
+  <!-- ===================================================================== -->
+
+  <schema xmlns="http://www.w3.org/2001/XMLSchema">
+    <simpleType name="deviceStateType" id="idDeviceStateType">
+      <annotation>
+        <documentation>
+          Device state type
+        </documentation>
+      </annotation>
+      <restriction base="xsd:string">
+        <enumeration value="OFF"/>
+        <enumeration value="ON"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="deviceModeType" id="idDeviceModeType">
+      <annotation>
+        <documentation>
+          Device mode type
+        </documentation>
+      </annotation>
+      <restriction base="xsd:string">
+        <enumeration value="ONLINE"/>
+        <enumeration value="OFFLINE"/>
+        <enumeration value="INITIALIZING"/>
+      </restriction>
+    </simpleType>
+
+    <simpleType name="tempType" id="idTempType">
+      <annotation>
+        <documentation>
+          Temperature type
+        </documentation>
+      </annotation>
+      <restriction base="xsd:integer"/>
+    </simpleType>
+    
+  </schema>
+  
+</uiSocket>
