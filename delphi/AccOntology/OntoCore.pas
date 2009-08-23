@@ -25,7 +25,7 @@ type
       function GetClassInstances(const Ontology: IXMLDocument; const Element: string; Instances: PInstances) : integer;
       function AddDeviceToGenericOntology(GenericOntology: IXMLDocument; Device: PDevice; Location: TLocation; Ontology: IXMLDocument) : string;
       function AddDeviceToOntology(Ontology: IXMLDocument; Device: PDevice; Location: TLocation) : boolean;
-      function RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstanceName: string) : boolean;
+      function RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstance: PInstance) : boolean;
 
     private
       // Implementace vyhledavacich funkci
@@ -1185,13 +1185,13 @@ implementation
   //
   //    Funkce tedy umi spravne mazat jen nami vytvorena zarizeni
 
-  function TOntoCore.RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstanceName: string) : boolean;
+  function TOntoCore.RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstance: PInstance) : boolean;
   var
     DeviceImplementation: IXMLNode;
   begin
 
     // nejprve zarizeni v ontologii najdeme
-    if (FindSpecificNode(Ontology.ChildNodes, IsObjectDefinition, @DeviceInstanceName, DeviceImplementation)) then
+    if (FindSpecificNode(Ontology.ChildNodes, IsObjectDefinition, @(DeviceInstance^.Name), DeviceImplementation)) then
     begin
 
       // pro nase potreby je to zatim snad postacujici volani

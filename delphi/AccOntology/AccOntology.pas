@@ -29,12 +29,12 @@ type
     Label5: TLabel;
     ListBox1: TListBox;
     Label6: TLabel;
-    Edit1: TEdit;
-    Edit2: TEdit;
+    edZkratka: TEdit;
+    edBarva: TEdit;
     Label7: TLabel;
-    Edit3: TEdit;
+    edMaterial: TEdit;
     Label8: TLabel;
-    Edit5: TEdit;
+    edLokalita: TEdit;
     Label10: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ZobrazMenu();
@@ -68,8 +68,8 @@ var
   Config: TConfig;
   OntoCore: TOntoCore;
   SelectedDevice: PDevice;
-  SelectedLocationInstance: string;
-  SelectedDeviceInstance: string;
+  SelectedLocationInstance: PInstance;
+  SelectedDeviceInstance: PInstance;
   SelectedLocationLeaf: string;
   SelectedLocationInstances: TInstances;
   SelectedDeviceInstances: TInstances;
@@ -155,14 +155,18 @@ begin
 end;
 
 procedure TForm1.VypisInstanceLokaci(instancesOf: string);
+var
+  FakeInstance: TInstance;
 begin
   SelectedLocationInstances.Clear();
+  FakeInstance.Name := 'Nova mistnost';
+  FakeInstance.IsFakeInstance := true;
+  SelectedLocationInstances.Add(FakeInstance);
   ontoCore.GetClassInstances(xmlonto, instancesOf, @SelectedLocationInstances);
   LocationInstancesList.Clear();
-  LocationInstancesList.Items.Add('Nova mistnost');
   LocationInstancesList.Items.AddStrings(SelectedLocationInstances.ToStringList());
   LocationInstancesList.Selected[0] := true;
-  selectedLocationInstance := 'Nova mistnost';
+  selectedLocationInstance := @FakeInstance;
 end;
 
 procedure TForm1.DevicesListClick(Sender: TObject);
@@ -200,8 +204,8 @@ var
   Location: TLocation;
 begin
 
-  Location.IsInstance := (CompareText(SelectedLocationInstance,'Nova mistnost') <> 0);
-  Location.Name := SelectedLocationInstance;
+  Location.IsInstance := SelectedLocationInstance.IsFakeInstance;
+  Location.Name := SelectedLocationInstance.Name;
 
   Location.Levels := TStringList.Create();
 
@@ -220,8 +224,8 @@ var
   Location: TLocation;
 begin
 
-  Location.IsInstance := (CompareText(SelectedLocationInstance,'Nova mistnost') <> 0);
-  Location.Name := SelectedLocationInstance;
+  Location.IsInstance := SelectedLocationInstance.IsFakeInstance;
+  Location.Name := SelectedLocationInstance.Name;
 
   Location.Levels := TStringList.Create();
 
@@ -263,7 +267,7 @@ begin
   while (I < LocationInstancesList.Items.Count) and (not LocationInstancesList.Selected[i]) do
     inc(i);
 
-  selectedLocationInstance := LocationInstancesList.Items[i];
+  selectedLocationInstance := SelectedLocationInstances.GetInstance(i);
 
 end;
 
@@ -272,14 +276,22 @@ var
   i: integer;
 begin
 
-  I := 0;
+  I := 0; // pozor! listbox je indexovan od 0
   while (I < DevicesInstancesList.Items.Count) and (not DevicesInstancesList.Selected[i]) do
     inc(i);
 
-  if (DevicesInstancesList.Items.Count <> 0) then
-    selectedDeviceInstance := DevicesInstancesList.Items[i];
+  if (i < DevicesInstancesList.Items.Count) then
+  begin
 
-  Smazazen1.Enabled := SelectedDeviceInstances.GetInstance(i).CreatedByThisApp;
+    selectedDeviceInstance := SelectedDeviceInstances.GetInstance(i+1);
+
+    Smazazen1.Enabled := selectedDeviceInstance^.CreatedByThisApp;
+    edZkratka.Text :=  selectedDeviceInstance^.Shortcut;
+    edBarva.Text := selectedDeviceInstance^.Color;
+    edMaterial.Text := selectedDeviceInstance^.Material;
+    edLokalita.Text := selectedDeviceInstance^.AccurateLocality;
+
+  end;
 
 end;
 

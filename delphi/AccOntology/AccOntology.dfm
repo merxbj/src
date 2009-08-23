@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 265
-  Top = 258
+  Left = 267
+  Top = 226
   Width = 743
   Height = 411
   Caption = 'Bakal'#225#345'sk'#225' pr'#225'ce - Fric Ji'#345#237' - 2009'
@@ -140,7 +140,7 @@ object Form1: TForm1
       '  ')
     TabOrder = 4
   end
-  object Edit1: TEdit
+  object edZkratka: TEdit
     Left = 56
     Top = 296
     Width = 121
@@ -148,7 +148,7 @@ object Form1: TForm1
     TabOrder = 5
     Text = 'Pul'#357#225'k'
   end
-  object Edit2: TEdit
+  object edBarva: TEdit
     Left = 56
     Top = 328
     Width = 121
@@ -156,7 +156,7 @@ object Form1: TForm1
     TabOrder = 6
     Text = 'B'#237'l'#253
   end
-  object Edit3: TEdit
+  object edMaterial: TEdit
     Left = 240
     Top = 296
     Width = 121
@@ -164,7 +164,7 @@ object Form1: TForm1
     TabOrder = 7
     Text = 'Kovov'#253
   end
-  object Edit5: TEdit
+  object edLokalita: TEdit
     Left = 472
     Top = 296
     Width = 121

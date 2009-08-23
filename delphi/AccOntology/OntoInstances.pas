@@ -9,6 +9,7 @@ type
   TInstance = record
     Name: string;
     CreatedByThisApp: boolean;
+    IsFakeInstance: boolean;
     Shortcut: string;
     Color: string;
     Material: string;
@@ -45,8 +46,8 @@ implementation
   function TInstances.GetInstance(Index: integer) : PInstance;
   begin
 
-    if (Index <= GetSize()) then
-      GetInstance := @Instances[Index]
+    if ((Index <= GetSize()) and (Index > 0)) then
+      GetInstance := @(Instances[Index])
     else
       GetInstance := nil;
   end;
@@ -93,6 +94,7 @@ implementation
 
       Instances[i].Name := '';
       Instances[i].CreatedByThisApp := false;
+      Instances[i].IsFakeInstance := false;
       Instances[i].Shortcut := '';
       Instances[i].Color := '';
       Instances[i].Material := '';
