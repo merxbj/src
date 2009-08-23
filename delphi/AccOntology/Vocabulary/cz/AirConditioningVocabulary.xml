@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Vocabulary>
-	<AC>
-		<Function Name="On" Language="CZ">
-			<Synonym>Zapnout</Synonym>
-			<Synonym>Zapnutí</Synonym>
-			<Synonym>Aktivovat</Synonym>
-			<Synonym>Aktivace</Synonym>
-			<Synonym>Aktivuj</Synonym>
-		</Function>
-		<Function Name="Off" Language="CZ">
-			<Synonym>Vypnout</Synonym>
-			<Synonym>Vypnutí</Synonym>
-			<Synonym>Deaktivovat</Synonym>
-			<Synonym>Deaktivace</Synonym>
-			<Synonym>Deaktivuj</Synonym>
-		</Function>
-	</AC>
+<Vocabulary>	
+		<Label Name="AirConditioning" Language="CZ">
+			<Synonym>Klimatizace</Synonym>
+			<Synonym>Klimoška</Synonym>
+			<Synonym>Vìtrák</Synonym>
+		</Label>
 </Vocabulary>

@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Vocabulary>
-	<Freezer>
-		<Function Name="On" Language="CZ">
-			<Synonym>Zapnout</Synonym>
-			<Synonym>ZapnutÌ</Synonym>
-			<Synonym>Aktivovat</Synonym>
-			<Synonym>Aktivace</Synonym>
-			<Synonym>Aktivuj</Synonym>
-		</Function>
-		<Function Name="Off" Language="CZ">
-			<Synonym>Vypnout</Synonym>
-			<Synonym>VypnutÌ</Synonym>
-			<Synonym>Deaktivovat</Synonym>
-			<Synonym>Deaktivace</Synonym>
-			<Synonym>Deaktivuj</Synonym>
-		</Function>
-	</Freezer>
+		<Label Name="Freezer" Language="CZ">
+			<Synonym>Mraz·k</Synonym>
+			<Synonym>Pulù·k</Synonym>
+		</Label>
 </Vocabulary>

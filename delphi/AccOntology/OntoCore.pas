@@ -1143,7 +1143,7 @@ implementation
 
       if ((Success) and (Device^.Vocabulary.Path <> '')) and false then
       begin
-        Node := DeviceNode.AddChild('hasAssociationVocabulary');
+        Node := DeviceNode.AddChild('hasAssociatedVocabulary');
         Node := Node.AddChild('');
       end;
 

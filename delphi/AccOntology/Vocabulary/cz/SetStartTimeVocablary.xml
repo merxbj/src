@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetStartTime" Language="CZ">
+			<Synonym>Startvní èas</Synonym>
+			<Synonym>Poèátek</Synonym>
+			<Synonym>Start</Synonym>
+		</Label>
+</Vocabulary>

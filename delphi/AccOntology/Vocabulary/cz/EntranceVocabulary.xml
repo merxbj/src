@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Entrance" Language="CZ">
+			<Synonym>Vchod</Synonym>
+			<Synonym>U vchodu</Synonym>
+			<Synonym>Vstup</Synonym>
+			<Synonym>U vstupu</Synonym>
+			<Synonym>Vjezd</Synonym>
+		</Label>
+</Vocabulary>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetStopTime" Language="CZ">
+			<Synonym>Koneèný èas</Synonym>
+			<Synonym>Konec</Synonym>
+			<Synonym>Stop</Synonym>
+		</Label>
+</Vocabulary>
