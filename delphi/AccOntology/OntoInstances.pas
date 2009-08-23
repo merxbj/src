@@ -20,9 +20,11 @@ type
 
   TInstances = class
     private
-      Instances: array [1..100] of TInstance;
+      Instances: array of TInstance;
       Size: integer;
     public
+      constructor Create; overload;
+
       function GetSize() : integer;
       function GetInstance(Index: integer) : PInstance;
       function ToStringList() : TStringList;
@@ -36,6 +38,15 @@ type
 
 implementation
 
+  constructor TInstances.Create;
+  begin
+
+    inherited;
+
+    Clear();
+
+  end;
+
   function TInstances.GetSize() : integer;
   begin
 
@@ -46,7 +57,7 @@ implementation
   function TInstances.GetInstance(Index: integer) : PInstance;
   begin
 
-    if ((Index <= GetSize()) and (Index > 0)) then
+    if (Index < GetSize()) then
       GetInstance := @(Instances[Index])
     else
       GetInstance := nil;
@@ -60,7 +71,7 @@ implementation
 
     list := TStringList.Create();
 
-    for i := 1 to GetSize() do
+    for i := 0 to GetSize() - 1 do
     begin
 
       list.Add(GetInstance(i).Name);
@@ -74,13 +85,11 @@ implementation
   procedure TInstances.Add(Instance: TInstance);
   begin
 
-    if (GetSize() < 100) then
-    begin
+    if (GetSize() = ((High(Instances) - Low(Instances)) + 1 )) then
+      SetLength(Instances, GetSize() + 10); // udelejme si vic mista pro instance
 
-      Instances[GetSize() + 1] := Instance;
-      size := size + 1;
-
-    end;
+    Instances[GetSize()] := Instance;
+    size := size + 1;
 
   end;
 
@@ -89,18 +98,8 @@ implementation
     i: integer;
   begin
 
-    for i := 1 to GetSize() do
-    begin
-
-      Instances[i].Name := '';
-      Instances[i].CreatedByThisApp := false;
-      Instances[i].IsFakeInstance := false;
-      Instances[i].Shortcut := '';
-      Instances[i].Color := '';
-      Instances[i].Material := '';
-      Instances[i].AccurateLocality := '';
-
-    end;
+    Instances := nil;
+    SetLength(Instances, 10); // startovni velikost pole instanci
 
     size := 0;
 

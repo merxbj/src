@@ -34,21 +34,9 @@
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element maxOccurs="unbounded" name="localityRestriction"> <!-- Filtr lokalit, kam lze zarizeni pridat-->
-                      <xs:complexType>
-                        <xs:attribute name="path" type="xs:string" use="required" />
-                        <xs:attribute name="name" type="xs:string" use="optional" />
-                      </xs:complexType>
-                    </xs:element>
                     <xs:element minOccurs="1" maxOccurs="1" name="accurateLocality">
                       <xs:complexType>
                         <xs:attribute name="hasAccuratLocality" type="xs:boolean" use="required" />
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element minOccurs="1" maxOccurs="1" name="vocabulary">
-                      <xs:complexType>
-                        <xs:attribute name="path" type="xs:string" use="required" />
-                        <xs:attribute name="language" type="xs:string" use="required" />
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>

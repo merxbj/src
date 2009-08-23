@@ -283,7 +283,7 @@ begin
   if (i < DevicesInstancesList.Items.Count) then
   begin
 
-    selectedDeviceInstance := SelectedDeviceInstances.GetInstance(i+1);
+    selectedDeviceInstance := SelectedDeviceInstances.GetInstance(i);
 
     Smazazen1.Enabled := selectedDeviceInstance^.CreatedByThisApp;
     edZkratka.Text :=  selectedDeviceInstance^.Shortcut;

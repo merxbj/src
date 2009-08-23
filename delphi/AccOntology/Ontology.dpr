@@ -5,7 +5,8 @@ uses
   AccOntology in 'AccOntology.pas' {Form1},
   OntoCore in 'OntoCore.pas',
   OntoUtils in 'OntoUtils.pas',
-  OntoInstances in 'OntoInstances.pas';
+  OntoInstances in 'OntoInstances.pas',
+  OntoVocabulary in 'OntoVocabulary.pas';
 
 {$R *.res}
 
