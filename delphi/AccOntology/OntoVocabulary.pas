@@ -1,0 +1,350 @@
+unit OntoVocabulary;
+
+interface
+
+uses StrUtils, Classes, SysUtils, xmldom, XMLIntf, msxmldom, XMLDoc;
+
+type
+
+  TVocabularyEntry = record
+    Name: string;
+    Language: string;
+    Synonyms: TStringList;
+  end;
+
+  PVocabularyEntry = ^TVocabularyEntry;
+
+  TVocabulary = class
+    private
+      VocabularyEntries: array of TVocabularyEntry;
+      Size: integer;
+
+      function GetEntryByIndex(Index: integer) : PVocabularyEntry;
+
+      procedure Clear();
+      procedure ParseToXML(VocabularyXML: IXMLDocument; FileName: String);
+      procedure ParseFromXML(VocabularyXML: IXMLDocument);
+      procedure ParseSingleEntry(EntryNode: IXMLNode);
+      procedure ParseSynonyms(SynonymsNode: IXMLNode; Entry: PVocabularyEntry);
+      procedure SaveSingleEntry(SingleEntry: PVocabularyEntry; RootElement: IXMLNode);
+    public
+      constructor Create; overload;
+
+      function GetSize() : integer;
+      function GetEntryByName(Name: string; Lang: string) : PVocabularyEntry;
+
+      procedure Add(Entry: TVocabularyEntry);
+      procedure Remove(Entry: PVocabularyEntry);
+      procedure LoadFromFile(FileName: string);
+      procedure SaveToFile(FileName: string);
+  end;
+
+  PVocabulary = ^TVocabulary;
+
+implementation
+
+  constructor TVocabulary.Create;
+  begin
+
+    inherited;
+
+    Clear();
+
+  end;
+
+  function TVocabulary.GetSize() : integer;
+  begin
+
+    GetSize := Size;
+
+  end;
+
+  function TVocabulary.GetEntryByName(Name: string; Lang: string) : PVocabularyEntry;
+  var
+    i: integer;
+    Entry: PVocabularyEntry;
+    Found: boolean;
+  begin
+
+    i := 0;
+    found := false;
+    Entry := nil;
+
+    while ((i < GetSize()) and (not Found)) do
+    begin
+
+      Entry := GetEntryByIndex(i);
+
+      if ((CompareText(Entry.Name, Name) = 0) and
+          (CompareText(Entry.Language, Lang) = 0)) then
+        found := true;
+
+      i := i + 1;
+
+    end;
+
+    if (found) then
+      GetEntryByName := Entry
+    else
+      GetEntryByName := nil;
+
+  end;
+
+  function TVocabulary.GetEntryByIndex(Index: integer) : PVocabularyEntry;
+  begin
+
+    if (Index < GetSize) then
+      GetEntryByIndex := @VocabularyEntries[Index]
+    else
+      GetEntryByIndex := nil;
+
+  end;
+
+  procedure TVocabulary.Clear();
+  begin
+
+    VocabularyEntries := nil;
+    SetLength(VocabularyEntries, 10); // startovni velikost
+
+    Size := 0;
+
+  end;
+
+  procedure TVocabulary.Add(Entry: TVocabularyEntry);
+  var
+    PossibleExisitingEntry: PVocabularyEntry;
+  begin
+
+    PossibleExisitingEntry := GetEntryByName(Entry.Name, Entry.Language);
+
+    if (PossibleExisitingEntry <> nil) then
+    begin
+
+      PossibleExisitingEntry^.Synonyms := Entry.Synonyms;
+
+    end else
+    begin
+
+      if (GetSize() = ((High(VocabularyEntries) - Low(VocabularyEntries)) + 1 )) then
+        SetLength(VocabularyEntries, GetSize() + 10); // udelejme si vic mista
+
+      VocabularyEntries[GetSize()] := Entry;
+      size := size + 1;
+
+    end;
+
+  end;
+
+
+  // Remove
+  //    Protoze nemame tuto kolekci implementovanou jako linked list - coz by
+  //    bylo rozhodne efektivnejsi, implementujeme zde odebrani zaznamu velice
+  //    hloupe a neefektivne.
+
+  procedure TVocabulary.Remove(Entry: PVocabularyEntry);
+  var
+    TempEntry: PVocabularyEntry;
+    i, j: integer;
+  begin
+
+    i := 0;
+    TempEntry := GetEntryByIndex(i);
+    while ((TempEntry <> nil) and (TempEntry <> Entry) and (i < GetSize())) do
+    begin
+
+      i := i + 1;
+      TempEntry := GetEntryByIndex(i);
+
+    end;
+
+    if (i < GetSize()) then
+    begin
+
+      j := i + 1;
+      while (j < (GetSize() - 1)) do
+        VocabularyEntries[j] := VocabularyEntries[j+1];
+
+      size := size - 1;  
+
+    end;
+
+  end;
+
+  procedure TVocabulary.LoadFromFile(FileName: String);
+  var
+    VocabularyXML: TXMLDocument;
+  begin
+
+    try
+
+      if (FileExists(FileName)) then
+      begin
+
+        VocabularyXML := TXMLDocument.Create(nil);
+        VocabularyXML.LoadFromFile(FileName);
+
+        VocabularyXML.Active := true;
+        ParseFromXML(VocabularyXML);
+
+      end;
+
+    finally
+
+      VocabularyXML := nil;
+
+    end;  
+
+  end;
+
+  procedure TVocabulary.SaveToFile(FileName: String);
+  var
+    VocabularyXML: TXMLDocument;
+  begin
+
+    try
+
+      VocabularyXML := TXMLDocument.Create(nil);
+      VocabularyXML.Active := true;
+      VocabularyXML.Options:=[doAutoSave, doNodeAutoCreate, doNodeAutoIndent];
+      ParseToXML(VocabularyXML, FileName);
+      // VocabularyXML.SaveToFile(FileName); !! See ParseToXML() !!
+
+    finally
+
+      VocabularyXML := nil;
+
+    end;
+
+  end;
+
+  procedure TVocabulary.ParseToXML(VocabularyXML: IXMLDocument; FileName: String);
+  var
+    RootElement: IXMLNode;
+    i: integer;
+    XMLLines: TStringList;
+  begin
+
+    RootElement := VocabularyXML.AddChild('Vocabulary');
+
+    for i := 0 to GetSize() - 1 do
+    begin
+
+      SaveSingleEntry(GetEntryByIndex(i), RootElement);
+
+    end;
+
+    // Protoze TXMLDocument neumi pridavat <?xml> element
+    // musime si je do dokumentu pridat samy!
+    XMLLines := TStringList.Create();
+    XMLLines.Assign(VocabularyXML.XML);
+    XMLLines.Insert(0, '<?xml version="1.0" encoding="utf-8"?>');
+    XMLLines.SaveToFile(FileName);
+
+  end;
+
+  procedure TVocabulary.ParseFromXML(VocabularyXML: IXMLDocument);
+  var
+    RootElement, VocabularyEntryRaw: IXMLNode;
+  begin
+
+    RootElement := VocabularyXML.ChildNodes.FindNode('Vocabulary');
+
+    if (RootElement <> nil) then
+    begin
+
+      VocabularyEntryRaw := RootElement.ChildNodes.First;
+
+      while (VocabularyEntryRaw <> nil) do
+      begin
+
+        ParseSingleEntry(VocabularyEntryRaw);
+        VocabularyEntryRaw := VocabularyEntryRaw.NextSibling;
+
+      end;
+
+    end;
+      
+  end;
+
+  procedure TVocabulary.ParseSingleEntry(EntryNode: IXMLNode);
+  var
+    Name, Lang: string;
+    Entry: TVocabularyEntry;
+  begin
+
+    Name := EntryNode.Attributes['name'];
+    Lang := EntryNode.Attributes['language'];
+    if ((Name <> '') and (Lang <> '')) then
+    begin
+
+      Entry.Name := Name;
+      Entry.Language := Lang;
+      ParseSynonyms(EntryNode, @Entry);
+
+      self.Add(Entry);
+
+    end;
+
+  end;
+
+  procedure TVocabulary.ParseSynonyms(SynonymsNode: IXMLNode; Entry: PVocabularyEntry);
+  var
+    SingleSynonymNode: IXMLNode;
+    Synonym: String;
+  begin
+
+    if (SynonymsNode <> nil) then
+    begin
+
+      Entry^.Synonyms := TStringList.Create();
+
+      SingleSynonymNode := SynonymsNode.ChildNodes.First;
+
+      while (SingleSynonymNode <> nil) do
+      begin
+
+        Synonym := SingleSynonymNode.Text;
+        if (Synonym <> '') then
+          Entry^.Synonyms.Add(Synonym);
+
+        SingleSynonymNode := SingleSynonymNode.NextSibling;
+
+      end;
+
+    end;
+
+  end;
+
+  procedure TVocabulary.SaveSingleEntry(SingleEntry: PVocabularyEntry; RootElement: IXMLNode);
+  var
+    XMLEntry, SynonymNode: IXMLNode;
+    i: integer;
+  begin
+
+    XMLEntry := RootElement.AddChild('Label');
+
+    if (XMLEntry <> nil) then
+    begin
+
+      XMLEntry.Attributes['name'] := SingleEntry^.Name;
+      XMLEntry.Attributes['language'] := SingleEntry^.Language;
+
+      for i := 0 to SingleEntry^.Synonyms.Count - 1 do
+      begin
+
+        SynonymNode := XMLEntry.AddChild('Synonym');
+
+        if (SynonymNode <> nil) then
+        begin
+
+          SynonymNode.Text := SingleEntry^.Synonyms.Strings[i];
+
+        end;
+
+      end;
+
+    end;
+
+  end;
+
+end.
