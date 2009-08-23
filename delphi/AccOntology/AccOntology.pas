@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, xmldom, XMLIntf, msxmldom, XMLDoc, OntoCore, Menus,
-  OntoUtils;
+  OntoInstances, OntoUtils;
 
 type
   TForm1 = class(TForm)
@@ -34,8 +34,6 @@ type
     Label7: TLabel;
     Edit3: TEdit;
     Label8: TLabel;
-    Edit4: TEdit;
-    Label9: TLabel;
     Edit5: TEdit;
     Label10: TLabel;
     procedure FormCreate(Sender: TObject);
@@ -84,9 +82,9 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
 
     // inicializace
-    SelectedLocationInstances.Instances := TStringList.Create();
-    SelectedDeviceInstances.Instances := TStringList.Create();
     OntoCore := TOntoCore.Create();
+    SelectedLocationInstances := TInstances.Create();
+    SelectedDeviceInstances := TInstances.Create();
 
     // inicializacni metody
     Config := LoadConfig('./Data/ontology.exe.config');
@@ -158,11 +156,11 @@ end;
 
 procedure TForm1.VypisInstanceLokaci(instancesOf: string);
 begin
-  SelectedLocationInstances.Instances.Clear();
+  SelectedLocationInstances.Clear();
   ontoCore.GetClassInstances(xmlonto, instancesOf, @SelectedLocationInstances);
   LocationInstancesList.Clear();
   LocationInstancesList.Items.Add('Nova mistnost');
-  LocationInstancesList.Items.AddStrings(SelectedLocationInstances.Instances);
+  LocationInstancesList.Items.AddStrings(SelectedLocationInstances.ToStringList());
   LocationInstancesList.Selected[0] := true;
   selectedLocationInstance := 'Nova mistnost';
 end;
@@ -181,12 +179,12 @@ end;
 
 procedure TForm1.VypisInstanceZarizeni(instanceOf: string);
 begin
-  SelectedDeviceInstances.Instances.Clear();
+  SelectedDeviceInstances.Clear();
   ontoCore.GetClassInstances(xmlonto, instanceOf, @SelectedDeviceInstances);
   DevicesInstancesList.Clear();
-  if ((SelectedDeviceInstances.Instances <> nil) and (SelectedDeviceInstances.Instances.Count > 0)) then
+  if ((SelectedDeviceInstances <> nil) and (SelectedDeviceInstances.GetSize() > 0)) then
   begin
-    DevicesInstancesList.items.addstrings(SelectedDeviceInstances.Instances);
+    DevicesInstancesList.items.addstrings(SelectedDeviceInstances.ToStringList());
     DevicesInstancesList.selected[0] := true;
   end;
 end;
@@ -277,12 +275,11 @@ begin
   I := 0;
   while (I < DevicesInstancesList.Items.Count) and (not DevicesInstancesList.Selected[i]) do
     inc(i);
-  if DevicesInstancesList.Items.Count=0 then
-  else selectedDeviceInstance := DevicesInstancesList.Items[i];
-  if (not SelectedDeviceInstances.CreatedByThisApp[i+1]) then
-    Smazazen1.Enabled := false
-  else
-    Smazazen1.Enabled := true;
+
+  if (DevicesInstancesList.Items.Count <> 0) then
+    selectedDeviceInstance := DevicesInstancesList.Items[i];
+
+  Smazazen1.Enabled := SelectedDeviceInstances.GetInstance(i).CreatedByThisApp;
 
 end;
 

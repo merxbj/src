@@ -3,7 +3,7 @@ unit OntoCore;
 interface
 
 uses
-  xmldom, XMLIntf, msxmldom, XMLDoc, sysutils, Classes, StrUtils,
+  xmldom, XMLIntf, msxmldom, XMLDoc, sysutils, Classes, StrUtils, OntoInstances,
   OntoUtils;
 
 type
@@ -17,16 +17,6 @@ type
   PLocation = ^TLocation;
 
   PToFunction = function(CheckedNode: IXMLNode; Data: Pointer) : boolean of object;
-
-  // Nekdy potrebujeme vedet, zda-li byla instance vytvorena nami
-  // Proto obalime TStringList spolu s korespondujicim polem
-  // ktere bude tuto vlastnost indikovat - neni to chytre, ale funguje to
-  TInstances = record
-    Instances: TStringList;
-    CreatedByThisApp: array [1..100] of boolean;
-  end;
-
-  PInstances = ^TInstances;
 
   TOntoCore = class
     public
@@ -71,6 +61,7 @@ type
       function AddDeviceToLocation(LocationNode: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
       function CreateNewLocation(ImplementationLocation: IXMLNode; Location: PLocation) : IXMLNode;
       function IsOurInstance(InstanceNode: IXMLNode) : boolean;
+      function ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
     end;
 
   const
@@ -254,6 +245,7 @@ implementation
     node:  IXMLNode;
     size, matches: integer;
     attribute: OleVariant;
+    instanceInfo: TInstance;
   begin
 
     if ((NodeList <> nil) and (NodeList.Count > 0)) then
@@ -270,20 +262,11 @@ implementation
         // potom se podivame na samotny uzel, na kterym jsme
         if (CompareText(node.NodeName, ClassName) = 0) then
         begin
-          attribute := node.GetAttributeNS('ID', NameSpaceRDF);
-          // Zda se, ze jsme nasli instanci
-          if (OleVariantToStr(attribute) <> '') then
-          begin
-            Instances^.Instances.Add(GetExactName(OleVariantToStr(attribute))); // pridejme ji tedy do seznamu
 
-            // podivejme se, zda-li jsme tuto instanci nevytvorili my
-            if (IsOurInstance(node)) then
-              Instances.CreatedByThisApp[Instances^.Instances.Count] := true
-            else
-              Instances.CreatedByThisApp[Instances^.Instances.Count] := false;
-
+            ExtractInstanceInformation(node, @instanceInfo); // ziskejme informace o instanci
+            Instances^.Add(instanceInfo); // pridejme ji do seznamu
             matches := matches + 1;
-          end;  
+
         end;
 
         node := node.NextSibling;
@@ -1093,11 +1076,10 @@ implementation
   begin
 
     // nejprve ziskame seznam vsechn instanci
-    Instances.Instances := TStringList.Create();
     GetClassInstances(Ontology, TargetClass, @Instances);
 
     // vysledne cislo zjistime velice naivne!
-    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(Instances.Instances.Count + 1));
+    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(Instances.GetSize() + 1));
 
   end;
 
@@ -1222,6 +1204,7 @@ implementation
 
   // IsOurInstance:
   //    Funkce zjisti, zda-li je zadana instance oznacena, jako nami vytvorena
+  
   function TOntoCore.IsOurInstance(InstanceNode: IXMLNode) : boolean;
   var
     RetVal: boolean;
@@ -1245,6 +1228,27 @@ implementation
     end;
 
     IsOurInstance := RetVal;
+
+  end;
+
+
+  // ExtractInstanceInformation
+  //    Funkce ziska presne informace o zadane instanci a ulozi je do tridy TInstance
+
+  function TOntoCore.ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
+  var
+    attribute: String;
+  begin
+
+    if (InstanceNode <> nil) then
+    begin
+
+      attribute := InstanceNode.GetAttributeNS('ID', NameSpaceRDF);
+
+      instanceInfo^.name := GetExactName(OleVariantToStr(attribute));
+      instanceInfo^.CreatedByThisApp := IsOurInstance(InstanceNode);
+
+    end;
 
   end;
 

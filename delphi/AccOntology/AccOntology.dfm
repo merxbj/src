@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 260
-  Top = 248
+  Left = 265
+  Top = 258
   Width = 743
   Height = 411
   Caption = 'Bakal'#225#345'sk'#225' pr'#225'ce - Fric Ji'#345#237' - 2009'
@@ -69,13 +69,6 @@ object Form1: TForm1
     Width = 40
     Height = 13
     Caption = 'Materi'#225'l:'
-  end
-  object Label9: TLabel
-    Left = 192
-    Top = 336
-    Width = 39
-    Height = 13
-    Caption = 'Slovn'#237'k:'
   end
   object Label10: TLabel
     Left = 376
@@ -171,20 +164,12 @@ object Form1: TForm1
     TabOrder = 7
     Text = 'Kovov'#253
   end
-  object Edit4: TEdit
-    Left = 240
-    Top = 328
-    Width = 121
-    Height = 21
-    TabOrder = 8
-    Text = 'freezer'
-  end
   object Edit5: TEdit
     Left = 472
     Top = 296
     Width = 121
     Height = 21
-    TabOrder = 9
+    TabOrder = 8
     Text = 'V rohu'
   end
   object xmlonto: TXMLDocument
