@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="On" Language="CZ">
+			<Synonym>Zapnout</Synonym>
+			<Synonym>Zapnutí</Synonym>
+			<Synonym>Aktivovat</Synonym>
+			<Synonym>Aktivace</Synonym>
+			<Synonym>Aktivuj</Synonym>
+		</Label>
+		<Label Name="On" Language="EN">
+			<Synonym>On</Synonym>
+			<Synonym>Flick</Synonym>
+			<Synonym>Activate</Synonym>
+		</Label>
+</Vocabulary>

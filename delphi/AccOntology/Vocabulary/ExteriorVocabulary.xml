@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Exterior" Language="CZ">
+			<Synonym>Venku</Synonym>
+			<Synonym>Vně</Synonym>
+		</Label>
+		<Label Name="Exterior" Language="EN">
+			<Synonym>Exterior</Synonym>
+			<Synonym>Outside</Synonym>
+			<Synonym>Outdoors</Synonym>
+			<Synonym>External</Synonym>
+		</Label>
+</Vocabulary>

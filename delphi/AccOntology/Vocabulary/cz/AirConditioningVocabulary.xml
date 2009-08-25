@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Vocabulary>	
-		<Label Name="AirConditioning" Language="CZ">
-			<Synonym>Klimatizace</Synonym>
-			<Synonym>Klimoška</Synonym>
-			<Synonym>Vìtrák</Synonym>
-		</Label>
-</Vocabulary>

@@ -14,6 +14,7 @@ type
     Color: string;
     Material: string;
     AccurateLocality: string;
+    Language: string;
   end;
 
   PInstance = ^TInstance;
@@ -22,15 +23,18 @@ type
     private
       Instances: array of TInstance;
       Size: integer;
+      Language: string;
     public
       constructor Create; overload;
 
       function GetSize() : integer;
       function GetInstance(Index: integer) : PInstance;
       function ToStringList() : TStringList;
+      function GetLanguage() : string;
 
       procedure Add(Instance: TInstance);
       procedure Clear();
+      procedure SetLanguage(Lang: string);
 
   end;
 
@@ -94,14 +98,26 @@ implementation
   end;
 
   procedure TInstances.Clear();
-  var
-    i: integer;
   begin
 
     Instances := nil;
     SetLength(Instances, 10); // startovni velikost pole instanci
 
     size := 0;
+
+  end;
+
+  procedure TInstances.SetLanguage(Lang: string);
+  begin
+
+    self.Language := Lang;
+
+  end;
+
+  function TInstances.GetLanguage() : string;
+  begin
+
+    GetLanguage := self.Language;
 
   end;
 

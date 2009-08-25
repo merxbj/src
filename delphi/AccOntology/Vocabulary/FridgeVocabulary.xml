@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Fridge" Language="CZ">
+			<Synonym>Lednička</Synonym>
+			<Synonym>Chladnička</Synonym>
+			<Synonym>Chladničku</Synonym>
+			<Synonym>Ledničku</Synonym>
+		</Label>
+		<Label Name="Fridge" Language="EN">
+			<Synonym>Fridge</Synonym>
+			<Synonym>Icebox</Synonym>
+			<Synonym>Refrigerator</Synonym>
+		</Label>
+</Vocabulary>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Location" Language="CZ">
+			<Synonym>Všude</Synonym>
+			<Synonym>Ve všech lokacích</Synonym>
+		</Label>
+		<Label Name="Location" Language="EN">
+			<Synonym>Location</Synonym>
+			<Synonym>Everywhere</Synonym>
+			<Synonym>Throughout</Synonym>
+		</Label>
+</Vocabulary>

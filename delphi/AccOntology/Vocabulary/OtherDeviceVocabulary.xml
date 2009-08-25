@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="OtherDevice" Language="CZ">
+			<Synonym>Ostatní spotřebiče</Synonym>
+			<Synonym>Nezazařený spotřebič</Synonym>
+		</Label>
+		<Label Name="OtherDevice" Language="EN">
+			<Synonym>Other device</Synonym>
+		</Label>
+</Vocabulary>

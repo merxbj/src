@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Function" Language="CZ">
+			<Synonym>Funkce</Synonym>
+		</Label>
+		<Label Name="Function" Language="EN">
+			<Synonym>Function</Synonym>
+		</Label>
+</Vocabulary>

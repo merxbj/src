@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Other" Language="CZ">
+			<Synonym>Ostatní</Synonym>
+			<Synonym>Další</Synonym>
+		</Label>
+		<Label Name="Other" Language="EN">
+			<Synonym>Other</Synonym>
+			<Synonym>Another</Synonym>
+		</Label>
+</Vocabulary>

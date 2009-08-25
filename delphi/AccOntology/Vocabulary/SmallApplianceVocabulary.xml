@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SmallAppliance" Language="CZ">
+			<Synonym>Malé spotřebiče</Synonym>
+			<Synonym>Malý spotřebič</Synonym>
+		</Label>
+		<Label Name="SmallAppliance" Language="EN">
+			<Synonym>Small appliance</Synonym>
+		</Label>
+</Vocabulary>

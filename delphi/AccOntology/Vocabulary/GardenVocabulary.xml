@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Garden" Language="CZ">
+			<Synonym>Na zahradě</Synonym>
+			<Synonym>Zahradě</Synonym>
+			<Synonym>Zahrada</Synonym>
+			<Synonym>Dvorek</Synonym>
+			<Synonym>Na dvorku</Synonym>
+		</Label>
+		<Label Name="Garden" Language="EN">
+			<Synonym>Garden</Synonym>
+			<Synonym>Yard</Synonym>
+			<Synonym>Garth</Synonym>
+		</Label>
+</Vocabulary>

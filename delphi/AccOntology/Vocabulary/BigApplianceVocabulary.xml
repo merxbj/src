@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="BigAppliance" Language="CZ">
+			<Synonym>Velké spotřebiče</Synonym>
+			<Synonym>Velký spotřebič</Synonym>
+		</Label>
+		<Label Name="BigAppliance" Language="EN">
+			<Synonym>Big appliance</Synonym>
+		</Label>
+</Vocabulary>

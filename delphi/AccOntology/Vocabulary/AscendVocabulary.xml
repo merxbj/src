@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Ascend" Language="CZ">
+			<Synonym>Výstup</Synonym>
+			<Synonym>Stoupáních</Synonym>
+		</Label>
+		<Label Name="Ascend" Language="EN">
+			<Synonym>Ascend</Synonym>
+		</Label>
+</Vocabulary>

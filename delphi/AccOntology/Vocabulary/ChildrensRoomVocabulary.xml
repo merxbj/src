@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="ChildrensRoom" Language="CZ">
+			<Synonym>Dětském pokoji</Synonym>
+			<Synonym>Dětský pokoj</Synonym>
+			<Synonym>Pokoji pro děti</Synonym>
+		</Label>
+		<Label Name="ChildrensRoom" Language="EN">
+			<Synonym>Childrensroom</Synonym>
+			<Synonym>Nursery</Synonym>
+		</Label>
+</Vocabulary>

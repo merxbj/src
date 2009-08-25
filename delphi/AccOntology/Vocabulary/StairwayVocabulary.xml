@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Stairway" Language="CZ">
+			<Synonym>Schodišti</Synonym>
+			<Synonym>Schodiště</Synonym>
+			<Synonym>Schody</Synonym>
+			<Synonym>Schodech</Synonym>
+			<Synonym>Schodu</Synonym>
+			<Synonym>Schody</Synonym>
+		</Label>
+		<Label Name="Stairway" Language="EN">
+			<Synonym>Staircase</Synonym>
+			<Synonym>Stairway</Synonym>
+			<Synonym>Stair</Synonym>
+		</Label>
+</Vocabulary>

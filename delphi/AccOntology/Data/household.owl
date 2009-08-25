@@ -1,2641 +1,2062 @@
 <?xml version="1.0"?>
-<rdf:RDF xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#" xmlns:swrlb="http://www.w3.org/2003/11/swrlb#" xmlns:swrl="http://www.w3.org/2003/11/swrl#" xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns="http://www.owl-ontologies.com/Ontology1241530166.owl#" xmlns:owl="http://www.w3.org/2002/07/owl#" xml:base="http://www.owl-ontologies.com/Ontology1241530166.owl">
-	<owl:Ontology rdf:about="">
-		<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ontology ofhousehold - include a functions, locations and devices</rdfs:comment>
-	</owl:Ontology>
-	<owl:Class rdf:ID="SetTargetCoolingTemperature">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetStopTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetAlarmClock"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetNumberOfCooker"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetTv"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetProgramChoice"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Set"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetStartTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SetEvent"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="OtherLamps">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Light"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Lamp"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="Advanced">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Function"/>
-		</rdfs:subClassOf>
-		<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SDF</rdfs:comment>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Basic"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Other"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Special"/>
-		</owl:disjointWith>
-		<owl:sameAs>
-			<Level rdf:ID="Level_1">
-				<containedIn>
-					<Object rdf:ID="Object_1">
-						<contains rdf:resource="#Level_1"/>
-					</Object>
-				</containedIn>
-				<contains>
-					<Stairway rdf:ID="Stairway_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</Stairway>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_2">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<Elevator rdf:ID="Elevator_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</Elevator>
-				</contains>
-				<contains>
-					<ChildrensRoom rdf:ID="ChildrensRoom_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</ChildrensRoom>
-				</contains>
-				<contains>
-					<Elevator rdf:ID="Elevator_2">
-						<containedIn rdf:resource="#Level_1"/>
-					</Elevator>
-				</contains>
-				<contains>
-					<BedRoom rdf:ID="BedRoom_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</BedRoom>
-				</contains>
-				<contains>
-					<BathRoom rdf:ID="BathRoom_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</BathRoom>
-				</contains>
-				<contains>
-					<Kitchen rdf:ID="Kitchen_1">
-						<containedIn rdf:resource="#Level_1"/>
-						<has>
-							<Freezer rdf:ID="Freezer_3">
-								<isIn rdf:resource="#Kitchen_1"/>
-								<disposeOf>
-									<On rdf:ID="On_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFreezingTemperature rdf:ID="SetTargetFreezingTemperature_5">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</SetTargetFreezingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<Initialize rdf:ID="Initialize_5">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</Initialize>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetTemperature rdf:ID="SetTargetTemperature_4">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</SetTargetTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_6">
-										<usedBy rdf:resource="#Freezer_3"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_6">
-										<belongsTo rdf:resource="#Freezer_3"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_6">
-										<belongsTo rdf:resource="#Freezer_3"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_6">
-										<belongsTo rdf:resource="#Freezer_3"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_6">
-										<determinates rdf:resource="#Freezer_3"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</Freezer>
-						</has>
-					</Kitchen>
-				</contains>
-				<contains>
-					<ChildrensRoom rdf:ID="ChildrensRoom_2">
-						<containedIn rdf:resource="#Level_1"/>
-					</ChildrensRoom>
-				</contains>
-				<contains>
-					<ChildrensRoom rdf:ID="ChildrensRoom_3">
-						<containedIn rdf:resource="#Level_1"/>
-					</ChildrensRoom>
-				</contains>
-				<contains>
-					<ChildrensRoom rdf:ID="ChildrensRoom_4">
-						<containedIn rdf:resource="#Level_1"/>
-					</ChildrensRoom>
-				</contains>
-				<contains>
-					<ChildrensRoom rdf:ID="ChildrensRoom_5">
-						<containedIn rdf:resource="#Level_1"/>
-					</ChildrensRoom>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_3">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_4">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_5">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_6">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_7">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<Garden rdf:ID="Garden_1">
-						<containedIn rdf:resource="#Level_1"/>
-					</Garden>
-				</contains>
-				<contains>
-					<Kitchen rdf:ID="Kitchen_2">
-						<containedIn rdf:resource="#Level_1"/>
-						<has>
-							<Fridge rdf:ID="Fridge_1">
-								<isIn rdf:resource="#Kitchen_2"/>
-								<disposeOf>
-									<On rdf:ID="On_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetCoolingTemperature rdf:ID="SetTargetCoolingTemperature_1">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</SetTargetCoolingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFreezingTemperature rdf:ID="SetTargetFreezingTemperature_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</SetTargetFreezingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<Initialize rdf:ID="Initialize_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</Initialize>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_2">
-										<usedBy rdf:resource="#Fridge_1"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_2">
-										<belongsTo rdf:resource="#Fridge_1"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_2">
-										<belongsTo rdf:resource="#Fridge_1"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_2">
-										<belongsTo rdf:resource="#Fridge_1"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_2">
-										<determinates rdf:resource="#Fridge_1"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</Fridge>
-						</has>
-						<has>
-							<Fridge rdf:ID="Fridge_2">
-								<isIn rdf:resource="#Kitchen_2"/>
-								<disposeOf>
-									<On rdf:ID="On_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetCoolingTemperature rdf:ID="SetTargetCoolingTemperature_2">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</SetTargetCoolingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFreezingTemperature rdf:ID="SetTargetFreezingTemperature_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</SetTargetFreezingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<Initialize rdf:ID="Initialize_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</Initialize>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_3">
-										<usedBy rdf:resource="#Fridge_2"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_3">
-										<belongsTo rdf:resource="#Fridge_2"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_3">
-										<belongsTo rdf:resource="#Fridge_2"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_3">
-										<belongsTo rdf:resource="#Fridge_2"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_3">
-										<determinates rdf:resource="#Fridge_2"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</Fridge>
-						</has>
-						<has>
-							<Freezer rdf:ID="Freezer_2">
-								<isIn rdf:resource="#Kitchen_2"/>
-								<disposeOf>
-									<On rdf:ID="On_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFreezingTemperature rdf:ID="SetTargetFreezingTemperature_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</SetTargetFreezingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<Initialize rdf:ID="Initialize_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</Initialize>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetTemperature rdf:ID="SetTargetTemperature_2">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</SetTargetTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_4">
-										<usedBy rdf:resource="#Freezer_2"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_4">
-										<belongsTo rdf:resource="#Freezer_2"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_4">
-										<belongsTo rdf:resource="#Freezer_2"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_4">
-										<belongsTo rdf:resource="#Freezer_2"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_4">
-										<determinates rdf:resource="#Freezer_2"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</Freezer>
-						</has>
-					</Kitchen>
-				</contains>
-				<contains>
-					<Garret rdf:ID="Garret_1">
-						<containedIn rdf:resource="#Level_1"/>
-						<has>
-							<Freezer rdf:ID="Freezer_1">
-								<isIn rdf:resource="#Garret_1"/>
-								<disposeOf>
-									<On rdf:ID="On_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFreezingTemperature rdf:ID="SetTargetFreezingTemperature_3">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</SetTargetFreezingTemperature>
-								</disposeOf>
-								<disposeOf>
-									<Initialize rdf:ID="Initialize_3">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</Initialize>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetTemperature rdf:ID="SetTargetTemperature_2">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</SetTargetTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_4">
-										<usedBy rdf:resource="#Freezer_1"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_4">
-										<belongsTo rdf:resource="#Freezer_1"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_4">
-										<belongsTo rdf:resource="#Freezer_1"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_4">
-										<belongsTo rdf:resource="#Freezer_1"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_4">
-										<determinates rdf:resource="#Freezer_1"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</Freezer>
-						</has>
-					</Garret>
-				</contains>
-				<contains>
-					<Kitchen rdf:ID="Kitchen_3">
-						<containedIn rdf:resource="#Level_1"/>
-					</Kitchen>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_8">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_9">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_10">
-						<containedIn rdf:resource="#Level_1"/>
-						<has>
-							<AirConditioning rdf:ID="AirConditioning_1">
-								<isIn rdf:resource="#OuterGarage_10"/>
-								<disposeOf>
-									<On rdf:ID="On_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetProgramChoice rdf:ID="SetProgramChoice_1">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</SetProgramChoice>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFanSpeed rdf:ID="SetTargetFanSpeed_1">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</SetTargetFanSpeed>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetTemperature rdf:ID="SetTargetTemperature_4">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</SetTargetTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_6">
-										<usedBy rdf:resource="#AirConditioning_1"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_6">
-										<belongsTo rdf:resource="#AirConditioning_1"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_6">
-										<belongsTo rdf:resource="#AirConditioning_1"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_6">
-										<belongsTo rdf:resource="#AirConditioning_1"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_6">
-										<determinates rdf:resource="#AirConditioning_1"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</AirConditioning>
-						</has>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_11">
-						<containedIn rdf:resource="#Level_1"/>
-					</OuterGarage>
-				</contains>
-				<contains>
-					<OuterGarage rdf:ID="OuterGarage_12">
-						<containedIn rdf:resource="#Level_1"/>
-						<has>
-							<AirConditioning rdf:ID="AirConditioning_3">
-								<isIn rdf:resource="#OuterGarage_12"/>
-								<disposeOf>
-									<On rdf:ID="On_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</On>
-								</disposeOf>
-								<disposeOf>
-									<Off rdf:ID="Off_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</Off>
-								</disposeOf>
-								<disposeOf>
-									<RemoteEnabled rdf:ID="RemoteEnabled_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</RemoteEnabled>
-								</disposeOf>
-								<disposeOf>
-									<VoiceControl rdf:ID="VoiceControl_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</VoiceControl>
-								</disposeOf>
-								<disposeOf>
-									<SetProgramChoice rdf:ID="SetProgramChoice_3">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</SetProgramChoice>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetFanSpeed rdf:ID="SetTargetFanSpeed_3">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</SetTargetFanSpeed>
-								</disposeOf>
-								<disposeOf>
-									<SetTargetTemperature rdf:ID="SetTargetTemperature_6">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</SetTargetTemperature>
-								</disposeOf>
-								<disposeOf>
-									<SetStartTime rdf:ID="SetStartTime_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</SetStartTime>
-								</disposeOf>
-								<disposeOf>
-									<SetStopTime rdf:ID="SetStopTime_8">
-										<usedBy rdf:resource="#AirConditioning_3"/>
-									</SetStopTime>
-								</disposeOf>
-								<hasProperty>
-									<Material rdf:ID="Material_8">
-										<belongsTo rdf:resource="#AirConditioning_3"/>
-									</Material>
-								</hasProperty>
-								<hasProperty>
-									<Shortcut rdf:ID="Shortcut_8">
-										<belongsTo rdf:resource="#AirConditioning_3"/>
-									</Shortcut>
-								</hasProperty>
-								<hasProperty>
-									<Color rdf:ID="Color_8">
-										<belongsTo rdf:resource="#AirConditioning_3"/>
-									</Color>
-								</hasProperty>
-								<isExactlyIn>
-									<AccurateLocation rdf:ID="AccurateLocation_8">
-										<determinates rdf:resource="#AirConditioning_3"/>
-									</AccurateLocation>
-								</isExactlyIn>
-								<rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-							</AirConditioning>
-						</has>
-					</OuterGarage>
-				</contains>  <contains>
-          <OuterGarage rdf:ID="OuterGarage_13">
-            <containedIn rdf:resource="#Level_1"/>
-            <has>
-              <AirConditioning rdf:ID="AirConditioning_3">
-                <isIn rdf:resource="#OuterGarage_13"/>
-                <disposeOf>
-                  <On rdf:ID="On_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </On>
-                </disposeOf>
-                <disposeOf>
-                  <Off rdf:ID="Off_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </Off>
-                </disposeOf>
-                <disposeOf>
-                  <RemoteEnabled rdf:ID="RemoteEnabled_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </RemoteEnabled>
-                </disposeOf>
-                <disposeOf>
-                  <VoiceControl rdf:ID="VoiceControl_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </VoiceControl>
-                </disposeOf>
-                <disposeOf>
-                  <SetProgramChoice rdf:ID="SetProgramChoice_3">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </SetProgramChoice>
-                </disposeOf>
-                <disposeOf>
-                  <SetTargetFanSpeed rdf:ID="SetTargetFanSpeed_3">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </SetTargetFanSpeed>
-                </disposeOf>
-                <disposeOf>
-                  <SetTargetTemperature rdf:ID="SetTargetTemperature_6">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </SetTargetTemperature>
-                </disposeOf>
-                <disposeOf>
-                  <SetStartTime rdf:ID="SetStartTime_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </SetStartTime>
-                </disposeOf>
-                <disposeOf>
-                  <SetStopTime rdf:ID="SetStopTime_8">
-                    <usedBy rdf:resource="#AirConditioning_3"/>
-                  </SetStopTime>
-                </disposeOf>
-                <hasProperty>
-                  <Material rdf:ID="Material_8">
-                    <belongsTo rdf:resource="#AirConditioning_3"/>
-                  </Material>
-                </hasProperty>
-                <hasProperty>
-                  <Shortcut rdf:ID="Shortcut_8">
-                    <belongsTo rdf:resource="#AirConditioning_3"/>
-                  </Shortcut>
-                </hasProperty>
-                <hasProperty>
-                  <Color rdf:ID="Color_8">
-                    <belongsTo rdf:resource="#AirConditioning_3"/>
-                  </Color>
-                </hasProperty>
-                <isExactlyIn>
-                  <AccurateLocation rdf:ID="AccurateLocation_8">
-                    <determinates rdf:resource="#AirConditioning_3"/>
-                  </AccurateLocation>
-                </isExactlyIn>
-                <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Zarizeni pridano programem AccOntology</rdfs:comment>
-              </AirConditioning>
-            </has>
-          </OuterGarage>
-        </contains>
-      </Level>
-		</owl:sameAs>
-	</owl:Class>
-	<owl:Class rdf:ID="ChildrensRoom">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="BathRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DwelingSpace"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="ToiletRoom"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Space"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="BedRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="LivingRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="WorkShop"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Cabinet"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#BedRoom">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Space"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#BathRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#WorkShop"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#LivingRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#ToiletRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Cabinet"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="Initialize">
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-	</owl:Class>
-	<owl:Class rdf:ID="AirConditioning">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Light"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Fan"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="OtherDevice"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#ToiletRoom">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Space"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#WorkShop"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Cabinet"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#LivingRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#BathRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Cabinet">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#BathRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#LivingRoom"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Space"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#WorkShop"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Function">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Location"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Device"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:ID="usedBy"/>
-				</owl:onProperty>
-				<owl:someValuesFrom>
-					<owl:Class rdf:about="#Device"/>
-				</owl:someValuesFrom>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/function.xml</annotationPropertySynonyms>
-	</owl:Class>
-	<owl:Class rdf:ID="MicrowaveOven">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Hood"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Dryer"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Dishwasher"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Refrigerator"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Oven"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="BigAppliance"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Freezer"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Grill"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="Hall">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Interior"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Space"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Entrance"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="DeleteContact">
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="HangUpPhone"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="PickUpPhone"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="AddContact"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DeleteEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Set"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="DVDRecorder">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="DVD"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DVDPlayer"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Entrance">
-		<owl:disjointWith rdf:resource="#Hall"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Space"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Interior"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#SetStartTime">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTv"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Set"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetNumberOfCooker"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetAlarmClock"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetProgramChoice"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="SuspensionLamp">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Lamp"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="WallLamp"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="TableLamp"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#SetTv">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetAlarmClock"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Set"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetProgramChoice"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetNumberOfCooker"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#SetProgramChoice">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Set"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetAlarmClock"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetNumberOfCooker"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#PickUpPhone">
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HangUpPhone"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#AddContact"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DeleteEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Set"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="MainLamp">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Lamp"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:ID="RemoteControl">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Other"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="VoiceEnabled"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#RemoteEnabled"/>
-		<owl:disjointWith rdf:resource="#VoiceControl"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Dryer">
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Freezer"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Dishwasher"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Refrigerator"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#BigAppliance"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Hood"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Oven"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#SetNumberOfCooker">
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetAlarmClock"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Set"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-	</owl:Class>
-	<owl:Class rdf:ID="InceraseTemperature">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Remind"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Remember"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DecreaseTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DecreaseIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="IncreaseIntenzity"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Special"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:ID="Kettle">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="SmallAppliance"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Sandwich"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Toaster"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Mixer"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Remind">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Remember"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DecreaseTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#InceraseTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DecreaseIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#IncreaseIntenzity"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Special"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#VoiceEnabled">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Other"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#RemoteControl"/>
-		<owl:disjointWith rdf:resource="#RemoteEnabled"/>
-		<owl:disjointWith rdf:resource="#VoiceControl"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DecreaseTemperature">
-		<owl:disjointWith rdf:resource="#Remind"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Remember"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#InceraseTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DecreaseIntenzity"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#IncreaseIntenzity"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Special"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Freezer">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Oven"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Hood"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Dishwasher"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Refrigerator"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#BigAppliance"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#IncreaseIntenzity">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Special"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Remind"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Remember"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#DecreaseTemperature"/>
-		<owl:disjointWith rdf:resource="#InceraseTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DecreaseIntenzity"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Space">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Interior"/>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom>
-					<owl:Class rdf:about="#OtherDevice"/>
-				</owl:someValuesFrom>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:ID="contains"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Hall"/>
-		<owl:disjointWith rdf:resource="#Entrance"/>
-	</owl:Class>
-	<owl:Class rdf:about="#BathRoom">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#LivingRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#WorkShop"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-	</owl:Class>
-	<owl:Class rdf:ID="Notebook">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Television"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="HomeTheatre"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="DVB-TReceiver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="HiFiSystem"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="VHS"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Electronic"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Dishwasher">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Refrigerator"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#BigAppliance"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Oven"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Hood"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Freezer"/>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Set">
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#AddContact"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DeleteEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="On"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Off"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HangUpPhone"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="OuterGarage">
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Exterior"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Balcony"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Terrace"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Garden"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:ID="Shortcut">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Material"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Color"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:ID="Property"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#SetAlarmClock">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetIntenzity"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-	</owl:Class>
-	<owl:Class rdf:about="#WorkShop">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#LivingRoom"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Light">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#OtherDevice"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#AirConditioning"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Fan"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#LivingRoom">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garage"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith rdf:resource="#WorkShop"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#VHS">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVB-TReceiver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HomeTheatre"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Television"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HiFiSystem"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Mixer">
-		<owl:disjointWith rdf:resource="#Kettle"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Sandwich"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Toaster"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#SmallAppliance"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#SetIntenzity">
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetStopTime"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DeleteEvent">
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HangUpPhone"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#AddContact"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Set"/>
-	</owl:Class>
-	<owl:Class rdf:ID="Fridge">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#BigAppliance"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#SetStopTime">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetEvent"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Garage">
-		<owl:disjointWith rdf:resource="#LivingRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DwelingSpace"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith rdf:resource="#WorkShop"/>
-	</owl:Class>
-	<owl:Class rdf:about="#HiFiSystem">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Television"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#HomeTheatre"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVB-TReceiver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-	</owl:Class>
-	<owl:Class rdf:about="#HomeTheatre">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Television"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVB-TReceiver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#HiFiSystem"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Garden">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Exterior"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#OuterGarage"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Balcony"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Terrace"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Sandwich">
-		<owl:disjointWith rdf:resource="#Kettle"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Toaster"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Mixer"/>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#SmallAppliance"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:ID="Object">
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-				<owl:allValuesFrom>
-					<owl:Class>
-						<owl:unionOf rdf:parseType="Collection">
-							<owl:Class rdf:ID="Level"/>
-							<owl:Class rdf:about="#Device"/>
-							<owl:Class rdf:about="#Location"/>
-							<owl:Class rdf:ID="Ascend"/>
-						</owl:unionOf>
-					</owl:Class>
-				</owl:allValuesFrom>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-				<owl:someValuesFrom>
-					<owl:Class>
-						<owl:intersectionOf rdf:parseType="Collection">
-							<owl:Class rdf:about="#Level"/>
-							<owl:Class rdf:about="#Location"/>
-						</owl:intersectionOf>
-					</owl:Class>
-				</owl:someValuesFrom>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-				<owl:valuesFrom>
-					<owl:Class rdf:about="#Level"/>
-				</owl:valuesFrom>
-				<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/object.xml</annotationPropertySynonyms>
-	</owl:Class>
-	<owl:Class rdf:about="#HangUpPhone">
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#AddContact"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#DeleteEvent"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Set"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DwelingSpace">
-		<owl:disjointWith rdf:resource="#Garage"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith rdf:resource="#WorkShop"/>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Kitchen"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#LivingRoom"/>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-	</owl:Class>
-	<owl:Class rdf:about="#BigAppliance">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Device"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Television">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#HomeTheatre"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVB-TReceiver"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#HiFiSystem"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-	</owl:Class>
-	<owl:Class rdf:ID="Stairway">
-		<owl:disjointWith>
-			<owl:Class rdf:ID="Elevator"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Ascend"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Fan">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#OtherDevice"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#AirConditioning"/>
-		<owl:disjointWith rdf:resource="#Light"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DVB-TReceiver">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Television"/>
-		<owl:disjointWith rdf:resource="#HomeTheatre"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#DVD"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#HiFiSystem"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SetEvent">
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#SetStopTime"/>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFreezingTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#AddContact">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#HangUpPhone"/>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith rdf:resource="#DeleteEvent"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SwitchOver"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Set"/>
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Hood">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#BigAppliance"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Oven"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Refrigerator"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Freezer"/>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith rdf:resource="#Dishwasher"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SwitchOver">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#CallTo"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#HangUpPhone"/>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith rdf:resource="#AddContact"/>
-		<owl:disjointWith rdf:resource="#DeleteEvent"/>
-		<owl:disjointWith rdf:resource="#Set"/>
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Oven">
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith rdf:resource="#Dishwasher"/>
-		<rdfs:subClassOf rdf:resource="#BigAppliance"/>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Freezer"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Refrigerator"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Hood"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Toaster">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#SmallAppliance"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Kettle"/>
-		<owl:disjointWith rdf:resource="#Sandwich"/>
-		<owl:disjointWith rdf:resource="#Mixer"/>
-	</owl:Class>
-	<owl:Class rdf:about="#TableLamp">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Lamp"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#WallLamp"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SuspensionLamp"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DVDPlayer">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#DVD"/>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom rdf:resource="#Function"/>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:ID="disposeOf"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#DVDRecorder"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Refrigerator">
-		<owl:disjointWith rdf:resource="#Freezer"/>
-		<owl:disjointWith rdf:resource="#Oven"/>
-		<owl:disjointWith rdf:resource="#Hood"/>
-		<rdfs:subClassOf rdf:resource="#BigAppliance"/>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Dishwasher"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Grill"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Material">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Property"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Shortcut"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Color"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Location">
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/location.xml</annotationPropertySynonyms>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom>
-					<owl:Class rdf:about="#Device"/>
-				</owl:someValuesFrom>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom rdf:resource="#Object"/>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:ID="containedIn"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Device"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Function"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Special">
-		<rdfs:subClassOf rdf:resource="#Function"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Other"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Basic"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Off">
-		<owl:disjointWith rdf:resource="#Set"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#On"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Basic"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Exterior">
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Interior"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#Location"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SmallAppliance">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Device"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Level">
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/level.xml</annotationPropertySynonyms>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom rdf:resource="#Location"/>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:allValuesFrom rdf:resource="#Object"/>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:about="#containedIn"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#contains"/>
-				</owl:onProperty>
-				<owl:valuesFrom rdf:resource="#Location"/>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#SetTargetFreezingTemperature">
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith rdf:resource="#SetStopTime"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetEvent"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetTemperature"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Kitchen">
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith rdf:resource="#Garage"/>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-		<owl:disjointWith rdf:resource="#WorkShop"/>
-		<owl:disjointWith rdf:resource="#DwelingSpace"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Garret"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#LivingRoom"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Property">
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/property.xml</annotationPropertySynonyms>
-		<rdfs:subClassOf>
-			<owl:Class>
-				<owl:intersectionOf rdf:parseType="Collection">
-					<owl:Restriction>
-						<owl:onProperty>
-							<owl:ObjectProperty rdf:ID="belongsTo"/>
-						</owl:onProperty>
-						<owl:someValuesFrom>
-							<owl:Class rdf:about="#Device"/>
-						</owl:someValuesFrom>
-					</owl:Restriction>
-					<owl:Restriction>
-						<owl:onProperty>
-							<owl:ObjectProperty rdf:about="#belongsTo"/>
-						</owl:onProperty>
-						<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
-						<owl:valuesFrom>
-							<owl:Class rdf:about="#Device"/>
-						</owl:valuesFrom>
-					</owl:Restriction>
-				</owl:intersectionOf>
-			</owl:Class>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SetTargetTemperature">
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetPower"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStopTime"/>
-		<owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith rdf:resource="#SetEvent"/>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#DecreaseIntenzity">
-		<owl:disjointWith rdf:resource="#Remind"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Remember"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#DecreaseTemperature"/>
-		<owl:disjointWith rdf:resource="#InceraseTemperature"/>
-		<owl:disjointWith rdf:resource="#IncreaseIntenzity"/>
-		<rdfs:subClassOf rdf:resource="#Special"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Elevator">
-		<owl:disjointWith rdf:resource="#Stairway"/>
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Ascend"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Balcony">
-		<rdfs:subClassOf rdf:resource="#Exterior"/>
-		<owl:disjointWith rdf:resource="#OuterGarage"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Terrace"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Garden"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SetPower">
-		<owl:disjointWith rdf:resource="#SetTargetTemperature"/>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-		<owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetEvent"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#SetTargetFanSpeed"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<owl:disjointWith rdf:resource="#SetStopTime"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Ascend">
-		<rdfs:subClassOf rdf:resource="#Location"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Terrace">
-		<owl:disjointWith rdf:resource="#OuterGarage"/>
-		<owl:disjointWith rdf:resource="#Balcony"/>
-		<owl:disjointWith rdf:resource="#Garden"/>
-		<rdfs:subClassOf rdf:resource="#Exterior"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Color">
-		<rdfs:subClassOf rdf:resource="#Property"/>
-		<owl:disjointWith rdf:resource="#Shortcut"/>
-		<owl:disjointWith rdf:resource="#Material"/>
-	</owl:Class>
-	<owl:Class rdf:about="#DVD">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Electronic"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Television"/>
-		<owl:disjointWith rdf:resource="#HomeTheatre"/>
-		<owl:disjointWith rdf:resource="#DVB-TReceiver"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#PersonalComputer"/>
-		</owl:disjointWith>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#HiFiSystem"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Electronic">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Device"/>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Garret">
-		<owl:disjointWith rdf:resource="#ChildrensRoom"/>
-		<owl:disjointWith rdf:resource="#Cabinet"/>
-		<owl:disjointWith rdf:resource="#Kitchen"/>
-		<owl:disjointWith rdf:resource="#Garage"/>
-		<owl:disjointWith rdf:resource="#WorkShop"/>
-		<owl:disjointWith rdf:resource="#DwelingSpace"/>
-		<owl:disjointWith rdf:resource="#LivingRoom"/>
-		<owl:disjointWith rdf:resource="#BedRoom"/>
-		<owl:disjointWith rdf:resource="#BathRoom"/>
-		<owl:disjointWith rdf:resource="#ToiletRoom"/>
-		<rdfs:subClassOf rdf:resource="#Space"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Grill">
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith rdf:resource="#Refrigerator"/>
-		<owl:disjointWith rdf:resource="#Hood"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Stove"/>
-		</owl:disjointWith>
-		<rdfs:subClassOf rdf:resource="#BigAppliance"/>
-		<owl:disjointWith rdf:resource="#Dishwasher"/>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith rdf:resource="#Freezer"/>
-		<owl:disjointWith rdf:resource="#Oven"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Device">
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
-				<owl:valuesFrom rdf:resource="#Location"/>
-				<owl:onProperty>
-					<owl:FunctionalProperty rdf:ID="isIn"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Restriction>
-						<owl:someValuesFrom rdf:resource="#Location"/>
-						<owl:onProperty>
-							<owl:ObjectProperty rdf:about="#containedIn"/>
-						</owl:onProperty>
-					</owl:Restriction>
-					<owl:Restriction>
-						<owl:someValuesFrom rdf:resource="#Ascend"/>
-						<owl:onProperty>
-							<owl:ObjectProperty rdf:about="#containedIn"/>
-						</owl:onProperty>
-					</owl:Restriction>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Location"/>
-		<rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom rdf:resource="#Property"/>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:ID="hasProperty"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom>
-					<owl:Class rdf:ID="AccurateLocation"/>
-				</owl:someValuesFrom>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:ID="isExactlyIn"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://www.linkTo.ontology/device.xml</annotationPropertySynonyms>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:someValuesFrom rdf:resource="#Location"/>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:about="#containedIn"/>
-				</owl:onProperty>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:about="#isExactlyIn"/>
-				</owl:onProperty>
-				<owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:TransitiveProperty rdf:about="#disposeOf"/>
-				</owl:onProperty>
-				<owl:someValuesFrom rdf:resource="#Function"/>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#Function"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Other">
-		<rdfs:subClassOf rdf:resource="#Function"/>
-		<owl:disjointWith rdf:resource="#Special"/>
-		<owl:disjointWith rdf:resource="#Advanced"/>
-		<owl:disjointWith>
-			<owl:Class rdf:about="#Basic"/>
-		</owl:disjointWith>
-	</owl:Class>
-	<owl:Class rdf:about="#Interior">
-		<owl:disjointWith rdf:resource="#Exterior"/>
-		<rdfs:subClassOf rdf:resource="#Location"/>
-	</owl:Class>
-	<owl:Class rdf:about="#CallTo">
-		<owl:disjointWith rdf:resource="#HangUpPhone"/>
-		<owl:disjointWith rdf:resource="#PickUpPhone"/>
-		<owl:disjointWith rdf:resource="#DeleteContact"/>
-		<owl:disjointWith rdf:resource="#AddContact"/>
-		<owl:disjointWith rdf:resource="#DeleteEvent"/>
-		<owl:disjointWith rdf:resource="#SwitchOver"/>
-		<owl:disjointWith rdf:resource="#Set"/>
-		<rdfs:subClassOf rdf:resource="#Advanced"/>
-	</owl:Class>
-	<owl:Class rdf:about="#OtherDevice">
-		<rdfs:subClassOf rdf:resource="#Device"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Basic">
-		<rdfs:subClassOf rdf:resource="#Function"/>
-		<owl:disjointWith rdf:resource="#Other"/>
-		<owl:disjointWith rdf:resource="#Special"/>
-		<owl:disjointWith rdf:resource="#Advanced"/>
-	</owl:Class>
-	<owl:Class rdf:about="#PersonalComputer">
-		<owl:disjointWith rdf:resource="#Television"/>
-		<owl:disjointWith rdf:resource="#HomeTheatre"/>
-		<owl:disjointWith rdf:resource="#DVD"/>
-		<owl:disjointWith rdf:resource="#DVB-TReceiver"/>
-		<owl:disjointWith rdf:resource="#Notebook"/>
-		<owl:disjointWith rdf:resource="#HiFiSystem"/>
-		<owl:disjointWith rdf:resource="#VHS"/>
-		<rdfs:subClassOf rdf:resource="#Electronic"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Remember">
-		<owl:disjointWith rdf:resource="#Remind"/>
-		<owl:disjointWith rdf:resource="#DecreaseTemperature"/>
-		<owl:disjointWith rdf:resource="#InceraseTemperature"/>
-		<owl:disjointWith rdf:resource="#DecreaseIntenzity"/>
-		<owl:disjointWith rdf:resource="#IncreaseIntenzity"/>
-		<rdfs:subClassOf rdf:resource="#Special"/>
-	</owl:Class>
-	<owl:Class rdf:about="#WallLamp">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Lamp"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#SuspensionLamp"/>
-		<owl:disjointWith rdf:resource="#TableLamp"/>
-	</owl:Class>
-	<owl:Class rdf:about="#AccurateLocation">
-		<rdfs:subClassOf rdf:resource="#Location"/>
-		<rdfs:subClassOf>
-			<owl:Restriction>
-				<owl:onProperty>
-					<owl:ObjectProperty rdf:ID="determinates"/>
-				</owl:onProperty>
-				<owl:someValuesFrom rdf:resource="#Device"/>
-			</owl:Restriction>
-		</rdfs:subClassOf>
-	</owl:Class>
-	<owl:Class rdf:about="#Stove">
-		<owl:disjointWith rdf:resource="#Dishwasher"/>
-		<owl:disjointWith rdf:resource="#Hood"/>
-		<owl:disjointWith rdf:resource="#Grill"/>
-		<rdfs:subClassOf rdf:resource="#BigAppliance"/>
-		<owl:disjointWith rdf:resource="#Oven"/>
-		<owl:disjointWith rdf:resource="#MicrowaveOven"/>
-		<owl:disjointWith rdf:resource="#Refrigerator"/>
-		<owl:disjointWith rdf:resource="#Dryer"/>
-		<owl:disjointWith rdf:resource="#Freezer"/>
-	</owl:Class>
-	<owl:Class rdf:about="#On">
-		<owl:disjointWith rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#Off"/>
-		<rdfs:subClassOf rdf:resource="#Basic"/>
-		<owl:sameAs rdf:resource="http://protege.stanford.edu/plugins/owl/protege#ExternalResource"/>
-	</owl:Class>
-	<owl:Class rdf:about="#Lamp">
-		<owl:disjointWith rdf:resource="#OtherLamps"/>
-		<rdfs:subClassOf rdf:resource="#Light"/>
-	</owl:Class>
-	<owl:Class rdf:about="#SetTargetFanSpeed">
-		<owl:disjointWith rdf:resource="#SetStartTime"/>
-		<owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
-		<owl:disjointWith rdf:resource="#SetProgramChoice"/>
-		<owl:disjointWith rdf:resource="#SetIntenzity"/>
-		<owl:disjointWith rdf:resource="#SetEvent"/>
-		<owl:disjointWith rdf:resource="#SetTv"/>
-		<rdfs:subClassOf rdf:resource="#Set"/>
-		<owl:disjointWith rdf:resource="#SetStopTime"/>
-		<owl:disjointWith rdf:resource="#SetPower"/>
-		<owl:disjointWith rdf:resource="#SetTargetTemperature"/>
-		<owl:disjointWith rdf:resource="#SetAlarmClock"/>
-		<owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
-	</owl:Class>
-	<owl:ObjectProperty rdf:about="#isExactlyIn">
-		<rdfs:range rdf:resource="#AccurateLocation"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-		<rdfs:domain rdf:resource="#Device"/>
-		<owl:inverseOf>
-			<owl:ObjectProperty rdf:about="#determinates"/>
-		</owl:inverseOf>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:about="#containedIn">
-		<rdfs:range>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Class rdf:about="#Object"/>
-					<owl:Class rdf:about="#Level"/>
-					<owl:Class rdf:about="#Location"/>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:range>
-		<owl:inverseOf>
-			<owl:TransitiveProperty rdf:about="#contains"/>
-		</owl:inverseOf>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-		<rdfs:domain>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Class rdf:about="#Ascend"/>
-					<owl:Class rdf:about="#Location"/>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:domain>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:ID="hasAssociationVocabulary">
-		<rdfs:domain>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Class rdf:about="#Location"/>
-					<owl:Class rdf:about="#Object"/>
-					<owl:Class rdf:about="#Device"/>
-					<owl:Class rdf:about="#Function"/>
-					<owl:Class rdf:about="#Ascend"/>
-					<owl:Class rdf:about="#Property"/>
-					<owl:Class rdf:about="#Level"/>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:domain>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:about="#determinates">
-		<rdfs:domain rdf:resource="#AccurateLocation"/>
-		<rdfs:range rdf:resource="#Device"/>
-		<owl:inverseOf rdf:resource="#isExactlyIn"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:ID="connectedTo">
-		<rdfs:range rdf:resource="#Device"/>
-		<owl:inverseOf rdf:resource="#connectedTo"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
-		<rdfs:domain rdf:resource="#Device"/>
-	</owl:ObjectProperty>
-	<owl:ObjectProperty rdf:about="#belongsTo">
-		<rdfs:range rdf:resource="#Device"/>
-		<owl:inverseOf>
-			<owl:TransitiveProperty rdf:about="#hasProperty"/>
-		</owl:inverseOf>
-		<rdfs:domain rdf:resource="#Property"/>
-	</owl:ObjectProperty>
-	<owl:TransitiveProperty rdf:about="#usedBy">
-		<rdfs:domain rdf:resource="#Function"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-		<owl:inverseOf>
-			<owl:TransitiveProperty rdf:about="#disposeOf"/>
-		</owl:inverseOf>
-		<rdfs:range rdf:resource="#Device"/>
-	</owl:TransitiveProperty>
-	<owl:TransitiveProperty rdf:about="#disposeOf">
-		<rdfs:domain rdf:resource="#Device"/>
-		<owl:inverseOf rdf:resource="#usedBy"/>
-		<rdfs:range rdf:resource="#Function"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-	</owl:TransitiveProperty>
-	<owl:TransitiveProperty rdf:about="#hasProperty">
-		<owl:inverseOf rdf:resource="#belongsTo"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-		<rdfs:domain rdf:resource="#Device"/>
-		<rdfs:range rdf:resource="#Property"/>
-	</owl:TransitiveProperty>
-	<owl:TransitiveProperty rdf:about="#contains">
-		<rdfs:range>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Class rdf:about="#Location"/>
-					<owl:Class rdf:about="#Ascend"/>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:range>
-		<rdfs:domain>
-			<owl:Class>
-				<owl:unionOf rdf:parseType="Collection">
-					<owl:Class rdf:about="#Object"/>
-					<owl:Class rdf:about="#Level"/>
-					<owl:Class rdf:about="#Location"/>
-				</owl:unionOf>
-			</owl:Class>
-		</rdfs:domain>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-		<owl:inverseOf rdf:resource="#containedIn"/>
-	</owl:TransitiveProperty>
-	<owl:FunctionalProperty rdf:about="#isIn">
-		<rdfs:domain rdf:resource="#Device"/>
-		<rdfs:range rdf:resource="#Location"/>
-		<owl:inverseOf>
-			<owl:InverseFunctionalProperty rdf:ID="has"/>
-		</owl:inverseOf>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-	</owl:FunctionalProperty>
-	<owl:InverseFunctionalProperty rdf:about="#has">
-		<rdfs:domain rdf:resource="#Location"/>
-		<rdfs:range rdf:resource="#Device"/>
-		<owl:inverseOf rdf:resource="#isIn"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
-	</owl:InverseFunctionalProperty>
-	<owl:AnnotationProperty rdf:ID="annotationPropertySynonyms">
-		<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
-	</owl:AnnotationProperty>
-	<owl:AllDifferent/>
-	<owl:Class rdf:ID="RemoteEnabled">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Other"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#RemoteControl"/>
-		<owl:disjointWith rdf:resource="#VoiceEnabled"/>
-	</owl:Class>
-	<owl:Class rdf:ID="VoiceControl">
-		<rdfs:subClassOf>
-			<owl:Class rdf:about="#Other"/>
-		</rdfs:subClassOf>
-		<owl:disjointWith rdf:resource="#RemoteControl"/>
-		<owl:disjointWith rdf:resource="#VoiceEnabled"/>
-	</owl:Class>
+<rdf:RDF
+    xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns="http://www.owl-ontologies.com/Ontology1241530166.owl#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xml:base="http://www.owl-ontologies.com/Ontology1241530166.owl">
+  <owl:Ontology rdf:about="">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >ontology ofhousehold - include a functions, locations and devices</rdfs:comment>
+  </owl:Ontology>
+  <owl:Class rdf:ID="SetTargetCoolingTemperature">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetAlarmClock"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetNumberOfCooker"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetTv"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetProgramChoice"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Set"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetStartTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SetEvent"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="OtherLamps">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Light"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Lamp"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="Advanced">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Function"/>
+    </rdfs:subClassOf>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >SDF</rdfs:comment>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Special"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Other"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Basic"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="ChildrensRoom">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="BathRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DwelingSpace"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="ToiletRoom"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Space"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="BedRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="LivingRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="WorkShop"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Cabinet"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#BedRoom">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Space"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#BathRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#WorkShop"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#LivingRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#ToiletRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Cabinet"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="AirConditioning">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Fan"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Light"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="OtherDevice"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Initialize">
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+  </owl:Class>
+  <owl:Class rdf:about="#ToiletRoom">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Space"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#WorkShop"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Cabinet"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#LivingRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#BathRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Cabinet">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#BathRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#LivingRoom"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Space"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#WorkShop"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Function">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Device"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Location"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="usedBy"/>
+        </owl:onProperty>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#Device"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class rdf:ID="Vocabulary"/>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="hasAssociatedVocabulary"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/function.xml</annotationPropertySynonyms>
+  </owl:Class>
+  <owl:Class rdf:ID="MicrowaveOven">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Hood"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Dryer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Dishwasher"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Refrigerator"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Oven"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="BigAppliance"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Freezer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Grill"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="Hall">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Interior"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Entrance"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Space"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="DeleteContact">
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Set"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DeleteEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="AddContact"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="PickUpPhone"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="HangUpPhone"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="CallTo"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="DVDRecorder">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="DVD"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DVDPlayer"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Entrance">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Space"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Hall"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Interior"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#SetStartTime">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTv"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Set"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetNumberOfCooker"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetAlarmClock"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetProgramChoice"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="SuspensionLamp">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lamp"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="TableLamp"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="WallLamp"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#SetTv">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetAlarmClock"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Set"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetProgramChoice"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetNumberOfCooker"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#SetProgramChoice">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Set"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetAlarmClock"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetNumberOfCooker"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#PickUpPhone">
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Set"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DeleteEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#AddContact"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HangUpPhone"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="MainLamp">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lamp"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="RemoteControl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Other"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="VoiceEnabled"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Dryer">
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Freezer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Dishwasher"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Refrigerator"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#BigAppliance"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Hood"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Oven"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#SetNumberOfCooker">
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetAlarmClock"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Set"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+  </owl:Class>
+  <owl:Class rdf:ID="InceraseTemperature">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="IncreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DecreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DecreaseTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Remember"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Remind"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Special"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Kettle">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="SmallAppliance"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Mixer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Toaster"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Sandwich"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Remind">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#IncreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DecreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#InceraseTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DecreaseTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Remember"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Special"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#VoiceEnabled">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Other"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#RemoteControl"/>
+  </owl:Class>
+  <owl:Class rdf:about="#DecreaseTemperature">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#IncreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DecreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#InceraseTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Remember"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Remind"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Special"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Freezer">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Oven"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Hood"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Dishwasher"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Refrigerator"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#BigAppliance"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#IncreaseIntenzity">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Special"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DecreaseIntenzity"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#InceraseTemperature"/>
+    <owl:disjointWith rdf:resource="#DecreaseTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Remember"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Remind"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Space">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#OtherDevice"/>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="contains"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Interior"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Entrance"/>
+    <owl:disjointWith rdf:resource="#Hall"/>
+  </owl:Class>
+  <owl:Class rdf:about="#BathRoom">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#LivingRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#WorkShop"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Notebook">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="VHS"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="HiFiSystem"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="DVB-TReceiver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="HomeTheatre"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Television"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Electronic"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Dishwasher">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Refrigerator"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#BigAppliance"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Oven"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Hood"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Freezer"/>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Set">
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#AddContact"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DeleteEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="On"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Off"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HangUpPhone"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="Shortcut">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Color"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Material"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Property"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#SetAlarmClock">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetIntenzity"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+  </owl:Class>
+  <owl:Class rdf:ID="OuterGarage">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Exterior"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Garden"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Terrace"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Balcony"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#WorkShop">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#LivingRoom"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Light">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#OtherDevice"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Fan"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#AirConditioning"/>
+  </owl:Class>
+  <owl:Class rdf:about="#LivingRoom">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garage"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith rdf:resource="#WorkShop"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Vocabulary">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Function"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="isAssociatedTo"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#Device"/>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isAssociatedTo"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isAssociatedTo"/>
+        </owl:onProperty>
+        <owl:someValuesFrom>
+          <owl:Class rdf:ID="Level"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#Location"/>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isAssociatedTo"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isAssociatedTo"/>
+        </owl:onProperty>
+        <owl:someValuesFrom>
+          <owl:Class rdf:ID="Object"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#Property"/>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isAssociatedTo"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#VHS">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HiFiSystem"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Television"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HomeTheatre"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVB-TReceiver"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Mixer">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Toaster"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Sandwich"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Kettle"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#SmallAppliance"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#SetIntenzity">
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetStopTime"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+  </owl:Class>
+  <owl:Class rdf:about="#DeleteEvent">
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+    <owl:disjointWith rdf:resource="#Set"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#AddContact"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HangUpPhone"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:ID="Fridge">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#BigAppliance"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#SetStopTime">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetEvent"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+  </owl:Class>
+  <owl:Class rdf:about="#HiFiSystem">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVB-TReceiver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#HomeTheatre"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Television"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Garage">
+    <owl:disjointWith rdf:resource="#LivingRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DwelingSpace"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith rdf:resource="#WorkShop"/>
+  </owl:Class>
+  <owl:Class rdf:about="#HomeTheatre">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#HiFiSystem"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVB-TReceiver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Television"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Garden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Exterior"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Terrace"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Balcony"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#OuterGarage"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Object">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+        <owl:valuesFrom>
+          <owl:Class rdf:about="#Level"/>
+        </owl:valuesFrom>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom>
+          <owl:Class>
+            <owl:intersectionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="#Level"/>
+              <owl:Class rdf:about="#Location"/>
+            </owl:intersectionOf>
+          </owl:Class>
+        </owl:someValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class>
+            <owl:unionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="#Level"/>
+              <owl:Class rdf:about="#Device"/>
+              <owl:Class rdf:about="#Location"/>
+              <owl:Class rdf:ID="Ascend"/>
+            </owl:unionOf>
+          </owl:Class>
+        </owl:allValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Vocabulary"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/object.xml</annotationPropertySynonyms>
+  </owl:Class>
+  <owl:Class rdf:about="#Sandwich">
+    <owl:disjointWith rdf:resource="#Mixer"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Toaster"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Kettle"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#SmallAppliance"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#HangUpPhone">
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+    <owl:disjointWith rdf:resource="#Set"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DeleteEvent"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#AddContact"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#DwelingSpace">
+    <owl:disjointWith rdf:resource="#Garage"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith rdf:resource="#WorkShop"/>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Kitchen"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#LivingRoom"/>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+  </owl:Class>
+  <owl:Class rdf:about="#BigAppliance">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Device"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Television">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#HiFiSystem"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVB-TReceiver"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#HomeTheatre"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Stairway">
+    <owl:disjointWith>
+      <owl:Class rdf:ID="Elevator"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Ascend"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Fan">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#OtherDevice"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Light"/>
+    <owl:disjointWith rdf:resource="#AirConditioning"/>
+  </owl:Class>
+  <owl:Class rdf:about="#DVB-TReceiver">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#HiFiSystem"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#DVD"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#HomeTheatre"/>
+    <owl:disjointWith rdf:resource="#Television"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SetEvent">
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetStopTime"/>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFreezingTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#AddContact">
+    <owl:disjointWith rdf:resource="#Set"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SwitchOver"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DeleteEvent"/>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <owl:disjointWith rdf:resource="#HangUpPhone"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Hood">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#BigAppliance"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Oven"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Refrigerator"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Freezer"/>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith rdf:resource="#Dishwasher"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SwitchOver">
+    <owl:disjointWith rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#DeleteEvent"/>
+    <owl:disjointWith rdf:resource="#AddContact"/>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <owl:disjointWith rdf:resource="#HangUpPhone"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CallTo"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Oven">
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith rdf:resource="#Dishwasher"/>
+    <rdfs:subClassOf rdf:resource="#BigAppliance"/>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Freezer"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Refrigerator"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Hood"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Toaster">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#SmallAppliance"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Mixer"/>
+    <owl:disjointWith rdf:resource="#Sandwich"/>
+    <owl:disjointWith rdf:resource="#Kettle"/>
+  </owl:Class>
+  <owl:Class rdf:about="#TableLamp">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lamp"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#SuspensionLamp"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#WallLamp"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#DVDPlayer">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="disposeOf"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Function"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#DVD"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#DVDRecorder"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Refrigerator">
+    <owl:disjointWith rdf:resource="#Freezer"/>
+    <owl:disjointWith rdf:resource="#Oven"/>
+    <owl:disjointWith rdf:resource="#Hood"/>
+    <rdfs:subClassOf rdf:resource="#BigAppliance"/>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Dishwasher"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Grill"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Material">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Property"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Color"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Shortcut"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Location">
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/location.xml</annotationPropertySynonyms>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Object"/>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:ID="containedIn"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+        <owl:someValuesFrom>
+          <owl:Class rdf:about="#Device"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Vocabulary"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Function"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Device"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Special">
+    <rdfs:subClassOf rdf:resource="#Function"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Basic"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Advanced"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Other"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Off">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#On"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Set"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Basic"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Exterior">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Interior"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SmallAppliance">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Device"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Level">
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/level.xml</annotationPropertySynonyms>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:minCardinality>
+        <owl:valuesFrom rdf:resource="#Location"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:about="#containedIn"/>
+        </owl:onProperty>
+        <owl:allValuesFrom rdf:resource="#Object"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#contains"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Location"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Vocabulary"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#SetTargetFreezingTemperature">
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith rdf:resource="#SetStopTime"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetEvent"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetTemperature"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Kitchen">
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith rdf:resource="#Garage"/>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+    <owl:disjointWith rdf:resource="#WorkShop"/>
+    <owl:disjointWith rdf:resource="#DwelingSpace"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Garret"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#LivingRoom"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Property">
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/property.xml</annotationPropertySynonyms>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:someValuesFrom>
+              <owl:Class rdf:about="#Device"/>
+            </owl:someValuesFrom>
+            <owl:onProperty>
+              <owl:ObjectProperty rdf:ID="belongsTo"/>
+            </owl:onProperty>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:valuesFrom>
+              <owl:Class rdf:about="#Device"/>
+            </owl:valuesFrom>
+            <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+            >1</owl:maxCardinality>
+            <owl:onProperty>
+              <owl:ObjectProperty rdf:about="#belongsTo"/>
+            </owl:onProperty>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Vocabulary"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#DecreaseIntenzity">
+    <owl:disjointWith rdf:resource="#IncreaseIntenzity"/>
+    <owl:disjointWith rdf:resource="#InceraseTemperature"/>
+    <owl:disjointWith rdf:resource="#DecreaseTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Remember"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Remind"/>
+    <rdfs:subClassOf rdf:resource="#Special"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SetTargetTemperature">
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetPower"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStopTime"/>
+    <owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith rdf:resource="#SetEvent"/>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="#Elevator">
+    <owl:disjointWith rdf:resource="#Stairway"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Ascend"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Balcony">
+    <rdfs:subClassOf rdf:resource="#Exterior"/>
+    <owl:disjointWith rdf:resource="#Garden"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Terrace"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#OuterGarage"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SetPower">
+    <owl:disjointWith rdf:resource="#SetTargetTemperature"/>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+    <owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetEvent"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#SetTargetFanSpeed"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <owl:disjointWith rdf:resource="#SetStopTime"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Ascend">
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Terrace">
+    <owl:disjointWith rdf:resource="#Garden"/>
+    <owl:disjointWith rdf:resource="#Balcony"/>
+    <owl:disjointWith rdf:resource="#OuterGarage"/>
+    <rdfs:subClassOf rdf:resource="#Exterior"/>
+  </owl:Class>
+  <owl:Class rdf:about="#DVD">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Electronic"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#HiFiSystem"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#PersonalComputer"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#DVB-TReceiver"/>
+    <owl:disjointWith rdf:resource="#HomeTheatre"/>
+    <owl:disjointWith rdf:resource="#Television"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Color">
+    <rdfs:subClassOf rdf:resource="#Property"/>
+    <owl:disjointWith rdf:resource="#Material"/>
+    <owl:disjointWith rdf:resource="#Shortcut"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Electronic">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Device"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Garret">
+    <owl:disjointWith rdf:resource="#ChildrensRoom"/>
+    <owl:disjointWith rdf:resource="#Cabinet"/>
+    <owl:disjointWith rdf:resource="#Kitchen"/>
+    <owl:disjointWith rdf:resource="#Garage"/>
+    <owl:disjointWith rdf:resource="#WorkShop"/>
+    <owl:disjointWith rdf:resource="#DwelingSpace"/>
+    <owl:disjointWith rdf:resource="#LivingRoom"/>
+    <owl:disjointWith rdf:resource="#BedRoom"/>
+    <owl:disjointWith rdf:resource="#BathRoom"/>
+    <owl:disjointWith rdf:resource="#ToiletRoom"/>
+    <rdfs:subClassOf rdf:resource="#Space"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Grill">
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith rdf:resource="#Refrigerator"/>
+    <owl:disjointWith rdf:resource="#Hood"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Stove"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#BigAppliance"/>
+    <owl:disjointWith rdf:resource="#Dishwasher"/>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith rdf:resource="#Freezer"/>
+    <owl:disjointWith rdf:resource="#Oven"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Device">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:ID="isExactlyIn"/>
+        </owl:onProperty>
+        <owl:someValuesFrom>
+          <owl:Class rdf:ID="AccurateLocation"/>
+        </owl:someValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Location"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:valuesFrom rdf:resource="#Location"/>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:ID="isIn"/>
+        </owl:onProperty>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:maxCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int"
+        >1</owl:maxCardinality>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:about="#isExactlyIn"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Property"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="hasProperty"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#disposeOf"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Function"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Vocabulary"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:about="#containedIn"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Location"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <annotationPropertySynonyms rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >http://www.linkTo.ontology/device.xml</annotationPropertySynonyms>
+    <rdfs:subClassOf>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:onProperty>
+              <owl:TransitiveProperty rdf:about="#containedIn"/>
+            </owl:onProperty>
+            <owl:someValuesFrom rdf:resource="#Location"/>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:onProperty>
+              <owl:TransitiveProperty rdf:about="#containedIn"/>
+            </owl:onProperty>
+            <owl:someValuesFrom rdf:resource="#Ascend"/>
+          </owl:Restriction>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Function"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Other">
+    <rdfs:subClassOf rdf:resource="#Function"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Basic"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Advanced"/>
+    <owl:disjointWith rdf:resource="#Special"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Interior">
+    <owl:disjointWith rdf:resource="#Exterior"/>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+  <owl:Class rdf:about="#CallTo">
+    <owl:disjointWith rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SwitchOver"/>
+    <owl:disjointWith rdf:resource="#DeleteEvent"/>
+    <owl:disjointWith rdf:resource="#AddContact"/>
+    <owl:disjointWith rdf:resource="#DeleteContact"/>
+    <owl:disjointWith rdf:resource="#PickUpPhone"/>
+    <owl:disjointWith rdf:resource="#HangUpPhone"/>
+    <rdfs:subClassOf rdf:resource="#Advanced"/>
+  </owl:Class>
+  <owl:Class rdf:about="#OtherDevice">
+    <rdfs:subClassOf rdf:resource="#Device"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Basic">
+    <rdfs:subClassOf rdf:resource="#Function"/>
+    <owl:disjointWith rdf:resource="#Advanced"/>
+    <owl:disjointWith rdf:resource="#Special"/>
+    <owl:disjointWith rdf:resource="#Other"/>
+  </owl:Class>
+  <owl:Class rdf:about="#PersonalComputer">
+    <owl:disjointWith rdf:resource="#VHS"/>
+    <owl:disjointWith rdf:resource="#HiFiSystem"/>
+    <owl:disjointWith rdf:resource="#Notebook"/>
+    <owl:disjointWith rdf:resource="#DVB-TReceiver"/>
+    <owl:disjointWith rdf:resource="#DVD"/>
+    <owl:disjointWith rdf:resource="#HomeTheatre"/>
+    <owl:disjointWith rdf:resource="#Television"/>
+    <rdfs:subClassOf rdf:resource="#Electronic"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Remember">
+    <owl:disjointWith rdf:resource="#IncreaseIntenzity"/>
+    <owl:disjointWith rdf:resource="#DecreaseIntenzity"/>
+    <owl:disjointWith rdf:resource="#InceraseTemperature"/>
+    <owl:disjointWith rdf:resource="#DecreaseTemperature"/>
+    <owl:disjointWith rdf:resource="#Remind"/>
+    <rdfs:subClassOf rdf:resource="#Special"/>
+  </owl:Class>
+  <owl:Class rdf:about="#WallLamp">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lamp"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#TableLamp"/>
+    <owl:disjointWith rdf:resource="#SuspensionLamp"/>
+  </owl:Class>
+  <owl:Class rdf:about="#AccurateLocation">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:TransitiveProperty rdf:ID="determinates"/>
+        </owl:onProperty>
+        <owl:someValuesFrom rdf:resource="#Device"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Stove">
+    <owl:disjointWith rdf:resource="#Dishwasher"/>
+    <owl:disjointWith rdf:resource="#Hood"/>
+    <owl:disjointWith rdf:resource="#Grill"/>
+    <rdfs:subClassOf rdf:resource="#BigAppliance"/>
+    <owl:disjointWith rdf:resource="#Oven"/>
+    <owl:disjointWith rdf:resource="#MicrowaveOven"/>
+    <owl:disjointWith rdf:resource="#Refrigerator"/>
+    <owl:disjointWith rdf:resource="#Dryer"/>
+    <owl:disjointWith rdf:resource="#Freezer"/>
+  </owl:Class>
+  <owl:Class rdf:about="#On">
+    <owl:disjointWith rdf:resource="#Off"/>
+    <owl:disjointWith rdf:resource="#Set"/>
+    <rdfs:subClassOf rdf:resource="#Basic"/>
+    <owl:sameAs rdf:resource="http://protege.stanford.edu/plugins/owl/protege#ExternalResource"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Lamp">
+    <owl:disjointWith rdf:resource="#OtherLamps"/>
+    <rdfs:subClassOf rdf:resource="#Light"/>
+  </owl:Class>
+  <owl:Class rdf:about="#SetTargetFanSpeed">
+    <owl:disjointWith rdf:resource="#SetStartTime"/>
+    <owl:disjointWith rdf:resource="#SetTargetCoolingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetTargetFreezingTemperature"/>
+    <owl:disjointWith rdf:resource="#SetProgramChoice"/>
+    <owl:disjointWith rdf:resource="#SetIntenzity"/>
+    <owl:disjointWith rdf:resource="#SetEvent"/>
+    <owl:disjointWith rdf:resource="#SetTv"/>
+    <rdfs:subClassOf rdf:resource="#Set"/>
+    <owl:disjointWith rdf:resource="#SetStopTime"/>
+    <owl:disjointWith rdf:resource="#SetTargetTemperature"/>
+    <owl:disjointWith rdf:resource="#SetPower"/>
+    <owl:disjointWith rdf:resource="#SetAlarmClock"/>
+    <owl:disjointWith rdf:resource="#SetNumberOfCooker"/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="#isAssociatedTo">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary"/>
+    </owl:inverseOf>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Property"/>
+          <owl:Class rdf:about="#Function"/>
+          <owl:Class rdf:about="#Object"/>
+          <owl:Class rdf:about="#Level"/>
+          <owl:Class rdf:about="#Device"/>
+          <owl:Class rdf:about="#Location"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="#Vocabulary"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#usedBy">
+    <rdfs:domain rdf:resource="#Function"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#disposeOf"/>
+    </owl:inverseOf>
+    <rdfs:range rdf:resource="#Device"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasAssociatedVocabulary">
+    <owl:inverseOf rdf:resource="#isAssociatedTo"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Location"/>
+          <owl:Class rdf:about="#Object"/>
+          <owl:Class rdf:about="#Device"/>
+          <owl:Class rdf:about="#Function"/>
+          <owl:Class rdf:about="#Property"/>
+          <owl:Class rdf:about="#Level"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:range rdf:resource="#Vocabulary"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#disposeOf">
+    <rdfs:domain rdf:resource="#Device"/>
+    <owl:inverseOf rdf:resource="#usedBy"/>
+    <rdfs:range rdf:resource="#Function"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasProperty">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#belongsTo"/>
+    </owl:inverseOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:domain rdf:resource="#Device"/>
+    <rdfs:range rdf:resource="#Property"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#belongsTo">
+    <rdfs:range rdf:resource="#Device"/>
+    <owl:inverseOf rdf:resource="#hasProperty"/>
+    <rdfs:domain rdf:resource="#Property"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#contains">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Location"/>
+          <owl:Class rdf:about="#Ascend"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Object"/>
+          <owl:Class rdf:about="#Level"/>
+          <owl:Class rdf:about="#Location"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <owl:inverseOf>
+      <owl:TransitiveProperty rdf:about="#containedIn"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:ID="annotationPropertySynonyms">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </owl:DatatypeProperty>
+  <owl:TransitiveProperty rdf:about="#isExactlyIn">
+    <rdfs:range rdf:resource="#AccurateLocation"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Device"/>
+    <owl:inverseOf>
+      <owl:TransitiveProperty rdf:about="#determinates"/>
+    </owl:inverseOf>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="#containedIn">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Object"/>
+          <owl:Class rdf:about="#Level"/>
+          <owl:Class rdf:about="#Location"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <owl:inverseOf rdf:resource="#contains"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Ascend"/>
+          <owl:Class rdf:about="#Location"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="#determinates">
+    <rdfs:domain rdf:resource="#AccurateLocation"/>
+    <rdfs:range rdf:resource="#Device"/>
+    <owl:inverseOf rdf:resource="#isExactlyIn"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="#isIn">
+    <rdfs:domain rdf:resource="#Device"/>
+    <rdfs:range rdf:resource="#Location"/>
+    <owl:inverseOf>
+      <owl:TransitiveProperty rdf:ID="has"/>
+    </owl:inverseOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="#has">
+    <rdfs:domain rdf:resource="#Location"/>
+    <rdfs:range rdf:resource="#Device"/>
+    <owl:inverseOf rdf:resource="#isIn"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+  </owl:TransitiveProperty>
+  <owl:SymmetricProperty rdf:ID="connectedTo">
+    <rdfs:range rdf:resource="#Device"/>
+    <owl:inverseOf rdf:resource="#connectedTo"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="#Device"/>
+  </owl:SymmetricProperty>
+  <owl:AllDifferent/>
 </rdf:RDF>
+
 <!-- Created with Protege (with OWL Plugin 3.4, Build 533)  http://protege.stanford.edu -->

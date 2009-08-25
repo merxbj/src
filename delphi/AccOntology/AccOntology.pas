@@ -36,6 +36,8 @@ type
     Label8: TLabel;
     edLokalita: TEdit;
     Label10: TLabel;
+    cbLanguage: TComboBox;
+    Label9: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ZobrazMenu();
     procedure LoadOnotology();
@@ -57,6 +59,7 @@ type
     procedure Pidejzazen1Click(Sender: TObject);
     procedure Smazazen1Click(Sender: TObject);
     procedure Info1Click(Sender: TObject);
+    procedure cbLanguageChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -184,6 +187,7 @@ end;
 procedure TForm1.VypisInstanceZarizeni(instanceOf: string);
 begin
   SelectedDeviceInstances.Clear();
+  SelectedDeviceInstances.SetLanguage(cbLanguage.Text);
   ontoCore.GetClassInstances(xmlonto, instanceOf, @SelectedDeviceInstances);
   DevicesInstancesList.Clear();
   if ((SelectedDeviceInstances <> nil) and (SelectedDeviceInstances.GetSize() > 0)) then
@@ -224,16 +228,25 @@ var
   Location: TLocation;
 begin
 
-  Location.IsInstance := SelectedLocationInstance.IsFakeInstance;
+  // priprava lokace
+  Location.IsInstance := not SelectedLocationInstance.IsFakeInstance;
   Location.Name := SelectedLocationInstance.Name;
 
   Location.Levels := TStringList.Create();
 
-  // Vsimnete si, ze nasledujici dva levely lokace maji pro OntoCore funkce vyznam pouze tehdy,
-  // pokud se jedna o novou instanci - a v tom pripade se bude zatim podporovat jen object_1 a level_1
   Location.Levels.Add('Object_1'); // zatim to tak bude vzdy
   Location.Levels.Add('Level_1'); // zatim to tak bude vzdy
   Location.Levels.Add(SelectedLocationLeaf);
+
+  // priprava zarizeni
+  SelectedDevice.AccurateLocation.Name := edLokalita.Text;
+
+  // TODO tohle ne! To je jen z nedostatku casu
+  SelectedDevice.Properties[1].Value := edMaterial.Text;
+  SelectedDevice.Properties[2].Value := edZkratka.Text;
+  SelectedDevice.Properties[3].Value := edBarva.Text;
+
+  SelectedDevice.VocabularyLanguage := cbLanguage.Text;
 
   // dalsi mocne volani!
   OntoCore.AddDeviceToOntology(XMLOnto, SelectedDevice, Location);
@@ -289,6 +302,7 @@ begin
     edZkratka.Text :=  selectedDeviceInstance^.Shortcut;
     edBarva.Text := selectedDeviceInstance^.Color;
     edMaterial.Text := selectedDeviceInstance^.Material;
+    edLokalita.Enabled := selectedDevice^.AccurateLocation.Allowed;
     edLokalita.Text := selectedDeviceInstance^.AccurateLocality;
 
   end;
@@ -329,6 +343,13 @@ begin
   doc.Active := false;
   doc.LoadFromFile();
   doc.Active := true;
+
+end;
+
+procedure TForm1.cbLanguageChange(Sender: TObject);
+begin
+
+  RefreshLists();
 
 end;
 

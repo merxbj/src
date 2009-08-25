@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="DwelingSpace" Language="CZ">
+			<Synonym>Obytný prostor</Synonym>
+			<Synonym>Obyvatelný prostor</Synonym>
+		</Label>
+		<Label Name="DwelingSpace" Language="EN">
+			<Synonym>Dweling space</Synonym>
+		</Label>
+</Vocabulary>

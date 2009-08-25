@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="OuterGarage" Language="CZ">
+			<Synonym>Před garáží</Synonym>
+			<Synonym>U garáže</Synonym>
+			<Synonym>Garáž</Synonym>
+			<Synonym>Garáže</Synonym>
+		</Label>
+		<Label Name="OuterGarage" Language="EN">
+			<Synonym>Outer garage</Synonym>
+		</Label>
+</Vocabulary>

@@ -17,18 +17,15 @@ type
 
   TProperty = record
     Name: string;
+    Value: string;
     Allowed: boolean;
   end;
 
-  TLocRestrict = record
-    Levels: TStringList; // Presha cesta k lokaci, do ktere muzeme zaradit zarizeni
-    Name: string; // Muze to byt list! (napr. pouze do kuchyne)
+  TAccurateLocation = record
+    Name: string;
+    Allowed: boolean;
   end;
 
-  TVocabulary = record
-    Path: string;
-    Language: string;
-  end;
 
   TDevice = record
     Category: string;
@@ -36,9 +33,8 @@ type
     Literal: string;
     ResSheet: string;
     UISheet: string;
-    LocRestrict: TLocRestrict;
-    HasAccurateLocality: boolean;
-    Vocabulary: TVocabulary;
+    AccurateLocation: TAccurateLocation;
+    VocabularyLanguage: string;
 
     Functions: array [1..30] of TFunction;
     Properties: array [1..3] of TProperty;
@@ -66,9 +62,7 @@ type
                 function ParseSingleFunction(DeviceFunction: IXMLNode; Func: PFunction) : boolean;
               function ParseProperties(DeviceProperties: IXMLNodeList; Device: PDevice) : boolean;
                 function ParseSingleProperty(DeviceProperty: IXMLNode; Prop: PProperty) : boolean;
-              function ParseLocalityRestriction(LocalityRestriction: IXMLNode; Device: PDevice) : boolean;
               function ParseAccurateLocality(AccurateLocality: IXMLNode; Device: PDevice) : boolean;
-              function ParseVocabulary(Vocabulary: IXMLNode; Device: PDevice) : boolean;
 
       // Zde by mohly byt jine funkce
       function ParseLevels(Levels: IXMLNodeList; ParsedLevels: PStringList) : integer;
@@ -313,12 +307,8 @@ implementation
         Success := ParseFunctions(DeviceProperty.ChildNodes, Device)
       else if (CompareText(PropertyName, 'properties') = 0) then
         Success := ParseProperties(DeviceProperty.ChildNodes, Device)
-      else if (CompareText(PropertyName, 'localityRestriction') = 0) then
-        Success := ParseLocalityRestriction(DeviceProperty, Device)
       else if (CompareText(PropertyName, 'accurateLocality') = 0) then
         Success := ParseAccurateLocality(DeviceProperty, Device)
-      else if (CompareText(PropertyName, 'vocabulary') = 0) then
-        Success := ParseVocabulary(DeviceProperty, Device)
       else
         ; // Nezname vlastnosti budeme zatim proste ignorovat
 
@@ -484,48 +474,6 @@ implementation
   end;
 
 
-  // ParseLocalityRestriction
-  //    Parsovaci funkce pro nastaveni restrikce lokality
-  
-  function TConfigProcessor.ParseLocalityRestriction(LocalityRestriction: IXMLNode; Device: PDevice) : boolean;
-  var
-    Success: boolean;
-    Attributes: IXMLNodeList;
-    ParsedLocalityRestriction: TLocRestrict;
-    RestrictedLevels: TStringList;
-  begin
-
-    Success := true;
-    RestrictedLevels := TStringList.Create();
-
-    try
-
-      Attributes := LocalityRestriction.AttributeNodes;
-      if ((Attributes <> nil) and (Attributes.Count > 0)) then
-      begin
-
-        if (ParseLevels(Attributes, @RestrictedLevels) > 0) then
-          ParsedLocalityRestriction.Levels := RestrictedLevels
-        else
-          Success := false; // Locality restriction bez jeji definice? Chyba!
-
-        if (Success) then
-        begin
-          ParsedLocalityRestriction.Name := Attributes['name'].Text;
-
-          Device^.LocRestrict := ParsedLocalityRestriction;
-        end;
-
-      end;
-
-    except
-      Success := false;
-    end;
-
-    ParseLocalityRestriction := Success;
-  end;
-
-
   // ParseAccurateLocality
   //    Parsovaci funkce pro nastaveni povoleni presne lokace
 
@@ -549,46 +497,13 @@ implementation
 
       end;
 
-      Device^.HasAccurateLocality := Allowed;
+      Device^.AccurateLocation.Allowed := Allowed;
 
     except
       Success := false;
     end;
 
     ParseAccurateLocality := Success;
-  end;
-
-
-  // ParseVocabulary
-  //    Parsovaci funkce pro nastaveni cesty a jazyku slovniku synonym
-
-  function TConfigProcessor.ParseVocabulary(Vocabulary: IXMLNode; Device: PDevice) : boolean;
-  var
-    Success: boolean;
-    Attributes: IXMLNodeList;
-    ParsedVocabulary: TVocabulary;
-  begin
-
-    Success := true;
-
-    try
-
-      Attributes := Vocabulary.AttributeNodes;
-      if ((Attributes <> nil) and (Attributes.Count > 0)) then
-      begin
-
-        ParsedVocabulary.Path := Attributes['path'].Text;
-        ParsedVocabulary.Language := Attributes['language'].Text;
-
-        Device^.Vocabulary := ParsedVocabulary;
-
-      end;
-
-    except
-      Success := false;
-    end;
-
-    ParseVocabulary := Success;
   end;
 
   // ParseLevels:

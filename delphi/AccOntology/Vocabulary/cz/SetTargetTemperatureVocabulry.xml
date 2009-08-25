@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Vocabulary>
-		<Label Name="SetTargetTemperature" Language="CZ">
-			<Synonym>Teplota</Synonym>
-			<Synonym>Teplotu</Synonym>
-		</Label>
-</Vocabulary>

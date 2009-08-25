@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetStartTime" Language="CZ">
+			<Synonym>Startovní čas</Synonym>
+			<Synonym>Počátek</Synonym>
+			<Synonym>Start</Synonym>
+		</Label>
+		<Label Name="SetStartTime" Language="EN">
+			<Synonym>Begin</Synonym>
+			<Synonym>Go</Synonym>
+			<Synonym>Start</Synonym>
+		</Label>
+</Vocabulary>

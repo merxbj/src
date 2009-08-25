@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetProgramChoice" Language="CZ">
+			<Synonym>Výběr programu</Synonym>
+			<Synonym>Program</Synonym>
+		</Label>
+		<Label Name="SetProgramChoice" Language="EN">
+			<Synonym>Program choice</Synonym>
+			<Synonym>Canal choice</Synonym>
+		</Label>
+</Vocabulary>

@@ -4,7 +4,7 @@ interface
 
 uses
   xmldom, XMLIntf, msxmldom, XMLDoc, sysutils, Classes, StrUtils, OntoInstances,
-  OntoUtils;
+  OntoUtils, OntoVocabulary;
 
 type
 
@@ -20,6 +20,9 @@ type
 
   TOntoCore = class
     public
+      // konstrukce / destrukce
+      constructor Create; overload;
+
       // Pristupove funkce
       function GetClassLeafs(const Ontology: IXMLDocument; const ClassName: string; Leafs: PStringList) : integer;
       function GetClassInstances(const Ontology: IXMLDocument; const Element: string; Instances: PInstances) : integer;
@@ -28,6 +31,9 @@ type
       function RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstance: PInstance) : boolean;
 
     private
+      // membery
+      Vocabulary: TVocabulary;
+
       // Implementace vyhledavacich funkci
       function FindClassLeafsRecursively(const NodeList: IXMLNodeList; ClassName: string; Leafs: PStringList) : integer;
       function FindClassInNode(const Node: IXMLNode; const Element: string) : string;
@@ -35,7 +41,6 @@ type
 
       // Implementace pridavacich funkci
       function WriteDeviceImplementation(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
-      function WriteDeviceImplementationGeneric(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
 
       // Silna funkce :)
       function FindSpecificNode(ExploredNodes: IXMLNodeList; Criterium: PToFunction;  Data: Pointer; var FoundNode: IXMLNode; StartOver: boolean = true) : boolean;
@@ -46,13 +51,14 @@ type
       function IsClassDefinitionOrReference(CheckedNode: IXMLNode; Data: Pointer) : boolean;
       function IsObjectDefinitionOrReference(CheckedNode: IXMLNode; Data: Pointer) : boolean;
       function IsObjectDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
+      function IsProperyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
 
       // Pomocne funkce
       function SaveOntologyElsewhere(Ontology: IXMLDocument) : string;
       function GetAdditionalLocationInfo(Location: PLocation; Ontology: IXMLDocument) : boolean;
       function VerifyGenericPartOfOntology(Ontology: IXMLDocument; Device: PDevice; Location: PLocation) : boolean;
-      function AddFunctionsToDeviceGeneric(TargetNode: IXMLNode; Device: PDevice) : boolean;
-      function AddPropertiesToDeviceGeneric(TargetNode: IXMLNode; Device: PDevice) : boolean;
+      function AddFunctionsToDevice(TargetNode: IXMLNode; Device: PDevice) : boolean;
+      function AddPropertiesToDevice(TargetNode: IXMLNode; Device: PDevice) : boolean;
       function AddNewClass(Ontology: IXMLDocument; ClassName: string; SubClassOf: PStringList) : boolean;
       function VerifyGenericDefinitionOfFunctions(Ontology: IXMLDocument; Device: PDevice) : boolean;
       function VerifyGenericDefinitionOfProperties(Ontology: IXMLDocument; Device: PDevice) : boolean;
@@ -61,7 +67,13 @@ type
       function AddDeviceToLocation(LocationNode: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
       function CreateNewLocation(ImplementationLocation: IXMLNode; Location: PLocation) : IXMLNode;
       function IsOurInstance(InstanceNode: IXMLNode) : boolean;
-      function ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
+      function ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance; Language: string) : boolean;
+      function AddMandatoryNodes(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
+      function CreateVocabularyElement(InstanceNode: IXMLNode; InstanceName: string) : boolean;
+      function UpdateFromSmallVocabulary(InstanceName: string; InstanceClass: string) : boolean;
+      function UpdateVocabulary(InstanceName: string; Language: string; Literal: string) : boolean;
+      function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string; Language: string) : string;
+      function SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
     end;
 
   const
@@ -81,8 +93,19 @@ type
 
 implementation
 
-  // interfacove metody
+  // konstrulce
 
+  constructor TOntoCore.Create;
+  begin
+
+    inherited;
+
+    Vocabulary := TVocabulary.Create();
+    Vocabulary.LoadFromFile('./Data/Vocabulary.xml');
+
+  end;
+
+  // interfacove metody
 
   // GetClassLeafs:
   //    Metoda, ktera poskytne k zadanemu elementu, vsechny jeho listy
@@ -244,7 +267,6 @@ implementation
   var
     node:  IXMLNode;
     size, matches: integer;
-    attribute: OleVariant;
     instanceInfo: TInstance;
   begin
 
@@ -263,7 +285,7 @@ implementation
         if (CompareText(node.NodeName, ClassName) = 0) then
         begin
 
-            ExtractInstanceInformation(node, @instanceInfo); // ziskejme informace o instanci
+            ExtractInstanceInformation(node, @instanceInfo, Instances^.GetLanguage()); // ziskejme informace o instanci
             Instances^.Add(instanceInfo); // pridejme ji do seznamu
             matches := matches + 1;
 
@@ -299,7 +321,7 @@ implementation
     if ((Success) and (FindSpecificNode(GenericOntology.ChildNodes, IsImplementationLocation, Nil, DesiredNode))) then
       Success := VerifyGenericPartOfOntology(GenericOntology, Device, @Location);
 
-    if (Success) and (WriteDeviceImplementationGeneric(DesiredNode, Device, @Location)) then
+    if (Success) and (WriteDeviceImplementation(DesiredNode, Device, @Location)) then
       AddDeviceToGenericOntology := SaveOntologyElsewhere(GenericOntology)
     else
       AddDeviceToGenericOntology := '';
@@ -336,16 +358,20 @@ implementation
 
     Success := true;
 
-    if (Location.IsInstance) then
+    if ((Success) and (Location.IsInstance)) then
       Success := GetAdditionalLocationInfo(@Location, Ontology);
 
     if ((Success) and (FindSpecificNode(Ontology.ChildNodes, IsImplementationLocation, Nil, DesiredNode))) then
-      Success := VerifyGenericPartOfOntology(Ontology, Device, @Location);
+      Success := VerifyGenericPartOfOntology(Ontology, Device, @Location)
+    else
+      Success := false;
 
     if (Success) and (WriteDeviceImplementation(DesiredNode, Device, @Location)) then
       AddDeviceToOntology := true
     else
       AddDeviceToOntology := false;
+
+    Vocabulary.SaveToFile('./Data/Vocabulary.xml');
 
   end;
 
@@ -478,7 +504,7 @@ implementation
   //    a nemela by zabrat prilis casu straveneho nad vysokou obecnosti.
   //    Tudiz tento kod pisi namiru ...
 
-  function TOntoCore.WriteDeviceImplementationGeneric(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
+  function TOntoCore.AddMandatoryNodes(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
   var
     Node: IXMLNode;
     Success: boolean;
@@ -490,22 +516,16 @@ implementation
 
       Node := ImplementationLocation.AddChild('owl:sameAs'); // vytvor pocatecni tag
       Node := Node.AddChild('Level', NameSpaceBASE); // zacni, jako obvykle, s patrem
+      SubscribeNode(Node); // oznacime si nove vytvorene patro
 
       Node.Attributes['rdf:ID'] := Location^.Levels[1]; // jmeno instance jsme dostali parametrem
       Node := Node.AddChild('containedIn');
       Node := Node.AddChild('Object');
       Node.Attributes['rdf:ID'] := Location^.Levels[0];
+      SubscribeNode(Node); // oznacime si nove vytvoreny object
+
       Node := Node.AddChild('contains');
       Node.Attributes['rdf:resource'] := concat('#',Location^.Levels[1]);
-
-      Node := Node.ParentNode.ParentNode.ParentNode;
-      Node := Node.AddChild('contains'); // nastesti mala ontologie obsahuje jen jednu mistnost
-      Node := Node.AddChild(Location^.Levels[2]); // Jakeho typu je nase mistnost?
-      Node.Attributes['rdf:ID'] := Location^.Name;
-      Node := Node.AddChild('containedIn');
-      Node.Attributes['rdf:resource'] := concat('#',Location^.Levels[1]);
-
-      AddDeviceToLocation(Node.ParentNode, Device, Location);
 
     except
 
@@ -513,20 +533,21 @@ implementation
 
     end;
 
-    WriteDeviceImplementationGeneric := Success;
+    AddMandatoryNodes := Success;
 
   end;
 
 
-  // AddFunctionsToDeviceGeneric:
+  // AddFunctionsToDevice:
   //    Metoda prida jednotlive funkce k zadane implementaci zarizeni
 
-  function TOntoCore.AddFunctionsToDeviceGeneric(TargetNode: IXMLNode; Device: PDevice) : boolean;
+  function TOntoCore.AddFunctionsToDevice(TargetNode: IXMLNode; Device: PDevice) : boolean;
   var
     Success: boolean;
     I: integer;
-    Node: IXMLNode;
+    Node, FuncNode: IXMLNode;
     SingleFunc: PFunction;
+    InstanceName: string;
   begin
 
     Success := true;
@@ -538,11 +559,16 @@ implementation
       while ((SingleFunc^.Name <> '') and (I <= 30)) do
       begin
 
+        InstanceName := GetNextInstanceOf(SingleFunc^.Name, TargetNode.OwnerDocument);
+
         Node := TargetNode.AddChild('disposeOf');
-        Node := Node.AddChild(SingleFunc^.Name);
-        Node.Attributes['rdf:ID'] := GetNextInstanceOf(SingleFunc^.Name, TargetNode.OwnerDocument);
-        Node := Node.AddChild('usedBy');
+        FuncNode := Node.AddChild(SingleFunc^.Name);
+        FuncNode.Attributes['rdf:ID'] := InstanceName;
+        Node := FuncNode.AddChild('usedBy');
         Node.Attributes['rdf:resource'] := GetDecoratedName(TargetNode.Attributes['rdf:ID']);
+
+        CreateVocabularyElement(FuncNode, InstanceName);
+        UpdateFromSmallVocabulary(InstanceName, SingleFunc^.Name);
 
         inc(I);
         SingleFunc := @Device^.Functions[I];
@@ -554,20 +580,21 @@ implementation
 
     end;
 
-    AddFunctionsToDeviceGeneric := Success;
+    AddFunctionsToDevice := Success;
 
   end;
 
 
-  // AddPropertiesToDeviceGeneric:
+  // AddPropertiesToDevice:
   //    Funkce prida jednotlive property k zadane implementaci zarizeni
- 
-  function TOntoCore.AddPropertiesToDeviceGeneric(TargetNode: IXMLNode; Device: PDevice) : boolean;
+
+  function TOntoCore.AddPropertiesToDevice(TargetNode: IXMLNode; Device: PDevice) : boolean;
   var
     Success: boolean;
     I: integer;
-    Node: IXMLNode;
+    Node, PropNode: IXMLNode;
     SingleProp: PProperty;
+    InstanceName: string;
   begin
 
     Success := true;
@@ -581,11 +608,16 @@ implementation
 
         if (SingleProp^.Allowed) then
         begin
+          InstanceName := GetNextInstanceOf(SingleProp^.Name, TargetNode.OwnerDocument);
+
           Node := TargetNode.AddChild('hasProperty');
-          Node := Node.AddChild(SingleProp^.Name);
-          Node.Attributes['rdf:ID'] := GetNextInstanceOf(SingleProp^.Name, TargetNode.OwnerDocument);
+          PropNode := Node.AddChild(SingleProp^.Name);
+          PropNode.Attributes['rdf:ID'] := InstanceName;
           Node := Node.AddChild('belongsTo');
           Node.Attributes['rdf:resource'] := GetDecoratedName(TargetNode.Attributes['rdf:ID']);
+
+          CreateVocabularyElement(PropNode, InstanceName);
+          UpdateVocabulary(InstanceName, Device^.VocabularyLanguage, SingleProp^.Value);
         end;
 
         inc(I);
@@ -598,7 +630,7 @@ implementation
 
     end;
 
-    AddPropertiesToDeviceGeneric := Success;
+    AddPropertiesToDevice := Success;
 
   end;
 
@@ -610,7 +642,7 @@ implementation
   function TOntoCore.VerifyGenericPartOfOntology(Ontology: IXMLDocument; Device: PDevice; Location: PLocation) : boolean;
   var
     Success: boolean;
-    FoundNode: IXMLNode;
+    FoundNode, ImplementationNode, SameAsNode: IXMLNode;
     SubClassOf: TStringList;
   begin
 
@@ -618,11 +650,16 @@ implementation
 
     try
 
-      SubClassOf := TStringList.Create();
+      // kontrola existence subclassof elementu
+      FindSpecificNode(Ontology.ChildNodes, IsImplementationLocation, Nil, ImplementationNode);
+      SameAsNode := ImplementationNode.ChildNodes.FindNode('sameAs', NameSpaceOWL);
+      if (SameAsNode = nil) then
+        AddMandatoryNodes(ImplementationNode, Device, Location);
 
       // kontrola existence typu zarizeni:
       if (not FindSpecificNode(Ontology.ChildNodes, IsClassDefinitionOrReference, @Device^.DeviceType, FoundNode)) then
       begin
+        SubClassOf := TStringList.Create();
         SubClassOf.Clear();
         SubClassOf.Add(Device^.Category);
         SubClassOf.Add('Device');
@@ -708,7 +745,7 @@ implementation
       if (CheckedNode.NodeType = ntElement) then
       begin
 
-        if (CompareText(OleVariantToStr(CheckedNode.GetAttributeNS('ID', NameSpaceRDF)), ObjectName^) = 0) then
+        if (CompareText(OleVariantToStr(CheckedNode.Attributes['rdf:ID']), ObjectName^) = 0) then
         begin
 
           Found := true;
@@ -1021,7 +1058,7 @@ implementation
   function TOntoCore.WriteDeviceImplementation(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
   var
     Success: boolean;
-    Node, FoundLocation: IXMLNode;
+    FoundLocation: IXMLNode;
   begin
 
     Success := true;
@@ -1073,13 +1110,21 @@ implementation
   function TOntoCore.GetNextInstanceOf(TargetClass: string; Ontology: IXMLDocument) : string;
   var
     Instances: TInstances;
+    ImplementationNode: IXMLNode;
+    Count: integer;
   begin
 
     // nejprve ziskame seznam vsechn instanci
-    GetClassInstances(Ontology, TargetClass, @Instances);
+    Count := 0;
+    Instances := TInstances.Create();
+    if (FindSpecificNode(Ontology.ChildNodes, IsImplementationLocation, Nil, ImplementationNode)) then
+      Count := FindInstancesOf(ImplementationNode.ChildNodes, TargetClass, @Instances);
 
     // vysledne cislo zjistime velice naivne!
-    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(Instances.GetSize() + 1));
+    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(Count + 1));
+
+    // uklid
+    Instances.Free();
 
   end;
 
@@ -1091,48 +1136,47 @@ implementation
   var
     Success: boolean;
     Node, DeviceNode: IXMLNode;
-    DeviceInstanceName: string;
+    DeviceInstanceName, AccLocationName, DeviceName: string;
   begin
 
-    Success := true;
-
     try
+      DeviceName := GetNextInstanceOf(Device^.DeviceType, LocationNode.OwnerDocument);
 
       Node := LocationNode.AddChild('has');
       DeviceNode := Node.AddChild(Device^.DeviceType);
-      DeviceInstanceName := GetNextInstanceOf(Device^.DeviceType, LocationNode.OwnerDocument);
+      DeviceInstanceName := DeviceName;
       DeviceNode.Attributes['rdf:ID'] := DeviceInstanceName;
       Node := DeviceNode.AddChild('isIn');
       Node.Attributes['rdf:resource'] := GetDecoratedName(Location^.Name);
 
       Success := false;
-      if (AddFunctionsToDeviceGeneric(DeviceNode, Device)) then // Pridejme funkce
-        if (AddPropertiesToDeviceGeneric(DeviceNode, Device)) then // Pridejme parametry
+      if (AddFunctionsToDevice(DeviceNode, Device)) then // Pridejme funkce
+        if (AddPropertiesToDevice(DeviceNode, Device)) then // Pridejme parametry
           Success := true;
 
-      if ((Success) and (Device^.HasAccurateLocality)) then
+      if ((Success) and (Device^.AccurateLocation.Allowed)) then
       begin
+        AccLocationName := GetNextInstanceOf('AccurateLocation', LocationNode.OwnerDocument);
+
         Node := DeviceNode.AddChild('isExactlyIn');
         Node := Node.AddChild('AccurateLocation');
-        Node.Attributes['rdf:ID'] := GetNextInstanceOf('AccurateLocation', LocationNode.OwnerDocument);
+        Node.Attributes['rdf:ID'] := AccLocationName;
         Node := Node.AddChild('determinates');
         Node.Attributes['rdf:resource'] := GetDecoratedName(DeviceInstanceName);
 
+        CreateVocabularyElement(DeviceNode, DeviceInstanceName);
+        UpdateVocabulary(AccLocationName, Device^.VocabularyLanguage, Device^.AccurateLocation.Name);
+
       end;
 
-      // TODO<MERXBJ> Temporarily disabled!!!!!!!!!!
-      //  Prozatim zustava disabled, protoze porad presne nevime, jak vocabulary funguji ...
-
-      if ((Success) and (Device^.Vocabulary.Path <> '')) and false then
+      if (Success) then
       begin
-        Node := DeviceNode.AddChild('hasAssociatedVocabulary');
-        Node := Node.AddChild('');
+        CreateVocabularyElement(DeviceNode, DeviceInstanceName);
+        UpdateFromSmallVocabulary(DeviceInstanceName, Device^.DeviceType);
       end;
 
       // Jeste navic si zarizeni oznacime tak, abychom ho poznali
-      Node := DeviceNode.AddChild('rdfs:comment');
-      Node.Attributes['rdf:datatype'] := 'http://www.w3.org/2001/XMLSchema#string';
-      Node.Text := SubscribeText;
+      SubscribeNode(DeviceNode);
 
     except
 
@@ -1151,7 +1195,7 @@ implementation
 
   function TOntoCore.CreateNewLocation(ImplementationLocation: IXMLNode; Location: PLocation) : IXMLNode;
   var
-    Level, Space, Contains, ContainedIn: IXMLNode;
+    Level, Space, Contains, ContainedIn, Node: IXMLNode;
     LevelName: string;
   begin
 
@@ -1171,6 +1215,12 @@ implementation
       Space.Attributes['rdf:ID'] := Location^.Name;
       ContainedIn := Space.AddChild('containedIn');
       ContainedIn.Attributes['rdf:resource'] := GetDecoratedName(Location^.Levels[1]);
+
+      CreateVocabularyElement(Space, Location^.Name);
+      UpdateFromSmallVocabulary(Location^.Name, Location^.Levels[Location^.Levels.Count - 1]);
+
+      // oznacime si namy vytvorenou lokaci
+      SubscribeNode(Space);
 
     end;
 
@@ -1198,6 +1248,8 @@ implementation
       DeviceImplementation.ParentNode.ParentNode.ChildNodes.Remove(DeviceImplementation.ParentNode);
 
     end;
+
+    RemoveDeviceFromOntology := true;
 
   end;
 
@@ -1235,7 +1287,7 @@ implementation
   // ExtractInstanceInformation
   //    Funkce ziska presne informace o zadane instanci a ulozi je do tridy TInstance
 
-  function TOntoCore.ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
+  function TOntoCore.ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance; Language: String) : boolean;
   var
     attribute: String;
   begin
@@ -1243,12 +1295,158 @@ implementation
     if (InstanceNode <> nil) then
     begin
 
-      attribute := InstanceNode.GetAttributeNS('ID', NameSpaceRDF);
+      attribute := OleVariantToStr(InstanceNode.Attributes['rdf:ID']);
 
       instanceInfo^.name := GetExactName(OleVariantToStr(attribute));
       instanceInfo^.CreatedByThisApp := IsOurInstance(InstanceNode);
+      instanceInfo^.Shortcut := GetPropertyTranslatedValue(InstanceNode, 'Shortcut', Language);
+      instanceInfo^.Material := GetPropertyTranslatedValue(InstanceNode, 'Material', Language);
+      instanceInfo^.Color := GetPropertyTranslatedValue(InstanceNode, 'Color', Language);
+      instanceInfo^.AccurateLocality := GetPropertyTranslatedValue(InstanceNode, 'AccurateLocation', Language);
 
     end;
+
+    ExtractInstanceInformation := true;
+
+  end;
+
+
+  function TOntoCore.UpdateFromSmallVocabulary(InstanceName: string; InstanceClass: string) : boolean;
+  var
+    SmallVocabulary: TVocabulary;
+    SmallEntry: PVocabularyEntry;
+    Entry: TVocabularyEntry;
+    i: integer;
+  begin
+
+    SmallVocabulary := TVocabulary.Create();
+    if (SmallVocabulary.LoadFromFile(Concat('./Vocabulary/', InstanceClass, 'Vocabulary.xml'))) then
+    begin
+
+      for i := 0 to SmallVocabulary.GetLangCount() - 1 do
+      begin
+
+        SmallEntry := SmallVocabulary.GetEntryByName(InstanceClass, SmallVocabulary.GetLangByIndex(i));
+
+        Entry.Name := InstanceName;
+        Entry.Language := SmallEntry.Language;
+        Entry.Synonyms := SmallEntry.Synonyms;
+
+        Vocabulary.Add(Entry);
+
+      end;
+
+    end;
+
+    UpdateFromSmallVocabulary := true;
+
+  end;
+
+  function TOntoCore.CreateVocabularyElement(InstanceNode: IXMLNode; InstanceName: string) : boolean;
+  var
+    Node: IXMLNode;
+  begin
+
+    Node := InstanceNode.AddChild('hasAssociatedVocabulary');
+    Node := Node.AddChild('Vocabulary');
+    Node.Attributes['rdf:ID'] := GetNextInstanceOf('Vocabulary', InstanceNode.OwnerDocument);
+    Node := Node.AddChild('isAssociatedTo');
+    Node.Attributes['rdf:resource'] := GetDecoratedName(InstanceName);
+
+    CreateVocabularyElement := true;
+
+  end;
+
+  function TOntoCore.UpdateVocabulary(InstanceName: string; Language: string; Literal: string) : boolean;
+  var
+    Entry: TVocabularyEntry;
+  begin
+
+    Entry.Name := InstanceName;
+    Entry.Language := Language;
+
+    Entry.Synonyms := TStringList.Create();
+    Entry.Synonyms.Add(Literal);
+
+    Vocabulary.Add(Entry);
+
+    UpdateVocabulary := true;
+
+  end;
+
+  function TOntoCore.GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string; Language: string) : string;
+  var
+    PropertyNode: IXMLNode;
+    ProperyInstanceName, PropertyValue: string;
+    Entry: PVocabularyEntry;
+  begin
+
+    PropertyValue := '';
+
+    if (FindSpecificNode(InstanceNode.ChildNodes, IsProperyDefinition, @PropertyName, PropertyNode)) then
+    begin
+
+      ProperyInstanceName := OleVariantToStr(PropertyNode.Attributes['rdf:ID']);
+
+      if (ProperyInstanceName <> '') then
+      begin
+
+        Entry := Vocabulary.GetEntryByName(ProperyInstanceName, Language);
+
+        if (Entry <> nil) then
+          PropertyValue := Entry^.Synonyms.Strings[0]; // mel by tam byt jen jeden
+
+      end;
+
+    end;
+
+    GetPropertyTranslatedValue := PropertyValue;
+
+  end;
+
+
+  function TOntoCore.IsProperyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
+  var
+    PropertyName: PString;
+    Found: boolean;
+  begin
+
+    Found := false;
+
+    try
+
+      PropertyName := Data;
+
+      if (CheckedNode.NodeType = ntElement) then
+      begin
+
+        if (CompareText(OleVariantToStr(CheckedNode.NodeName), PropertyName^) = 0) then
+        begin
+
+          Found := true;
+
+        end;
+
+      end;
+
+    except
+       ;
+    end;
+
+    IsProperyDefinition := Found;
+
+  end;
+
+  function TOntoCore.SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
+  var
+    Node: IXMLNode;
+  begin
+
+    Node := NodeToSubscribe.AddChild('rdfs:comment');
+    Node.Attributes['rdf:datatype'] := 'http://www.w3.org/2001/XMLSchema#string';
+    Node.Text := SubscribeText;
+
+    SubscribeNode := true;
 
   end;
 

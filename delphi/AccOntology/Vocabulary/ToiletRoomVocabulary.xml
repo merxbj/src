@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="ToiletRoom" Language="CZ">
+			<Synonym>Záchod</Synonym>
+			<Synonym>Na záchodě</Synonym>
+			<Synonym>WC</Synonym>
+			<Synonym>Toaleta</Synonym>
+			<Synonym>Na toaletě</Synonym>
+		</Label>
+		<Label Name="ToiletRoom" Language="EN">
+			<Synonym>Toilet room</Synonym>
+			<Synonym>Cloakroom</Synonym>
+			<Synonym>WC</Synonym>
+			<Synonym>Toilet</Synonym>
+		</Label>
+</Vocabulary>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Space" Language="CZ">
+			<Synonym>Místnost</Synonym>
+			<Synonym>V místnosti</Synonym>
+			<Synonym>Místnostech</Synonym>
+		</Label>
+		<Label Name="Space" Language="EN">
+			<Synonym>Space</Synonym>
+		</Label>
+</Vocabulary>

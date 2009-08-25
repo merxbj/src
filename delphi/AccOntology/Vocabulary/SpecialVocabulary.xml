@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Special" Language="CZ">
+			<Synonym>Speciální</Synonym>
+		</Label>
+		<Label Name="Special" Language="EN">
+			<Synonym>Special</Synonym>
+		</Label>
+</Vocabulary>

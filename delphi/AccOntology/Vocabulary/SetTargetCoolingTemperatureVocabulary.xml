@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetTargetCoolingTemperature" Language="CZ">
+			<Synonym>Chladící teplotu</Synonym>
+		</Label>
+		<Label Name="SetTargetCoolingTemperature" Language="EN">
+			<Synonym>Cooling temperature</Synonym>
+		</Label>
+</Vocabulary>

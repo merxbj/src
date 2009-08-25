@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Interior" Language="CZ">
+			<Synonym>Uvnitř</Synonym>
+			<Synonym>Vevnitř</Synonym>
+		</Label>
+		<Label Name="Interior" Language="EN">
+			<Synonym>Interior</Synonym>
+			<Synonym>Inside</Synonym>
+			<Synonym>Indoors</Synonym>
+		</Label>
+</Vocabulary>

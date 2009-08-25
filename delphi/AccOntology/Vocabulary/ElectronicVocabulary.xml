@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Electronic" Language="CZ">
+			<Synonym>Elektrické spotřebiče</Synonym>
+			<Synonym>Elektrické spotřebič</Synonym>
+		</Label>
+		<Label Name="Electronic" Language="EN">
+			<Synonym>Electronic</Synonym>
+			<Synonym>Electric</Synonym>
+			<Synonym>Electrical</Synonym>
+		</Label>
+</Vocabulary>

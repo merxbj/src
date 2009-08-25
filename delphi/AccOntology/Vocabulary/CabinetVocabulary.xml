@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Cabinet" Language="CZ">
+			<Synonym>Kabinet</Synonym>
+			<Synonym>Skříň</Synonym>
+			<Synonym>V kabinetu</Synonym>
+			<Synonym>Ve skříni</Synonym>
+		</Label>
+		<Label Name="Cabinet" Language="EN">
+			<Synonym>Cabinet</Synonym>
+			<Synonym>Section</Synonym>
+			<Synonym>Cupboard</Synonym>
+		</Label>
+</Vocabulary>

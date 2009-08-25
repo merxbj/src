@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="VoiceControl" Language="CZ">
+			<Synonym>Hlasové ovládání</Synonym>
+			<Synonym>Ovládání hlasem</Synonym>
+		</Label>
+		<Label Name="VoiceControl" Language="EN">
+			<Synonym>Voice control</Synonym>
+		</Label>
+</Vocabulary>

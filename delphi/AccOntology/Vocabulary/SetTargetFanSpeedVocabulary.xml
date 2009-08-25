@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetTargetFanSpeed" Language="CZ">
+			<Synonym>Rychlost větráku</Synonym>
+			<Synonym>Fukar</Synonym>
+			<Synonym>Větrák</Synonym>
+			<Synonym>Rychlost fukaru</Synonym>
+			<Synonym>Rychlost</Synonym>
+		</Label>
+		<Label Name="SetTargetFanSpeed" Language="EN">
+			<Synonym>Fan speed</Synonym>
+			<Synonym>Fan level</Synonym>
+			<Synonym>Level</Synonym>
+			<Synonym>Speed</Synonym>
+		</Label>
+</Vocabulary>

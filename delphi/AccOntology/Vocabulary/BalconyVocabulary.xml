@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Balcony" Language="CZ">
+			<Synonym>Na balkóně</Synonym>
+			<Synonym>Balkón</Synonym>
+			<Synonym>Balkónu</Synonym>
+		</Label>
+		<Label Name="Balcony" Language="EN">
+			<Synonym>Balcony</Synonym>
+		</Label>
+</Vocabulary>

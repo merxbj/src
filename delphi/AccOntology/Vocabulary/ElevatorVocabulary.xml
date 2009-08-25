@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Elevator" Language="CZ">
+			<Synonym>Výtah</Synonym>
+			<Synonym>Výtahu</Synonym>
+			<Synonym>Páternosteru</Synonym>
+			<Synonym>Páternoster</Synonym>
+		</Label>
+		<Label Name="Elevator" Language="EN">
+			<Synonym>Elevator</Synonym>
+			<Synonym>Lift</Synonym>
+			<Synonym>Paternoster</Synonym>
+		</Label>
+</Vocabulary>

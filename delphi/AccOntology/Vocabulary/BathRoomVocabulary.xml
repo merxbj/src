@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="BathRoom" Language="CZ">
+			<Synonym>Koupelna</Synonym>
+			<Synonym>V koupelně<Synonym>
+			<Synonym>Umývárna</Synonym>
+			<Synonym>Umývárka</Synonym>
+			<Synonym>V umývárně</Synonym>
+			<Synonym>V umývárce</Synonym>
+		</Label>
+		<Label Name="BathRoom" Language="EN">
+			<Synonym>Bathroom</Synonym>
+		</Label>
+</Vocabulary>

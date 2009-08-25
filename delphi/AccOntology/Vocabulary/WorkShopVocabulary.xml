@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="WorkShop" Language="CZ">
+			<Synonym>Pracovna</Synonym>
+			<Synonym>V pracovně</Synonym>
+			<Synonym>Dílna</Synonym>
+			<Synonym>V dílně</Synonym>
+			<Synonym>Montérna</Synonym>
+			<Synonym>V montérně</Synonym>
+		</Label>
+		<Label Name="WorkShop" Language="EN">
+			<Synonym>Workshop</Synonym>
+			<Synonym>Workroom</Synonym>
+		</Label>
+</Vocabulary>

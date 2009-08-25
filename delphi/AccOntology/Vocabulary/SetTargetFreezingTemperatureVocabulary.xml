@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetTargetFreezingTemperature" Language="CZ">
+			<Synonym>Mrazící teplotu</Synonym>
+		</Label>
+		<Label Name="SetTargetFreezingTemperature" Language="EN">
+			<Synonym>Freezing temperature</Synonym>
+		</Label>
+</Vocabulary>

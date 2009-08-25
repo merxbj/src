@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="RemoteControl" Language="CZ">
+			<Synonym>Dálkové ovládání</Synonym>
+			<Synonym>Dálkáč</Synonym>
+			<Synonym>Dálkový ovladač</Synonym>
+		</Label>
+		<Label Name="RemoteControl" Language="EN">
+			<Synonym>Remote control</Synonym>
+		</Label>
+</Vocabulary>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Off" Language="CZ">
+			<Synonym>Vypnout</Synonym>
+			<Synonym>Vypnutí</Synonym>
+			<Synonym>Deaktivovat</Synonym>
+			<Synonym>Deaktivace</Synonym>
+			<Synonym>Deaktivuj</Synonym>
+		</Label>
+		<Label Name="Off" Language="EN">
+			<Synonym>Off</Synonym>
+			<Synonym>Disable</Synonym>
+		</Label>
+</Vocabulary>

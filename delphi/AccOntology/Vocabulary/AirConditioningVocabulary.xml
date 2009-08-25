@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>	
+		<Label Name="AirConditioning" Language="CZ">
+			<Synonym>Klimatizace</Synonym>
+			<Synonym>Klimoška</Synonym>
+			<Synonym>Větrák</Synonym>
+		</Label>
+		<Label Name="AirConditioning" Language="EN">
+			<Synonym>Air Conditioning</Synonym>
+			<Synonym>Ventilator </Synonym>
+			<Synonym>Fan</Synonym>
+		</Label>
+</Vocabulary>

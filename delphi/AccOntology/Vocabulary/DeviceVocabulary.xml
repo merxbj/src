@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Device" Language="CZ">
+			<Synonym>Všechna zařízení</Synonym>
+			<Synonym>Všechny zařízení</Synonym>
+			<Synonym>Všechny spotřebiče</Synonym>
+		</Label>
+		<Label Name="Device" Language="EN">
+			<Synonym>Device</Synonym>
+			<Synonym>Equipment</Synonym>
+		</Label>
+</Vocabulary>

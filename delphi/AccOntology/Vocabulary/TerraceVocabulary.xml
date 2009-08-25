@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Terrace" Language="CZ">
+			<Synonym>Na terase</Synonym>
+			<Synonym>Terasa</Synonym>
+			<Synonym>U terasy</Synonym>
+		</Label>
+		<Label Name="Terrace" Language="EN">
+			<Synonym>Terrace</Synonym>
+			<Synonym>Platform</Synonym>
+		</Label>
+</Vocabulary>

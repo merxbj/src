@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Set" Language="CZ">
+			<Synonym>Nastav</Synonym>
+			<Synonym>Nastavit</Synonym>
+			<Synonym>Přenastavit</Synonym>
+		</Label>
+		<Label Name="Set" Language="EN">
+			<Synonym>Set</Synonym>
+		</Label>
+</Vocabulary>

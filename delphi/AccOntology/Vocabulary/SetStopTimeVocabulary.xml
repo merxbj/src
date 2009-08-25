@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="SetStopTime" Language="CZ">
+			<Synonym>Konečný čas</Synonym>
+			<Synonym>Konec</Synonym>
+			<Synonym>Stop</Synonym>
+		</Label>
+		<Label Name="SetStopTime" Language="EN">
+			<Synonym>Stop time</Synonym>
+			<Synonym>Hitch</Synonym>
+			<Synonym>Stop</Synonym>
+		</Label>
+</Vocabulary>

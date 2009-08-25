@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="Freezer" Language="CZ">
+			<Synonym>Mrazák</Synonym>
+			<Synonym>Pulťák</Synonym>
+		</Label>
+		<Label Name="Freezer" Language="EN">
+			<Synonym>Freezer</Synonym>
+		</Label>
+</Vocabulary>

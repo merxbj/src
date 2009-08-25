@@ -2,7 +2,7 @@ unit OntoVocabulary;
 
 interface
 
-uses StrUtils, Classes, SysUtils, xmldom, XMLIntf, msxmldom, XMLDoc;
+uses StrUtils, Classes, SysUtils, xmldom, XMLIntf, msxmldom, XMLDoc, OntoUtils;
 
 type
 
@@ -17,6 +17,7 @@ type
   TVocabulary = class
     private
       VocabularyEntries: array of TVocabularyEntry;
+      VocabularyLanguages: TStringList;
       Size: integer;
 
       function GetEntryByIndex(Index: integer) : PVocabularyEntry;
@@ -32,10 +33,12 @@ type
 
       function GetSize() : integer;
       function GetEntryByName(Name: string; Lang: string) : PVocabularyEntry;
+      function LoadFromFile(FileName: string) : boolean;
+      function GetLangCount() : integer;
+      function GetLangByIndex(Index: integer) : string;
 
       procedure Add(Entry: TVocabularyEntry);
       procedure Remove(Entry: PVocabularyEntry);
-      procedure LoadFromFile(FileName: string);
       procedure SaveToFile(FileName: string);
   end;
 
@@ -106,6 +109,11 @@ implementation
     VocabularyEntries := nil;
     SetLength(VocabularyEntries, 10); // startovni velikost
 
+    VocabularyLanguages := nil;
+    VocabularyLanguages := TStringList.Create();
+    VocabularyLanguages.Sorted := true;
+    VocabularyLanguages.Duplicates := dupIgnore;
+
     Size := 0;
 
   end;
@@ -170,10 +178,13 @@ implementation
 
   end;
 
-  procedure TVocabulary.LoadFromFile(FileName: String);
+  function TVocabulary.LoadFromFile(FileName: String) : boolean;
   var
     VocabularyXML: TXMLDocument;
+    Success: boolean;
   begin
+
+    Success := false;
 
     try
 
@@ -184,7 +195,11 @@ implementation
         VocabularyXML.LoadFromFile(FileName);
 
         VocabularyXML.Active := true;
+
+        self.Clear();
         ParseFromXML(VocabularyXML);
+
+        Success := true;
 
       end;
 
@@ -192,7 +207,9 @@ implementation
 
       VocabularyXML := nil;
 
-    end;  
+    end;
+
+    LoadFromFile := Success;
 
   end;
 
@@ -272,8 +289,8 @@ implementation
     Entry: TVocabularyEntry;
   begin
 
-    Name := EntryNode.Attributes['name'];
-    Lang := EntryNode.Attributes['language'];
+    Name := OleVariantToStr(EntryNode.Attributes['Name']);
+    Lang := OleVariantToStr(EntryNode.Attributes['Language']);
     if ((Name <> '') and (Lang <> '')) then
     begin
 
@@ -282,6 +299,7 @@ implementation
       ParseSynonyms(EntryNode, @Entry);
 
       self.Add(Entry);
+      VocabularyLanguages.Add(Lang);
 
     end;
 
@@ -326,8 +344,8 @@ implementation
     if (XMLEntry <> nil) then
     begin
 
-      XMLEntry.Attributes['name'] := SingleEntry^.Name;
-      XMLEntry.Attributes['language'] := SingleEntry^.Language;
+      XMLEntry.Attributes['Name'] := SingleEntry^.Name;
+      XMLEntry.Attributes['Language'] := SingleEntry^.Language;
 
       for i := 0 to SingleEntry^.Synonyms.Count - 1 do
       begin
@@ -344,6 +362,23 @@ implementation
       end;
 
     end;
+
+  end;
+
+  function TVocabulary.GetLangCount() : integer;
+  begin
+
+    GetLangCount := VocabularyLanguages.Count;
+
+  end;
+
+  function TVocabulary.GetLangByIndex(Index: integer) : string;
+  begin
+
+    if (Index < GetLangCount()) then
+      GetLangByIndex := VocabularyLanguages.Strings[Index]
+    else
+      GetLangByIndex := '';
 
   end;
 

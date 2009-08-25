@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vocabulary>
+		<Label Name="LivingRoom" Language="CZ">
+			<Synonym>Obytný pokoj</Synonym>
+			<Synonym>Obývák</Synonym>
+			<Synonym>Obýváku</Synonym>
+			<Synonym>V obýváku</Synonym>
+			<Synonym>V obytném pokoji</Synonym>
+		</Label>
+		<Label Name="LivingRoom" Language="EN">
+			<Synonym>Lounge</Synonym>
+			<Synonym>Living room</Synonym>
+		</Label>
+</Vocabulary>

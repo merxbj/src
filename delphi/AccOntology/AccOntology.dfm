@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 267
-  Top = 226
+  Left = 278
+  Top = 239
   Width = 743
   Height = 411
   Caption = 'Bakal'#225#345'sk'#225' pr'#225'ce - Fric Ji'#345#237' - 2009'
@@ -76,6 +76,13 @@ object Form1: TForm1
     Width = 89
     Height = 13
     Caption = 'Roz'#353'i'#345'uj'#237'c'#237' lokalita:'
+  end
+  object Label9: TLabel
+    Left = 192
+    Top = 336
+    Width = 30
+    Height = 13
+    Caption = 'Jazyk:'
   end
   object DevicesList: TListBox
     Left = 8
@@ -172,8 +179,22 @@ object Form1: TForm1
     TabOrder = 8
     Text = 'V rohu'
   end
+  object cbLanguage: TComboBox
+    Left = 240
+    Top = 328
+    Width = 145
+    Height = 21
+    ItemHeight = 13
+    ItemIndex = 0
+    TabOrder = 9
+    Text = 'CZ'
+    OnChange = cbLanguageChange
+    Items.Strings = (
+      'CZ'
+      'EN')
+  end
   object xmlonto: TXMLDocument
-    Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix]
+    Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix, doAutoSave]
     Left = 88
     DOMVendorDesc = 'MSXML'
   end
