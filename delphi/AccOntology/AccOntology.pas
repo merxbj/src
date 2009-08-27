@@ -133,12 +133,18 @@ end;
 procedure TForm1.VypisLokality();
 var
   locations: TStringList;
+  AccLocIndex: Integer;
 begin
 
   locations := TStringList.Create();
   ontocore.GetClassLeafs(xmlonto, 'Location', @locations);
   if ((locations <> nil) and (locations.Count > 0)) then
   begin
+    // Get rid of the AccurateLocation leaf!
+    AccLocIndex := locations.IndexOf('AccurateLocation');
+    if (AccLocIndex >= 0) then
+      locations.Delete(AccLocIndex);
+
     LocationsList.Items.AddStrings(locations);
     LocationsList.Selected[0] := true;
   end;
