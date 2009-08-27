@@ -314,6 +314,7 @@ begin
     edMaterial.Text := selectedDeviceInstance^.Material.Value;
     edLokalita.Enabled := selectedDevice^.AccurateLocation.Allowed;
     edLokalita.Text := selectedDeviceInstance^.AccurateLocality.Value;
+    btnSave.Enabled := true;
 
   end
   else begin
