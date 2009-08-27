@@ -38,7 +38,7 @@ type
     Label10: TLabel;
     cbLanguage: TComboBox;
     Label9: TLabel;
-    Button1: TButton;
+    btnSave: TButton;
     procedure FormCreate(Sender: TObject);
     procedure ZobrazMenu();
     procedure LoadOnotology();
@@ -61,7 +61,7 @@ type
     procedure Smazazen1Click(Sender: TObject);
     procedure Info1Click(Sender: TObject);
     procedure cbLanguageChange(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -316,6 +316,7 @@ begin
     edBarva.Text := '';
     edMaterial.Text := '';
     edLokalita.Text := '';
+    btnSave.Enabled := false;
 
   end;
 
@@ -365,7 +366,7 @@ begin
 
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.btnSaveClick(Sender: TObject);
 begin
 
   selectedDeviceInstance^.Shortcut.Value := edZkratka.Text;
