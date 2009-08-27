@@ -651,7 +651,7 @@ implementation
           Node := TargetNode.AddChild('hasProperty');
           PropNode := Node.AddChild(SingleProp^.Name);
           PropNode.Attributes['rdf:ID'] := InstanceName;
-          Node := Node.AddChild('belongsTo');
+          Node := PropNode.AddChild('belongsTo');
           Node.Attributes['rdf:resource'] := GetDecoratedName(TargetNode.Attributes['rdf:ID']);
 
           CreateVocabularyElement(PropNode, InstanceName);
