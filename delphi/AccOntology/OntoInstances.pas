@@ -31,8 +31,8 @@ type
       function GetInstance(Index: integer) : PInstance;
       function ToStringList() : TStringList;
       function GetLanguage() : string;
+      function Add(Instance: TInstance) : integer;
 
-      procedure Add(Instance: TInstance);
       procedure Clear();
       procedure SetLanguage(Lang: string);
 
@@ -86,7 +86,7 @@ implementation
 
   end;
 
-  procedure TInstances.Add(Instance: TInstance);
+  function TInstances.Add(Instance: TInstance) : integer;
   begin
 
     if (GetSize() = ((High(Instances) - Low(Instances)) + 1 )) then
@@ -94,6 +94,8 @@ implementation
 
     Instances[GetSize()] := Instance;
     size := size + 1;
+
+    Add := (size - 1); // navrat pozici ulozeni instance
 
   end;
 

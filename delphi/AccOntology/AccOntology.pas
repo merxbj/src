@@ -160,16 +160,17 @@ end;
 procedure TForm1.VypisInstanceLokaci(instancesOf: string);
 var
   FakeInstance: TInstance;
+  Index: integer;
 begin
   SelectedLocationInstances.Clear();
   FakeInstance.Name := 'Nova mistnost';
   FakeInstance.IsFakeInstance := true;
-  SelectedLocationInstances.Add(FakeInstance);
+  Index := SelectedLocationInstances.Add(FakeInstance); // ulozime si index pozice nove polozky v seznamu
   ontoCore.GetClassInstances(xmlonto, instancesOf, @SelectedLocationInstances);
   LocationInstancesList.Clear();
   LocationInstancesList.Items.AddStrings(SelectedLocationInstances.ToStringList());
   LocationInstancesList.Selected[0] := true;
-  selectedLocationInstance := @FakeInstance;
+  SelectedLocationInstance := SelectedLocationInstances.GetInstance(Index);
 end;
 
 procedure TForm1.DevicesListClick(Sender: TObject);
