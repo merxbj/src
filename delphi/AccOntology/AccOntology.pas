@@ -62,6 +62,7 @@ type
     procedure Info1Click(Sender: TObject);
     procedure cbLanguageChange(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure UpdateLocations(SimpleLocation: PSimpleLocation);
   private
     { Private declarations }
   public
@@ -316,6 +317,8 @@ begin
     edLokalita.Text := selectedDeviceInstance^.AccurateLocality.Value;
     btnSave.Enabled := true;
 
+    UpdateLocations(@(selectedDeviceInstance^.SimpleLocation));
+
   end
   else begin
 
@@ -385,6 +388,26 @@ begin
   OntoCore.UpdateInstanceVocabulary(selectedDeviceInstance);
 
   DevicesInstancesListClick(self);
+
+end;
+
+procedure TForm1.UpdateLocations(SimpleLocation: PSimpleLocation);
+var
+  LocationTypeIndex, LocationInstanceIndex: integer;
+begin
+
+  LocationTypeIndex := LocationsList.Items.IndexOf(SimpleLocation^.LocationType);
+  if (LocationTypeIndex >= 0) then
+  begin
+
+    LocationsList.Selected[LocationTypeIndex] := true;
+    LocationsListClick(self);
+
+    LocationInstanceIndex := LocationInstancesList.Items.IndexOf(SimpleLocation^.LocationInstance);
+    if (LocationInstanceIndex >= 0) then
+      LocationInstancesList.Selected[LocationInstanceIndex] := true;
+
+  end;
 
 end;
 

@@ -1394,6 +1394,9 @@ implementation
       instanceInfo^.Color := GetPropertyTranslatedValue(InstanceNode, 'Color');
       instanceInfo^.AccurateLocality := GetPropertyTranslatedValue(InstanceNode, 'AccurateLocation');
 
+      instanceInfo^.SimpleLocation.LocationType := InstanceNode.ParentNode.ParentNode.NodeName;
+      instanceInfo^.SimpleLocation.LocationInstance := OleVariantToStr(InstanceNode.ParentNode.ParentNode.Attributes['rdf:ID']);
+
     end;
 
     ExtractInstanceInformation := true;

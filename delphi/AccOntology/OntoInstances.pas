@@ -11,6 +11,11 @@ type
     Value: String;
   end;
 
+  TSimpleLocation = record
+    LocationType: String;
+    LocationInstance: String;
+  end;
+
   TInstance = record
     Name: string;
     CreatedByThisApp: boolean;
@@ -19,10 +24,12 @@ type
     Color: TTranslatedProperty;
     Material: TTranslatedProperty;
     AccurateLocality: TTranslatedProperty;
+    SimpleLocation: TSimpleLocation;
     Language: string;
   end;
 
   PInstance = ^TInstance;
+  PSimpleLocation = ^TSimpleLocation;
 
   TInstances = class
     private
