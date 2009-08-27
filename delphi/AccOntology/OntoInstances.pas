@@ -6,14 +6,19 @@ uses StrUtils, Classes;
 
 type
 
+  TTranslatedProperty = record
+    Name: String;
+    Value: String;
+  end;
+
   TInstance = record
     Name: string;
     CreatedByThisApp: boolean;
     IsFakeInstance: boolean;
-    Shortcut: string;
-    Color: string;
-    Material: string;
-    AccurateLocality: string;
+    Shortcut: TTranslatedProperty;
+    Color: TTranslatedProperty;
+    Material: TTranslatedProperty;
+    AccurateLocality: TTranslatedProperty;
     Language: string;
   end;
 

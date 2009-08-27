@@ -193,6 +193,15 @@ object Form1: TForm1
       'CZ'
       'EN')
   end
+  object Button1: TButton
+    Left = 400
+    Top = 328
+    Width = 75
+    Height = 25
+    Caption = 'Ulozit'
+    TabOrder = 10
+    OnClick = Button1Click
+  end
   object xmlonto: TXMLDocument
     Options = [doNodeAutoCreate, doNodeAutoIndent, doAttrNull, doAutoPrefix, doAutoSave]
     Left = 88

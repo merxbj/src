@@ -32,6 +32,7 @@ type
       function AddDeviceToGenericOntology(GenericOntology: IXMLDocument; Device: PDevice; Location: TLocation; Ontology: IXMLDocument) : string;
       function AddDeviceToOntology(Ontology: IXMLDocument; Device: PDevice; Location: TLocation) : boolean;
       function RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstance: PInstance) : boolean;
+      function UpdateInstanceVocabulary(DeviceInstance: PInstance) : boolean;
 
     private
       // membery
@@ -75,7 +76,7 @@ type
       function CreateVocabularyElement(InstanceNode: IXMLNode; InstanceName: string) : boolean;
       function UpdateFromSmallVocabulary(InstanceName: string; InstanceClass: string) : boolean;
       function UpdateVocabulary(InstanceName: string; Literal: string) : boolean;
-      function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : string;
+      function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : TTranslatedProperty;
       function SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
     end;
 
@@ -86,6 +87,7 @@ type
     NameSpaceOWL = 'xmlns:owl="http://www.w3.org/2002/07/owl#"';
     NameSpaceBASE = 'http://www.owl-ontologies.com/Ontology1241530166.owl#';
     SubscribeText = 'Zarizeni pridano programem AccOntology';
+    VocabularyPath = './Data/Vocabulary.xml';
 
   var
     WholeNodeList: IXMLNodeList;
@@ -105,7 +107,7 @@ implementation
 
     Vocabulary := TVocabulary.Create();
     Language := 'CZ'; // defaultni jazyk
-    Vocabulary.LoadFromFile('./Data/Vocabulary.xml');
+    Vocabulary.LoadFromFile(VocabularyPath);
 
   end;
 
@@ -154,6 +156,35 @@ implementation
     end
     else
       GetClassInstances := -1; // xml se nezda byt v poradku
+
+  end;
+
+  function TOntoCore.UpdateInstanceVocabulary(DeviceInstance: PInstance) : boolean;
+  var
+    Success: boolean;
+  begin
+
+    Success := true;
+
+    if (DeviceInstance <> nil) then
+    begin
+
+      try
+
+        UpdateVocabulary(DeviceInstance^.Shortcut.Name, DeviceInstance^.Shortcut.Value);
+        UpdateVocabulary(DeviceInstance^.Color.Name, DeviceInstance^.Color.Value);
+        UpdateVocabulary(DeviceInstance^.Material.Name, DeviceInstance^.Material.Value);
+        UpdateVocabulary(DeviceInstance^.AccurateLocality.Name, DeviceInstance^.AccurateLocality.Value);
+
+      except
+
+        Success := false;
+
+      end;
+
+      Vocabulary.SaveToFile(VocabularyPath);
+
+    end;
 
   end;
 
@@ -375,7 +406,7 @@ implementation
     else
       AddDeviceToOntology := false;
 
-    Vocabulary.SaveToFile('./Data/Vocabulary.xml');
+    Vocabulary.SaveToFile(VocabularyPath);
 
   end;
 
@@ -1398,33 +1429,33 @@ implementation
 
   end;
 
-  function TOntoCore.GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : string;
+  function TOntoCore.GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : TTranslatedProperty;
   var
     PropertyNode: IXMLNode;
-    ProperyInstanceName, PropertyValue: string;
     Entry: PVocabularyEntry;
+    TranslatedProperty: TTranslatedProperty;
   begin
 
-    PropertyValue := '';
+    TranslatedProperty.Value := '';
 
     if (FindSpecificNode(InstanceNode.ChildNodes, IsProperyDefinition, @PropertyName, PropertyNode)) then
     begin
 
-      ProperyInstanceName := OleVariantToStr(PropertyNode.Attributes['rdf:ID']);
+      TranslatedProperty.Name := OleVariantToStr(PropertyNode.Attributes['rdf:ID']);
 
-      if (ProperyInstanceName <> '') then
+      if (TranslatedProperty.Name <> '') then
       begin
 
-        Entry := Vocabulary.GetEntryByName(ProperyInstanceName, Language);
+        Entry := Vocabulary.GetEntryByName(TranslatedProperty.Name, Language);
 
         if (Entry <> nil) then
-          PropertyValue := Entry^.Synonyms.Strings[0]; // mel by tam byt jen jeden
+          TranslatedProperty.Value := Entry^.Synonyms.Strings[0]; // mel by tam byt jen jeden
 
       end;
 
     end;
 
-    GetPropertyTranslatedValue := PropertyValue;
+    GetPropertyTranslatedValue := TranslatedProperty;
 
   end;
 

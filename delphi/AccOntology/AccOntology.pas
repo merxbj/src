@@ -38,6 +38,7 @@ type
     Label10: TLabel;
     cbLanguage: TComboBox;
     Label9: TLabel;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure ZobrazMenu();
     procedure LoadOnotology();
@@ -60,6 +61,7 @@ type
     procedure Smazazen1Click(Sender: TObject);
     procedure Info1Click(Sender: TObject);
     procedure cbLanguageChange(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -301,11 +303,19 @@ begin
     selectedDeviceInstance := SelectedDeviceInstances.GetInstance(i);
 
     Smazazen1.Enabled := selectedDeviceInstance^.CreatedByThisApp;
-    edZkratka.Text :=  selectedDeviceInstance^.Shortcut;
-    edBarva.Text := selectedDeviceInstance^.Color;
-    edMaterial.Text := selectedDeviceInstance^.Material;
+    edZkratka.Text :=  selectedDeviceInstance^.Shortcut.Value;
+    edBarva.Text := selectedDeviceInstance^.Color.Value;
+    edMaterial.Text := selectedDeviceInstance^.Material.Value;
     edLokalita.Enabled := selectedDevice^.AccurateLocation.Allowed;
-    edLokalita.Text := selectedDeviceInstance^.AccurateLocality;
+    edLokalita.Text := selectedDeviceInstance^.AccurateLocality.Value;
+
+  end
+  else begin
+
+    edZkratka.Text := '';
+    edBarva.Text := '';
+    edMaterial.Text := '';
+    edLokalita.Text := '';
 
   end;
 
@@ -352,6 +362,21 @@ procedure TForm1.cbLanguageChange(Sender: TObject);
 begin
 
   RefreshLists();
+
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+
+  selectedDeviceInstance^.Shortcut.Value := edZkratka.Text;
+  selectedDeviceInstance^.Color.Value := edBarva.Text;
+  selectedDeviceInstance^.Material.Value := edMaterial.Text;
+  selectedDeviceInstance^.AccurateLocality.Value := edLokalita.Text;
+
+  OntoCore.Language := cbLanguage.Text;
+  OntoCore.UpdateInstanceVocabulary(selectedDeviceInstance);
+
+  DevicesInstancesListClick(self);
 
 end;
 
