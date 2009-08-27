@@ -55,7 +55,7 @@ type
       function IsClassDefinitionOrReference(CheckedNode: IXMLNode; Data: Pointer) : boolean;
       function IsObjectDefinitionOrReference(CheckedNode: IXMLNode; Data: Pointer) : boolean;
       function IsObjectDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
-      function IsProperyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
+      function IsPropertyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
 
       // Pomocne funkce
       function SaveOntologyElsewhere(Ontology: IXMLDocument) : string;
@@ -78,6 +78,7 @@ type
       function UpdateVocabulary(InstanceName: string; Literal: string) : boolean;
       function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : TTranslatedProperty;
       function SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
+      function RemoveDeviceVocabularies(DeviceNode: IXMLNode) : boolean;
     end;
 
   const
@@ -86,7 +87,7 @@ type
     NameSpaceRDFS = 'http://www.w3.org/2000/01/rdf-schema#';
     NameSpaceOWL = 'xmlns:owl="http://www.w3.org/2002/07/owl#"';
     NameSpaceBASE = 'http://www.owl-ontologies.com/Ontology1241530166.owl#';
-    SubscribeText = 'Zarizeni pridano programem AccOntology';
+    SubscribeText = 'Pridano programem AccOntology';
     VocabularyPath = './Data/Vocabulary.xml';
 
   var
@@ -1193,8 +1194,8 @@ implementation
   function TOntoCore.AddDeviceToLocation(LocationNode: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
   var
     Success: boolean;
-    Node, DeviceNode: IXMLNode;
-    DeviceInstanceName, AccLocationName, DeviceName: string;
+    Node, DeviceNode, AccLocationNode: IXMLNode;
+    DeviceInstanceName, AccLocationInstanceName, DeviceName: string;
   begin
 
     try
@@ -1214,16 +1215,16 @@ implementation
 
       if ((Success) and (Device^.AccurateLocation.Allowed)) then
       begin
-        AccLocationName := GetNextInstanceOf('AccurateLocation', LocationNode.OwnerDocument);
+        AccLocationInstanceName := GetNextInstanceOf('AccurateLocation', LocationNode.OwnerDocument);
 
         Node := DeviceNode.AddChild('isExactlyIn');
-        Node := Node.AddChild('AccurateLocation');
-        Node.Attributes['rdf:ID'] := AccLocationName;
-        Node := Node.AddChild('determinates');
+        AccLocationNode := Node.AddChild('AccurateLocation');
+        AccLocationNode.Attributes['rdf:ID'] := AccLocationInstanceName;
+        Node := AccLocationNode.AddChild('determinates');
         Node.Attributes['rdf:resource'] := GetDecoratedName(DeviceInstanceName);
 
-        CreateVocabularyElement(DeviceNode, DeviceInstanceName);
-        UpdateVocabulary(AccLocationName, Device^.AccurateLocation.Name);
+        CreateVocabularyElement(AccLocationNode, AccLocationInstanceName);
+        UpdateVocabulary(AccLocationInstanceName, Device^.AccurateLocation.Name);
 
       end;
 
@@ -1303,6 +1304,7 @@ implementation
     begin
 
       // pro nase potreby je to zatim snad postacujici volani
+      RemoveDeviceVocabularies(DeviceImplementation);
       DeviceImplementation.ParentNode.ParentNode.ChildNodes.Remove(DeviceImplementation.ParentNode);
 
     end;
@@ -1438,7 +1440,7 @@ implementation
 
     TranslatedProperty.Value := '';
 
-    if (FindSpecificNode(InstanceNode.ChildNodes, IsProperyDefinition, @PropertyName, PropertyNode)) then
+    if (FindSpecificNode(InstanceNode.ChildNodes, IsPropertyDefinition, @PropertyName, PropertyNode)) then
     begin
 
       TranslatedProperty.Name := OleVariantToStr(PropertyNode.Attributes['rdf:ID']);
@@ -1449,7 +1451,8 @@ implementation
         Entry := Vocabulary.GetEntryByName(TranslatedProperty.Name, Language);
 
         if (Entry <> nil) then
-          TranslatedProperty.Value := Entry^.Synonyms.Strings[0]; // mel by tam byt jen jeden
+          if (Entry^.Synonyms.Count > 0) then
+            TranslatedProperty.Value := Entry^.Synonyms.Strings[0]; // mel by tam byt jen jeden
 
       end;
 
@@ -1460,7 +1463,7 @@ implementation
   end;
 
 
-  function TOntoCore.IsProperyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
+  function TOntoCore.IsPropertyDefinition(CheckedNode: IXMLNode; Data: Pointer) : boolean;
   var
     PropertyName: PString;
     Found: boolean;
@@ -1488,7 +1491,7 @@ implementation
        ;
     end;
 
-    IsProperyDefinition := Found;
+    IsPropertyDefinition := Found;
 
   end;
 
@@ -1502,6 +1505,38 @@ implementation
     Node.Text := SubscribeText;
 
     SubscribeNode := true;
+
+  end;
+
+
+  function TOntoCore.RemoveDeviceVocabularies(DeviceNode: IXMLNode) : boolean;
+  var
+    Found: boolean;
+    FoundNode: IXMLNode;
+    PropertyName, EntryName: string;
+    Entry: PVocabularyEntry;
+  begin
+
+    PropertyName := 'Vocabulary';
+    Found := FindSpecificNode(DeviceNode.ChildNodes, IsPropertyDefinition, @PropertyName, FoundNode);
+
+    while (Found and (FoundNode <> nil)) do
+    begin
+
+      EntryName := GetExactName(FoundNode.ChildNodes.First.Attributes['rdf:resource']);
+
+      if (EntryName <> '') then
+      begin
+
+        Vocabulary.RemoveByName(EntryName);
+
+      end;
+
+      Found := FindSpecificNode(DeviceNode.ChildNodes, IsPropertyDefinition, @PropertyName, FoundNode, false);
+
+    end;
+
+    Vocabulary.SaveToFile(VocabularyPath);
 
   end;
 

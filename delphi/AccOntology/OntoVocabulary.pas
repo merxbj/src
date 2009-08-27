@@ -39,6 +39,7 @@ type
 
       procedure Add(Entry: TVocabularyEntry);
       procedure Remove(Entry: PVocabularyEntry);
+      procedure RemoveByName(Name: string; Lang: string = '');
       procedure SaveToFile(FileName: string);
   end;
 
@@ -137,6 +138,7 @@ implementation
         SetLength(VocabularyEntries, GetSize() + 10); // udelejme si vic mista
 
       VocabularyEntries[GetSize()] := Entry;
+      VocabularyLanguages.Add(Entry.Language);
       size := size + 1;
 
     end;
@@ -168,11 +170,16 @@ implementation
     if (i < GetSize()) then
     begin
 
-      j := i + 1;
+      j := i;
       while (j < (GetSize() - 1)) do
-        VocabularyEntries[j] := VocabularyEntries[j+1];
+      begin
 
-      size := size - 1;  
+        VocabularyEntries[j] := VocabularyEntries[j+1];
+        j := j + 1;
+
+      end;
+
+      size := size - 1;
 
     end;
 
@@ -379,6 +386,37 @@ implementation
       GetLangByIndex := VocabularyLanguages.Strings[Index]
     else
       GetLangByIndex := '';
+
+  end;
+
+  procedure TVocabulary.RemoveByName(Name: string; Lang: string = '');
+  var
+    TempEntry: PVocabularyEntry;
+    i: integer;
+  begin
+
+    if (Lang <> '') then
+    begin
+
+      TempEntry := GetEntryByName(Name, Lang);
+
+      if (TempEntry <> nil) then
+        Remove(TempEntry);
+
+    end
+    else begin
+
+      for i := 0 to (GetLangCount() - 1) do
+      begin
+
+        TempEntry := GetEntryByName(Name, GetLangByIndex(i));
+
+        if (TempEntry <> nil) then
+          Remove(TempEntry);
+
+      end;
+
+    end;
 
   end;
 
