@@ -187,6 +187,8 @@ implementation
 
     end;
 
+    UpdateInstanceVocabulary := Success;
+
   end;
 
   // privatni metody
@@ -1132,24 +1134,13 @@ implementation
   
 
   // GetNextInstanceOf:
-  //    Funkce najivne zjisti jmeno dalsi instance zadane tridy:
-  //    Funguje tak, ze nejprve najde vsechny jeji instance (reusneme jiz existujici fci)
-  //    A s tim predpokladem, ze instance se pojmenovavaji: "Trida_X" kde x je poradove cislo
-  //    instance, pricteme k celkovemu poctu instanci 1ku a toto cislo pak pripojime k
-  //    nazvu tridy
-  //
-  //    Metoda tedy predpoklada neprerusenou ciselnou radu pojmenovavani instanci
-  //    Neni to tedy neprustrelne, ale je to prozatim postacujici
-  //
-  //    Vsimnete si take prosim, ze komentar k metode je delsi nez metoda sama :D
 
   function TOntoCore.GetNextInstanceOf(TargetClass: string; Ontology: IXMLDocument) : string;
   var
     Instances: TInstances;
-    InstancesList, LastInstance: TStringList;
+    InstancesList, ParsedInstance: TStringList;
     ImplementationNode: IXMLNode;
-    Count, NextIndex: integer;
-    LastIndex: string;
+    Count, ParsedIndex, i, Max, NextIndex: integer;
   begin
 
     NextIndex := 1;
@@ -1163,19 +1154,26 @@ implementation
     if (Count > 0) then
     begin
 
-      InstancesList := TStringList.Create();
       InstancesList := Instances.ToStringList();
-      InstancesList.Sort(); // mame setrideny seznam vsech existujicich instanci
 
-      LastInstance := TStringList.Create();
-      LastInstance.Delimiter := '_';
-      LastInstance.DelimitedText := InstancesList.Strings[Count-1]; // vezmeme posledni a rozdelime ji podle znaku '_'
-      LastIndex := LastInstance.Strings[1]; // jako druhy retezec mame cislo posledni instance
+      Max := 0;
+      for i := 0 to InstancesList.Count - 1 do
+      begin
 
-      NextIndex := StrToInt(LastIndex) + 1; // zvetsime o jedna
+        ParsedInstance := TStringList.Create();
+        ParsedInstance.Delimiter := '_';
+        ParsedInstance.DelimitedText := InstancesList.Strings[i];
+        ParsedIndex := StrToInt(ParsedInstance.Strings[1]);
+        if (ParsedIndex > Max) then
+          Max := ParsedIndex;
+
+        ParsedInstance.Free();
+
+      end;
 
       InstancesList.Free();
-      LastInstance.Free();
+
+      NextIndex := Max + 1;
 
     end;
 
@@ -1254,7 +1252,7 @@ implementation
 
   function TOntoCore.CreateNewLocation(ImplementationLocation: IXMLNode; Location: PLocation) : IXMLNode;
   var
-    Level, Space, Contains, ContainedIn, Node: IXMLNode;
+    Level, Space, Contains, ContainedIn: IXMLNode;
     LevelName: string;
   begin
 
@@ -1514,7 +1512,6 @@ implementation
     Found: boolean;
     FoundNode: IXMLNode;
     PropertyName, EntryName: string;
-    Entry: PVocabularyEntry;
   begin
 
     PropertyName := 'Vocabulary';
@@ -1537,6 +1534,8 @@ implementation
     end;
 
     Vocabulary.SaveToFile(VocabularyPath);
+
+    RemoveDeviceVocabularies := true;
 
   end;
 
