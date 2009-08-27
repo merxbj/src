@@ -1114,9 +1114,13 @@ implementation
   function TOntoCore.GetNextInstanceOf(TargetClass: string; Ontology: IXMLDocument) : string;
   var
     Instances: TInstances;
+    InstancesList, LastInstance: TStringList;
     ImplementationNode: IXMLNode;
-    Count: integer;
+    Count, NextIndex: integer;
+    LastIndex: string;
   begin
+
+    NextIndex := 1;
 
     // nejprve ziskame seznam vsechn instanci
     Count := 0;
@@ -1124,8 +1128,27 @@ implementation
     if (FindSpecificNode(Ontology.ChildNodes, IsImplementationLocation, Nil, ImplementationNode)) then
       Count := FindInstancesOf(ImplementationNode.ChildNodes, TargetClass, @Instances);
 
+    if (Count > 0) then
+    begin
+
+      InstancesList := TStringList.Create();
+      InstancesList := Instances.ToStringList();
+      InstancesList.Sort(); // mame setrideny seznam vsech existujicich instanci
+
+      LastInstance := TStringList.Create();
+      LastInstance.Delimiter := '_';
+      LastInstance.DelimitedText := InstancesList.Strings[Count-1]; // vezmeme posledni a rozdelime ji podle znaku '_'
+      LastIndex := LastInstance.Strings[1]; // jako druhy retezec mame cislo posledni instance
+
+      NextIndex := StrToInt(LastIndex) + 1; // zvetsime o jedna
+
+      InstancesList.Free();
+      LastInstance.Free();
+
+    end;
+
     // vysledne cislo zjistime velice naivne!
-    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(Count + 1));
+    GetNextInstanceOf := concat(TargetClass, '_', IntToStr(NextIndex));
 
     // uklid
     Instances.Free();
@@ -1343,11 +1366,14 @@ implementation
   function TOntoCore.CreateVocabularyElement(InstanceNode: IXMLNode; InstanceName: string) : boolean;
   var
     Node: IXMLNode;
+    VocabularyName: string;
   begin
+
+    VocabularyName := GetNextInstanceOf('Vocabulary', InstanceNode.OwnerDocument);
 
     Node := InstanceNode.AddChild('hasAssociatedVocabulary');
     Node := Node.AddChild('Vocabulary');
-    Node.Attributes['rdf:ID'] := GetNextInstanceOf('Vocabulary', InstanceNode.OwnerDocument);
+    Node.Attributes['rdf:ID'] := VocabularyName;
     Node := Node.AddChild('isAssociatedTo');
     Node.Attributes['rdf:resource'] := GetDecoratedName(InstanceName);
 
