@@ -20,6 +20,9 @@ type
 
   TOntoCore = class
     public
+      // verejni clenove
+      Language: string;
+
       // konstrukce / destrukce
       constructor Create; overload;
 
@@ -67,12 +70,12 @@ type
       function AddDeviceToLocation(LocationNode: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
       function CreateNewLocation(ImplementationLocation: IXMLNode; Location: PLocation) : IXMLNode;
       function IsOurInstance(InstanceNode: IXMLNode) : boolean;
-      function ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance; Language: string) : boolean;
+      function ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
       function AddMandatoryNodes(ImplementationLocation: IXMLNode; Device: PDevice; Location: PLocation) : boolean;
       function CreateVocabularyElement(InstanceNode: IXMLNode; InstanceName: string) : boolean;
       function UpdateFromSmallVocabulary(InstanceName: string; InstanceClass: string) : boolean;
-      function UpdateVocabulary(InstanceName: string; Language: string; Literal: string) : boolean;
-      function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string; Language: string) : string;
+      function UpdateVocabulary(InstanceName: string; Literal: string) : boolean;
+      function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : string;
       function SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
     end;
 
@@ -101,6 +104,7 @@ implementation
     inherited;
 
     Vocabulary := TVocabulary.Create();
+    Language := 'CZ'; // defaultni jazyk
     Vocabulary.LoadFromFile('./Data/Vocabulary.xml');
 
   end;
@@ -285,7 +289,7 @@ implementation
         if (CompareText(node.NodeName, ClassName) = 0) then
         begin
 
-            ExtractInstanceInformation(node, @instanceInfo, Instances^.GetLanguage()); // ziskejme informace o instanci
+            ExtractInstanceInformation(node, @instanceInfo); // ziskejme informace o instanci
             Instances^.Add(instanceInfo); // pridejme ji do seznamu
             matches := matches + 1;
 
@@ -617,7 +621,7 @@ implementation
           Node.Attributes['rdf:resource'] := GetDecoratedName(TargetNode.Attributes['rdf:ID']);
 
           CreateVocabularyElement(PropNode, InstanceName);
-          UpdateVocabulary(InstanceName, Device^.VocabularyLanguage, SingleProp^.Value);
+          UpdateVocabulary(InstanceName, SingleProp^.Value);
         end;
 
         inc(I);
@@ -1165,7 +1169,7 @@ implementation
         Node.Attributes['rdf:resource'] := GetDecoratedName(DeviceInstanceName);
 
         CreateVocabularyElement(DeviceNode, DeviceInstanceName);
-        UpdateVocabulary(AccLocationName, Device^.VocabularyLanguage, Device^.AccurateLocation.Name);
+        UpdateVocabulary(AccLocationName, Device^.AccurateLocation.Name);
 
       end;
 
@@ -1217,7 +1221,7 @@ implementation
       ContainedIn.Attributes['rdf:resource'] := GetDecoratedName(Location^.Levels[1]);
 
       CreateVocabularyElement(Space, Location^.Name);
-      UpdateFromSmallVocabulary(Location^.Name, Location^.Levels[Location^.Levels.Count - 1]);
+      UpdateFromSmallVocabulary(Location^.Name, Location^.Levels[Location^.Levels.Count - 1], );
 
       // oznacime si namy vytvorenou lokaci
       SubscribeNode(Space);
@@ -1287,7 +1291,7 @@ implementation
   // ExtractInstanceInformation
   //    Funkce ziska presne informace o zadane instanci a ulozi je do tridy TInstance
 
-  function TOntoCore.ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance; Language: String) : boolean;
+  function TOntoCore.ExtractInstanceInformation(InstanceNode: IXMLNode; InstanceInfo: PInstance) : boolean;
   var
     attribute: String;
   begin
@@ -1299,10 +1303,10 @@ implementation
 
       instanceInfo^.name := GetExactName(OleVariantToStr(attribute));
       instanceInfo^.CreatedByThisApp := IsOurInstance(InstanceNode);
-      instanceInfo^.Shortcut := GetPropertyTranslatedValue(InstanceNode, 'Shortcut', Language);
-      instanceInfo^.Material := GetPropertyTranslatedValue(InstanceNode, 'Material', Language);
-      instanceInfo^.Color := GetPropertyTranslatedValue(InstanceNode, 'Color', Language);
-      instanceInfo^.AccurateLocality := GetPropertyTranslatedValue(InstanceNode, 'AccurateLocation', Language);
+      instanceInfo^.Shortcut := GetPropertyTranslatedValue(InstanceNode, 'Shortcut');
+      instanceInfo^.Material := GetPropertyTranslatedValue(InstanceNode, 'Material');
+      instanceInfo^.Color := GetPropertyTranslatedValue(InstanceNode, 'Color');
+      instanceInfo^.AccurateLocality := GetPropertyTranslatedValue(InstanceNode, 'AccurateLocation');
 
     end;
 
@@ -1316,25 +1320,19 @@ implementation
     SmallVocabulary: TVocabulary;
     SmallEntry: PVocabularyEntry;
     Entry: TVocabularyEntry;
-    i: integer;
   begin
 
     SmallVocabulary := TVocabulary.Create();
     if (SmallVocabulary.LoadFromFile(Concat('./Vocabulary/', InstanceClass, 'Vocabulary.xml'))) then
     begin
 
-      for i := 0 to SmallVocabulary.GetLangCount() - 1 do
-      begin
+      SmallEntry := SmallVocabulary.GetEntryByName(InstanceClass, Language);
 
-        SmallEntry := SmallVocabulary.GetEntryByName(InstanceClass, SmallVocabulary.GetLangByIndex(i));
+      Entry.Name := InstanceName;
+      Entry.Language := SmallEntry.Language;
+      Entry.Synonyms := SmallEntry.Synonyms;
 
-        Entry.Name := InstanceName;
-        Entry.Language := SmallEntry.Language;
-        Entry.Synonyms := SmallEntry.Synonyms;
-
-        Vocabulary.Add(Entry);
-
-      end;
+      Vocabulary.Add(Entry);
 
     end;
 
@@ -1357,7 +1355,7 @@ implementation
 
   end;
 
-  function TOntoCore.UpdateVocabulary(InstanceName: string; Language: string; Literal: string) : boolean;
+  function TOntoCore.UpdateVocabulary(InstanceName: string; Literal: string) : boolean;
   var
     Entry: TVocabularyEntry;
   begin
@@ -1374,7 +1372,7 @@ implementation
 
   end;
 
-  function TOntoCore.GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string; Language: string) : string;
+  function TOntoCore.GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : string;
   var
     PropertyNode: IXMLNode;
     ProperyInstanceName, PropertyValue: string;

@@ -187,7 +187,7 @@ end;
 procedure TForm1.VypisInstanceZarizeni(instanceOf: string);
 begin
   SelectedDeviceInstances.Clear();
-  SelectedDeviceInstances.SetLanguage(cbLanguage.Text);
+  ontoCore.Language := cbLanguage.Text;
   ontoCore.GetClassInstances(xmlonto, instanceOf, @SelectedDeviceInstances);
   DevicesInstancesList.Clear();
   if ((SelectedDeviceInstances <> nil) and (SelectedDeviceInstances.GetSize() > 0)) then
@@ -246,7 +246,7 @@ begin
   SelectedDevice.Properties[2].Value := edZkratka.Text;
   SelectedDevice.Properties[3].Value := edBarva.Text;
 
-  SelectedDevice.VocabularyLanguage := cbLanguage.Text;
+  OntoCore.Language := cbLanguage.Text;
 
   // dalsi mocne volani!
   OntoCore.AddDeviceToOntology(XMLOnto, SelectedDevice, Location);
