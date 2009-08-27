@@ -690,7 +690,7 @@ implementation
 
       // kontrola existence subclassof elementu
       FindSpecificNode(Ontology.ChildNodes, IsImplementationLocation, Nil, ImplementationNode);
-      SameAsNode := ImplementationNode.ChildNodes.FindNode('sameAs', NameSpaceOWL);
+      SameAsNode := ImplementationNode.ChildNodes.FindNode('owl:sameAs');
       if (SameAsNode = nil) then
         AddMandatoryNodes(ImplementationNode, Device, Location);
 
