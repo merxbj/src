@@ -78,7 +78,7 @@ type
       function UpdateVocabulary(InstanceName: string; Literal: string) : boolean;
       function GetPropertyTranslatedValue(InstanceNode: IXMLNode; PropertyName: string) : TTranslatedProperty;
       function SubscribeNode(NodeToSubscribe: IXMLNode) : boolean;
-      function RemoveDeviceVocabularies(DeviceNode: IXMLNode) : boolean;
+      function RemoveElementVocabularies(DeviceNode: IXMLNode) : boolean;
     end;
 
   const
@@ -1291,10 +1291,12 @@ implementation
   //    Tezko zjistovat, co vsechno prislo s pridanim noveho zarizeni (ano slo by to, ale to uz je jiny pribeh)
   //
   //    Funkce tedy umi spravne mazat jen nami vytvorena zarizeni
+  //    Funkce nyni maze i nami vytvorene lokace, levely a event. celou implementaci, pokud je nase
 
   function TOntoCore.RemoveDeviceFromOntology(Ontology: IXMLDocument; DeviceInstance: PInstance) : boolean;
   var
-    DeviceImplementation: IXMLNode;
+    DeviceImplementation, LocationImplementation,
+    LevelImplementation, ImplementationLocation: IXMLNode;
   begin
 
     // nejprve zarizeni v ontologii najdeme
@@ -1302,8 +1304,38 @@ implementation
     begin
 
       // pro nase potreby je to zatim snad postacujici volani
-      RemoveDeviceVocabularies(DeviceImplementation);
-      DeviceImplementation.ParentNode.ParentNode.ChildNodes.Remove(DeviceImplementation.ParentNode);
+      RemoveElementVocabularies(DeviceImplementation);
+
+      LocationImplementation := DeviceImplementation.ParentNode.ParentNode; // lokace ktera obsahuje mazane zarizeni
+      LocationImplementation.ChildNodes.Remove(DeviceImplementation.ParentNode); // smazeme zarizeni
+
+      LevelImplementation := LocationImplementation.ParentNode.ParentNode; // level ktery obsahuje nasi lokaci
+      if (LocationImplementation.ChildNodes.FindNode('has') = nil) then // je lokace prazda?
+      begin
+
+        if (IsOurInstance(LocationImplementation)) then
+        begin
+
+          RemoveElementVocabularies(LocationImplementation);
+          LevelImplementation.ChildNodes.Remove(LocationImplementation.ParentNode); // smazeme lokaci
+
+        end;
+
+        ImplementationLocation := LevelImplementation.ParentNode.ParentNode; // misto kde se nachazi cela implementace
+        if (LevelImplementation.ChildNodes.FindNode('contains') = nil) then // existuje v levelu vubec jeste nejaka lokace
+        begin
+
+          if (IsOurInstance(LevelImplementation)) then
+          begin
+
+            RemoveElementVocabularies(LevelImplementation);
+            ImplementationLocation.ChildNodes.Remove(LevelImplementation.ParentNode); // a je cisto!
+
+          end;
+
+        end;
+
+      end;
 
     end;
 
@@ -1507,7 +1539,7 @@ implementation
   end;
 
 
-  function TOntoCore.RemoveDeviceVocabularies(DeviceNode: IXMLNode) : boolean;
+  function TOntoCore.RemoveElementVocabularies(DeviceNode: IXMLNode) : boolean;
   var
     Found: boolean;
     FoundNode: IXMLNode;
@@ -1525,7 +1557,7 @@ implementation
       if (EntryName <> '') then
       begin
 
-        Vocabulary.RemoveByName(EntryName);
+        Vocabulary.RemoveByName(EntryName); // bez specifikovaneho jazyka maze vsechny
 
       end;
 
@@ -1535,7 +1567,7 @@ implementation
 
     Vocabulary.SaveToFile(VocabularyPath);
 
-    RemoveDeviceVocabularies := true;
+    RemoveElementVocabularies := true;
 
   end;
 
