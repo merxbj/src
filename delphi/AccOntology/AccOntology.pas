@@ -183,6 +183,7 @@ begin
   selectedDevice := @Config.Devices[i+1];
 
   VypisInstanceZarizeni(selectedDevice^.DeviceType);
+  DevicesInstancesListClick(self);
 end;
 
 procedure TForm1.VypisInstanceZarizeni(instanceOf: string);
