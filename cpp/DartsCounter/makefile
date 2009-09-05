@@ -3,8 +3,10 @@
 # hodu.
 #
 
-program: main.o darts.o
-	g++ -o $@ main.o darts.o
+DartsCounter: main.o darts.o
+	g++ -Wall -o $@ main.o darts.o
 
 main.o: main.cpp
 darts.o: darts.cpp darts.h
+clean:
+	rm -rf *o DartsCounter

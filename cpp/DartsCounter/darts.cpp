@@ -37,31 +37,34 @@ hits_t& darts_c::guess_hits(int score)
 
 void darts_c::guess_hits_impl(int score)
 {
-    if (score == 0) // didn't we win?
+    hits_t::reverse_iterator biggest = points_un.rbegin();
+    int throws = score / (*biggest)->value;;
+    int rest = score % (*biggest)->value;;
+    int finalDouble = rest;;
+    int doubleRest = 0;
+
+    if (find_value(points_dbl, rest) == -1)
     {
-        return;
-    }
-    else if ((score % 2 == 0) && (score <= points_dbl.back()->value))
-    {
-        // try to finish 
-        // if it's not possible 
-            // pop last hit from stack
-            // if not possible (stack is empty)
-                // push best fit value (new score >= 2)
-            // push new - lower value hit
-            // recursion with appropriate score
-    }
-    else
-    {
-        // push best fit value (new score >= 2)
-        hits_t::reverse_iterator it = points_un.rbegin();
-        int new_score = 0;
-        while ((new_score = score - ((*it)->value)) < 0)
+        if (throws > 0)
         {
-            it++;
+            --throws;
+            rest += (*biggest)->value;
         }
-        hits.push_back((*it));
+
+        for (hits_t::reverse_iterator doublesIt = points_dbl.rbegin(); doublesIt != points_dbl.rend(); doublesIt++)
+        {
+            doubleRest = rest - (*doublesIt)->value;
+            if (find_value(points_un, doubleRest) != -1)
+            {
+                finalDouble = (*doublesIt)->value;
+                break;
+            }
+        }
     }
+
+    std::cout << (*biggest)->value << " x " << throws << std::endl;
+    std::cout << doubleRest << " and final " << finalDouble << std::endl;
+    std::cout << (*biggest)->value * throws + doubleRest + finalDouble << std::endl;
 }
 
 int darts_c::fill_zones(int* zones)
@@ -112,7 +115,7 @@ int darts_c::fill_unifyied()
 {
     int j = 0;
     hit_t* last = NULL;
-    
+
     for (hits_t::iterator it = points.begin(); it != points.end(); it++)
     {
         // this function expects sorted vector!
@@ -155,81 +158,24 @@ int darts_c::sort(hits_t& sorted)
     return sorted.size();
 }
 
-bool darts_c::pass_end_req(const hit_t* point)
+
+int darts_c::find_value(const hits_t& hits, int value)
 {
-    // best starting value (in fact ending) is bigger than biggest single of 3 points of value
-    return (point->value > (points_sng.back()->value + 3));
-}
+    int low = 0;
+    int high = hits.size() - 1;
+    int index = (low + high) / 2;
 
-void darts_c::fix_hits()
-{
-    // try to fix last three hits
-    hits_t::reverse_iterator last = hits.rbegin();
-    hits_t::reverse_iterator next_last = last + 1;
-    
-    // check last two hits
-    int sum = (*last)->value + (*next_last)->value;
-
-    if (sum < points.back()->value) // we might hit better
+    while ((high >= low) && (hits[index]->value != value))
     {
-        hits.pop_back();
-        hits.pop_back(); // remove last two hits
-        sum += hits.back()->value;
-        last = std::find(points.rbegin(), points.rend(), hits.back());
-        hits.pop_back();
-        hits.push_back(*(++last));
-        guess_hits_impl(sum - (*last)->value);
-    }
-}
-/*
-
-// This one is trying to be more "random", but is quite complicated!
-// even there is a mistake in thirth if statement! what if the score is 48!!!
-
-void darts_c::guess_hits_impl(int score)
-{
-    if (score == 0) // didn't we win?
-    {
-        fix_hits();
-        return;
-    }
-
-    int new_score = 0;
-
-    if (this->hits.size() == 0) // start with any of doubles - we will reverse the vector at the end
-    {
-        if ((score % 2 == 0) && (score <= points_dbl.back()->value)) // we can finish it immediately
-        {
-            new_score = score - points_dbl[(score / 2) - 1]->value; // array is sorted
-        }
+        if (value > hits[index]->value)
+            low = index + 1;
         else
-        {
-            srand(static_cast<unsigned>(time(NULL)));
-            bool* used = new bool[points_dbl.size()];
-            memset(used, 0, points_dbl.size());
-
-            int double_hit = rand() % points_dbl.size();
-            while (((new_score = score - this->points_dbl[double_hit]->value) < 0) ||
-                     !pass_end_req(this->points_dbl[double_hit]))
-            {
-                used[double_hit] = true;
-                while (((double_hit = rand() % points_dbl.size()), used[double_hit])); // choose new unused double hit
-            }
-
-            hits.push_back(points_dbl[double_hit]);
-            delete [] used; // we don't want it anymore
-        }
-    }
-    else // common situation
-    {
-        hits_t::reverse_iterator it = points_un.rbegin();
-        while ((new_score = score - ((*it)->value)) < 0)
-        {
-            it++;
-        }
-        hits.push_back((*it));
+            high = index - 1;
+        index = (low + high) / 2;
     }
 
-    guess_hits_impl(new_score); // and now the mighty recursion
+    if (high < low)
+        index = -1;
+
+    return index;
 }
-*/
