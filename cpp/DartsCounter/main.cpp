@@ -6,11 +6,13 @@ int main(int argc, char** argv)
     if (argc > 1)
         startScore = atoi(argv[1]);
 
-    hits_t hits;
-    darts_c darts_counter;
+    results_t* results;
+    darts_c* darts_counter = new darts_c();
 
-    hits = darts_counter.guess_hits(startScore);
-    //darts_counter.show_hits(hits);
+    results = darts_counter->guess_hits(startScore);
+    darts_counter->print_results(results);
+
+    delete darts_counter;
 
     return 0;
 }
