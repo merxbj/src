@@ -1,15 +1,17 @@
-<WorkManagement>
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="WorkManagementToHtml.xslt" type="text/xsl"?>
+<WorkSummary>
     
     <TaskDefinitions>
         <Task id="1" name="G/A" estimate="0" />
         <Task id="2" name="NFD" estimate="0" />
         <Task id="3" name="Smart Prepays implementation" estimate="0" />
-        <Task id="4" name="Wawa - cash management exports - implementation" estimate="0" />
+        <Task id="4" name="Wawa - cash management exports - implementation" estimate="52" correction="44.5" />
     </TaskDefinitions>
     
     <TwoWeeksSummary timeSpanStart="09/29/2009" timeSpanEnd="10/09/2009">
 
-        <WeekSummary weekStart="09/29/2009" weekEnd="02/10/2009">
+        <WeekSummary weekStart="09/29/2009" weekEnd="10/02/2009">
             <Day dayName="Monday" />
             <Day dayName="Tuesday">
                 <Task id="1" hours="0.5" />
@@ -67,4 +69,4 @@
         
     </TwoWeeksSummary>
     
-</WorkManagement>
+</WorkSummary>
