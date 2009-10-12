@@ -9,21 +9,21 @@
             <body>
                 <h1>Work Summary of Jarda Merxbauer</h1>
                 <xsl:for-each select="/WorkSummary/TwoWeeksSummary">
-                    <xsl:call-template name="TwoWeeksTables" />
+                    <xsl:call-template name="BuildTwoWeeksTables" />
                 </xsl:for-each>
             </body>
         </html>
     </xsl:template>
 
-    <xsl:template name="TwoWeeksTables">
+    <xsl:template name="BuildTwoWeeksTables">
         <h2>Two work weeks: <xsl:value-of select="@timeSpanStart" /> - <xsl:value-of select="@timeSpanEnd" /></h2>
         <xsl:for-each select="WeekSummary">
-            <xsl:call-template name="OneWeekTable" />
+            <xsl:call-template name="BuildOneWeekTable" />
         </xsl:for-each>
-        <xsl:call-template name="TwoWeeksSummaryTable" />
+        <xsl:call-template name="BuildTwoWeeksSummary" />
     </xsl:template>
     
-    <xsl:template name="OneWeekTable">
+    <xsl:template name="BuildOneWeekTable">
         <xsl:variable name="WeekStart" select="@weekStart" />
         <p>
             <table summary="Summary of the one week within the given time span." border="1">
@@ -108,7 +108,7 @@
                     <xsl:with-param name="DayOfWeek">Friday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td>0</td>
+            <td><xsl:value-of select="sum(//Task[../../@weekStart=$WeekStart and @id=$TaskId]/@hours)" /></td>
         </tr>
     </xsl:template>
 
@@ -136,7 +136,8 @@
         </xsl:choose>
     </xsl:template>
     
-    <xsl:template name="TwoWeeksSummaryTable">
+    <xsl:template name="BuildTwoWeeksSummary">
+        <xsl:variable name="TimeSpanStart" select="@timeSpanStart" />
         <p>
             <table summary="Total Summary of all tasks." border="1">
                 <caption>Tasks total</caption>
@@ -151,7 +152,7 @@
                     <tr>
                         <th>Task</th>
                         <th>Estimate</th>
-                        <th>Estimate Correction</th>
+                        <th>Worked before</th>
                         <th>Worked hours</th>
                         <th>Over/Short</th>
                         <th>ETA</th>
@@ -160,6 +161,7 @@
                 <tbody>
                     <xsl:for-each select="/WorkSummary/TaskDefinitions/Task">
                         <xsl:call-template name="BuildTaskSummary">
+                            <xsl:with-param name="TimeSpanStart" select="$TimeSpanStart" />
                             <xsl:with-param name="TaskId" select="@id" />
                         </xsl:call-template>
                     </xsl:for-each>
@@ -169,14 +171,44 @@
     </xsl:template>
 
     <xsl:template name="BuildTaskSummary">
+        <xsl:param name="TimeSpanStart" />
         <xsl:param name="TaskId" />
+        <xsl:variable name="Estimate">
+            <xsl:choose>
+                <xsl:when test="@estimate">
+                    <xsl:value-of select="@estimate" />
+                </xsl:when>
+                <xsl:otherwise>0</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="Correction">
+            <xsl:choose>
+                <xsl:when test="@correction">
+                    <xsl:value-of select="@correction" />
+                </xsl:when>
+                <xsl:otherwise>0</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="WorkedHours" select="sum(//Task[../../../@timeSpanStart=$TimeSpanStart and @id=$TaskId]/@hours)" />
+        <xsl:variable name="OverShort" select="$Estimate - $Correction - $WorkedHours" />
+        <xsl:variable name="Eta">
+            <xsl:choose>
+                <xsl:when test="@eta">
+                    <xsl:value-of select="@eta" />
+                </xsl:when>
+                <xsl:otherwise>N/A</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
         <tr>
             <td><xsl:value-of select="@name" /></td>
-            <td><xsl:value-of select="@estimate" /></td>
-            <td><xsl:value-of select="@correction" /></td>
-            <td><xsl:value-of select="sum(//Task[@id=$TaskId]/@hours)" /></td>
-            <td><xsl:value-of select="@estimate - @correction - sum(//task[@id=$TaskId]/@hours)" /></td>
+            <td><xsl:value-of select="$Estimate" /></td>
+            <td><xsl:value-of select="$Correction" /></td>
+            <td><xsl:value-of select="$WorkedHours" /></td>
+            <td><xsl:value-of select="$OverShort" /></td>
+            <td><xsl:value-of select="$Eta" /></td>
         </tr>
+
     </xsl:template>
     
 </xsl:stylesheet>

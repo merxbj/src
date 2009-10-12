@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet href="WorkManagementToHtml.xslt" type="text/xsl"?>
+<?xml-stylesheet href="WorkSummaryToHtml.xslt" type="text/xsl"?>
 <WorkSummary>
     
     <TaskDefinitions>
@@ -51,21 +51,6 @@
                 <Task id="3" hours="6.5" />
             </Day>
         </WeekSummary>
-
-        <Totals>
-            <Tasks>
-                <Task id="1" hours="7" estimateRemaining="0" />
-                <Task id="2" hours="10" estimateRemaining="0" />
-                <Task id="3" hours="47" estimateRemaining="0" />
-                <Task id="4" hours="7.5" estimateRemaining="0" />
-            </Tasks>
-            <Hours>
-                <Planned hours="72" />
-                <Worked hours="71.5" />
-                <FromLastWeek hours="1.5" />
-                <OverShort hours="1" />
-            </Hours>
-        </Totals>
         
     </TwoWeeksSummary>
     
