@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="WorkSummaryToHtml.xslt" type="text/xsl"?>
+<WorkSummary>
+    
+    <TaskDefinitions>
+        <Task id="1" name="G/A" estimate="0" />
+        <Task id="2" name="NFD" estimate="0" />
+        <Task id="3" name="Training" estimate="0" />
+        <Task id="4" name="Smart Prepays implementation" estimate="0" />
+        <Task id="5" name="Wawa - flash" estimate="0" correction="0" />
+    </TaskDefinitions>
+
+    <WeekSummary weekStart="10/12/2009" weekEnd="10/16/2009">
+        <Day dayName="Monday">
+            <Task id="1" hours="1" />
+            <Task id="3" hours="2.5" />
+            <Task id="4" hours="2.5" />
+            <Task id="5" hours="2.5" />
+        </Day>
+        <Day dayName="Tuesday">
+        </Day>
+        <Day dayName="Wednesday">
+        </Day>
+        <Day dayName="Thursday" />
+        <Day dayName="Friday">
+        </Day>
+    </WeekSummary>
+
+    <WeekSummary weekStart="10/19/2009" weekEnd="10/23/2009">
+        <Day dayName="Monday">
+        </Day>
+        <Day dayName="Tuesday">
+        </Day>
+        <Day dayName="Wednesday">
+        </Day>
+        <Day dayName="Thursday">
+        </Day>
+        <Day dayName="Friday">
+        </Day>
+    </WeekSummary>
+    
+</WorkSummary>
