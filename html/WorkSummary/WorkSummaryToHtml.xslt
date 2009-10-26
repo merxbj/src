@@ -3,6 +3,7 @@
 
     <xsl:template match="/">
         <html xmlns="http://www.w3.org/1999/xhtml">
+        <link rel="stylesheet" href="style.css" />
             <head>
                 <title>Work summary</title>
             </head>
@@ -10,6 +11,7 @@
                 <h1>Work Summary of Jarda Merxbauer</h1>
                 <xsl:apply-templates />
                 <xsl:call-template name="BuildTasksSummary" />
+                <xsl:call-template name="BuildHoursSummary" />
             </body>
         </html>
     </xsl:template>
@@ -17,7 +19,7 @@
     <xsl:template match="WeekSummary">
         <xsl:variable name="WeekStart" select="@weekStart" />
         <p>
-            <table summary="Summary of the one week within the given time span." border="1">
+            <table summary="Summary of the one week within the given time span.">
                 <caption>Week: <xsl:value-of select="@weekStart" /> - <xsl:value-of select="@weekEnd" /></caption>
                 <colgroup>
                     <col />
@@ -63,55 +65,55 @@
         <xsl:param name="TaskId" />
         <xsl:param name="WeekStart" />
         <tr>
-            <td><xsl:value-of select="@name" /></td>
-            <td>
+            <td class="taskTitle"><xsl:value-of select="@name" /></td>
+            <td class="number">
                 <xsl:call-template name="BuildSingleDayTaskCell">
                     <xsl:with-param name="TaskId" select="$TaskId" />
                     <xsl:with-param name="WeekStart" select="$WeekStart" />
                     <xsl:with-param name="DayOfWeek">Monday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td>
+            <td class="number">
                 <xsl:call-template name="BuildSingleDayTaskCell">
                     <xsl:with-param name="TaskId" select="$TaskId" />
                     <xsl:with-param name="WeekStart" select="$WeekStart" />
                     <xsl:with-param name="DayOfWeek">Tuesday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td>
+            <td class="number">
                 <xsl:call-template name="BuildSingleDayTaskCell">
                     <xsl:with-param name="TaskId" select="$TaskId" />
                     <xsl:with-param name="WeekStart" select="$WeekStart" />
                     <xsl:with-param name="DayOfWeek">Wednesday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td>
+            <td class="number">
                 <xsl:call-template name="BuildSingleDayTaskCell">
                     <xsl:with-param name="TaskId" select="$TaskId" />
                     <xsl:with-param name="WeekStart" select="$WeekStart" />
                     <xsl:with-param name="DayOfWeek">Thursday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td>
+            <td class="number">
                 <xsl:call-template name="BuildSingleDayTaskCell">
                     <xsl:with-param name="TaskId" select="$TaskId" />
                     <xsl:with-param name="WeekStart" select="$WeekStart" />
                     <xsl:with-param name="DayOfWeek">Friday</xsl:with-param>
                 </xsl:call-template>
             </td>
-            <td><strong><xsl:value-of select="sum(//Task[../../@weekStart=$WeekStart and @id=$TaskId]/@hours)" /></strong></td>
+            <td class="taskTotal number"><xsl:value-of select="sum(//Task[../../@weekStart=$WeekStart and @id=$TaskId]/@hours)" /></td>
         </tr>
     </xsl:template>
 
     <xsl:template name="BuildDaysTotals">
-        <tr>
+        <tr class="dayTotal">
             <th>Day total</th>
-            <td><strong><xsl:value-of select="sum(.//Day[@dayName='Monday']/Task/@hours)" /></strong></td>
-            <td><strong><xsl:value-of select="sum(.//Day[@dayName='Tuesday']/Task/@hours)" /></strong></td>
-            <td><strong><xsl:value-of select="sum(.//Day[@dayName='Wednesday']/Task/@hours)" /></strong></td>
-            <td><strong><xsl:value-of select="sum(.//Day[@dayName='Thursday']/Task/@hours)" /></strong></td>
-            <td><strong><xsl:value-of select="sum(.//Day[@dayName='Friday']/Task/@hours)" /></strong></td>
-            <td><strong><xsl:value-of select="sum(.//Day/Task/@hours)" /></strong></td>
+            <td class="number"><xsl:value-of select="sum(.//Day[@dayName='Monday']/Task/@hours)" /></td>
+            <td class="number"><xsl:value-of select="sum(.//Day[@dayName='Tuesday']/Task/@hours)" /></td>
+            <td class="number"><xsl:value-of select="sum(.//Day[@dayName='Wednesday']/Task/@hours)" /></td>
+            <td class="number"><xsl:value-of select="sum(.//Day[@dayName='Thursday']/Task/@hours)" /></td>
+            <td class="number"><xsl:value-of select="sum(.//Day[@dayName='Friday']/Task/@hours)" /></td>
+            <td class="grandTotal number"><xsl:value-of select="sum(.//Day/Task/@hours)" /></td>
         </tr>
     </xsl:template>
 
@@ -129,7 +131,7 @@
     
     <xsl:template name="BuildTasksSummary">
         <p>
-            <table summary="Total Summary of all tasks." border="1">
+            <table summary="Total Summary of all tasks.">
                 <caption>Tasks total</caption>
                 <colgroup>
                     <col />
@@ -189,13 +191,44 @@
         </xsl:variable>
 
         <tr>
-            <td><xsl:value-of select="@name" /></td>
-            <td><xsl:value-of select="$Estimate" /></td>
-            <td><xsl:value-of select="$Correction" /></td>
-            <td><xsl:value-of select="$WorkedHours" /></td>
-            <td><xsl:value-of select="$OverShort" /></td>
-            <td><xsl:value-of select="$Eta" /></td>
+            <td class="taskTitle"><xsl:value-of select="@name" /></td>
+            <td class="number"><xsl:value-of select="$Estimate" /></td>
+            <td class="number"><xsl:value-of select="$Correction" /></td>
+            <td class="number"><xsl:value-of select="$WorkedHours" /></td>
+            <td class="number"><xsl:value-of select="$OverShort" /></td>
+            <td class="number"><xsl:value-of select="$Eta" /></td>
         </tr>
+    </xsl:template>
+    
+    <xsl:template name="BuildTaskSummaryPerDay">
+        <p>
+            <table summary="Total Summary of all worked hours.">
+                <caption>Hours total</caption>
+                <colgroup>
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Worked Hours</th>
+                        <th>Should have worked</th>
+                        <th>Worked before</th>
+                        <th>Worked hours</th>
+                        <th>Over/Short</th>
+                        <th>ETA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <xsl:for-each select="/WorkSummary/TaskDefinitions/Task">
+                        <xsl:call-template name="BuildTaskSummary">
+                            <xsl:with-param name="TaskId" select="@id" />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </p>
     </xsl:template>
     
 </xsl:stylesheet>
