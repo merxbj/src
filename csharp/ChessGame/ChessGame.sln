@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessController", "ChessController\ChessController.csproj", "{682D48A7-ABD5-424C-9B3E-8A1DEF92B572}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessGameTest", "ChessGameTest\ChessGameTest.csproj", "{EBE11DFA-34AD-4C2F-8776-F829BD1CADDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{682D48A7-ABD5-424C-9B3E-8A1DEF92B572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682D48A7-ABD5-424C-9B3E-8A1DEF92B572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682D48A7-ABD5-424C-9B3E-8A1DEF92B572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682D48A7-ABD5-424C-9B3E-8A1DEF92B572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBE11DFA-34AD-4C2F-8776-F829BD1CADDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBE11DFA-34AD-4C2F-8776-F829BD1CADDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBE11DFA-34AD-4C2F-8776-F829BD1CADDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBE11DFA-34AD-4C2F-8776-F829BD1CADDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
