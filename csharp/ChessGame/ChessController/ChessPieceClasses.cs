@@ -10,8 +10,8 @@ namespace ChessController
             int yDir = (Color == ChessColor.Black) ? -1 : 1;
             
             // Move
-            if ((direction.CompareTo(new Vector(0, yDir)) == 0) ||
-                (OnStartPosition && direction.CompareTo(new Vector(0, yDir * 2)) == 0))
+            if ((direction.Equals(new Vector(0, yDir))) ||
+                (OnStartPosition && direction.Equals(new Vector(0, yDir * 2))))
             {
                 Position pos = GetPositionOnBoard().Move(direction);
                 IChessPiece piece = Board.GetFieldPiece(pos);
@@ -31,8 +31,8 @@ namespace ChessController
                 }
             }
             // Attacking
-            else if (direction.CompareTo(new Vector( 1, yDir)) == 0 || 
-                     direction.CompareTo(new Vector(-1, yDir)) == 0)
+            else if (direction.Equals(new Vector( 1, yDir)) || 
+                     direction.Equals(new Vector(-1, yDir)))
             {
                 Position pos = GetPositionOnBoard();
                 IChessPiece enemy = Board.GetFieldPiece(pos.Move(direction));
@@ -60,16 +60,19 @@ namespace ChessController
     {
         public override bool ValidateMove(Vector direction)
         {
-            if (direction.CompareTo(new Vector( 1, 2)) == 0 ||
-                direction.CompareTo(new Vector( 2, 1)) == 0 ||
-                direction.CompareTo(new Vector(-1, 2)) == 0 ||
-                direction.CompareTo(new Vector(-2, 1)) == 0 ||
-                direction.CompareTo(new Vector( 1,-2)) == 0 ||
-                direction.CompareTo(new Vector( 2,-1)) == 0 ||
-                direction.CompareTo(new Vector(-1,-2)) == 0 ||
-                direction.CompareTo(new Vector(-2,-1)) == 0)
+            if (direction.Equals(new Vector( 1,  2)) ||
+                direction.Equals(new Vector( 2,  1)) ||
+                direction.Equals(new Vector(-1,  2)) ||
+                direction.Equals(new Vector(-2,  1)) ||
+                direction.Equals(new Vector( 1, -2)) ||
+                direction.Equals(new Vector( 2, -1)) ||
+                direction.Equals(new Vector(-1, -2)) ||
+                direction.Equals(new Vector(-2, -1)))
             {
-                return true;
+                Position pos = GetPositionOnBoard().Move(direction);
+                IChessPiece piece = Board.GetFieldPiece(pos);
+                if ((piece == null) || (!Color.Equals(piece.Color)))
+                    return true;
             }
 
             return false;
@@ -80,7 +83,31 @@ namespace ChessController
     {
         public override bool ValidateMove(Vector direction)
         {
-            return (Math.Abs(direction.x) == Math.Abs(direction.y));
+            if (Math.Abs(direction.x) == Math.Abs(direction.y))
+            {
+                Vector simpleDirection = direction.Direction;
+                Position startPos = GetPositionOnBoard();
+                Position endPos = startPos.Move(direction);
+                Position pos = startPos.Move(simpleDirection);
+                IChessPiece piece;
+
+                while (!pos.Equals(endPos))
+                {
+                    piece = Board.GetFieldPiece(pos);
+                    if (piece != null)
+                        return false; // there is a piece in our way!
+
+                    pos.Move(simpleDirection);
+                }
+
+                piece = Board.GetFieldPiece(endPos);
+                if (piece != null && piece.Color == Color)
+                    return false;
+
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -104,9 +131,9 @@ namespace ChessController
     {
         public override bool ValidateMove(Vector direction)
         {
-            bool isCastling = (OnStartPosition && (direction.y == 0) && (Math.Abs(direction.x).CompareTo(2) == 0));
+            bool isCastling = (OnStartPosition && (direction.y == 0) && (Math.Abs(direction.x).Equals(2)));
             
-            if ((Math.Abs(direction.Size).CompareTo(1) != 0) &&
+            if (!(Math.Abs(direction.Size).Equals(1)) &&
                 !isCastling)
             {
                 return false;

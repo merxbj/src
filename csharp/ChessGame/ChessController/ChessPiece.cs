@@ -48,6 +48,12 @@ namespace ChessController
                 return board.GetPiecePosition(this);
         }
 
+        protected  bool IsWayClear()
+        {
+            
+            return false;
+        }
+
         #endregion
 
         public IChessBoard Board
