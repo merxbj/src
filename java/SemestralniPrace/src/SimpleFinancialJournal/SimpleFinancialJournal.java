@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 /**
@@ -17,22 +12,21 @@ public class SimpleFinancialJournal {
     }
 
     public void Run() {
-        
+
         JournalCommand command = new JournalCommand();
 
         while (shell.requestCommand(command)) {
             try {
                 prot.processCommand(command);
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 shell.handleException(ex);
             } finally {
                 command.clear();
             }
-            
+
         }
 
     }
-
     private Shell shell;
     private JournalProtocol prot;
 }

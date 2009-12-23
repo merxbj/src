@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 import java.io.*;
@@ -78,13 +73,12 @@ public class PersistentJournalEntry implements Serializable, Comparable<Persiste
         if (pj1.equals(pj2)) {
             Integer pje1 = getEntryId();
             Integer pje2 = o.getEntryId();
-            
+
             return pje1.compareTo(pje2);
         } else {
             return pj1.compareTo(pj2);
         }
     }
-
     private int journalId;
     private int entryId;
     private Money amount;

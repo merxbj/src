@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 /**
  *
  * @author eTeR
  */
-public class JournalEntry implements Comparable<JournalEntry>{
+public class JournalEntry implements Comparable<JournalEntry> {
 
     public int compareTo(JournalEntry o) {
         Integer e1 = getEntryId();
@@ -79,10 +74,8 @@ public class JournalEntry implements Comparable<JournalEntry>{
     public String toString() {
         return String.format("%6d : %10s : %s", entryId, amount, description);
     }
-
     private int entryId;
     private Money amount;
     private String description;
     private Journal journal;
-
 }

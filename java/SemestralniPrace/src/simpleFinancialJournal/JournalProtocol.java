@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 import java.util.*;
@@ -20,10 +15,11 @@ public class JournalProtocol {
         this.idGenerator = IdentifierGenerator.getInstance();
         idGenerator.initJournalIdGenerator(journals);
         this.assignedFile = null;
+        hasUnsavedChanges = false;
         clearJournals();
     }
 
-    public void processCommand(JournalCommand command) throws Exception{
+    public void processCommand(JournalCommand command) throws Exception {
 
         switch (command.type) {
             case ASSIGN:
@@ -46,6 +42,18 @@ public class JournalProtocol {
                 break;
             case SAVE:
                 saveData();
+                break;
+            case CLOSE:
+                closeFile(command);
+                break;
+            case SORT:
+                sortJournal(command);
+                break;
+            case REMOVE:
+                removeJournalEntry(command);
+                break;
+            case BALANCE:
+                printBalance();
                 break;
 
         }
@@ -80,6 +88,7 @@ public class JournalProtocol {
     private void createNewJournal() {
         Journal j = new Journal(idGenerator.getNextJournalId());
         journals.add(j);
+        hasUnsavedChanges = true;
         shell.log(String.format("New journal with id %d created", j.getJournalId()));
     }
 
@@ -109,7 +118,7 @@ public class JournalProtocol {
         }
 
         shell.log(String.format("Unable to find journal with id %d", journalId));
-        
+
     }
 
     /*
@@ -117,16 +126,13 @@ public class JournalProtocol {
      * Journal will get the journalEntryId by itself.
      */
     private void addJournalEntry(JournalCommand command) {
-        if (selectedJournal == null) {
-            shell.log("You must select journal before you want to create any entry!");
-            return;
+        if (checkSelectedJournal()) {
+            JournalEntry je = new JournalEntry();
+            je.setAmount((Money) command.parameters.get(0));
+            je.setDescription((String) command.parameters.get(1));
+            selectedJournal.add(je);
+            hasUnsavedChanges = true;
         }
-
-        JournalEntry je = new JournalEntry();
-        je.setAmount((Money) command.parameters.get(0));
-        je.setDescription((String) command.parameters.get(1));
-
-        selectedJournal.add(je);
     }
 
     private void showData(JournalCommand command) {
@@ -138,15 +144,12 @@ public class JournalProtocol {
     }
 
     private void listEntries() {
-        if (selectedJournal == null) {
-            shell.log("You must select journal before you want to list any!");
-            return;
-        }
-
-        Iterator it = selectedJournal.iterator();
-        while (it.hasNext()) {
-            JournalEntry je = (JournalEntry) it.next();
-            shell.log(je.toString());
+        if (checkSelectedJournal()) {
+            Iterator it = selectedJournal.iterator();
+            while (it.hasNext()) {
+                JournalEntry je = (JournalEntry) it.next();
+                shell.log(je.toString());
+            }
         }
     }
 
@@ -163,9 +166,78 @@ public class JournalProtocol {
             shell.log("You must assign a file before you can save anything!");
             return;
         }
-        
+
         PersistentJournal pj = new PersistentJournal();
         pj.serialize(assignedFile, journals);
+        hasUnsavedChanges = false;
+    }
+
+    private void removeJournalEntry(JournalCommand command) {
+        if (checkSelectedJournal()) {
+            int journalId = (Integer) command.parameters.get(0);
+            Iterator it = selectedJournal.iterator();
+            while (it.hasNext()) {
+                JournalEntry je = (JournalEntry) it.next();
+                if (je.getEntryId() == journalId) {
+                    selectedJournal.remove(je);
+                    hasUnsavedChanges = true;
+                    return;
+                }
+            }
+            shell.log(String.format("Unable to find journal entry with id %d", journalId));
+        }
+    }
+
+    private boolean checkSelectedJournal() {
+        if (selectedJournal == null) {
+            shell.log("You must select journal before you want to list any!");
+            return false;
+        }
+        return true;
+    }
+
+    private void closeFile(JournalCommand command) {
+        if (assignedFile != null) {
+            if (hasUnsavedChanges && !command.parameters.contains("forced")) {
+                shell.log("Journal contains unsaved changes!");
+                shell.log("If you want to close it anyway, please use close forced!");
+                return;
+            }
+            clearJournals();
+            hasUnsavedChanges = false;
+            selectedJournal = null;
+            assignedFile = null;
+        }
+    }
+
+    private void sortJournal(JournalCommand command) {
+        if (checkSelectedJournal()) {
+            SortColumn column = new SortColumn((String) command.parameters.get(0));
+            SortOrder order = new SortOrder((String) command.parameters.get(1));
+
+            if (column.getColumn().equals(SortColumn.Column.UNSUPPORTED)) {
+                shell.log(String.format("Unsupported sort column \"%s\"!", column));
+                return;
+            } else if (order.getOrder().equals(SortOrder.Order.UNKNOWN)) {
+                shell.log(String.format("Unknown sort order \"%s\" provided!", column));
+                return;
+            }
+
+            selectedJournal.setSortColumn(column);
+            selectedJournal.setSortOrder(order);
+
+            selectedJournal.sort();
+        }
+    }
+
+    private void printBalance() {
+        if (checkSelectedJournal()) {
+            Money journalBalance = new Money(0);
+            for (JournalEntry je : selectedJournal) {
+                journalBalance.setValue(journalBalance.getValue() + je.getAmount().getValue());
+            }
+            shell.log(String.format("Journal %d balance: %s", selectedJournal.getJournalId(), journalBalance));
+        }
     }
 
     private IdentifierGenerator idGenerator;
@@ -173,4 +245,5 @@ public class JournalProtocol {
     private Journal selectedJournal;
     private Shell shell;
     private File assignedFile;
+    private boolean hasUnsavedChanges;
 }

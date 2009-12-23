@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 import java.util.*;
@@ -101,7 +96,7 @@ public class JournalCommand {
 
         try {
             journalId = Integer.parseInt(rawParameters.get(0));
-        } catch (Exception ex){
+        } catch (Exception ex) {
             return false;
         }
 
@@ -150,9 +145,59 @@ public class JournalCommand {
      */
     private boolean buildListParams() {
         if (rawParameters.size() == 1) {
-            if ((rawParameters.get(0).compareTo("journals") == 0) ||
-                (rawParameters.get(0).compareTo("entries") == 0)) {
+            if ((rawParameters.get(0).compareTo("journals") == 0)
+                    || (rawParameters.get(0).compareTo("entries") == 0)) {
                 parameters.add(rawParameters.get(0));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean buildRemoveParams() {
+        if (rawParameters.size() == 1) {
+            try {
+                int journalEntryId = Integer.parseInt(rawParameters.get(0));
+                parameters.add(journalEntryId);
+                return true;
+            } catch (Exception ex) {
+            }
+        }
+        return false;
+    }
+
+
+    /*
+     * The sense of the forced param is to allow user to close the journal even
+     * when there are unsaved changes in it.
+     */
+    private boolean buildCloseParams() {
+        if (rawParameters.size() == 1) {
+            if (rawParameters.get(0).compareTo("forced") == 0) {
+                parameters.add(rawParameters.get(0));
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * The command would look like "sort by *** desc/asc" to be more user readable.
+     * However, we will omit the "by" word and add only the column to the params
+     * If asc/desc is not found, asc is used as default
+     */
+    private boolean buildSortParams() {
+        if (rawParameters.size() == 2) {
+            parameters.add(rawParameters.get(1));
+            parameters.add(new String("asc"));
+            return true;
+        } else if (rawParameters.size() == 3) {
+            if ((rawParameters.get(2).compareTo("asc") == 0) ||
+                (rawParameters.get(2).compareTo("desc") == 0)) {
+                parameters.add(rawParameters.get(1));
+                parameters.add(rawParameters.get(2));
                 return true;
             }
         }
@@ -179,6 +224,15 @@ public class JournalCommand {
             case LIST:
                 success = buildListParams();
                 break;
+            case REMOVE:
+                success = buildRemoveParams();
+                break;
+            case CLOSE:
+                success = buildCloseParams();
+                break;
+            case SORT:
+                success = buildSortParams();
+                break;
             case NOTHING:
                 success = false;
                 break;
@@ -187,12 +241,12 @@ public class JournalCommand {
                 break;
         }
 
-        if (!success)
+        if (!success) {
             type = CommandType.NOTHING;
+        }
 
         return success;
     }
-
     private String rawName;
     private ArrayList<String> rawParameters;
     public int paramCount;
@@ -200,6 +254,7 @@ public class JournalCommand {
     public CommandType type;
 
     public enum CommandType {
+
         NOTHING, HELP,
         ASSIGN, CLOSE, SAVE, SELECT,
         LIST, BALANCE, SORT, ADD, REMOVE, CREATE,

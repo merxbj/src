@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 import java.util.*;
@@ -38,8 +33,9 @@ public class Shell {
         String buf = scan.nextLine();
 
         if (command.parse(buf)) {
-            if (command.type.equals(JournalCommand.CommandType.QUIT))
+            if (command.type.equals(JournalCommand.CommandType.QUIT)) {
                 return false;
+            }
         } else {
             log("Invalid command or command parameters!");
         }
@@ -55,9 +51,9 @@ public class Shell {
 
         /*
         if (ex instanceof UnknownHostException)
-            message = "Requested addres is unreachable!";
+        message = "Requested addres is unreachable!";
         else if (ex instanceof SocketException)
-            message = "There is no Battle Game server on the requested address!";
+        message = "There is no Battle Game server on the requested address!";
          */
 
         return message;

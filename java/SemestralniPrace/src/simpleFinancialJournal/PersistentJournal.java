@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package simpleFinancialJournal;
 
 import java.util.*;
@@ -38,10 +33,10 @@ public class PersistentJournal {
             }
         } catch (EOFException ex) {
             // we have just reached the end of file
-        }
-        finally {
-            if (ois != null)
+        } finally {
+            if (ois != null) {
                 ois.close();
+            }
         }
 
         Iterator it = persistentEntries.iterator();
@@ -50,7 +45,7 @@ public class PersistentJournal {
         while (it.hasNext()) {
 
             PersistentJournalEntry pje = (PersistentJournalEntry) it.next();
-            
+
             JournalEntry je = new JournalEntry();
             je.setEntryId(pje.getEntryId());
             je.setAmount(pje.getAmount());
@@ -59,22 +54,24 @@ public class PersistentJournal {
             Integer journalId = pje.getJournalId();
             if (journal == null) {
                 journal = new Journal(journalId);
-                journal.suspendGenerator();
-            }
-            else if (journal.getJournalId() != journalId) {
+                journal.suspend();
+            } else if (journal.getJournalId() != journalId) {
                 journals.add(journal);
-                journal.resumeGenerator();
+                journal.resume();
                 journal = new Journal(journalId);
             }
 
             journal.add(je);
         }
-        journals.add(journal);
-        journal.resumeGenerator();
+
+        if (journal != null) {
+            journals.add(journal);
+            journal.resume();
+        }
     }
 
     public void serialize(File file, Set<Journal> journals) throws Exception {
-        
+
         persistentEntries.clear();
         Iterator jit = journals.iterator();
 
@@ -84,7 +81,7 @@ public class PersistentJournal {
 
             Iterator jeit = j.iterator();
             while (jeit.hasNext()) {
-                JournalEntry je = (JournalEntry)jeit.next();
+                JournalEntry je = (JournalEntry) jeit.next();
 
                 PersistentJournalEntry pje = new PersistentJournalEntry();
                 pje.setAmount(je.getAmount());
@@ -121,6 +118,5 @@ public class PersistentJournal {
             throw new Exception("Unexpected exception thrown during journal save!", unexpectedException);
         }
     }
-
     private TreeSet<PersistentJournalEntry> persistentEntries;
 }
