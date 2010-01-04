@@ -3,19 +3,25 @@ package simpleFinancialJournal;
 import java.util.*;
 
 /**
- *
- * @author eTeR
+ * Method providing an unified way for work with the command line.
  */
 public class Shell {
 
     public Shell() {
+        scanner = new Scanner(System.in);
         System.out.println("Welcome to Simple Financial Journal!");
     }
 
+    /*
+     * Writes the given message to the stdout.
+     */
     public void log(String message) {
         System.out.println(String.format("\t%s", message));
     }
 
+    /*
+     * Writes the exception message to the stdout.
+     */
     public void handleException(Exception ex) {
         String message = translateException(ex);
         log(message);
@@ -23,14 +29,12 @@ public class Shell {
 
     public void printHelp() {
         log("Please enter one of following commands:");
-        log("help, assign, close, save, select, list, balance, sort, add, remove, create, quit, exit");
+        log("help, assign, close, save, select, list, balance, sort, add, remove, update, create, quit, exit");
     }
 
     public boolean requestCommand(JournalCommand command) {
-        Scanner scan = new Scanner(System.in);
-
         System.out.print("$ ");
-        String buf = scan.nextLine();
+        String buf = scanner.nextLine();
 
         if (command.parse(buf)) {
             if (command.type.equals(JournalCommand.CommandType.QUIT)) {
@@ -41,6 +45,14 @@ public class Shell {
         }
 
         return true;
+    }
+
+    /*
+     * Request user for input with given message by unified way.
+     */
+    public String requestUserInput(String message) {
+        System.out.print(String.format("%s $ ", message));
+        return scanner.nextLine();
     }
 
     private String translateException(Exception ex) {
@@ -58,4 +70,6 @@ public class Shell {
 
         return message;
     }
+
+    private Scanner scanner;
 }

@@ -12,6 +12,10 @@ public class Money implements Serializable, Comparable<Money> {
         this.value = value;
     }
 
+    public Money(double value) {
+        this.value = Math.round(value * 100);
+    }
+
     public long getValue() {
         return value;
     }

@@ -47,9 +47,9 @@ public class PersistentJournal {
             PersistentJournalEntry pje = (PersistentJournalEntry) it.next();
 
             JournalEntry je = new JournalEntry();
-            je.setEntryId(pje.getEntryId());
-            je.setAmount(pje.getAmount());
-            je.setDescription(pje.getDescription());
+            je.entryId = pje.getEntryId();
+            je.amount = pje.getAmount();
+            je.description = pje.getDescription();
 
             Integer journalId = pje.getJournalId();
             if (journal == null) {
@@ -84,9 +84,9 @@ public class PersistentJournal {
                 JournalEntry je = (JournalEntry) jeit.next();
 
                 PersistentJournalEntry pje = new PersistentJournalEntry();
-                pje.setAmount(je.getAmount());
-                pje.setDescription(je.getDescription());
-                pje.setEntryId(je.getEntryId());
+                pje.setAmount(je.amount);
+                pje.setDescription(je.description);
+                pje.setEntryId(je.entryId);
                 pje.setJournalId(journalId);
 
                 persistentEntries.add(pje);

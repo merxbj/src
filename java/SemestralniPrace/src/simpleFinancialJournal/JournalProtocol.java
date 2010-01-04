@@ -2,6 +2,7 @@ package simpleFinancialJournal;
 
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.*;
 
 /**
  *
@@ -55,7 +56,9 @@ public class JournalProtocol {
             case BALANCE:
                 printBalance();
                 break;
-
+            case UPDATE:
+                updateRecord(command);
+                break;
         }
     }
 
@@ -106,10 +109,8 @@ public class JournalProtocol {
      */
     private void selectActiveJournal(JournalCommand command) {
         int journalId = (Integer) command.parameters.get(0);
-        Iterator iter = journals.iterator();
 
-        while (iter.hasNext()) {
-            Journal j = (Journal) iter.next();
+        for (Journal j : journals) {
             if (j.getJournalId() == journalId) {
                 selectedJournal = j;
                 shell.log(String.format("Selected journal with id %d", journalId));
@@ -128,35 +129,48 @@ public class JournalProtocol {
     private void addJournalEntry(JournalCommand command) {
         if (checkSelectedJournal()) {
             JournalEntry je = new JournalEntry();
-            je.setAmount((Money) command.parameters.get(0));
-            je.setDescription((String) command.parameters.get(1));
+            je.amount = (Money) command.parameters.get(0);
+            je.description = (String) command.parameters.get(1);
             selectedJournal.add(je);
             hasUnsavedChanges = true;
         }
     }
 
-    private void showData(JournalCommand command) {
+    private void showData(JournalCommand command) throws JournalException {
         if (((String) command.parameters.get(0)).compareTo("entries") == 0) {
-            listEntries();
+            listEntries(command);
         } else {
             listJournals();
         }
     }
 
-    private void listEntries() {
+    private void listEntries(JournalCommand command) throws JournalException {
         if (checkSelectedJournal()) {
-            Iterator it = selectedJournal.iterator();
-            while (it.hasNext()) {
-                JournalEntry je = (JournalEntry) it.next();
+            for (JournalEntry je : selectedJournal) {
+                if (!command.parameters.contains("*")) {
+                try {
+                    Class<?> c = je.getClass();
+                    Field restrictedField = c.getDeclaredField((String) command.parameters.get(1));
+                    Object value = restrictedField.get(je);
+
+                    if (((String) command.parameters.get(2)).compareTo("is") == 0) {
+                        if (!value.equals(command.parameters.get(3)))
+                            continue;
+                    } else if (value instanceof String) {
+                        if (!((String) value).contains((String) command.parameters.get(3)))
+                            continue;
+                    }
+                } catch (Exception ex) {
+                    throw new JournalException("Invalid where clause!");
+                }
+            }
                 shell.log(je.toString());
             }
         }
     }
 
     private void listJournals() {
-        Iterator it = journals.iterator();
-        while (it.hasNext()) {
-            Journal j = (Journal) it.next();
+        for (Journal j : journals) {
             shell.log(j.toString());
         }
     }
@@ -175,10 +189,8 @@ public class JournalProtocol {
     private void removeJournalEntry(JournalCommand command) {
         if (checkSelectedJournal()) {
             int journalId = (Integer) command.parameters.get(0);
-            Iterator it = selectedJournal.iterator();
-            while (it.hasNext()) {
-                JournalEntry je = (JournalEntry) it.next();
-                if (je.getEntryId() == journalId) {
+            for (JournalEntry je : selectedJournal) {
+                if (je.entryId == journalId) {
                     selectedJournal.remove(je);
                     hasUnsavedChanges = true;
                     return;
@@ -234,9 +246,21 @@ public class JournalProtocol {
         if (checkSelectedJournal()) {
             Money journalBalance = new Money(0);
             for (JournalEntry je : selectedJournal) {
-                journalBalance.setValue(journalBalance.getValue() + je.getAmount().getValue());
+                journalBalance.setValue(journalBalance.getValue() + je.amount.getValue());
             }
             shell.log(String.format("Journal %d balance: %s", selectedJournal.getJournalId(), journalBalance));
+        }
+    }
+
+    private void updateRecord(JournalCommand command) throws Exception {
+        if (checkSelectedJournal()) {
+            JournalEntry je = new JournalEntry();
+            je.entryId = (Integer) command.parameters.get(0);
+            je.amount = (Money) command.parameters.get(1);
+            je.description = (String) command.parameters.get(2);
+
+            selectedJournal.update(je);
+            hasUnsavedChanges = true;
         }
     }
 

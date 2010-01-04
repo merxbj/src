@@ -97,7 +97,7 @@ public class Journal implements Comparable<Journal>, Iterable<JournalEntry> {
     public void add(JournalEntry e) {
         if (!suspend) {
             int journalEntryId = generator.getNextJournalEntryId(journalId);
-            e.setEntryId(journalEntryId);
+            e.entryId = journalEntryId;
         }
 
         if (!entries.contains(e))
@@ -105,6 +105,15 @@ public class Journal implements Comparable<Journal>, Iterable<JournalEntry> {
 
         if (!suspend) {
             sort();
+        }
+    }
+
+    public void update(JournalEntry e) throws Exception {
+        if (!entries.contains(e)) {
+            throw new JournalException("Invalid record id to update!");
+        } else {
+            remove(e);
+            entries.add(e);
         }
     }
 

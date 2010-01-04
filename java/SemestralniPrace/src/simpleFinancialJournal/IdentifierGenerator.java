@@ -35,7 +35,7 @@ public class IdentifierGenerator {
         if (entries.size() == 0) {
             journalToEntries.put(journalId, 1);
         } else {
-            journalToEntries.put(journalId, entries.get(entries.size()-1).getEntryId() + 1);
+            journalToEntries.put(journalId, entries.get(entries.size()-1).entryId + 1);
         }
     }
 

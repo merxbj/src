@@ -3,8 +3,8 @@ package simpleFinancialJournal;
 import java.util.*;
 
 /**
- *
- * @author eTeR
+ * Class encapsulating a single user command with its parameters. It provides
+ * a method for parse a single command line input.
  */
 public class JournalCommand {
 
@@ -16,6 +16,10 @@ public class JournalCommand {
         type = CommandType.NOTHING;
     }
 
+    /*
+     * Parses a single command line input, validates it and initializes the 
+     * command itself into the source of flow.
+     */
     public boolean parse(String rawCommand) {
         StringTokenizer tokenizer = new StringTokenizer(rawCommand, " ");
 
@@ -40,6 +44,9 @@ public class JournalCommand {
         type = CommandType.NOTHING;
     }
 
+    /*
+     * The command type is derived from the first word parsed from user input
+     */
     private void assignCommandType() {
 
         if (rawName.compareTo("assign") == 0) {
@@ -66,8 +73,9 @@ public class JournalCommand {
             type = CommandType.SORT;
         } else if (rawName.compareTo("list") == 0) {
             type = CommandType.LIST;
+        } else if (rawName.compareTo("update") == 0) {
+            type = CommandType.UPDATE;
         }
-
     }
 
     private boolean buildAssignParams() {
@@ -106,32 +114,15 @@ public class JournalCommand {
     }
 
 
-    /*
-     * I'm going to involve a nasty hack here, as if i want to allow user to create
-     * description for entry with spaces (such an unusual thing!), I would have to
-     * employ some other interface, how to collect parameters.
-     * However, I want utilize the shell and command now, therefore I will consider
-     * first parameter as an amount and consolidate all remaining raw parameters to 
-     * one standalone string containing "spaced" description
-     */
     private boolean buildAddParams() {
         if (rawParameters.size() > 1) {
             try {
-                Double rawAmount = Double.parseDouble(rawParameters.get(0));
-                Money amount = new Money(Math.round(Math.ceil(rawAmount * 100)));
+                Money amount = new Money(Double.parseDouble(rawParameters.get(0)));
                 parameters.add(amount);
-            } catch (NumberFormatException nfe) {
+                parameters.add(buildString(1));
+            } catch (Exception ex) {
                 return false;
             }
-
-            Iterator it = rawParameters.iterator();
-            String description = new String("");
-            it.next(); // let's skip the first raw parameter (we have alread handled it before)
-            while (it.hasNext()) {
-                String partialDesc = (String) it.next();
-                description = description + partialDesc + " ";
-            }
-            parameters.add(description);
 
             return true;
         } else {
@@ -144,15 +135,46 @@ public class JournalCommand {
      * how to deal with it.
      */
     private boolean buildListParams() {
-        if (rawParameters.size() == 1) {
-            if ((rawParameters.get(0).compareTo("journals") == 0)
-                    || (rawParameters.get(0).compareTo("entries") == 0)) {
+        if (rawParameters.size() > 0) {
+            if (rawParameters.get(0).compareTo("journals") == 0) {
                 parameters.add(rawParameters.get(0));
                 return true;
+            } else if (rawParameters.get(0).compareTo("entries") == 0) {
+                parameters.add(rawParameters.get(0));
+                return buildWhereClause();
             }
         }
 
         return false;
+    }
+
+    /*
+     * There I'm very stupidly trying to parse restricting value as a double
+     * When this not succeed, I will try to parse it as a string
+     */
+    private boolean buildWhereClause() {
+        if ((rawParameters.size() > 1) && (rawParameters.get(1).compareTo("where") == 0)) {
+            try {
+                parameters.add(rawParameters.get(2)); // column name
+                if ((rawParameters.get(3).compareTo("is") == 0) ||
+                        (rawParameters.get(3).compareTo("contains") == 0)) {
+                    parameters.add(rawParameters.get(3));
+                }
+                try {
+                    double dValue;
+                    dValue = Double.parseDouble(rawParameters.get(4));
+                    parameters.add(new Money(dValue));
+                } catch (Exception ex) {
+                    parameters.add(buildString(4));
+                }
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        } else {
+            parameters.add("*");
+            return true;
+        }
     }
 
     private boolean buildRemoveParams() {
@@ -205,6 +227,79 @@ public class JournalCommand {
         return false;
     }
 
+    /*
+     * Update command takes only record id as the argument on the top of the add
+     * command. Therefore the record id will be parsed out, removed from raw
+     * paremeters and then buildAddParams will be called to take care about the
+     * rest.
+     */
+    private boolean buildUpdateParams() {
+        if (rawParameters.size() > 0) {
+            try {
+                parameters.add(Integer.parseInt(rawParameters.get(0)));
+                rawParameters.remove(0);
+                return buildAddParams();
+            } catch (Exception ex) {
+                
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * I'm going to involve a nasty hack here, as if i want to allow user to create
+     * description for entry with spaces (such an unusual thing!), I would have to
+     * employ some other interface, how to collect parameters.
+     * However, I want utilize the shell and command now, therefore I will consider
+     * first parameter as an amount and consolidate all remaining raw parameters to 
+     * one standalone string containing "spaced" description
+     */
+    private String buildString(int firstToken) throws JournalException {
+        String builtString = new String("");
+        int i = firstToken;
+        boolean valid = true;
+
+        String partialString = rawParameters.get(i++);
+        if (partialString.indexOf("'") != 0)
+            throw new JournalException("Invalid string format!");
+
+        builtString = builtString + partialString;
+        
+        while (i < rawParameters.size()) {
+            valid = false;
+            partialString = rawParameters.get(i);
+             int stringTerminatorPos = partialString.indexOf("'");
+             if ((stringTerminatorPos != -1) && (stringTerminatorPos != (partialString.length() - 1))) {
+                 throw new JournalException("Invalid string format!");
+             } else if (stringTerminatorPos != -1) {
+                 builtString = builtString + " " + partialString;
+                 valid = true;
+                 break; // this should be the end of the string
+             } else {
+                builtString = builtString + " " + partialString;
+             }
+             i++;
+        }
+
+        if (!valid) {
+            throw new JournalException("Invalid string format!");
+        } else {
+            // don't forget to cut off the leading and trailing quotas!
+            builtString = builtString.substring(1, builtString.length() - 1);
+        }
+
+        return builtString;
+    }
+
+
+    /*
+     * Every single command may or may not use parameters as an additional source
+     * of information. This function is called everytime the valid command
+     * is recognized and decides, whether the additional parameters may have any
+     * meaning, validates them and builds a list of parameters upon them (when
+     * they are valid)
+     */
     private boolean buildCommand() {
         boolean success;
 
@@ -233,6 +328,9 @@ public class JournalCommand {
             case SORT:
                 success = buildSortParams();
                 break;
+            case UPDATE:
+                success = buildUpdateParams();
+                break;
             case NOTHING:
                 success = false;
                 break;
@@ -257,7 +355,7 @@ public class JournalCommand {
 
         NOTHING, HELP,
         ASSIGN, CLOSE, SAVE, SELECT,
-        LIST, BALANCE, SORT, ADD, REMOVE, CREATE,
+        LIST, BALANCE, SORT, ADD, REMOVE, CREATE, UPDATE,
         QUIT
     }
 }

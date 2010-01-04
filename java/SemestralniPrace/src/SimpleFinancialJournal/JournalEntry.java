@@ -7,8 +7,8 @@ package simpleFinancialJournal;
 public class JournalEntry implements Comparable<JournalEntry> {
 
     public int compareTo(JournalEntry o) {
-        Integer e1 = getEntryId();
-        Integer e2 = o.getEntryId();
+        Integer e1 = entryId;
+        Integer e2 = o.entryId;
         return e1.compareTo(e2);
     }
 
@@ -34,30 +34,6 @@ public class JournalEntry implements Comparable<JournalEntry> {
         return hash;
     }
 
-    public Money getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Money amount) {
-        this.amount = amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getEntryId() {
-        return entryId;
-    }
-
-    public void setEntryId(int entryId) {
-        this.entryId = entryId;
-    }
-
     public Journal attachedJournal() {
         return journal;
     }
@@ -74,8 +50,8 @@ public class JournalEntry implements Comparable<JournalEntry> {
     public String toString() {
         return String.format("%6d : %10s : %s", entryId, amount, description);
     }
-    private int entryId;
-    private Money amount;
-    private String description;
+    public int entryId;
+    public Money amount;
+    public String description;
     private Journal journal;
 }

@@ -23,14 +23,14 @@ public class AmountComparator implements Comparator<JournalEntry> {
     }
 
     /**
-     * Interface method implementation which does the acutall comparation based
+     * Interface method implementation which does the actuall comparation based
      * on provided sort order
      */
     public int compare(JournalEntry je1, JournalEntry je2) {
         if (sortOrder.getOrder().equals(SortOrder.Order.ASC))
-            return je1.getAmount().compareTo(je2.getAmount());
+            return je1.amount.compareTo(je2.amount);
         else
-            return je2.getAmount().compareTo(je1.getAmount());
+            return je2.amount.compareTo(je1.amount);
     }
 
     SortOrder sortOrder;

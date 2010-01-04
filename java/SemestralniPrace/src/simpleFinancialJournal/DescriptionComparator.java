@@ -28,9 +28,9 @@ public class DescriptionComparator implements Comparator<JournalEntry> {
      */
     public int compare(JournalEntry je1, JournalEntry je2) {
         if (sortOrder.getOrder().equals(SortOrder.Order.ASC))
-            return je1.getDescription().compareToIgnoreCase(je2.getDescription());
+            return je1.description.compareToIgnoreCase(je2.description);
         else
-            return je2.getDescription().compareToIgnoreCase(je1.getDescription());
+            return je2.description.compareToIgnoreCase(je1.description);
     }
 
     SortOrder sortOrder;
