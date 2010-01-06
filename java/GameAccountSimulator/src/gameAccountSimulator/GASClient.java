@@ -7,7 +7,7 @@ public class GASClient {
         GameAccountSimulator gas = new GameAccountSimulator();
 
         // Mebik lands collection
-        int [] landCounts = {150,150,137,133,123,132,118,102,88,70,57,31,21};
+        int [] landCounts = {216,216,199,192,179,200,171,149,128,103,90,48,35};
 
 
         // Jirka Fric lands collection
