@@ -1,0 +1,17 @@
+*.obj
+*.lib
+*.suo
+*.ncb
+*.user
+*.idb
+*.pdb
+/Debug/
+/Release/
+*.tar.gz
+*.dsc
+*.deb
+*.exe
+*.[aos]
+*.py[co]
+/java/*/build/
+/java/*/dist/
