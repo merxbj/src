@@ -5,13 +5,13 @@
 *.user
 *.idb
 *.pdb
-/Debug/
-/Release/
+Debug/
+Release/
 *.tar.gz
 *.dsc
 *.deb
 *.exe
 *.[aos]
 *.py[co]
-/java/*/build/
-/java/*/dist/
+java/*/build/
+java/*/dist/
