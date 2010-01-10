@@ -63,6 +63,7 @@ public class GameAccountSimulator {
             }
         }
 
+        lands.printRecentlyBought();
         totalTimeElapsed += tickDuration;
 
     }
@@ -74,6 +75,7 @@ public class GameAccountSimulator {
     }
 
     public void run() {
+        System.out.println("Simulation started ...");
         while (!passedEndingCondition()) {
             updateAccount();
         }

@@ -40,7 +40,7 @@ public class Land {
     }
 
     public String toString() {
-        return String.format("%-17s  %3d  %9.2f", getName(), getQuantity(), getTotalIncome());
+        return String.format("%-17s  %3d  %9.2f", getName(), getQuantity(), getIncomePerPrice());
     }
 
     private double startingPrice;

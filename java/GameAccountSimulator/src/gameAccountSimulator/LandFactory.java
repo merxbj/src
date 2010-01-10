@@ -51,7 +51,7 @@ public class LandFactory {
                 land = new Land("Royal Trade Route", 1250000, quantity, 6200);
                 break;
             case GOLD_MINE:
-                land = new Land("Gold Mine", 4000000, quantity, 16500);
+                land = new Land("Gold Mine", 4000000, quantity, 15000);
                 break;
             default:
                 land = null;
