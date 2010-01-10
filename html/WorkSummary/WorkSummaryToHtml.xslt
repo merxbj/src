@@ -11,7 +11,6 @@
                 <h1>Work Summary of Jarda Merxbauer</h1>
                 <xsl:apply-templates />
                 <xsl:call-template name="BuildTasksSummary" />
-                <xsl:call-template name="BuildHoursSummary" />
             </body>
         </html>
     </xsl:template>
@@ -200,7 +199,7 @@
         </tr>
     </xsl:template>
     
-    <xsl:template name="BuildTaskSummaryPerDay">
+    <xsl:template match="WorkSchedule">
         <p>
             <table summary="Total Summary of all worked hours.">
                 <caption>Hours total</caption>
@@ -213,19 +212,18 @@
                 <thead>
                     <tr>
                         <th>Worked Hours</th>
-                        <th>Should have worked</th>
+                        <th>Schedulued</th>
                         <th>Worked before</th>
-                        <th>Worked hours</th>
                         <th>Over/Short</th>
-                        <th>ETA</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <xsl:for-each select="/WorkSummary/TaskDefinitions/Task">
-                        <xsl:call-template name="BuildTaskSummary">
-                            <xsl:with-param name="TaskId" select="@id" />
-                        </xsl:call-template>
-                    </xsl:for-each>
+                    <tr>
+                        <td><xsl:value-of select="sum(//Task/@hours)" /></td>
+                        <td><xsl:value-of select="ScheduledHours" /></td>
+                        <td><xsl:value-of select="WorkedBefore" /></td>
+                        <td><xsl:value-of select="sum(//Task/@hours) - ScheduledHours + WorkedBefore" /></td>
+                    </tr>
                 </tbody>
             </table>
         </p>

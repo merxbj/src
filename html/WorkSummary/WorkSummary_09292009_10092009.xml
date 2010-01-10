@@ -50,4 +50,9 @@
         </Day>
     </WeekSummary>
     
+    <WorkSchedule>
+        <ScheduledHours>80</ScheduledHours>
+        <WorkedBefore>1.5</WorkedBefore>
+    </WorkSchedule>
+    
 </WorkSummary>
