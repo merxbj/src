@@ -166,19 +166,19 @@ element* parseSingleCronElement(const char* rawCronElement)
 bool validateCron(const element* const* cronElements)
 {
     if ((!cronElements[CRON_HOUR]->all && !(cronElements[CRON_HOUR]->modulo > 0)) &&
-        (cronElements[CRON_HOUR]->exact < 0) || (cronElements[CRON_HOUR]->exact > 23)) // minute
+        (cronElements[CRON_HOUR]->exact < 0) || (cronElements[CRON_HOUR]->exact > 23)) // exact hour between 0 and 23
         return false;
     if ((!cronElements[CRON_MINUTE]->all && !(cronElements[CRON_MINUTE]->modulo > 0)) &&
-        (cronElements[CRON_MINUTE]->exact < 0) || (cronElements[CRON_MINUTE]->exact > 59)) // hour
+        (cronElements[CRON_MINUTE]->exact < 0) || (cronElements[CRON_MINUTE]->exact > 59)) // exact minute between 0 and 59
         return false;
     if ((!cronElements[CRON_DAY_OF_MONTH]->all && !(cronElements[CRON_DAY_OF_MONTH]->modulo > 0)) &&
-        (cronElements[CRON_DAY_OF_MONTH]->exact < 1) || (cronElements[CRON_DAY_OF_MONTH]->exact > 31)) // day of month
+        (cronElements[CRON_DAY_OF_MONTH]->exact < 1) || (cronElements[CRON_DAY_OF_MONTH]->exact > 31)) // exact day of month between 1 and 31
         return false;
     if ((!cronElements[CRON_MONTH]->all && !(cronElements[CRON_MONTH]->modulo > 0)) &&
-        (cronElements[CRON_MONTH]->exact < 1) || (cronElements[CRON_MONTH]->exact > 12)) // month
+        (cronElements[CRON_MONTH]->exact < 1) || (cronElements[CRON_MONTH]->exact > 12)) // month between 1 and 12
         return false;
     if ((!cronElements[CRON_DAY_OF_WEEK]->all && !(cronElements[CRON_DAY_OF_WEEK]->modulo > 0)) &&
-        (cronElements[CRON_DAY_OF_WEEK]->exact < 0) || (cronElements[CRON_DAY_OF_WEEK]->exact > 6)) // day if week
+        (cronElements[CRON_DAY_OF_WEEK]->exact < 0) || (cronElements[CRON_DAY_OF_WEEK]->exact > 6)) // exact day of week between 0 and 6
         return false;
 
     return true;
