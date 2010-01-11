@@ -36,8 +36,6 @@ public class GameAccountSimulator {
     }
 
     public void updateAccount() {
-        // update balance
-        accountBalance += lands.getTotalIncome();
 
         // buy new land(s)
         boolean buyMore = true;
@@ -65,7 +63,7 @@ public class GameAccountSimulator {
 
         lands.printRecentlyBought();
         totalTimeElapsed += tickDuration;
-
+        accountBalance += lands.getTotalIncome();
     }
 
     private void printResults() {
