@@ -68,7 +68,7 @@ public class GameAccountSimulator {
 
     private void printResults() {
         System.out.println("Simulation ended ...");
-        System.out.println(String.format("Total time elapsed: %d", totalTimeElapsed));
+        System.out.println(String.format("Total time elapsed: %d days %d hours and %d minutes", totalTimeElapsed / 1440, (totalTimeElapsed % 1440) / 60, (totalTimeElapsed % 1440) % 60));
         
     }
 

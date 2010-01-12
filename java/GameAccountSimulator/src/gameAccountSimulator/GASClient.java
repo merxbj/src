@@ -7,7 +7,7 @@ public class GASClient {
         GameAccountSimulator gas = new GameAccountSimulator();
 
         // Mebik lands collection
-        int [] landCounts = {246,246,224,216,201,217,195,169,146,118,97,54,39};
+        int [] landCounts = {253,253,232,225,209,225,202,174,152,122,100,55,40};
 
 
         // Jirka Fric lands collection
@@ -15,8 +15,8 @@ public class GASClient {
 
         gas.createCustomizedLandList(landCounts);
         //gas.setTargetIncome(6396000.0);
-        gas.setTargetIncome(3000000.0);
-        gas.setStartingAmount(210845);
+        gas.setTargetIncome(6396000.0);
+        gas.setStartingAmount(3395228);
         gas.run();
     }
 
