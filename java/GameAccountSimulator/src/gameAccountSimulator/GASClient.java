@@ -5,7 +5,7 @@ public class GASClient {
     public static void main(String[] args) {
 
         GameAccountSimulator gas = new GameAccountSimulator();
-        ConfigFile cf = new ConfigFile("C:\\temp\\GASConfig.xml");
+        ConfigFile cf = new ConfigFile(parseCommandLine(args));
 
         try {
             cf.parse();
@@ -18,7 +18,15 @@ public class GASClient {
         }
     }
 
-    public static void handleException(Exception ex) {
+    private static void handleException(Exception ex) {
         System.out.println(String.format("Invalid or not-existing config file! %s", ex.toString()));
+    }
+
+    private static String parseCommandLine(String[] args) {
+        if (args.length == 1) {
+            return args[0];
+        } else {
+            return new String("C:\\temp\\GASConfig.xml");
+        }
     }
 }
