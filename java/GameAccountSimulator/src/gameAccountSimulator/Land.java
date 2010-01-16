@@ -27,6 +27,10 @@ public class Land {
         return (income * quantity);
     }
 
+    public double getIncome() {
+        return income;
+    }
+
     public void incQuantity() {
         quantity++;
     }
@@ -39,6 +43,7 @@ public class Land {
         return quantity;
     }
 
+    @Override
     public String toString() {
         return String.format("%-17s  %3d  %9.2f", getName(), getQuantity(), getIncomePerPrice());
     }

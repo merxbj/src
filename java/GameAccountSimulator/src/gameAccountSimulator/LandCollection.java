@@ -7,7 +7,7 @@ public class LandCollection {
     LandCollection() {
         factory = new LandFactory();
         lands = new ArrayList<Land>();
-        recentlyBought = new ArrayList<Land>();
+        recentlyBought = new PurchaseInfo();
     }
 
     public void createCommonLandCollection() {
@@ -53,8 +53,8 @@ public class LandCollection {
         double balance = budget - land.getCurrentPrice();
         
         if (balance > 0.0) {
+            recentlyBought.purchase(land);
             land.incQuantity();
-            recentlyBought.add(land);
         }
 
         return balance;
@@ -91,16 +91,13 @@ public class LandCollection {
     }
 
     public void printRecentlyBought() {
-        Collections.sort(recentlyBought, new LandCurrentPriceComparator());
-        for (Land l : recentlyBought) {
-            System.out.println(String.format("Bought land! %s", l.toString()));
-        }
-        System.out.println("-------------------------------------------------");
+        recentlyBought.printReceipt();
         recentlyBought.clear();
+        System.out.println("-------------------------------------------------------------------------------------");
     }
     
     private ArrayList<Land> lands;
     private LandFactory factory;
-    private ArrayList<Land> recentlyBought;
+    private PurchaseInfo recentlyBought;
 
 }
