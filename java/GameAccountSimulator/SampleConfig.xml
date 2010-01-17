@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Required root element -->
+<GASConfiguration>
+    <!-- List of counts of your current land setup sorted from FARM to GOLD MINE -->
+    <LandCollectionSetUp>272,272,250,242,225,242,216,188,162,131,108,62,44</LandCollectionSetUp>
+    <!-- Target income you wish to reach -->
+    <TargetIncome>6396000</TargetIncome>
+    <!-- Starting gold amount you have currently on your account -->
+    <StartingAmount>19689463</StartingAmount>
+</GASConfiguration>
