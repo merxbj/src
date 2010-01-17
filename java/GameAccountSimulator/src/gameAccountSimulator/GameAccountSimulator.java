@@ -1,14 +1,17 @@
 package gameAccountSimulator;
 
+import java.util.ArrayList;
+
 public class GameAccountSimulator {
 
     public GameAccountSimulator() {
         lands = new LandCollection();
         accountBalance = 0;
-        ect = EndingConditionType.TARGET_INCOME;
+        endingConditions = new ArrayList<EndingConditionType>();
         targetIncome = 0;
         totalTimeElapsed = 0;
         tickDuration = 50;
+        targetCyclesCount = Integer.MAX_VALUE;
     }
 
     public void createCommonLandList() {
@@ -19,8 +22,12 @@ public class GameAccountSimulator {
         lands.createCustomizedLandCollection(counts);
     }
 
-    public void setEndingConditionType(EndingConditionType ect) {
-        this.ect = ect;
+    public void addEndingConditionType(EndingConditionType ect) {
+        this.endingConditions.add(ect);
+    }
+
+    public void removeEndingConditionType(EndingConditionType ect) {
+        this.endingConditions.remove(ect);
     }
 
     public void setTargetIncome(double balance) {
@@ -33,6 +40,14 @@ public class GameAccountSimulator {
 
     public void setTickDuration(int tickDuration) {
         this.tickDuration = tickDuration;
+    }
+
+    public int getTargetCyclesCount() {
+        return targetCyclesCount;
+    }
+
+    public void setTargetCyclesCount(int targetCyclesCount) {
+        this.targetCyclesCount = targetCyclesCount;
     }
 
     public void updateAccount() {
@@ -57,7 +72,7 @@ public class GameAccountSimulator {
                     accountBalance = lands.buyLand(land, accountBalance);
                 else
                     // ouch! we haven't enough money to buy first land!
-                    ect = EndingConditionType.FORCED;
+                    endingConditions.add(EndingConditionType.FORCED);
             }
         }
 
@@ -82,16 +97,21 @@ public class GameAccountSimulator {
 
     private boolean passedEndingCondition() {
         boolean passed = false;
-        
-        switch (ect) {
-            case TARGET_INCOME:
-                passed = (targetIncome <= lands.getTotalIncome());
+        for (EndingConditionType ect : endingConditions) {
+            switch (ect) {
+                case TARGET_INCOME:
+                    passed = (targetIncome <= lands.getTotalIncome());
+                    break;
+                case CYCLES_PASSED:
+                    passed = (totalTimeElapsed / tickDuration) == targetCyclesCount;
+                    break;
+                case FORCED:
+                    passed = true;
+                default:
+                    passed = false;
+            }
+            if (passed)
                 break;
-            case FORCED:
-                passed = true;
-                break;
-            default:
-                passed = false;
         }
 
         return passed;
@@ -102,6 +122,7 @@ public class GameAccountSimulator {
     private long totalTimeElapsed;
     private int tickDuration;
 
-    private EndingConditionType ect;
+    private ArrayList<EndingConditionType> endingConditions;
     private double targetIncome;
+    private int targetCyclesCount;
 }

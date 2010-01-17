@@ -17,7 +17,7 @@ public class LandPurchaseInfo {
 
     @Override
     public String toString() {
-        return String.format("Bought %3d %-17s for %9.0f gold! Income increased by %9.0f golds!", quantity, land.getName(), totalPrice, totalIncomeIncrease);
+        return String.format("Bought %3d %-17s for %9.0f gold! Income increased by %5.0f gold!", quantity, land.getName(), totalPrice, totalIncomeIncrease);
     }
 
     private Land land;

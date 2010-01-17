@@ -93,7 +93,7 @@ public class LandCollection {
     public void printRecentlyBought() {
         recentlyBought.printReceipt();
         recentlyBought.clear();
-        System.out.println("-------------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------");
     }
     
     private ArrayList<Land> lands;
