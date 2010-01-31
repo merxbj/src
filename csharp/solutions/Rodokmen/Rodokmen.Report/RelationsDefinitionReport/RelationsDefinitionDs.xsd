@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RelationsDefinitionDs" targetNamespace="http://tempuri.org/RelationsDefinitionDs.xsd" xmlns:mstns="http://tempuri.org/RelationsDefinitionDs.xsd" xmlns="http://tempuri.org/RelationsDefinitionDs.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+        </Connections>
+        <Tables>
+        </Tables>
+        <Sources>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RelationsDefinitionDs" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="RelationsDefinitionDs" msprop:Generator_DataSetName="RelationsDefinitionDs">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="RelationsDefinition" msprop:Generator_UserTableName="RelationsDefinition" msprop:Generator_RowDeletedName="RelationsDefinitionRowDeleted" msprop:Generator_RowChangedName="RelationsDefinitionRowChanged" msprop:Generator_RowClassName="RelationsDefinitionRow" msprop:Generator_RowChangingName="RelationsDefinitionRowChanging" msprop:Generator_RowEvArgName="RelationsDefinitionRowChangeEvent" msprop:Generator_RowEvHandlerName="RelationsDefinitionRowChangeEventHandler" msprop:Generator_TableClassName="RelationsDefinitionDataTable" msprop:Generator_TableVarName="tableRelationsDefinition" msprop:Generator_RowDeletingName="RelationsDefinitionRowDeleting" msprop:Generator_TablePropName="RelationsDefinition">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RelationId" msprop:Generator_UserColumnName="RelationId" msprop:Generator_ColumnVarNameInTable="columnRelationId" msprop:Generator_ColumnPropNameInRow="RelationId" msprop:Generator_ColumnPropNameInTable="RelationIdColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="MaleName" msprop:Generator_UserColumnName="MaleName" msprop:Generator_ColumnVarNameInTable="columnMaleName" msprop:Generator_ColumnPropNameInRow="MaleName" msprop:Generator_ColumnPropNameInTable="MaleNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="FemaleName" msprop:Generator_UserColumnName="FemaleName" msprop:Generator_ColumnVarNameInTable="columnFemaleName" msprop:Generator_ColumnPropNameInRow="FemaleName" msprop:Generator_ColumnPropNameInTable="FemaleNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="MaxRelCount" msprop:Generator_UserColumnName="MaxRelCount" msprop:Generator_ColumnVarNameInTable="columnMaxRelCount" msprop:Generator_ColumnPropNameInRow="MaxRelCount" msprop:Generator_ColumnPropNameInTable="MaxRelCountColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

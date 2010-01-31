@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.StartUp", "Rodokmen.StartUp\Rodokmen.StartUp.csproj", "{26A03955-763B-49D8-AFEE-F4411CD8F89E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.Common", "Rodokmen.Common\Rodokmen.Common.csproj", "{7C6DBDD4-6540-412F-9330-DF62E6CFBF70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.Report", "Rodokmen.Report\Rodokmen.Report.csproj", "{3ADFE861-4A07-4689-BF37-A9573C8B9C58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.Report.Ui", "Rodokmen.Report.Ui\Rodokmen.Report.Ui.csproj", "{6EA6E432-0292-4D59-A052-2FEB0C35854E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.Configurations.Ui", "Rodokmen.Configurations.Ui\Rodokmen.Configurations.Ui.csproj", "{3A2B5C84-577E-4C19-9A6D-829E85E38D2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rodokmen.Configurations", "Rodokmen.Configurations\Rodokmen.Configurations.csproj", "{DDAFFDD4-FC72-47FD-8709-25A3DA27E4C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26A03955-763B-49D8-AFEE-F4411CD8F89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26A03955-763B-49D8-AFEE-F4411CD8F89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26A03955-763B-49D8-AFEE-F4411CD8F89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26A03955-763B-49D8-AFEE-F4411CD8F89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C6DBDD4-6540-412F-9330-DF62E6CFBF70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6DBDD4-6540-412F-9330-DF62E6CFBF70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6DBDD4-6540-412F-9330-DF62E6CFBF70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6DBDD4-6540-412F-9330-DF62E6CFBF70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ADFE861-4A07-4689-BF37-A9573C8B9C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ADFE861-4A07-4689-BF37-A9573C8B9C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ADFE861-4A07-4689-BF37-A9573C8B9C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ADFE861-4A07-4689-BF37-A9573C8B9C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA6E432-0292-4D59-A052-2FEB0C35854E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA6E432-0292-4D59-A052-2FEB0C35854E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA6E432-0292-4D59-A052-2FEB0C35854E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA6E432-0292-4D59-A052-2FEB0C35854E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A2B5C84-577E-4C19-9A6D-829E85E38D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A2B5C84-577E-4C19-9A6D-829E85E38D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A2B5C84-577E-4C19-9A6D-829E85E38D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A2B5C84-577E-4C19-9A6D-829E85E38D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDAFFDD4-FC72-47FD-8709-25A3DA27E4C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDAFFDD4-FC72-47FD-8709-25A3DA27E4C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDAFFDD4-FC72-47FD-8709-25A3DA27E4C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDAFFDD4-FC72-47FD-8709-25A3DA27E4C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

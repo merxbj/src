@@ -16,3 +16,6 @@ Release/
 java/*/build/
 java/*/dist/
 java/*/nbproject/private/
+csharp/*/bin/
+csharp/*/obj/
+*.settings
