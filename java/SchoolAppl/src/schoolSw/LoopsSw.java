@@ -1,11 +1,12 @@
 package schoolSw;
 
-import common.*;
 import java.util.*;
 
 public class LoopsSw extends common.BaseExectuableClass {
 
-   public LoopsSw(boolean wantRun)
+   public LoopsSw(boolean wantRun) {
+       super(wantRun);
+   }
 
     public void Execute() {
 

@@ -15,5 +15,5 @@ public class BaseExectuableClass implements Executable {
         ;
     }
 
-    private boolean wantRun = false;
+    protected boolean wantRun = false;
 }

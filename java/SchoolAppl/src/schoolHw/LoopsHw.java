@@ -1,11 +1,12 @@
 package schoolHw;
 
-import common.*;
-
 public class LoopsHw extends common.BaseExectuableClass {
 
-    public void Execute()
-    {
-        ;
+    public LoopsHw(boolean wantRun) {
+        super(wantRun);
     }
+
+    public void Execute() {
+    }
+
 }
