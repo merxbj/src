@@ -1,4 +1,4 @@
-package FTPUploader;
+package FTPSynchronizer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -13,8 +13,14 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+/*
+ *TODO: make ENUM for mysql collumns
+ *TODO: save log while program is running, not at the end 
+ */
+
+
 @SuppressWarnings("serial")
-public class FTPUploader extends JFrame implements ActionListener,ListSelectionListener
+public class FTPSyncMain extends JFrame implements ActionListener,ListSelectionListener
 {
 	JFrame mainFrame;
 	JList loginsList;
@@ -41,7 +47,7 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 	static String mysqlDb;
 	public static String rootDir;
 	
-	public FTPUploader()
+	public FTPSyncMain()
     {
 	    /*
 	     * Arranges default layout 
@@ -119,6 +125,8 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 	{
     	File dirRoot = new File(rootDir);
 
+    	
+    	
     	File[] files = dirRoot.listFiles();
 		readFolderContent(files);
 
@@ -142,7 +150,7 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 	 *	Show table with all customers from mysql table
 	 */
 	{
-		downloadCustomersList();
+		queryCustomersList();
 
 		customersTableModel = new TblModel(customers);
 	    customersTable = new JTable(customersTableModel);
@@ -187,7 +195,7 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 	    buttonsPanel.add(buttonExit);
 	}
 
-	private static void readFolderContent(File[] files)
+	private void readFolderContent(File[] files)
 	/*
 	 *  Reads all files from rootDir command line argument
 	 */
@@ -196,20 +204,17 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
    		{
    	    	if(files[i].isDirectory() && (files[i].list().length != 0) && !files[i].getName().substring(0,1).equals("."))
    	    	{ // if it is dir and has something to print
-   	    		File[] currentDir = files[i].listFiles();
-   	    		readFolderContent(currentDir);
+   	    		File[] subDir = files[i].listFiles();
+   	    		readFolderContent(subDir);
    	    	}
    	    	else
    	    	{
-   	    		if(!files[i].isDirectory() && !files[i].getName().substring(0,1).equals("."))
-   	    		{
-   	    			filesForUpload.add(new Object[] {files[i].toString(), false});
-   	    		}
+    			filesForUpload.add(new Object[] {removeWinSlashes(files[i].getAbsolutePath()), false});
    	    	}
    		}
     }
 
-    private void downloadCustomersList()
+    private void queryCustomersList()
     {
     	/*
     	 *CREATE TABLE IF NOT EXISTS `customers` (
@@ -272,7 +277,7 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 			startUploading.setEnabled(false);
 			
 			getChoosenFilesForUpload();
-			new uploadProcessing(choosenFiles,customers);
+			new UploadProcessing(choosenFiles,customers);
 			
 			startUploading.setEnabled(true);
 		}
@@ -321,22 +326,30 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 				rootDir=args[i].substring(index+1);
 			}
 		}
+		
+		/*
+		 * Check if rootDir is specified, if not use user home dir
+		 */
+		if(rootDir.isEmpty())
+		{
+			rootDir = System.getProperty("user.home");
+		}
 	}
 
-	public static void insertToLog(String s)
+	public static void insertToLog(String text)
 	{
-		insertToLog(s,false);
+		insertToLog(text,false);
 	}
 	
-	public static void insertToLog(String s,boolean b)
+	public static void insertToLog(String text,boolean pureText)
 	{
-		if(b)
+		if(pureText)
 		{
-			log.insert(s+"\n", 0);
+			log.insert(text+"\n", 0);
 		}
 		else
 		{
-			log.insert("====( "+s+" )==========\n", 0);
+			log.insert("====( "+text+" )==========\n", 0);
 		}
 		log.update(log.getGraphics());
 	}	
@@ -350,20 +363,38 @@ public class FTPUploader extends JFrame implements ActionListener,ListSelectionL
 		}
 	}
 	
-	public static void updateProgressBarValue(int v)
+	public static void updateProgressBarValue(int value)
 	{
-		progressBar.setValue(v);
+		progressBar.setValue(value);
 		progressBar.update(progressBar.getGraphics());
 	}
 
 	public static void main(String[] args)
     {
     	getSettingsFromCommandLine(args);
-        new FTPUploader();
+        new FTPSyncMain();
     }
 
 	public static void refreshCustomersTable()
 	{
 		customersTable.update(customersTable.getGraphics());
+	}
+	
+	public static String removeWinSlashes(String strForConversion)
+	{
+		String convertedStr = "";
+		for (int i = 0;i<strForConversion.split("\\\\").length;i++)
+		{
+			if (convertedStr.isEmpty())
+			{
+				convertedStr = strForConversion.split("\\\\")[i];				
+			}
+			else
+			{
+				convertedStr = convertedStr + "/" + strForConversion.split("\\\\")[i];
+			}
+		}
+		//System.out.println(convertedStr+"/");
+		return convertedStr;
 	}
 }
