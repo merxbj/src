@@ -1,4 +1,4 @@
-package FTPUploader;
+package FTPSynchronizer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -36,15 +36,15 @@ public class JTableCellRenderer implements TableCellRenderer
 	    	}
 		}
 		
-		if(row < FTPUploader.customers.size())
+		if(row < FTPSyncMain.customers.size())
 		{
-			if (value.equals(FTPUploader.customers.get(row)[0]))
+			if (value.equals(FTPSyncMain.customers.get(row)[0]))
 			{
-				if(FTPUploader.customers.get(row)[5].equals("D"))
+				if(FTPSyncMain.customers.get(row)[5].equals("D"))
 				{
 					renderer.setBackground(Color.GREEN);
 				}
-				else if(FTPUploader.customers.get(row)[5].equals("E"))
+				else if(FTPSyncMain.customers.get(row)[5].equals("E"))
 				{
 					renderer.setBackground(Color.RED);
 				}
