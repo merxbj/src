@@ -1,82 +1,68 @@
 package FTPSynchronizer;
 
+import java.io.IOException;
 import java.util.ArrayList;
-//import org.jibble.simpleftp.*;
-import java.io.*;
-
+import FTPSynchronizer.FTPSyncMainWindow.customersArrayMap;
 
 public class UploadProcessing
 {
-	newFtpClient ftp;
+	ExtendedFtpClient ftp;
 	ArrayList<String> choosenFiles;
 	String currentPath;
 	
-	boolean isCompleted;
-
-	public UploadProcessing(ArrayList<String> choosenFiles,ArrayList<Object[]> customers)
+	public void startUploadProcess(ArrayList<String> choosenFiles,ArrayList<Object[]> choosenCustomers)
 	{
 		this.choosenFiles = choosenFiles;
 		
-		isCompleted = false;
 		/*
 		 * Count choosen customers for ProgressBar
 		 */
-		int countChoosenCustomers = 0;
-		for (int c=0;c<customers.size();c++)
-		{
-			if(customers.get(c)[1].equals(true))
-			{
-				countChoosenCustomers++;
-			}
-		}
 		
-		
-		FTPSyncMain.progressBar.setMaximum((choosenFiles.size()*countChoosenCustomers)+countChoosenCustomers);
-		FTPSyncMain.progressBar.setValue(0);
-		
-		eraseRootDirFromPath();
+		FTPSyncMainWindow.progressBar.setMaximum((choosenFiles.size()*choosenCustomers.size())+choosenCustomers.size());
+		FTPSyncMainWindow.progressBar.setValue(0);
 
 		/*
 		 * Go throw customers and begin FTP connection
 		 */
-		for (int i=0;i<customers.size();i++)
+		for (int i=0;i<choosenCustomers.size();i++)
 		{
-			if(customers.get(i)[1].equals(true))
+			if(ftpProcessing(	choosenCustomers.get(i)[customersArrayMap.CUSTOMERNAME.ordinal()].toString(),
+								choosenCustomers.get(i)[customersArrayMap.URL.ordinal()].toString(),
+								choosenCustomers.get(i)[customersArrayMap.SUBDIR.ordinal()].toString(),
+								choosenCustomers.get(i)[customersArrayMap.MYSQLNAME.ordinal()].toString(),
+								choosenCustomers.get(i)[customersArrayMap.MYSQLPASS.ordinal()].toString()))
 			{
-				if(ftpProcessing(	customers.get(i)[0].toString(),
-									customers.get(i)[2].toString(),
-									customers.get(i)[3].toString(),
-									customers.get(i)[4].toString()))
-				{
-					customers.get(i)[5] = "D";
-					FTPSyncMain.refreshCustomersTable();
-				}
-				else
-				{
-					customers.get(i)[5] = "E";
-					FTPSyncMain.refreshCustomersTable();
-				}
-				FTPSyncMain.updateProgressBarValue(FTPSyncMain.progressBar.getValue()+1);
+				choosenCustomers.get(i)[customersArrayMap.UPLOADSTATUS.ordinal()] = "D";
+				CustomersPanel.refreshCustomersTable();
 			}
+			else
+			{
+				choosenCustomers.get(i)[customersArrayMap.UPLOADSTATUS.ordinal()] = "E";
+				CustomersPanel.refreshCustomersTable();
+			}
+			FTPSyncMainWindow.updateProgressBarValue(FTPSyncMainWindow.progressBar.getValue()+1);
 		}
 		
-		FTPSyncMain.progressBar.setValue(FTPSyncMain.progressBar.getMaximum());
-		FTPSyncMain.log.setCaretPosition(0); //scroll to top
-		saveLogToFile();
+		FTPSyncMainWindow.progressBar.setValue(FTPSyncMainWindow.progressBar.getMaximum());
+		FTPSyncMainWindow.log.setCaretPosition(0); //scroll to top
 	}
 	
-	private boolean ftpProcessing(String customerName, String ftpUrl, String ftpName, String ftpPass)
+	private boolean ftpProcessing(String customerName, String ftpUrl, String subDir, String ftpName, String ftpPass)
 	/*
-	 * Connect and disconnect from FTP and start uploading files
+	 * Connects/disconnects from FTP and start uploading files
 	 */
 	{
 		try
 		{
-		    ftp = new newFtpClient();
+		    ftp = new ExtendedFtpClient();
 		    
 		    if(ftp.connect(ftpUrl, ftpName, ftpPass))
 		    {
-		    	FTPSyncMain.insertToLog("Connected to "+customerName+" :: "+ftpUrl);
+		    	FTPSyncMainWindow.insertToLog("Connected to "+customerName+" :: "+ftpUrl);
+		    	if(!subDir.isEmpty())
+		    	{
+		    		ftp.changeWorkingDir(subDir); //Change working directory on server
+		    	}
 		    	if(uploadFiles())
 		    	{
 				    ftp.disconnect();
@@ -90,13 +76,13 @@ public class UploadProcessing
 		    }
 		    else
 		    {
-		    	FTPSyncMain.insertToLog("Cannot connect to "+customerName+" :: "+ftpUrl);
+		    	FTPSyncMainWindow.insertToLog("Cannot connect to "+customerName+" :: "+ftpUrl);
 				return false;
 		    }
 		}
 		catch (IOException e)
 		{
-			FTPSyncMain.insertToLog(e.toString(),true);
+			FTPSyncMainWindow.insertToLog(e.toString(),true);
 		    return false;
 		}
 	}
@@ -116,7 +102,7 @@ public class UploadProcessing
 								
 				if(ftp.changeWorkingDir(currentPath))
 				{
-					ftp.storeFile(FTPSyncMain.rootDir + choosenFiles.get(i).substring(1));
+					ftp.storeFile(FTPSyncMain.rootDir + choosenFiles.get(i));
 				}
 				
 				/*
@@ -129,56 +115,21 @@ public class UploadProcessing
 					 */
 					if(!currentPath.equals(choosenFiles.get(i+1).substring(0,choosenFiles.get(i+1).lastIndexOf("/"))))
 					{
-						for (int o=0;o<choosenFiles.get(i).toString().split("/").length-2;o++)
+						for (int o=0;o<choosenFiles.get(i).toString().split("/").length-1;o++)
 						{
 							ftp.changeDirUp();
 						}
 					}
 				}
 				
-				FTPSyncMain.updateProgressBarValue(FTPSyncMain.progressBar.getValue()+1);
+				FTPSyncMainWindow.updateProgressBarValue(FTPSyncMainWindow.progressBar.getValue()+1);
 			}
 			catch (IOException e)
 			{
-				FTPSyncMain.insertToLog(e.toString(), true);
+				FTPSyncMainWindow.insertToLog(e.toString(), true);
 				return false;
 			}
 		}
 		return true;
-	}
-
-	private void eraseRootDirFromPath()
-	/*
-	 * Erase rootDir from path string
-	 */
-	{
-		for (int o=0;o<choosenFiles.size();o++)
-		{
-			if(!(choosenFiles.get(o).length() < FTPSyncMain.rootDir.length()))
-			{
-				if(choosenFiles.get(o).substring(0, FTPSyncMain.rootDir.length()).equals(FTPSyncMain.rootDir.toString()))
-				{
-					choosenFiles.set(o, choosenFiles.get(o).substring(FTPSyncMain.rootDir.length()-1));
-				}
-			}
-		}
-	}
-
-	private void saveLogToFile()
-	/*
-	 * Make file log.txt and fill with actual output of log TextArea
-	 */
-	{
-		try
-		{
-			FileWriter fstream = new FileWriter("log.txt");
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write(FTPSyncMain.log.getText());
-    	    out.close();
-		}
-		catch (Exception e)
-		{
-			System.err.println("Error: " + e.getMessage());
-		}
 	}
 }

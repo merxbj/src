@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class newFtpClient
+public class ExtendedFtpClient
 {
 	FTPClient ftp;
 
@@ -21,8 +21,6 @@ public class newFtpClient
 		ftp.connect(host);
 		ftp.login(user,password);
 
-		//FTPUploader ftpUploader = new FTPUploader();
-		
 		if(!(ftp.getReplyCode() == 230))
 		{
 			return false;
@@ -40,11 +38,11 @@ public class newFtpClient
 		{
 			ftp.logout();
 			ftp.disconnect();
-			FTPSyncMain.insertToLog("Disconnected");
+			FTPSyncMainWindow.insertToLog("Disconnected");
 		}
 		catch (IOException e)
 		{
-	    	FTPSyncMain.insertToLog("Exception occured while disconnecting: "+e);
+	    	FTPSyncMainWindow.insertToLog("Exception occured while disconnecting: "+e);
 		}
 	}
 
@@ -61,13 +59,13 @@ public class newFtpClient
 				{
 					if(!ftp.changeWorkingDirectory(folders.split("/")[i]))
 					{
-						FTPSyncMain.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
+						FTPSyncMainWindow.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
 						return false;						
 					}
 				}
 				else
 				{
-					FTPSyncMain.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
+					FTPSyncMainWindow.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
 					return false;
 				}
 			}
@@ -106,17 +104,17 @@ public class newFtpClient
 		    
 			if(ftp.getReplyCode() == 226)
 			{
-				FTPSyncMain.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : SUCCESS", true);
+				FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : SUCCESS", true);
 			}
 			else
 			{
-				FTPSyncMain.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", true);				
+				FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", true);				
 			}
 		}
 		catch (IOException e)
 		{
-			FTPSyncMain.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", true);
-			FTPSyncMain.insertToLog(e.toString(), true);
+			FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", true);
+			FTPSyncMainWindow.insertToLog(e.toString(), true);
 		}
 	}
 }

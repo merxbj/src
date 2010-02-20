@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import FTPSynchronizer.FTPSyncMainWindow.customersArrayMap;
+
 
 public class JTableCellRenderer implements TableCellRenderer
 {
@@ -27,7 +29,9 @@ public class JTableCellRenderer implements TableCellRenderer
 		{
 	    	if (row % 2 == 0)
 	    	{
-	    		renderer.setBackground(Color.LIGHT_GRAY);
+	    		Color secondColor = new Color(240,240,240);
+	    		
+	    		renderer.setBackground(secondColor);
 	    		
 	    	}
 	    	else
@@ -36,15 +40,15 @@ public class JTableCellRenderer implements TableCellRenderer
 	    	}
 		}
 		
-		if(row < FTPSyncMain.customers.size())
+		if(row < FTPSyncMainWindow.choosenCustomers.size())
 		{
-			if (value.equals(FTPSyncMain.customers.get(row)[0]))
+			if (value.equals(FTPSyncMainWindow.choosenCustomers.get(row)[0]))
 			{
-				if(FTPSyncMain.customers.get(row)[5].equals("D"))
+				if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("D"))
 				{
 					renderer.setBackground(Color.GREEN);
 				}
-				else if(FTPSyncMain.customers.get(row)[5].equals("E"))
+				else if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("E"))
 				{
 					renderer.setBackground(Color.RED);
 				}
