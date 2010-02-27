@@ -1,6 +1,8 @@
 package logger;
 
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -63,8 +65,9 @@ public class Logger implements Observer {
         try {
             String formattedMesage = String.format(message, args);
             fw = new FileWriter(fileName, true /* append */);
+        	DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy @ HH:mm:ss");
             Date dt = new Date();
-            fw.append(String.format("%28s | %5s | %s\n", dt.toString(), logLevelToString(level), formattedMesage));
+            fw.append(String.format("%21s | %5s | %s\n", dateFormat.format(dt), logLevelToString(level), formattedMesage));
         } catch (Exception ex) {
             // Exception cought during writing to log occured
             reportLoggingException(ex);
@@ -77,7 +80,7 @@ public class Logger implements Observer {
         }
     }
 
-    private String logLevelToString(LogLevel level) throws LoggingException {
+    public static String logLevelToString(LogLevel level) throws LoggingException {
         switch (level) {
             case LOG_LEVEL_DEBUG:
                 return "DEBUG";

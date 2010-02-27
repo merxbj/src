@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
-import FTPSynchronizer.FTPSyncMainWindow.LogType;
 import FTPSynchronizer.FTPSyncMainWindow.mysqlCollumns;
 
 @SuppressWarnings("serial")
@@ -30,20 +29,31 @@ public class CustomersPanel extends JPanel implements ActionListener
 	JFrame areYouSureFrame;
 	static JScrollPane scrollPanelCustomersTable;
 	JCheckBox customersCheckBox;
-	JButton chooseAllCustomers,uncheckAllCustomers,addNewCustomer,removeCustomer,editCustomer,buttonOk,buttonStorno;
+	static JButton chooseAllCustomers,uncheckAllCustomers,addNewCustomer,removeCustomer,editCustomer;
+	JButton buttonOk, buttonStorno;
 	static JTable customersTable;
 	private TblModel customersTableModel;
 	JPanel buttonsPanel;
 	
+	CheckBoxHeader chbh;
+	
+	boolean isChecked;
+	
 	public CustomersPanel()
 	{
+	    initButtons();
+	    
 		queryCustomersList();
 
 		customersTableModel = new TblModel(FTPSyncMainWindow.customers);
 	    customersTable = new JTable(customersTableModel);
 	    customersTable.getColumnModel().getColumn(1).setMaxWidth(20);
 	    customersTable.getColumnModel().getColumn(0).setHeaderValue("Zakaznici");
-	    customersTable.getColumnModel().getColumn(1).setHeaderValue("X");
+	    
+	    chbh = new CheckBoxHeader();
+	    chbh.addActionListener(this);
+	    customersTable.getColumnModel().getColumn(1).setHeaderRenderer(chbh);
+	    isChecked = false;
 	    
 	    JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
 	    customersTable.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
@@ -53,7 +63,6 @@ public class CustomersPanel extends JPanel implements ActionListener
 	    customersCheckBox = new JCheckBox();
 	    fileCheckCustomerColumn.setCellEditor(new DefaultCellEditor(customersCheckBox));
 	    
-	    initButtons();
 	    
 	    setLayout(new BorderLayout());
 	    add(scrollPanelCustomersTable, BorderLayout.CENTER);
@@ -63,32 +72,20 @@ public class CustomersPanel extends JPanel implements ActionListener
 	private void initButtons()
 	{
 		buttonsPanel = new JPanel();
-		JPanel firstPanel = new JPanel();
-		JPanel secondPanel = new JPanel();
-	    
-	    chooseAllCustomers = new JButton("Check all");
-	    uncheckAllCustomers = new JButton("unCheck all");
+
 	    addNewCustomer = new JButton("Add new");
 	    editCustomer = new JButton("Edit");
 	    removeCustomer = new JButton("Remove");
 	    
-	    chooseAllCustomers.addActionListener(this);
-	    uncheckAllCustomers.addActionListener(this);
 	    addNewCustomer.addActionListener(this);
 	    removeCustomer.addActionListener(this);
 	    editCustomer.addActionListener(this);
 	    
-	    firstPanel.add(chooseAllCustomers);
-	    firstPanel.add(uncheckAllCustomers);
-	    secondPanel.add(addNewCustomer);
-	    secondPanel.add(editCustomer);
-	    secondPanel.add(removeCustomer);
-	    buttonsPanel.add(firstPanel);
-	    buttonsPanel.add(secondPanel);
+	    buttonsPanel.add(addNewCustomer);
+	    buttonsPanel.add(editCustomer);
+	    buttonsPanel.add(removeCustomer);
 	    
-	    buttonsPanel.setLayout(new GridLayout(2,0));
-	    firstPanel.setLayout(new GridLayout(1,0));
-	    secondPanel.setLayout(new GridLayout(1,0));
+	    buttonsPanel.setLayout(new GridLayout(1,0));
 	}
 	
 	public static void queryCustomersList()
@@ -127,7 +124,16 @@ public class CustomersPanel extends JPanel implements ActionListener
     		 }
     	 catch(Exception e)
     	 {
-    		FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+    		FTPSyncMainWindow.log.logError(e.toString());
+    		/*
+    		 * If there was error disable all unneeded buttons
+    		 */
+		    chooseAllCustomers.setEnabled(false);
+		    uncheckAllCustomers.setEnabled(false);
+		    addNewCustomer.setEnabled(false);
+		    editCustomer.setEnabled(false);
+		    removeCustomer.setEnabled(false);
+		    FTPSyncMainWindow.startStopUploading.setEnabled(false);
     	 }
     }
 	
@@ -141,18 +147,23 @@ public class CustomersPanel extends JPanel implements ActionListener
 	
 	public void actionPerformed(ActionEvent a)
 	{
-		if(a.getSource() == chooseAllCustomers)
+		if(a.getSource() == chbh)
 		{
-			for (int i = 0; i < FTPSyncMainWindow.customers.size();i++)
+			if(!isChecked)
 			{
-				customersTableModel.setValueAt(Boolean.TRUE, i, 1);
+				for (int i = 0; i < FTPSyncMainWindow.customers.size();i++)
+				{
+					customersTableModel.setValueAt(Boolean.TRUE, i, 1);
+					isChecked=true;
+				}
 			}
-		}
-		if(a.getSource() == uncheckAllCustomers)
-		{
-			for (int i = 0; i < FTPSyncMainWindow.customers.size();i++)
+			else
 			{
-				customersTableModel.setValueAt(Boolean.FALSE, i, 1);
+				for (int i = 0; i < FTPSyncMainWindow.customers.size();i++)
+				{
+					customersTableModel.setValueAt(Boolean.FALSE, i, 1);
+					isChecked=false;
+				}				
 			}
 		}
 		if(a.getSource() == addNewCustomer)
@@ -195,15 +206,15 @@ public class CustomersPanel extends JPanel implements ActionListener
     										[FTPSyncMainWindow.customersArrayMap.CUSTOMERNAME.ordinal()]
     								+"' LIMIT 1");
     		
-    		FTPSyncMainWindow.insertToLog("Customer "+FTPSyncMainWindow.customers.get(
+    		FTPSyncMainWindow.log.logInfo("Customer "+FTPSyncMainWindow.customers.get(
 														customersTable.getSelectedRow())
 														[FTPSyncMainWindow.customersArrayMap.CUSTOMERNAME.ordinal()]
-											+" : DELETED", LogType.LOG_LEVEL_INFO);
+														 +" : DELETED");
     		queryCustomersList();
 		}
 		catch (SQLException e)
 		{
-			FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+			FTPSyncMainWindow.log.logError(e.toString());
 		}
 	}
 	

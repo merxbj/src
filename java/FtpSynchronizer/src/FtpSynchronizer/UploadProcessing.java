@@ -3,7 +3,6 @@ package FTPSynchronizer;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import FTPSynchronizer.FTPSyncMainWindow.LogType;
 import FTPSynchronizer.FTPSyncMainWindow.customersArrayMap;
 
 public class UploadProcessing implements Runnable
@@ -50,7 +49,6 @@ public class UploadProcessing implements Runnable
 		 */
 		for (int i=0;i<choosenCustomers.size();i++)
 		{
-			if(!stop) //if stop has not been performed
 			if(ftpProcessing(	choosenCustomers.get(i)[customersArrayMap.CUSTOMERNAME.ordinal()].toString(),
 								choosenCustomers.get(i)[customersArrayMap.URL.ordinal()].toString(),
 								choosenCustomers.get(i)[customersArrayMap.SUBDIR.ordinal()].toString(),
@@ -71,6 +69,13 @@ public class UploadProcessing implements Runnable
 		FTPSyncMainWindow.progressBar.setValue(FTPSyncMainWindow.progressBar.getMaximum());
 		
 		FTPSyncMainWindow.logBox.setCaretPosition(0); //scroll to top
+		
+		/*
+		 * Stop everything
+		 */
+		FTPSyncMainWindow.threadObject.stopThread();
+		FTPSyncMainWindow.startStopUploading.setText("Start uploading\n");
+		FTPSyncMainWindow.isRunning = false;
 	}
 	
 	private boolean ftpProcessing(String customerName, String ftpUrl, String subDir, String ftpName, String ftpPass)
@@ -80,35 +85,42 @@ public class UploadProcessing implements Runnable
 	{
 		try
 		{
-		    ftp = new ExtendedFtpClient();
-		    
-		    if(ftp.connect(ftpUrl, ftpName, ftpPass))
-		    {
-		    	FTPSyncMainWindow.insertToLog("Connected to "+customerName+" :: "+ftpUrl, LogType.LOG_LEVEL_INFO);
-		    	if(!subDir.isEmpty())
-		    	{
-		    		ftp.changeWorkingDir(subDir); //Change working directory on server
-		    	}
-		    	if(uploadFiles())
-		    	{
-				    ftp.disconnect();
-				    return true;
-		    	}
-		    	else
-		    	{
-				    ftp.disconnect();
-		    		return false;
-		    	}
-		    }
-		    else
-		    {
-		    	FTPSyncMainWindow.insertToLog("Cannot connect to "+customerName+" :: "+ftpUrl, LogType.LOG_LEVEL_ERROR);
-				return false;
-		    }
+	    	if(!stop) //if stop has not been performed
+	    	{	
+	    		ftp = new ExtendedFtpClient();
+    
+			    if(ftp.connect(ftpUrl, ftpName, ftpPass))
+			    {
+			    	FTPSyncMainWindow.log.logInfo("Connected to "+customerName+" :: "+ftpUrl);
+			    	if(!subDir.isEmpty())
+			    	{
+			    		ftp.changeWorkingDir(subDir); //Change working directory on server
+			    	}
+			    	if(uploadFiles())
+			    	{
+					    ftp.disconnect();
+					    return true;
+			    	}
+			    	else
+			    	{
+					    ftp.disconnect();
+			    		return false;
+			    	}
+			    }
+			    else
+			    {
+			    	FTPSyncMainWindow.log.logError("Cannot connect to "+customerName+" :: "+ftpUrl);
+					return false;
+			    }
+	    	}
+	    	else
+	    	{
+	    		return false;
+	    	}
 		}
 		catch (IOException e)
 		{
-			FTPSyncMainWindow.insertToLog(e.toString(),LogType.LOG_LEVEL_ERROR);
+			FTPSyncMainWindow.log.logError(e.toString());
 		    return false;
 		}
 	}
@@ -118,44 +130,51 @@ public class UploadProcessing implements Runnable
 	 * Start uploading files
 	 */
 	{
-		currentPath = "";
-		
-		for(int i=0;i<choosenFiles.size();i++)
-		{
-			try
+    	if(!stop) //if stop has not been performed
+    	{	
+			currentPath = "";
+			
+			for(int i=0;i<choosenFiles.size();i++)
 			{
-				currentPath = choosenFiles.get(i).substring(0,choosenFiles.get(i).lastIndexOf("/")+1);
-								
-				if(ftp.changeWorkingDir(currentPath))
+				try
 				{
-					ftp.storeFile(FTPSyncMain.rootDir + choosenFiles.get(i));
-				}
-				
-				/*
-				 * IF we have something next?
-				 */
-				if(i+1 < choosenFiles.size())
-				{
-					/*
-					 * IF next file hasnt same path like file before
-					 */
-					if(!currentPath.equals(choosenFiles.get(i+1).substring(0,choosenFiles.get(i+1).lastIndexOf("/"))))
+					currentPath = choosenFiles.get(i).substring(0,choosenFiles.get(i).lastIndexOf("/")+1);
+									
+					if(ftp.changeWorkingDir(currentPath))
 					{
-						for (int o=0;o<choosenFiles.get(i).toString().split("/").length-1;o++)
+						ftp.storeFile(FTPSyncMain.rootDir + choosenFiles.get(i));
+					}
+					
+					/*
+					 * IF we have something next?
+					 */
+					if(i+1 < choosenFiles.size())
+					{
+						/*
+						 * IF next file hasnt same path like file before
+						 */
+						if(!currentPath.equals(choosenFiles.get(i+1).substring(0,choosenFiles.get(i+1).lastIndexOf("/"))))
 						{
-							ftp.changeDirUp();
+							for (int o=0;o<choosenFiles.get(i).toString().split("/").length-1;o++)
+							{
+								ftp.changeDirUp();
+							}
 						}
 					}
+					
+					FTPSyncMainWindow.updateProgressBarValue(FTPSyncMainWindow.progressBar.getValue()+1);
 				}
-				
-				FTPSyncMainWindow.updateProgressBarValue(FTPSyncMainWindow.progressBar.getValue()+1);
+				catch (IOException e)
+				{
+					FTPSyncMainWindow.log.logError(e.toString());
+					return false;
+				}
 			}
-			catch (IOException e)
-			{
-				FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
-				return false;
-			}
-		}
-		return true;
+			return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
 	}
 }

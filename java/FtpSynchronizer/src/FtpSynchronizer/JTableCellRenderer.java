@@ -21,17 +21,13 @@ public class JTableCellRenderer implements TableCellRenderer
 		
 		if (isSelected)
 		{
-			Color selected = new Color(150,230,230);
-
-			renderer.setBackground(selected);
+			renderer.setBackground(new Color(150,230,230));
 		}
 		else
 		{
 	    	if (row % 2 == 0)
 	    	{
-	    		Color secondColor = new Color(240,240,240);
-	    		
-	    		renderer.setBackground(secondColor);
+	    		renderer.setBackground(new Color(240,240,240));
 	    		
 	    	}
 	    	else
@@ -46,11 +42,11 @@ public class JTableCellRenderer implements TableCellRenderer
 			{
 				if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("D"))
 				{
-					renderer.setBackground(Color.GREEN);
+					renderer.setBackground(new Color(150,255,150));
 				}
 				else if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("E"))
 				{
-					renderer.setBackground(Color.RED);
+					renderer.setBackground(new Color(255,150,150));
 				}
 			}			
 		}

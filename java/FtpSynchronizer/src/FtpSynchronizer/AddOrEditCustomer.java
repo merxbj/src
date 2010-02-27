@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import FTPSynchronizer.FTPSyncMainWindow.LogType;
 import FTPSynchronizer.FTPSyncMainWindow.mysqlCollumns;
 
 @SuppressWarnings("serial")
@@ -115,12 +114,12 @@ public class AddOrEditCustomer extends JFrame implements ActionListener
 											" '"+cSubDir.getText()+"'," +
 											" '"+cConnName.getText()+"'," +
 											" '"+new String(cConnPass.getPassword())+"')");
-			FTPSyncMainWindow.insertToLog("Customer " + cName.getText() + " succesfully added to table", LogType.LOG_LEVEL_INFO);
+			FTPSyncMainWindow.log.logInfo("Customer " + cName.getText() + " succesfully added to table");
 			CustomersPanel.queryCustomersList();
 		}
 		catch(Exception e)
 		{
-			FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+			FTPSyncMainWindow.log.logError(e.toString());
 		}
 	}
 	
@@ -153,7 +152,7 @@ public class AddOrEditCustomer extends JFrame implements ActionListener
     		 }
     	 catch(Exception e)
     	 {
-    		FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+    		FTPSyncMainWindow.log.logError(e.toString());
     		setVisible(false);
     	 }
     }
@@ -172,12 +171,12 @@ public class AddOrEditCustomer extends JFrame implements ActionListener
 									"`connName`='"+cConnName.getText()+"'," +
 									"`connPass`='"+new String(cConnPass.getPassword())+"' " +
 									"WHERE `name`='"+originalName+"'");
-			FTPSyncMainWindow.insertToLog("Customer " + cName.getText() + " succesfully updated", LogType.LOG_LEVEL_INFO);
+			FTPSyncMainWindow.log.logInfo("Customer " + cName.getText() + " succesfully updated");
 			CustomersPanel.queryCustomersList();
 		}
 		catch(Exception e)
 		{
-			FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+			FTPSyncMainWindow.log.logError(e.toString());
 		}
     }
 	

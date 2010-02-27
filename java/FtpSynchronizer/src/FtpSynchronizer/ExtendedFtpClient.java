@@ -2,8 +2,6 @@ package FTPSynchronizer;
 
 import org.apache.commons.net.ftp.FTPClient;
 
-import FTPSynchronizer.FTPSyncMainWindow.LogType;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,11 +38,11 @@ public class ExtendedFtpClient
 		{
 			ftp.logout();
 			ftp.disconnect();
-			FTPSyncMainWindow.insertToLog("Disconnected");
+			FTPSyncMainWindow.log.logInfo("Disconnected");
 		}
 		catch (IOException e)
 		{
-	    	FTPSyncMainWindow.insertToLog("Exception occured while disconnecting: "+e);
+	    	FTPSyncMainWindow.log.logError("Exception occured while disconnecting: "+e);
 		}
 	}
 
@@ -61,13 +59,13 @@ public class ExtendedFtpClient
 				{
 					if(!ftp.changeWorkingDirectory(folders.split("/")[i]))
 					{
-						FTPSyncMainWindow.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", LogType.LOG_LEVEL_ERROR);
+						FTPSyncMainWindow.log.logError("Create " +folders.split("/")[i]+ " : FAILED");
 						return false;						
 					}
 				}
 				else
 				{
-					FTPSyncMainWindow.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", LogType.LOG_LEVEL_ERROR);
+					FTPSyncMainWindow.log.logError("Create " +folders.split("/")[i]+ " : FAILED");
 					return false;
 				}
 			}
@@ -106,17 +104,17 @@ public class ExtendedFtpClient
 		    
 			if(ftp.getReplyCode() == 226)
 			{
-				FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : SUCCESS", LogType.LOG_LEVEL_INFO);
+				FTPSyncMainWindow.log.logInfo(file.substring(FTPSyncMain.rootDir.length()-1) + " : SUCCESS");
 			}
 			else
 			{
-				FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", LogType.LOG_LEVEL_ERROR);				
+				FTPSyncMainWindow.log.logError(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED");				
 			}
 		}
 		catch (IOException e)
 		{
-			FTPSyncMainWindow.insertToLog(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED", LogType.LOG_LEVEL_ERROR);
-			FTPSyncMainWindow.insertToLog(e.toString(), LogType.LOG_LEVEL_ERROR);
+			FTPSyncMainWindow.log.logError(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED");
+			FTPSyncMainWindow.log.logError(e.toString());
 		}
 	}
 }

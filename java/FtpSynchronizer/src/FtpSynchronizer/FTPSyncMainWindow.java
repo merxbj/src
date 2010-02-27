@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,16 +20,17 @@ import javax.swing.JTextArea;
 
 import logger.*; // 3t3r's logger instance
 /*
- * TODO:multithrething //DONE // check it 
- * TODO:add ignorelist // for files
+ * TODO:multithrething // testing
+ * TODO:remove Check all and uncheck all buttons // add checkbox to JTABLE header "X"
  */
 @SuppressWarnings("serial")
-public class FTPSyncMainWindow extends JFrame implements ActionListener
+public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
 {
 	JFrame mainFrame;
 	static JTextArea logBox;
 	JPanel buttonsPanel,logPanel,secondPanel;
-	JButton startStopUploading,buttonExit;
+	JButton buttonExit, ignoreList;
+	public static JButton startStopUploading;
 	JScrollPane scrollPaneLog;
 	JStatusBar statusBar;
 	public static JProgressBar progressBar;
@@ -42,29 +45,18 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 	enum mysqlCollumns {NULL, CUSTOMERNAME, URL, SUBDIR, MYSQLNAME, MYSQLPASS} //we have to count from 1
 	enum customersArrayMap {CUSTOMERNAME, ISSELECTED, URL, SUBDIR, MYSQLNAME, MYSQLPASS, UPLOADSTATUS}
 	enum filesForUploadMap {FILEPATH, ISSELECTED};
-    enum LogType {LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_DEBUG}
 	
 	public static LogDispatcher log;
 
-	/*
-	 * Threading test implementation
-	 */
-    private UploadProcessing threadObject; // class representing the thread
+    static UploadProcessing threadObject; // class representing the thread
     private Thread workerThread; // class encapsulating the WorkerThread and providing an interface to work with it
-    private boolean isRunning;
-    /*
-     * --end--
-     */
+    static boolean isRunning;
 	
 	public FTPSyncMainWindow()
 	{
         log = new LogDispatcher();
         log.registerLogger(new Logger("main.log", "MainModule", new LogExceptionHandlerImpl()));
-        
-        // create the worker thread
-        threadObject = new UploadProcessing(); // create the object representing the thread
-        workerThread = new Thread(threadObject); // create the actuall thread
-        isRunning = false; // we are not running, yet
+        log.registerLogger(this);
 	}
 	
 	public void FTPSyncMainWindowInit()
@@ -113,7 +105,7 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 	 *	simple JTextArea to show what we are currently doing  
 	 */
 	{
-	    logBox = new JTextArea("Welcome to FTP uploader v1.0.0-r1\n", 1, 1);
+	    logBox = new JTextArea("Welcome to FTP uploader v1.0.1\n", 1, 1);
 	    logBox.setEditable(false);
 	    scrollPaneLog = new JScrollPane(logBox);
 	}
@@ -144,12 +136,15 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 	{
 	    buttonsPanel = new JPanel();
 
+	    ignoreList = new JButton("Edit ignore list");
 	    startStopUploading = new JButton("Start uploading");
 	    buttonExit = new JButton("Exit");
 	    
+	    ignoreList.addActionListener(this);
 	    startStopUploading.addActionListener(this);
 	    buttonExit.addActionListener(this);
 
+	    buttonsPanel.add(ignoreList);
 	    buttonsPanel.add(startStopUploading);
 	    buttonsPanel.add(buttonExit);
 	    buttonsPanel.setLayout(new GridLayout(1,0));
@@ -157,6 +152,11 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 
 	public void actionPerformed(ActionEvent a)
 	{
+		if(a.getSource() == ignoreList)
+		{
+			IgnoreList il = new IgnoreList();
+			il.createIgnoreListWindow();
+		}
 		if(a.getSource() == startStopUploading)
 		{
 			startStopButtonActionPerformed();
@@ -171,28 +171,24 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
     {
         if (!isRunning)
         {
-            //getLog().append("Going to start the thread\n");
-			//startStopUploading.setEnabled(false);
-			insertToLog("Uploading process started");
+            // create the worker thread
+            threadObject = new UploadProcessing(); // create the object representing the thread
+            workerThread = new Thread(threadObject); // create the actuall thread        
+            isRunning = false; // we are not running, yet
+            
+            
+        	log.logInfo("Uploading process started");
 			getChoosenFilesForUpload();
 			getChoosenCustomers();
-            workerThread.start();
-			/*UploadProcessing up = new UploadProcessing();
-			up.startUploadProcess(choosenFiles,choosenCustomers);*/
-			
-			//startStopUploading.setEnabled(true);
+			workerThread.start();
             startStopUploading.setText("Stop uploading\n");
             isRunning = true;
-            //getLog().append("Thread started\n");
         }
         else
         {
-            //getLog().append("Going to stop the thread\n");
-			insertToLog("USER ABORT!");
             threadObject.stopThread();
             startStopUploading.setText("Start uploading\n");
             isRunning = false;
-            //getLog().append("Thread stopped\n");
         }
     }
     
@@ -210,11 +206,11 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 
 		if(!choosenFiles.isEmpty())
 		{
-			insertToLog("Gathering choosen files : DONE", LogType.LOG_LEVEL_INFO);
+			log.logInfo("Gathering choosen files : DONE");
 		}
 		else
 		{
-			insertToLog("Gathering choosen files : FAILED", LogType.LOG_LEVEL_INFO);
+			log.logError("Gathering choosen files : FAILED");
 		}
 	}
 
@@ -240,52 +236,25 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener
 
 		if(!choosenCustomers.isEmpty())
 		{
-			insertToLog("Gathering choosen customers : DONE", LogType.LOG_LEVEL_INFO);
+			log.logInfo("Gathering choosen customers : DONE");
 		}
 		else
 		{
-			insertToLog("Gathering choosen customers : FAILED", LogType.LOG_LEVEL_INFO);
+			log.logError("Gathering choosen customers : FAILED");
 		}
 	}
-	
-	public static void insertToLog(String text)
+
+	@Override
+	public void update(Observable o, Object arg1)
 	{
-		insertToLog(text,LogType.LOG_LEVEL_INFO);
+        if (o instanceof LogDispatcher)
+        {
+            LogDispatcher ld = (LogDispatcher) o;
+				logBox.insert(ld.getFormattedMessage(), 0);
+        }
 	}
 	
-	public static void insertToLog(String text,LogType lType)
-	{
-		switch (lType)
-		{
-			case LOG_LEVEL_ERROR:
-			{
-				log.logError(text);
-				logBox.insert(log.getMessage(), 0);
-				break;
-			}
-			case LOG_LEVEL_INFO:
-			{
-				log.logInfo(text);
-				logBox.insert(log.getMessage(), 0);
-				break;
-			}
-			case LOG_LEVEL_DEBUG:
-			{
-				log.logWarning(text);
-				logBox.insert(log.getMessage(), 0);
-				break;
-			}
-			default:
-			{
-				log.logInfo(text);
-				logBox.insert(log.getMessage(), 0);
-				break;
-			}			
-	    }
-		logBox.update(logBox.getGraphics());
-	}	
-	
-	public static void updateProgressBarValue(int value)
+	public static synchronized void updateProgressBarValue(int value)
 	{
 		progressBar.setValue(value);
 		progressBar.update(progressBar.getGraphics());

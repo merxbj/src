@@ -1,5 +1,8 @@
 package logger;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import logger.Logger.LogLevel;
@@ -58,13 +61,34 @@ public class LogDispatcher extends Observable
     }
 
     public String getMessage() {
-        return message+"\n"; //my fix ;-)
+        return message;
     }
 
     public LogLevel getLogLevel() {
         return logLevel;
     }
-
+    
+    public String getFormattedMessage()
+    {
+    	String formattedMessage = null;
+        try
+        {
+            String formatMessage = String.format(message, args);
+            Date dt = new Date();
+        	DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss"); //time is enought i think
+            formattedMessage = new String(String.format("%8s | %5s | %s\n",
+            										dateFormat.format(dt),
+            										Logger.logLevelToString(logLevel),
+            										formatMessage));
+        }
+        catch (Exception ex)
+        {
+        	// i dont care
+        }
+        
+        return formattedMessage;
+    }
+    
     private String message;
     private Object[] args;
     private Logger.LogLevel logLevel;
