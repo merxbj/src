@@ -2,6 +2,7 @@ package FTPSynchronizer;
 
 public class FTPSyncMain
 {
+	final static String version = new String("v1.0.1-r1");
 	static String mysqlName;
 	static String mysqlPass;
 	static String mysqlDb;
@@ -36,14 +37,15 @@ public class FTPSyncMain
 			}
 			catch (Exception e)
 			{
-				System.out.println(	"Reparsovani argumentu se nepovedlo\n" +
-									"zkontrolujte spravny zapis\n" +
-									"--mysqlName=prihlasovaciJmeno\n" +
-									"--mysqlPass=prihlasovaciHeslo\n" +
-									"--mysqlDb=databaze\n" +
-									"--rootDir=c:/projekt/ \n" +
-									"//pokud parametr rootDir nebude vyplnen pouzije" +
-									" se defaultni adresar uzivatele (os independent)");
+				System.out.println(	"Reparsing command line args has returned error\n" +
+									"please check if they are correctly writen\n" +
+									"example\n" +
+									"--mysqlName=mysqlUserName\n" +
+									"--mysqlPass=mysqlUserPassword\n" +
+									"--mysqlDb=mysqlDatabase\n" +
+									"--rootDir=c:/_project_directory/project/ \n" +
+									"//if roodDir will be empty program will use" +
+									"default user home dir (os independent)");
 				System.exit(0);
 			}
 		}
@@ -51,7 +53,14 @@ public class FTPSyncMain
 		/*
 		 * Check if rootDir is specified, if not use user home dir
 		 */
-		if(rootDir.isEmpty())
+		try
+		{
+			if(rootDir.isEmpty())
+			{
+				rootDir = System.getProperty("user.home");
+			}
+		}
+		catch (Exception e)
 		{
 			rootDir = System.getProperty("user.home");
 		}

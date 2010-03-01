@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -25,7 +26,7 @@ public class FilesPanel extends JPanel implements ActionListener
 	private TblModel filesTableModel;
 	JScrollPane scrollPanelFilesTable;
 	JCheckBox filesCheckBox;
-	JButton chooseAllFiles,uncheckAllFiles,ignoreList;
+	JButton ignoreList;
 	
 	CheckBoxHeader chbh;
 	boolean isChecked;
@@ -36,7 +37,7 @@ public class FilesPanel extends JPanel implements ActionListener
 	public FilesPanel()
 	{
 		File dirRoot = new File(FTPSyncMain.rootDir);
-	
+
 		files = dirRoot.listFiles();
 		readFolderContent(files);
 	
@@ -72,34 +73,54 @@ public class FilesPanel extends JPanel implements ActionListener
     {
 		loadedIgnoreList = "";
 		loadedIgnoreList = getIgnoreListFromFile();
-		
-   		for(int i=0; i < files.length; i++)
-   		{
-	    	if(isInIgnoreList(files[i].getName())) // ignoreList
-   	    	{
-	   	    	if(files[i].isDirectory() && (files[i].list().length != 0))
-	   	    	{ // if it is dir and has something to print
-	   	    			File[] subDir = files[i].listFiles();
-	   	    			readFolderContent(subDir);
-	   	    	}
-	   	    	else
+		try
+		{
+	   		for(int i=0; i < files.length; i++)
+	   		{
+		    	if(isInIgnoreList(files[i].getName())) // ignoreList
 	   	    	{
-	   	    		FTPSyncMainWindow.filesForUpload.add(new Object[]{
-	    									removeRootDirFromPath(
-	    									removeWinSlashes(
-	    									files[i].getAbsolutePath()
-	    									)), false});
+		    		try
+		    		{
+			   	    	if(files[i].isDirectory() && (files[i].list().length != 0))
+			   	    	{ // if it is dir and has something to print
+			   	    			File[] subDir = files[i].listFiles();
+			   	    			readFolderContent(subDir);
+			   	    	}
+			   	    	else
+			   	    	{
+			   	    		FTPSyncMainWindow.filesForUpload.add(new Object[]{
+			    									removeRootDirFromPath(
+			    									removeWinSlashes(
+			    									files[i].getAbsolutePath()
+			    									)), false});
+			   	    	}
+		    		}
+		    		catch(Exception e)
+		    		{
+		    			FTPSyncMainWindow.log.logError("There was an error while reading folder content");
+		    		}
 	   	    	}
-   	    	}
-   		}
+	   		}
+		}
+		catch(PatternSyntaxException e)
+		{
+			FTPSyncMainWindow.log.logError("There is an error in Ignore List, Check it up again!\n Disabling this rule\n"+e);
+		}
     }
 	
-	private static boolean isInIgnoreList(String name)
+	private static boolean isInIgnoreList(String name) throws PatternSyntaxException
 	{
 		for (int i=0;i<loadedIgnoreList.split(";").length;i++)
 		{
-			if(name.toLowerCase().matches(loadedIgnoreList.split(";")[i].toLowerCase()))
-			return false;
+			try
+			{
+				if(name.toLowerCase().matches(loadedIgnoreList.split(";")[i].toLowerCase()))
+				return false;
+			}
+			catch(PatternSyntaxException e)
+			{
+				return true; // if rule is wrong, disable it
+			}
 		}
 		return true;
 	}

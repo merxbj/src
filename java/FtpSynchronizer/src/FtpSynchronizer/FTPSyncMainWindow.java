@@ -19,16 +19,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import logger.*; // 3t3r's logger instance
-/*
- * TODO:multithrething // testing
- * TODO:remove Check all and uncheck all buttons // add checkbox to JTABLE header "X"
- */
+
 @SuppressWarnings("serial")
 public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
 {
 	JFrame mainFrame;
 	static JTextArea logBox;
-	JPanel buttonsPanel,logPanel,secondPanel;
+	JPanel buttonsPanel,logPanel,rightPanel,filesPanel,customersPanel;
 	JButton buttonExit, ignoreList;
 	public static JButton startStopUploading;
 	JScrollPane scrollPaneLog;
@@ -67,15 +64,15 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
 	    initButtons();
 	    createJTextAreaLog();
 	    
-		JPanel filesPanel = new FilesPanel();
-	    JPanel customersPanel = new CustomersPanel();
+		filesPanel = new FilesPanel();
+	    customersPanel = new CustomersPanel();
 	    logPanel = new JPanel();
 	    
 	    /*
 		 *	Create window with all elements  
 		 */
 
-    	mainFrame = new JFrame("FTPSynchronizer");
+    	mainFrame = new JFrame("FTPSynchronizer "+FTPSyncMain.version);
     	mainFrame.setSize(1000,500);
     	mainFrame.setLocationRelativeTo(null);
     	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,16 +81,16 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
 	    contentPane.setLayout(new BorderLayout());
 	    
 	    logPanel = new JPanel(new BorderLayout());
-	    secondPanel = new JPanel(new GridLayout(2,0));
+	    rightPanel = new JPanel(new GridLayout(2,0));
 	    
 	    logPanel.add(scrollPaneLog, BorderLayout.CENTER);
 	    logPanel.add(buttonsPanel, BorderLayout.SOUTH);
 	    
-	    secondPanel.add(customersPanel);
-	    secondPanel.add(logPanel);
+	    rightPanel.add(customersPanel);
+	    rightPanel.add(logPanel);
 	    
 	    mainFrame.add(filesPanel, BorderLayout.LINE_START);
-	    mainFrame.add(secondPanel, BorderLayout.CENTER);
+	    mainFrame.add(rightPanel, BorderLayout.CENTER);
 
 	    createJStatusBarComponent();
 
@@ -105,7 +102,7 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
 	 *	simple JTextArea to show what we are currently doing  
 	 */
 	{
-	    logBox = new JTextArea("Welcome to FTP uploader v1.0.1\n", 1, 1);
+	    logBox = new JTextArea("Welcome to FTP uploader "+FTPSyncMain.version+"\n", 1, 1);
 	    logBox.setEditable(false);
 	    scrollPaneLog = new JScrollPane(logBox);
 	}
@@ -250,7 +247,7 @@ public class FTPSyncMainWindow extends JFrame implements ActionListener,Observer
         if (o instanceof LogDispatcher)
         {
             LogDispatcher ld = (LogDispatcher) o;
-				logBox.insert(ld.getFormattedMessage(), 0);
+			logBox.insert(ld.getFormattedMessage(), 0);
         }
 	}
 	

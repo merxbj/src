@@ -29,7 +29,7 @@ public class CustomersPanel extends JPanel implements ActionListener
 	JFrame areYouSureFrame;
 	static JScrollPane scrollPanelCustomersTable;
 	JCheckBox customersCheckBox;
-	static JButton chooseAllCustomers,uncheckAllCustomers,addNewCustomer,removeCustomer,editCustomer;
+	static JButton addNewCustomer,removeCustomer,editCustomer;
 	JButton buttonOk, buttonStorno;
 	static JTable customersTable;
 	private TblModel customersTableModel;
@@ -128,8 +128,6 @@ public class CustomersPanel extends JPanel implements ActionListener
     		/*
     		 * If there was error disable all unneeded buttons
     		 */
-		    chooseAllCustomers.setEnabled(false);
-		    uncheckAllCustomers.setEnabled(false);
 		    addNewCustomer.setEnabled(false);
 		    editCustomer.setEnabled(false);
 		    removeCustomer.setEnabled(false);
@@ -141,7 +139,7 @@ public class CustomersPanel extends JPanel implements ActionListener
 	{
 		if(customersTable != null)
 		{
-			customersTable.updateUI();
+			customersTable.update(customersTable.getGraphics());
 		}
 	}
 	
