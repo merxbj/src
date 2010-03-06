@@ -1,23 +1,22 @@
 package notwa.wom;
 
-public class Project {
+public class Project extends BusinessObject{
     private int pID;
 	private String pName;
 	
-	public Project (Object[] project) {
-		parseDataRow(project); //TODO: add check here
-	}
-	
-	private void parseDataRow(Object[] project) {
-		this.pID = ((Integer) project[0]).intValue();
-		this.pName = project[1].toString();
+	public Project (int projectID) {
+		this.pID = projectID;
 	}
 
 	public int getProjectID() {
 		return this.pID;
 	}
 	
-	public String getName() {
+	public String getProjectName() {
 		return this.pName;
+	}
+	
+	public void setProjectName(String projectName) {
+		this.pName = projectName;
 	}
 }

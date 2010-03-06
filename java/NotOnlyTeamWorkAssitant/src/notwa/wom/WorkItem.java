@@ -2,7 +2,7 @@ package notwa.wom;
 
 import java.util.Date;
 
-public class WorkItem extends BusinessObject {
+public class WorkItem extends BusinessObject implements Comparable<WorkItem> {
 
 	private int wiID;
 	private String wiSubject;
@@ -94,4 +94,12 @@ public class WorkItem extends BusinessObject {
 	public void setWiDeadLineDate(Date wiDeadLineDate) {
 		this.wiDeadLineDate = wiDeadLineDate;
 	}
+	
+	@Override
+	public int compareTo(WorkItem wi) {
+        Integer j1 = getID();
+        Integer j2 = wi.getID();
+	 
+        return j1.compareTo(j2);
+    }
 }

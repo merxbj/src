@@ -1,6 +1,6 @@
 package notwa.wom;
 
-public class User {
+public class User extends BusinessObject {
 
 	private int uID;
 	private String uLogin;
@@ -8,24 +8,20 @@ public class User {
 	private String uUserFirstName;
 	private String uUserLastName;
 	
-	public User(Object[] user) {
-		parseDataRow(user);
+	public User(int userID) {
+		this.uID = userID;
 	}
 
-	private void parseDataRow(Object[] user) {
-		this.uID = ((Integer) user[0]).intValue();
-		this.uLogin = user[1].toString();
-		this.uPassword = user[2].toString();
-		this.uUserFirstName = user[3].toString();
-		this.uUserLastName = user[4].toString();		
-	}
-	
 	public int getUserID() {
 		return this.uID;
 	}
 	
 	public String getLoginName() {
 		return this.uLogin;
+	}
+
+	public String getLoginPass() {
+		return this.uPassword;
 	}
 	
 	public String getFirstName() {
@@ -36,8 +32,19 @@ public class User {
 		return this.uUserLastName;
 	}
 	
-	public boolean verifyPassword() {
-		//check password somewhere, idkfa where and how
-		return false;
+	public void setLoginName(String loginName) {
+		this.uLogin = loginName;
+	}
+	
+	public void setUserPassword(String userPassword) {
+		this.uPassword = userPassword;
+	}
+	
+	public void setUserFirstName(String firstName) {
+		this.uUserFirstName = firstName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.uUserLastName = lastName;
 	}
 }
