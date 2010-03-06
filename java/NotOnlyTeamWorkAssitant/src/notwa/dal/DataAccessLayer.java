@@ -1,9 +1,8 @@
 package notwa.dal;
 
 import notwa.wom.BusinessObjectCollection;
-import notwa.wom.BusinessObject;
+import java.sql.Connection;
 
-public interface DataAccessLayer {
-	int Fill(BusinessObjectCollection boc);
-	int Fill(BusinessObjectCollection boc, ParameterCollection pc);
+public abstract class DataAccessLayer implements Fillable<BusinessObjectCollection> {
+
 }

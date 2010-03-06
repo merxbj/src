@@ -2,13 +2,14 @@ package notwa.dal;
 
 import notwa.wom.*;
 
-public class WorkItemCollectionDal implements DataAccessLayer {
+public class WorkItemCollectionDal implements Fillable<WorkItemCollection> {
 	
-	public int Fill(BusinessObjectCollection boc) {
-		return 1;
+	public int Fill(WorkItemCollection wic) {
+		ParameterCollection emptyPc = new ParameterCollection();
+		return Fill(wic, emptyPc);
 	}
 	
-	public int Fill(BusinessObjectCollection boc, ParameterCollection pc) {
+	public int Fill(WorkItemCollection wic, ParameterCollection pc) {
 		return 1;
 	}
 }
