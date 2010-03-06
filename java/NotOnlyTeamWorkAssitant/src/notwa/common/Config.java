@@ -13,7 +13,6 @@ public class Config {
 
 	private static Config singleton;
 	private final String CONFIG_FILE_NAME = "./notwa.config";
-	private ExceptionHandler eh;
 	
 	public static Config getInstance() {
 		if (singleton == null)
@@ -23,12 +22,11 @@ public class Config {
 
 	protected Config() {
         this.configFile = new File(CONFIG_FILE_NAME);
-        this.eh = ExceptionHandler.getInstanece();
         this.connections = new TreeSet<ConnectionInfo>();
         try {
         	this.parse();
         } catch (Exception ex) {
-        	eh.handleException(ex);
+        	ExceptionHandler.getInstanece().handleException(ex);
         }
     }
 
