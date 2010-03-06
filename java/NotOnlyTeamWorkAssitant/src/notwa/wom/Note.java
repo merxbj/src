@@ -1,37 +1,41 @@
 package notwa.wom;
 
-public class Note {
+public class Note extends BusinessObject {
 
 	private int nID;
-	private int nWorkItemID;
-	private String nNote;
-	private int nAuthorID;
+	private WorkItem nWorkItem;
+	private String nNoteText;
+	private User nAuthor;
 	
-	public Note (Object[] note) {
-		parseDataRow(note); //TODO: add check here
-	}
-	
-	private void parseDataRow(Object[] note) {
-		this.nID = ((Integer) note[0]).intValue();
-		this.nWorkItemID = ((Integer) note[1]).intValue();
-		this.nNote = note[2].toString();
-		this.nAuthorID = ((Integer) note[3]).intValue();;
-		
+	public Note (int noteID) {
+		this.nID = noteID;
 	}
 
 	public int getNoteID() {
 		return this.nID;
 	}
 	
-	public int getWorkItemID() {
-		return this.nWorkItemID;
+	public WorkItem getWorkItem() {
+		return this.nWorkItem;
 	}
 	
 	public String getNoteText() {
-		return this.nNote;
+		return this.nNoteText;
 	}
 	
-	public User getAutor() {
-		return UserCollection.getUserByID(this.nAuthorID);
+	public User getAuthor() {
+		return this.nAuthor;
+	}
+	
+	public void setWorkItem(WorkItem wi) {
+		this.nWorkItem = wi;
+	}
+	
+	public void setNoteText(String noteText) {
+		this.nNoteText = noteText;
+	}
+	
+	public void setAuthor(User author) {
+		this.nAuthor = author;
 	}
 }

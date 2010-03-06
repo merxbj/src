@@ -1,11 +1,12 @@
 package notwa.wom;
 
-import java.util.ArrayList;
-
-public class NoteCollection {
-	ArrayList<Note> noteCollection = new ArrayList<Note>();
+public class NoteCollection extends BusinessObjectCollection {
 	
-	public void add(Note note) {
-		noteCollection.add(note);
+	protected void add(Note note) {
+		super.add(note);
+	}
+	
+	protected void remove(Note note) {
+		super.remove(note);
 	}
 }

@@ -1,12 +1,12 @@
 package notwa.wom;
 
-import java.util.ArrayList;
+public class ProjectCollection extends BusinessObjectCollection {
 
-public class ProjectCollection {
-
-	ArrayList<Project> projectCollection = new ArrayList<Project>();
+	protected void add(Project project) {
+		super.add(project);
+	}
 	
-	public void add(Project project) {
-		projectCollection.add(project);
+	protected void remove(Project project) {
+		super.remove(project);
 	}
 }

@@ -13,5 +13,8 @@ public abstract class BusinessObjectCollection implements Iterable<BusinessObjec
 	protected void add(BusinessObject bo) {
 		collection.add(bo);
 	}
-
+	
+	protected void remove(BusinessObject bo) {
+		collection.remove(bo);
+	}
 }
