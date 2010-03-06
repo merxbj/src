@@ -1,5 +1,7 @@
 package notwa.common;
 
+import java.lang.StringBuilder;
+
 public class ConnectionInfo implements Comparable<ConnectionInfo> {
 	private String label;
 	private String host;
@@ -56,8 +58,19 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
 		this.password = password;
 	}
 	
+	/*
+	 * TODO: Implement connection string compiler!
+	 */
 	public String compileConnectionString() {
-		return "";
+		StringBuilder sb = new StringBuilder();
+		sb.append("jdbc:mysql:");
+		sb.append("//");
+		sb.append(this.host);
+		sb.append(":");
+		sb.append(this.port);
+		sb.append("/");
+		sb.append(this.dbname);
+		return "jdbc:mysql://213.192.44.108:9970/notwa";
 	}
 	
 }

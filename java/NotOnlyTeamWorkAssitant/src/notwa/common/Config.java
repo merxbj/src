@@ -6,6 +6,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
 import javax.xml.xpath.*;
 import notwa.common.ExceptionHandler;
+import java.util.TreeSet;
+import java.util.Set;
 
 public class Config {
 
@@ -22,6 +24,7 @@ public class Config {
 	protected Config() {
         this.configFile = new File(CONFIG_FILE_NAME);
         this.eh = ExceptionHandler.getInstanece();
+        this.connections = new TreeSet<ConnectionInfo>();
         try {
         	this.parse();
         } catch (Exception ex) {
@@ -29,8 +32,8 @@ public class Config {
         }
     }
 
-    public String[] getConnecionStrings() {
-        return connecionStrings;
+    public ConnectionInfo[] getConnecionStrings() {
+        return (ConnectionInfo[]) connections.toArray();
     }
 
     public void parse() throws Exception {
@@ -43,10 +46,21 @@ public class Config {
         }
     }
 
-    private void parseConnecionStrings(NodeList nodes) {       
-        
+    private void parseConnecionStrings(NodeList nodes) throws Exception {       
+        XPath xp = XPathFactory.newInstance().newXPath();
+    	for (int i = 0; i < nodes.getLength(); i++) {
+        	Node n = nodes.item(i);
+        	ConnectionInfo ci = new ConnectionInfo();
+        	ci.setDbname(xp.evaluate("/@dbname", n));
+        	ci.setHost(xp.evaluate("/@host", n));
+        	ci.setUser(xp.evaluate("/@user", n));
+        	ci.setPort(xp.evaluate("/@port", n));
+        	ci.setPassword(xp.evaluate("/@password", n));
+        	ci.setLabel(xp.evaluate("/@label", n));
+        	connections.add(ci);
+        }
     }
 
-    private String[] connecionStrings;
+    private Set<ConnectionInfo> connections;
     private File configFile;
 }
