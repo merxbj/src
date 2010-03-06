@@ -1,0 +1,17 @@
+package notwa.wom;
+
+enum WorkItemState {
+PLEASE_RESOLVE,
+WAITING,
+IN_PROGRESS,
+CLOSED,
+DELETED
+}
+
+enum WorkItemPriority {
+CRITICAL,
+IMPORTANT,
+NORMAL,
+NICE_TO_HAVE,
+UNNECESSARY
+}
