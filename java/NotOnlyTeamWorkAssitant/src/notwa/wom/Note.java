@@ -1,6 +1,6 @@
 package notwa.wom;
 
-public class Note extends BusinessObject {
+public class Note extends BusinessObject implements Comparable<Note> {
 
 	private int nID;
 	private WorkItem nWorkItem;
@@ -9,10 +9,6 @@ public class Note extends BusinessObject {
 	
 	public Note (int noteID) {
 		this.nID = noteID;
-	}
-
-	public int getNoteID() {
-		return this.nID;
 	}
 	
 	public WorkItem getWorkItem() {
@@ -38,4 +34,12 @@ public class Note extends BusinessObject {
 	public void setAuthor(User author) {
 		this.nAuthor = author;
 	}
+	
+	@Override
+	public int compareTo(Note note) {
+        Integer j1 = this.nID;
+        Integer j2 = note.nID;
+	 
+        return j1.compareTo(j2);
+    }
 }
