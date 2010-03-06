@@ -2,72 +2,96 @@ package notwa.wom;
 
 import java.util.Date;
 
-public class WorkItem{
-	
+public class WorkItem extends BusinessObject {
+
 	private int wiID;
 	private String wiSubject;
-	private int wiPriority;
+	private WorkItemPriority wiPriority;
 	private String wiDescription;
-	private int wiCurrentLeaderID;
-	private int wiStateID;
+	private User wiAssignedUser;
+	private WorkItemState wiState;
 	private Date wiLastModified;
-	private int wiProjectID;
-	private int wiParentWorkItemID;
+	private Project wiProject;
+	private WorkItem wiParentWorkItem;
 	private Date wiDeadLineDate;
-	
-	public WorkItem(Object[] wi) {
-		parseDataRow(wi); //TODO: add check here
-	}
-	//TODO:missing priority!!
-	private void parseDataRow(Object[] wi) {
-		this.wiID = ((Integer) wi[0]).intValue();
-		this.wiSubject = wi[1].toString();
-		this.wiPriority = ((Integer) wi[2]).intValue();
-		this.wiDescription = wi[2].toString();
-		this.wiCurrentLeaderID = ((Integer) wi[3]).intValue();
-		this.wiStateID = ((Integer) wi[4]).intValue();
-		this.wiLastModified = ((Date) wi[5]);
-		this.wiProjectID = ((Integer) wi[6]).intValue();
-		this.wiParentWorkItemID = ((Integer) wi[7]).intValue();
-		this.wiDeadLineDate = ((Date) wi[5]);		
+
+	public WorkItem(int wiID) {
+		this.wiID = wiID;
 	}
 
 	public int getID() {
 		return this.wiID;
 	}
-	
+
 	public String getSubject() {
 		return this.wiSubject;
 	}
-	
-	public int getPriority() {
+
+	public WorkItemPriority getPriority() {
 		return this.wiPriority;
 	}
-	
+
 	public String getDescription() {
 		return this.wiDescription;
 	}
 
-	public int getStateID() {
-		return this.wiStateID;
+	public WorkItemState getState() {
+		return this.wiState;
 	}
-	
+
 	public Date getLastModified() {
 		return this.wiLastModified;
 	}
 
-	public int getProjectID() {
-		return this.wiProjectID;
+	public Project getProject() {
+		return this.wiProject;
 	}
 
-	public int getParentID() {
-		return this.wiParentWorkItemID;
+	public WorkItem getParent() {
+		return this.wiParentWorkItem;
 	}
 
 	public Date getDeadLineDate() {
 		return this.wiDeadLineDate;
 	}
-	public User getAuthor() {
-		return UserCollection.getUserByID(this.wiCurrentLeaderID);
+	
+	public User getAssignedUser() {
+		return wiAssignedUser;
+	}
+
+	public void setWiSubject(String wiSubject) {
+		this.wiSubject = wiSubject;
+	}
+
+	public void setWiPriority(WorkItemPriority wiPriority) {
+		this.wiPriority = wiPriority;
+	}
+
+	public void setWiDescription(String wiDescription) {
+		this.wiDescription = wiDescription;
+	}
+
+	public void setWiAssignedUser(User wiAssignedUser) {
+		this.wiAssignedUser = wiAssignedUser;
+	}
+
+	public void setWiState(WorkItemState wiState) {
+		this.wiState = wiState;
+	}
+
+	public void setWiLastModified(Date wiLastModified) {
+		this.wiLastModified = wiLastModified;
+	}
+
+	public void setWiProject(Project wiProject) {
+		this.wiProject = wiProject;
+	}
+
+	public void setWiParentWorkItem(WorkItem wiParentWorkItem) {
+		this.wiParentWorkItem = wiParentWorkItem;
+	}
+
+	public void setWiDeadLineDate(Date wiDeadLineDate) {
+		this.wiDeadLineDate = wiDeadLineDate;
 	}
 }

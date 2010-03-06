@@ -1,5 +1,5 @@
 package notwa.wom;
 
-public class BusinessObject {
+public abstract class BusinessObject {
 
 }
