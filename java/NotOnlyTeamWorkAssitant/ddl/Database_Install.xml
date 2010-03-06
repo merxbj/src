@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DatabaseUpgrade>
+    <file name="./Create_Database.sql" />
+    <file name="./Create_Projects.sql" />
+    <file name="./Create_Users.sql" />
+    <file name="./Create_States.sql" />
+    <file name="./Create_Project_User_Assigment.sql" />
+    <file name="./Create_Work_Items.sql" />
+    <file name="./Create_Work_Item_Notes.sql" />
+</DatabaseUpgrade>

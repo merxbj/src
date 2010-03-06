@@ -16,6 +16,8 @@ Release/
 java/*/build/
 java/*/dist/
 java/*/nbproject/private/
+java/*/bin/
 csharp/*/bin/
 csharp/*/obj/
 *.settings
+java/.metadata
