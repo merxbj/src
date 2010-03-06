@@ -5,5 +5,5 @@ import notwa.wom.BusinessObject;
 
 public interface DataAccessLayer {
 	int Fill(BusinessObjectCollection boc);
-	int Fill(BusinessObject boc, ParameterCollection pc);
+	int Fill(BusinessObjectCollection boc, ParameterCollection pc);
 }
