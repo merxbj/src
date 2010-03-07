@@ -1,4 +1,4 @@
-package notwa.dal;
+package notwa.sql;
 
 public class Parameter {
 	private String name;

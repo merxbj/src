@@ -10,12 +10,12 @@ public abstract class BusinessObjectCollection implements Iterable<BusinessObjec
 		return collection.iterator();
 	}
 	
-	protected void add(BusinessObject bo) {
+	public void add(BusinessObject bo) {
 		collection.add(bo);
 		bo.attach(this);
 	}
 	
-	protected void remove(BusinessObject bo) {
+	public void remove(BusinessObject bo) {
 		collection.remove(bo);
 	}
 }

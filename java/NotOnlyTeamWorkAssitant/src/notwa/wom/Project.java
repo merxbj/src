@@ -10,7 +10,7 @@ public class Project extends BusinessObject implements Comparable<Project>,Clone
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
-		Project clone=(Project)this.clone();
+		Project clone = (Project) super.clone();
 
 		clone.pID = this.pID;
 		clone.pName = this.pName;

@@ -2,8 +2,8 @@ package notwa.wom;
 
 public abstract class BusinessObject {
 	
-	private BusinessObjectCollection attachedBOC = null;
-	private Object originalVersion;
+	protected BusinessObjectCollection attachedBOC;
+	protected Object originalVersion;
 	
 	public void attach(BusinessObjectCollection boc) {
 		this.attachedBOC = boc;

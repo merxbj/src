@@ -27,7 +27,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
-		WorkItem clone=(WorkItem)this.clone();
+		WorkItem clone = (WorkItem) super.clone();
 
 		clone.wiID = this.wiID;
 		clone.wiSubject = this.wiSubject;

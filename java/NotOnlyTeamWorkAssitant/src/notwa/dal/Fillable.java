@@ -1,5 +1,6 @@
 package notwa.dal;
 
+import notwa.sql.ParameterCollection;
 import notwa.wom.BusinessObjectCollection;
 
 public interface Fillable<T extends BusinessObjectCollection> {

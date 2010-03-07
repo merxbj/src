@@ -1,4 +1,4 @@
-package notwa.common;
+package notwa.sql;
 
 public abstract class Parameters {
 

@@ -14,7 +14,7 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
-		User clone=(User)this.clone();
+		User clone = (User) super.clone();
 
 		clone.uID = this.uID;
 		clone.uLogin = this.uLogin;

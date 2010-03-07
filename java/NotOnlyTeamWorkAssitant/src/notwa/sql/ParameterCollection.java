@@ -1,6 +1,7 @@
-package notwa.dal;
+package notwa.sql;
 
 import java.util.*;
+
 
 public class ParameterCollection implements Collection<Parameter>{
 
