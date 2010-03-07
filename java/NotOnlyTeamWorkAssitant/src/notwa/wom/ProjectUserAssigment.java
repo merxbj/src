@@ -1,9 +1,17 @@
 package notwa.wom;
 
-public class ProjectUserAssigment extends BusinessObject implements Comparable<ProjectUserAssigment> {
+public class ProjectUserAssigment extends BusinessObject implements Comparable<ProjectUserAssigment>,Cloneable {
 
 	private Project pProject;
 	private User pUser;
+
+	protected Object clone() throws CloneNotSupportedException {
+		ProjectUserAssigment clone=(ProjectUserAssigment)this.clone();
+
+		clone.pProject=(Project)pProject.clone();
+		clone.pUser=(User)pUser.clone();
+		return clone;
+	}
 	
 	public Project getProject() {
 		return this.pProject;

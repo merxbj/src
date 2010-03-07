@@ -1,6 +1,6 @@
 package notwa.wom;
 
-public class Note extends BusinessObject implements Comparable<Note> {
+public class Note extends BusinessObject implements Comparable<Note>,Cloneable {
 
 	private int nID;
 	private WorkItem nWorkItem;
@@ -9,6 +9,16 @@ public class Note extends BusinessObject implements Comparable<Note> {
 	
 	public Note (int noteID) {
 		this.nID = noteID;
+	}
+
+	protected Object clone() throws CloneNotSupportedException {
+		Note clone=(Note)this.clone();
+
+		clone.nID=nID;
+		clone.nWorkItem=(WorkItem)nWorkItem.clone();
+		clone.nNoteText=nNoteText;
+		clone.nAuthor=(User)nAuthor.clone();
+		return clone;
 	}
 	
 	public WorkItem getWorkItem() {

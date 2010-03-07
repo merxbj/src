@@ -1,6 +1,6 @@
 package notwa.wom;
 
-public class User extends BusinessObject implements Comparable<User> {
+public class User extends BusinessObject implements Comparable<User>,Cloneable {
 
 	private int uID;
 	private String uLogin;
@@ -10,6 +10,17 @@ public class User extends BusinessObject implements Comparable<User> {
 	
 	public User(int userID) {
 		this.uID = userID;
+	}
+	
+	protected Object clone() throws CloneNotSupportedException {
+		User clone=(User)this.clone();
+
+		clone.uID=uID;
+		clone.uLogin=uLogin;
+		clone.uPassword=uPassword;
+		clone.uUserFirstName=uUserFirstName;
+		clone.uUserLastName=uUserLastName;
+		return clone;
 	}
 	
 	public String getLoginName() {

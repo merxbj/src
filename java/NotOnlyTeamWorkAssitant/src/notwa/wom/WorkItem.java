@@ -2,7 +2,7 @@ package notwa.wom;
 
 import java.util.Date;
 
-public class WorkItem extends BusinessObject implements Comparable<WorkItem> {
+public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Cloneable {
 
 	private int wiID;
 	private String wiSubject;
@@ -23,6 +23,22 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem> {
 	
 	public WorkItem(int wiID) {
 		this.wiID = wiID;
+	}
+	
+	protected Object clone() throws CloneNotSupportedException {
+		WorkItem clone=(WorkItem)this.clone();
+
+		clone.wiID=wiID;
+		clone.wiSubject=wiSubject;
+		clone.wiPriority=wiPriority;
+		clone.wiDescription=wiDescription;
+		clone.wiAssignedUser=(User)wiAssignedUser.clone();
+		clone.wiState=wiState;
+		clone.wiLastModified=wiLastModified;
+		clone.wiProject=(Project)wiProject.clone();
+		clone.wiParentWorkItem=(WorkItem)wiParentWorkItem.clone();
+		clone.wiDeadLineDate=wiDeadLineDate;
+		return clone;
 	}
 
 	public String getSubject() {
