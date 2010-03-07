@@ -14,10 +14,10 @@ public class Note extends BusinessObject implements Comparable<Note>,Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		Note clone=(Note)this.clone();
 
-		clone.nID=nID;
-		clone.nWorkItem=(WorkItem)nWorkItem.clone();
-		clone.nNoteText=nNoteText;
-		clone.nAuthor=(User)nAuthor.clone();
+		clone.nID = this.nID;
+		clone.nWorkItem = this.nWorkItem;
+		clone.nNoteText = this.nNoteText;
+		clone.nAuthor = this.nAuthor;
 		return clone;
 	}
 	

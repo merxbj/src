@@ -14,6 +14,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	private Project wiProject;
 	private WorkItem wiParentWorkItem;
 	private Date wiDeadLineDate;
+	private NoteCollection noteCollection;
 
 	enum WorkItemState {
 		PLEASE_RESOLVE,	WAITING, IN_PROGRESS, CLOSED, DELETED }
@@ -28,16 +29,17 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	protected Object clone() throws CloneNotSupportedException {
 		WorkItem clone=(WorkItem)this.clone();
 
-		clone.wiID=wiID;
-		clone.wiSubject=wiSubject;
-		clone.wiPriority=wiPriority;
-		clone.wiDescription=wiDescription;
-		clone.wiAssignedUser=(User)wiAssignedUser.clone();
-		clone.wiState=wiState;
-		clone.wiLastModified=wiLastModified;
-		clone.wiProject=(Project)wiProject.clone();
-		clone.wiParentWorkItem=(WorkItem)wiParentWorkItem.clone();
-		clone.wiDeadLineDate=wiDeadLineDate;
+		clone.wiID = this.wiID;
+		clone.wiSubject = this.wiSubject;
+		clone.wiPriority = this.wiPriority;
+		clone.wiDescription = this.wiDescription;
+		clone.wiAssignedUser = this.wiAssignedUser;
+		clone.wiState = this.wiState;
+		clone.wiLastModified = this.wiLastModified;
+		clone.wiProject = this.wiProject;
+		clone.wiParentWorkItem = this.wiParentWorkItem;
+		clone.wiDeadLineDate = this.wiDeadLineDate;
+		clone.noteCollection = this.noteCollection;
 		return clone;
 	}
 
@@ -76,6 +78,10 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	public User getAssignedUser() {
 		return wiAssignedUser;
 	}
+	
+	public NoteCollection getNoteCollection() {
+		return noteCollection;
+	}
 
 	public void setWiSubject(String wiSubject) {
 		this.wiSubject = wiSubject;
@@ -112,7 +118,10 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	public void setWiDeadLineDate(Date wiDeadLineDate) {
 		this.wiDeadLineDate = wiDeadLineDate;
 	}
-	
+	public void setNoteCollection(NoteCollection noteCollection) {
+		this.noteCollection = noteCollection;
+	}
+
 	@Override
 	public int compareTo(WorkItem wi) {
         Integer j1 = this.wiID;
