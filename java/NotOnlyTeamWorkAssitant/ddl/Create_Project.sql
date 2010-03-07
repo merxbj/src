@@ -1,8 +1,8 @@
 -- Create Projects table
-CREATE TABLE Projects (
+CREATE TABLE Project (
     project_id              NUMERIC(19) NOT NULL,
     name                    VARCHAR(255) NOT NULL,
     
-    CONSTRAINT PK_Projects
+    CONSTRAINT PK_Project
         Primary Key (project_id)
     )

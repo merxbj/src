@@ -1,19 +1,32 @@
 package notwa.dal;
 
 import notwa.sql.ParameterCollection;
+import notwa.sql.Parameters;
+import notwa.sql.Parameter;
 import notwa.wom.*;
 
 import java.lang.StringBuilder;
 import notwa.sql.SqlBuilder;
 import java.sql.ResultSet;
+
+import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 
 public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
 
-	private Getable userDal;
-	private Getable noteDal;
-	private Getable projectDal;
+	private Getable<User> userDal;
+	private Getable<Note> noteDal;
+	private Getable<Project> projectDal;
 	
+	
+	
+	public WorkItemDal(ConnectionInfo ci) {
+		super(ci);
+		this.userDal = new UserDal(ci);
+		this.noteDal = new NoteDal(ci);
+		this.projectDal = new ProjectDal(ci);
+	}
+
 	public int Fill(WorkItemCollection wic) {
 		ParameterCollection emptyPc = new ParameterCollection();
 		return Fill(wic, emptyPc);
@@ -23,7 +36,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 		StringBuilder vanillaSql = new StringBuilder();
 		vanillaSql.append("SELECT 	work_item_id,");
 		vanillaSql.append("       	assigned_user_id,");
-		vanillaSql.append("       	state_id,");
+		vanillaSql.append("       	status_id,");
 		vanillaSql.append("       	project_id,");
 		vanillaSql.append("       	parent_work_item_id,");
 		vanillaSql.append("       	subject,");
@@ -31,7 +44,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 		vanillaSql.append(" 		description,");
 		vanillaSql.append("			expected_timestamp,");
 		vanillaSql.append(" 		last_modified_timestamp");
-		vanillaSql.append("FROM Work_Items");
+		vanillaSql.append("FROM Work_Item");
 		vanillaSql.append("/* STATEMENT=WHERE;RELATION=AND;");
 		vanillaSql.append("		{column=work_item_id;parameter=WorkItemId;}");
 		vanillaSql.append("		{column=state_id;parameter=WorkItemStatusId;}");
@@ -51,8 +64,12 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 				WorkItem wi = new WorkItem(rs.getInt("work_item_id"));
 				wi.setSubject(rs.getString("subject"));
 				wi.setDescription(rs.getString("description"));
-				wi.setPriority((WorkItem.WorkItemPriority) rs.getObject("working_priority"));
-				wi.
+				wi.setPriority(WorkItemPriority.lookup(rs.getInt("working_priority")));
+				wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
+				wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
+				wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
+				wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"))})));
+				// TODO Complete!
 			}
 		} catch (Exception ex) {
 			LoggingInterface.getInstanece().handleException(ex);
@@ -60,7 +77,8 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 		return 1;
 	}
 
-	public void get(WorkItem boc, ParameterCollection primaryKey) {
-		
+	public WorkItem get(ParameterCollection primaryKey) {
+		// TODO Auto-generated method stub		
+		return new WorkItem(1);
 	}
 }

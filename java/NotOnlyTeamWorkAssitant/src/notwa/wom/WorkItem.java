@@ -49,7 +49,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 		return this.description;
 	}
 
-	public WorkItemStatus getState() {
+	public WorkItemStatus getStatus() {
 		return this.status;
 	}
 
@@ -93,8 +93,8 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 		this.assignedUser = assignedUser;
 	}
 
-	public void setState(WorkItemStatus state) {
-		this.status = state;
+	public void setStatus(WorkItemStatus status) {
+		this.status = status;
 	}
 
 	public void setLastModifiedTimestamp(Date lastModifiedTimestamp) {

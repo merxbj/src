@@ -11,6 +11,13 @@ public class ParameterCollection implements Collection<Parameter>{
 		this.parameters = new ArrayList<Parameter>();
 	}
 	
+	public ParameterCollection(Parameter [] params) {
+		this.parameters = new ArrayList<Parameter>();
+		for (Parameter p : params) {
+			this.parameters.add(p);
+		}
+	}
+	
 	@Override
 	public boolean add(Parameter parameter) {
 		if (!parameters.contains(parameter)) {

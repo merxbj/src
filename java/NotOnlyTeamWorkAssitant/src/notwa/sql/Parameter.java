@@ -2,7 +2,12 @@ package notwa.sql;
 
 public class Parameter {
 	private String name;
-	private String value;
+	private Object value;
+	
+	public Parameter(String name, Object value) {
+		this.name = name;
+		this.value = value;
+	}
 	
 	@Override
 	public int hashCode() {
@@ -33,7 +38,7 @@ public class Parameter {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 	public void setValue(String value) {
