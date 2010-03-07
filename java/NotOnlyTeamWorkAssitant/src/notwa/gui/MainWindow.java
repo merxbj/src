@@ -1,12 +1,12 @@
 package notwa.gui;
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class MainWindow {
-
-	private JFrame mainWindow;
+@SuppressWarnings("serial")
+public class MainWindow extends JFrame {
 	private String version = new String("v0.0.1-r1"); //config?
 	
 	public MainWindow() {
@@ -14,9 +14,32 @@ public class MainWindow {
 	}
 
 	private void initMainWindow() {
-		mainWindow = new JFrame("NOTWA - NOT Only Team Work Assistent " + version.toString());
-		mainWindow.setPreferredSize(new Dimension(1000,500));
-		mainWindow.setLocationRelativeTo(null);
-		mainWindow.setVisible(true);
+		this.setLayout(new BorderLayout());
+		this.setTitle("NOTWA - NOT Only Team Work Assistent " + version.toString());
+		this.setSize(1000,500);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		/*
+		 * Load MainMenu
+		 */
+		MainMenu mm = new MainMenu();
+		this.setJMenuBar(mm);
+		
+		/*
+		 * create main JPanel and Load tabs 
+		 */
+		JPanel mainJP = new JPanel(new BorderLayout());
+		DataBaseTabs dbt = new DataBaseTabs();
+		mainJP.add(dbt, BorderLayout.CENTER);
+		this.add(mainJP,BorderLayout.CENTER);
+		
+		/*
+		 * create JStatusBar object
+		 */
+		JStatusBar jsb = new JStatusBar();
+		this.add(jsb, BorderLayout.PAGE_END);
+		
+		this.setVisible(true);
 	}
 }
