@@ -7,6 +7,7 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	private String uPassword;
 	private String uUserFirstName;
 	private String uUserLastName;
+	private ProjectCollection assignedProjects;
 	
 	public User(int userID) {
 		this.uID = userID;
@@ -15,11 +16,12 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		User clone=(User)this.clone();
 
-		clone.uID=uID;
-		clone.uLogin=uLogin;
-		clone.uPassword=uPassword;
-		clone.uUserFirstName=uUserFirstName;
-		clone.uUserLastName=uUserLastName;
+		clone.uID = this.uID;
+		clone.uLogin = this.uLogin;
+		clone.uPassword = this.uPassword;
+		clone.uUserFirstName = this.uUserFirstName;
+		clone.uUserLastName = this.uUserLastName;
+		clone.assignedProjects = this.assignedProjects;
 		return clone;
 	}
 	
@@ -39,6 +41,10 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 		return this.uUserLastName;
 	}
 	
+	public ProjectCollection getAssignedProjects() {
+		return assignedProjects;
+	}
+	
 	public void setLoginName(String loginName) {
 		this.uLogin = loginName;
 	}
@@ -53,6 +59,10 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	
 	public void setLastName(String lastName) {
 		this.uUserLastName = lastName;
+	}
+	
+	public void setAssignedProjects(ProjectCollection assignedProjects) {
+		this.assignedProjects = assignedProjects;
 	}
 	
 	@Override
