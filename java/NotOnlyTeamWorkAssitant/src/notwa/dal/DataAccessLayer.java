@@ -1,11 +1,9 @@
 package notwa.dal;
 
-import notwa.sql.ParameterCollection;
-import notwa.wom.BusinessObjectCollection;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 
-public abstract class DataAccessLayer implements Fillable<BusinessObjectCollection> {
+public abstract class DataAccessLayer {
 	protected DatabaseConnection dc;
 	
 	public DataAccessLayer() {
@@ -15,15 +13,5 @@ public abstract class DataAccessLayer implements Fillable<BusinessObjectCollecti
 	
 	public DataAccessLayer(ConnectionInfo ci) {
 		dc = new DatabaseConnection(ci);
-	}
-
-	@Override
-	public int Fill(BusinessObjectCollection boc, ParameterCollection pc) {
-		return 0;
-	}
-
-	@Override
-	public int Fill(BusinessObjectCollection boc) {
-		return 0;
 	}
 }

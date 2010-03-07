@@ -1,55 +1,64 @@
 package notwa.wom;
 
-public class Note extends BusinessObject implements Comparable<Note>,Cloneable {
+public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
-	private int nID;
-	private WorkItem nWorkItem;
-	private String nNoteText;
-	private User nAuthor;
+	private int id;
+	private WorkItem workItem;
+	private String text;
+	private User author;
 	
 	public Note (int noteID) {
-		this.nID = noteID;
+		this.id = noteID;
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
 		Note clone = (Note) super.clone();
 
-		clone.nID = this.nID;
-		clone.nWorkItem = this.nWorkItem;
-		clone.nNoteText = this.nNoteText;
-		clone.nAuthor = this.nAuthor;
+		clone.id = this.id;
+		clone.workItem = this.workItem;
+		clone.text = this.text;
+		clone.author = this.author;
 		return clone;
 	}
 	
 	public WorkItem getWorkItem() {
-		return this.nWorkItem;
+		return this.workItem;
 	}
 	
 	public String getNoteText() {
-		return this.nNoteText;
+		return this.text;
 	}
 	
 	public User getAuthor() {
-		return this.nAuthor;
+		return this.author;
 	}
 	
 	public void setWorkItem(WorkItem wi) {
-		this.nWorkItem = wi;
+		this.workItem = wi;
 	}
 	
 	public void setNoteText(String noteText) {
-		this.nNoteText = noteText;
+		this.text = noteText;
 	}
 	
 	public void setAuthor(User author) {
-		this.nAuthor = author;
+		this.author = author;
 	}
 	
 	@Override
 	public int compareTo(Note note) {
-        Integer j1 = this.nID;
-        Integer j2 = note.nID;
+        Integer j1 = this.id;
+        Integer j2 = note.id;
 	 
         return j1.compareTo(j2);
     }
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Note)) {
+			return false;
+		} else {
+			return (this.compareTo((Note) o) == 0);
+		}
+	}
 }

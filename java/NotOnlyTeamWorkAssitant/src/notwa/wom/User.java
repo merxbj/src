@@ -1,44 +1,44 @@
 package notwa.wom;
 
-public class User extends BusinessObject implements Comparable<User>,Cloneable {
+public class User extends BusinessObject implements Comparable<User>, Cloneable {
 
-	private int uID;
-	private String uLogin;
-	private String uPassword;
-	private String uUserFirstName;
-	private String uUserLastName;
+	private int id;
+	private String login;
+	private String password;
+	private String firstName;
+	private String lastName;
 	private ProjectCollection assignedProjects;
 	
 	public User(int userID) {
-		this.uID = userID;
+		this.id = userID;
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
 		User clone = (User) super.clone();
 
-		clone.uID = this.uID;
-		clone.uLogin = this.uLogin;
-		clone.uPassword = this.uPassword;
-		clone.uUserFirstName = this.uUserFirstName;
-		clone.uUserLastName = this.uUserLastName;
+		clone.id = this.id;
+		clone.login = this.login;
+		clone.password = this.password;
+		clone.firstName = this.firstName;
+		clone.lastName = this.lastName;
 		clone.assignedProjects = this.assignedProjects;
 		return clone;
 	}
 	
 	public String getLoginName() {
-		return this.uLogin;
+		return this.login;
 	}
 
 	public String getLoginPass() {
-		return this.uPassword;
+		return this.password;
 	}
 	
 	public String getFirstName() {
-		return this.uUserFirstName;
+		return this.firstName;
 	}
 	
 	public String getLastName() {
-		return this.uUserLastName;
+		return this.lastName;
 	}
 	
 	public ProjectCollection getAssignedProjects() {
@@ -46,19 +46,19 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	}
 	
 	public void setLoginName(String loginName) {
-		this.uLogin = loginName;
+		this.login = loginName;
 	}
 	
 	public void setUserPassword(String userPassword) {
-		this.uPassword = userPassword;
+		this.password = userPassword;
 	}
 	
 	public void setUserFirstName(String firstName) {
-		this.uUserFirstName = firstName;
+		this.firstName = firstName;
 	}
 	
 	public void setLastName(String lastName) {
-		this.uUserLastName = lastName;
+		this.lastName = lastName;
 	}
 	
 	public void setAssignedProjects(ProjectCollection assignedProjects) {
@@ -67,9 +67,18 @@ public class User extends BusinessObject implements Comparable<User>,Cloneable {
 	
 	@Override
 	public int compareTo(User user) {
-        Integer j1 = this.uID;
-        Integer j2 = user.uID;
+        Integer j1 = this.id;
+        Integer j2 = user.id;
 	 
         return j1.compareTo(j2);
     }
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof User)) {
+			return false;
+		} else {
+			return (this.compareTo((User) o) == 0);
+		}
+	}
 }

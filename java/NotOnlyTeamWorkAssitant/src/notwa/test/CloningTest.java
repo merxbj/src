@@ -24,10 +24,10 @@ public class CloningTest {
 		
 		
 		WorkItem wi = new WorkItem(1);
-		wi.setWiSubject("class CloningTest");
-		wi.setWiAssignedUser(user);
-		wi.setWiDescription("create new class CloningTest for testing this code...");
-		wi.setWiProject(project);
+		wi.setSubject("class CloningTest");
+		wi.setAssignedUser(user);
+		wi.setDescription("create new class CloningTest for testing this code...");
+		wi.setProject(project);
 		wi.setNoteCollection(noteCollection);
 		
 		WorkItemCollection wic = new WorkItemCollection();

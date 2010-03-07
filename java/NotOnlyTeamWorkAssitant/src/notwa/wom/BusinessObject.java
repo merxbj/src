@@ -1,16 +1,18 @@
 package notwa.wom;
 
+import notwa.common.LoggingInterface;
+
 public abstract class BusinessObject {
 	
 	protected BusinessObjectCollection attachedBOC;
-	protected Object originalVersion;
+	protected BusinessObject originalVersion;
 	
 	public void attach(BusinessObjectCollection boc) {
 		this.attachedBOC = boc;
 		try {
-			this.originalVersion = this.clone();
-		} catch (CloneNotSupportedException e) {
-			// log?
+			this.originalVersion = (BusinessObject) this.clone();
+		} catch (CloneNotSupportedException ex) {
+			LoggingInterface.getInstanece().handleException(ex);
 		}
 	}
 	

@@ -2,18 +2,18 @@ package notwa.wom;
 
 import java.util.Date;
 
-public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Cloneable {
+public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cloneable {
 
-	private int wiID;
-	private String wiSubject;
-	private WorkItemPriority wiPriority;
-	private String wiDescription;
-	private User wiAssignedUser;
-	private WorkItemState wiState;
-	private Date wiLastModified;
-	private Project wiProject;
-	private WorkItem wiParentWorkItem;
-	private Date wiDeadLineDate;
+	private int id;
+	private String subject;
+	private WorkItemPriority priority;
+	private String description;
+	private User assignedUser;
+	private WorkItemState status;
+	private Date lastModifiedTimestamp;
+	private Project project;
+	private WorkItem parentWorkItem;
+	private Date expectedTimestamp;
 	private NoteCollection noteCollection;
 
 	enum WorkItemState {
@@ -22,101 +22,101 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 	enum WorkItemPriority {
 		CRITICAL, IMPORTANT, NORMAL, NICE_TO_HAVE, UNNECESSARY }
 	
-	public WorkItem(int wiID) {
-		this.wiID = wiID;
+	public WorkItem(int id) {
+		this.id = id;
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
 		WorkItem clone = (WorkItem) super.clone();
 
-		clone.wiID = this.wiID;
-		clone.wiSubject = this.wiSubject;
-		clone.wiPriority = this.wiPriority;
-		clone.wiDescription = this.wiDescription;
-		clone.wiAssignedUser = this.wiAssignedUser;
-		clone.wiState = this.wiState;
-		clone.wiLastModified = this.wiLastModified;
-		clone.wiProject = this.wiProject;
-		clone.wiParentWorkItem = this.wiParentWorkItem;
-		clone.wiDeadLineDate = this.wiDeadLineDate;
+		clone.id = this.id;
+		clone.subject = this.subject;
+		clone.priority = this.priority;
+		clone.description = this.description;
+		clone.assignedUser = this.assignedUser;
+		clone.status = this.status;
+		clone.lastModifiedTimestamp = this.lastModifiedTimestamp;
+		clone.project = this.project;
+		clone.parentWorkItem = this.parentWorkItem;
+		clone.expectedTimestamp = this.expectedTimestamp;
 		clone.noteCollection = this.noteCollection;
 		return clone;
 	}
 
 	public String getSubject() {
-		return this.wiSubject;
+		return this.subject;
 	}
 
 	public WorkItemPriority getPriority() {
-		return this.wiPriority;
+		return this.priority;
 	}
 
 	public String getDescription() {
-		return this.wiDescription;
+		return this.description;
 	}
 
 	public WorkItemState getState() {
-		return this.wiState;
+		return this.status;
 	}
 
-	public Date getLastModified() {
-		return this.wiLastModified;
+	public Date getLastModifiedTimestamp() {
+		return this.lastModifiedTimestamp;
 	}
 
 	public Project getProject() {
-		return this.wiProject;
+		return this.project;
 	}
 
 	public WorkItem getParent() {
-		return this.wiParentWorkItem;
+		return this.parentWorkItem;
 	}
 
-	public Date getDeadLineDate() {
-		return this.wiDeadLineDate;
+	public Date getExpectedTimestamp() {
+		return this.expectedTimestamp;
 	}
 	
 	public User getAssignedUser() {
-		return wiAssignedUser;
+		return assignedUser;
 	}
 	
 	public NoteCollection getNoteCollection() {
 		return noteCollection;
 	}
 
-	public void setWiSubject(String wiSubject) {
-		this.wiSubject = wiSubject;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
-	public void setWiPriority(WorkItemPriority wiPriority) {
-		this.wiPriority = wiPriority;
+	public void setPriority(WorkItemPriority priority) {
+		this.priority = priority;
 	}
 
-	public void setWiDescription(String wiDescription) {
-		this.wiDescription = wiDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public void setWiAssignedUser(User wiAssignedUser) {
-		this.wiAssignedUser = wiAssignedUser;
+	public void setAssignedUser(User assignedUser) {
+		this.assignedUser = assignedUser;
 	}
 
-	public void setWiState(WorkItemState wiState) {
-		this.wiState = wiState;
+	public void setState(WorkItemState state) {
+		this.status = state;
 	}
 
-	public void setWiLastModified(Date wiLastModified) {
-		this.wiLastModified = wiLastModified;
+	public void setLastModifiedTimestamp(Date lastModifiedTimestamp) {
+		this.lastModifiedTimestamp = lastModifiedTimestamp;
 	}
 
-	public void setWiProject(Project wiProject) {
-		this.wiProject = wiProject;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
-	public void setWiParentWorkItem(WorkItem wiParentWorkItem) {
-		this.wiParentWorkItem = wiParentWorkItem;
+	public void setParentWorkItem(WorkItem parentWorkItem) {
+		this.parentWorkItem = parentWorkItem;
 	}
 
-	public void setWiDeadLineDate(Date wiDeadLineDate) {
-		this.wiDeadLineDate = wiDeadLineDate;
+	public void setExpectedTimestamp(Date expectedTimestamp) {
+		this.expectedTimestamp = expectedTimestamp;
 	}
 	public void setNoteCollection(NoteCollection noteCollection) {
 		this.noteCollection = noteCollection;
@@ -124,9 +124,18 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>,Clo
 
 	@Override
 	public int compareTo(WorkItem wi) {
-        Integer j1 = this.wiID;
-        Integer j2 = wi.wiID;
+        Integer j1 = this.id;
+        Integer j2 = wi.id;
 	 
         return j1.compareTo(j2);
     }
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof WorkItem)) {
+			return false;
+		} else {
+			return (this.compareTo((WorkItem) o) == 0);
+		}
+	}
 }
