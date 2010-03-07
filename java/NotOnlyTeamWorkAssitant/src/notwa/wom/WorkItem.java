@@ -9,19 +9,13 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 	private WorkItemPriority priority;
 	private String description;
 	private User assignedUser;
-	private WorkItemState status;
+	private WorkItemStatus status;
 	private Date lastModifiedTimestamp;
 	private Project project;
 	private WorkItem parentWorkItem;
 	private Date expectedTimestamp;
 	private NoteCollection noteCollection;
 
-	enum WorkItemState {
-		PLEASE_RESOLVE,	WAITING, IN_PROGRESS, CLOSED, DELETED }
-
-	enum WorkItemPriority {
-		CRITICAL, IMPORTANT, NORMAL, NICE_TO_HAVE, UNNECESSARY }
-	
 	public WorkItem(int id) {
 		this.id = id;
 	}
@@ -55,7 +49,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 		return this.description;
 	}
 
-	public WorkItemState getState() {
+	public WorkItemStatus getState() {
 		return this.status;
 	}
 
@@ -99,7 +93,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 		this.assignedUser = assignedUser;
 	}
 
-	public void setState(WorkItemState state) {
+	public void setState(WorkItemStatus state) {
 		this.status = state;
 	}
 

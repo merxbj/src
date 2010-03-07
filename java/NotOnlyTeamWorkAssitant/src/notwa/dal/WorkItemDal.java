@@ -49,7 +49,10 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 			ResultSet rs = dc.executeQuery(sql);
 			while (rs.next()) {
 				WorkItem wi = new WorkItem(rs.getInt("work_item_id"));
-				
+				wi.setSubject(rs.getString("subject"));
+				wi.setDescription(rs.getString("description"));
+				wi.setPriority((WorkItem.WorkItemPriority) rs.getObject("working_priority"));
+				wi.
 			}
 		} catch (Exception ex) {
 			LoggingInterface.getInstanece().handleException(ex);
