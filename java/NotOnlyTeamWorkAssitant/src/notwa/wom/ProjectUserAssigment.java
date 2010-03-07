@@ -1,23 +1,31 @@
 package notwa.wom;
 
-public class ProjectUserAssigment extends BusinessObject {
+public class ProjectUserAssigment extends BusinessObject implements Comparable<ProjectUserAssigment> {
 
-	private Project project;
+	private Project pProject;
 	private User pUser;
 	
-	public ProjectUserAssigment(Project project) {
-		this.project = project;
-	}
-	
 	public Project getProject() {
-		return this.project;
+		return this.pProject;
 	}
 	
 	public User getAssignedUser() {
 		return this.pUser;
 	}
+
+	public void setProject(Project project) {
+		this.pProject = project;
+	}
 	
 	public void setAssignedUser(User user) {
 		this.pUser = user;
 	}
+	
+	@Override
+	public int compareTo(ProjectUserAssigment pua) {
+        String j1 = this.pProject.getProjectName();
+        String j2 = pua.getProject().getProjectName();
+	 
+        return j1.compareTo(j2);
+    }
 }

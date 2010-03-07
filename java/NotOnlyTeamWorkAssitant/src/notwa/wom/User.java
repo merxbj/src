@@ -1,6 +1,6 @@
 package notwa.wom;
 
-public class User extends BusinessObject {
+public class User extends BusinessObject implements Comparable<User> {
 
 	private int uID;
 	private String uLogin;
@@ -10,10 +10,6 @@ public class User extends BusinessObject {
 	
 	public User(int userID) {
 		this.uID = userID;
-	}
-
-	public int getUserID() {
-		return this.uID;
 	}
 	
 	public String getLoginName() {
@@ -47,4 +43,12 @@ public class User extends BusinessObject {
 	public void setLastName(String lastName) {
 		this.uUserLastName = lastName;
 	}
+	
+	@Override
+	public int compareTo(User user) {
+        Integer j1 = this.uID;
+        Integer j2 = user.uID;
+	 
+        return j1.compareTo(j2);
+    }
 }

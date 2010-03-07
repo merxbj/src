@@ -15,12 +15,14 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem> {
 	private WorkItem wiParentWorkItem;
 	private Date wiDeadLineDate;
 
+	enum WorkItemState {
+		PLEASE_RESOLVE,	WAITING, IN_PROGRESS, CLOSED, DELETED }
+
+	enum WorkItemPriority {
+		CRITICAL, IMPORTANT, NORMAL, NICE_TO_HAVE, UNNECESSARY }
+	
 	public WorkItem(int wiID) {
 		this.wiID = wiID;
-	}
-
-	public int getID() {
-		return this.wiID;
 	}
 
 	public String getSubject() {
@@ -97,8 +99,8 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem> {
 	
 	@Override
 	public int compareTo(WorkItem wi) {
-        Integer j1 = getID();
-        Integer j2 = wi.getID();
+        Integer j1 = this.wiID;
+        Integer j2 = wi.wiID;
 	 
         return j1.compareTo(j2);
     }
