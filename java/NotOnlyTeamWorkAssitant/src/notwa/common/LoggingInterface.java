@@ -3,24 +3,28 @@ package notwa.common;
 import notwa.logger.LogDispatcher;
 import notwa.logger.Logger;
 
-public class ExceptionHandler {
+public class LoggingInterface {
 	
-	private static ExceptionHandler singleton;
+	private static LoggingInterface singleton;
 	private LogDispatcher ld;
 	
-	public static ExceptionHandler getInstanece() {
+	public static LoggingInterface getInstanece() {
 		if (singleton == null) {
-			singleton = new ExceptionHandler();
+			singleton = new LoggingInterface();
 		}
 		return singleton;
 	}
 	
-	protected ExceptionHandler() {
+	protected LoggingInterface() {
 		ld = new LogDispatcher();
 		ld.registerLogger(new Logger("./log/notwa.log", "NOTWA"));
 	}
 	
 	public void handleException(Exception ex) {
 		ld.logError(ex.toString());
+	}
+	
+	public LogDispatcher getLogger() {
+		return ld;
 	}
 }

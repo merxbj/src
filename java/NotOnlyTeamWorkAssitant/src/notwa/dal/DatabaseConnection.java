@@ -1,7 +1,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.common.ExceptionHandler;
+import notwa.common.LoggingInterface;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -16,7 +16,7 @@ public class DatabaseConnection {
 			con = DriverManager.getConnection(ci.compileConnectionString());
 			connected = true;
 		} catch (Exception ex) {
-			ExceptionHandler.getInstanece().handleException(ex);
+			LoggingInterface.getInstanece().handleException(ex);
 			connected = false;
 		}
 	}

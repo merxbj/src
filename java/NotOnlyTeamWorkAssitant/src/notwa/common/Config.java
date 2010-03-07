@@ -5,7 +5,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
 import javax.xml.xpath.*;
-import notwa.common.ExceptionHandler;
+import notwa.common.LoggingInterface;
 import java.util.TreeSet;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class Config {
         try {
         	this.parse();
         } catch (Exception ex) {
-        	ExceptionHandler.getInstanece().handleException(ex);
+        	LoggingInterface.getInstanece().handleException(ex);
         }
     }
 

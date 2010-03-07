@@ -2,7 +2,7 @@ package notwa.dal;
 
 import notwa.wom.*;
 
-public class WorkItemCollectionDal implements Fillable<WorkItemCollection> {
+public class WorkItemCollectionDal extends DataAccessLayer {
 	
 	public int Fill(WorkItemCollection wic) {
 		ParameterCollection emptyPc = new ParameterCollection();
@@ -10,6 +10,7 @@ public class WorkItemCollectionDal implements Fillable<WorkItemCollection> {
 	}
 	
 	public int Fill(WorkItemCollection wic, ParameterCollection pc) {
+		String vanilaSql = "SELECT * FROM Work_Items"; 
 		return 1;
 	}
 }
