@@ -24,7 +24,7 @@ public class LoggingInterface {
 		ld.logError(ex.toString());
 	}
 	
-	public LogDispatcher getLogger() {
-		return ld;
+	public static LogDispatcher getLogger() {
+		return getInstanece().ld;
 	}
 }
