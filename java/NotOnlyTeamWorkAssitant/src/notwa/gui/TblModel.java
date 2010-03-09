@@ -6,22 +6,26 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 class TblModel extends AbstractTableModel
 {
-	private final int COLUMN_COUNT = 6;
 	private ArrayList<Object[]> rowData;
+	private String[] tableHeaders;
 
-	public TblModel(ArrayList<Object[]> rowData)
+	public TblModel(ArrayList<Object[]> rowData, String[] tableHeaders)
 	{
 		this.rowData = rowData;
+		this.tableHeaders = tableHeaders;
+	}
+	
+	public String getColumnName(int c) {
+		return tableHeaders[c];
 	}
 
 	public int getColumnCount()
 	{
-		return COLUMN_COUNT;
+		return tableHeaders.length;
 	}
 
 	public int getRowCount()
 	{
-
 		return rowData == null ? 0 : rowData.size();
 	}
 
@@ -38,6 +42,8 @@ class TblModel extends AbstractTableModel
 
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
+		if(columnIndex < 3) // this will be more accurate //TODO: can be edited by owner of wit and so on ...
+			return false;
 		return true;
 	}
 

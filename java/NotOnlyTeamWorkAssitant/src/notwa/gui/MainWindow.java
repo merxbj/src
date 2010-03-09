@@ -4,12 +4,29 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	private String version = new String("v0.0.1-r1"); //config?
 	
 	public MainWindow() {
+		
+		/*
+		 * temp this will be removed when loading from config is completly done
+		 */
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * end.
+		 */
+		
+		
 		initMainWindow();
 	}
 

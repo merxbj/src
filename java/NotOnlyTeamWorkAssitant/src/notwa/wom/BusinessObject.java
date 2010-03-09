@@ -28,27 +28,23 @@ public abstract class BusinessObject {
 		return attachedBOC != null;
 	}
 	
-	protected void rollback() {
+	public void rollback() {
 		Class<?> c = this.getClass();
 		Class<?> o = originalVersion.getClass();
 		
 		for (Field field : c.getDeclaredFields()) {
 			try {
 				field.setAccessible(true);
-				for (Field ovField : o.getDeclaredFields()) {
-						ovField.setAccessible(true);
-						Object value = ovField.get(originalVersion);
-						if (field.getName().equals(ovField.getName())) {
-							field.set(this, value);
-						}
-				}
+				Field ovField = o.getDeclaredField(field.getName());
+				ovField.setAccessible(true);
+       			field.set(this, ovField.get(originalVersion));
 			} catch (Exception e) {
 				LoggingInterface.getInstanece().handleException(e);
 			}
 		}
 	}
 	
-	protected void commit() {
+	public void commit() {
 		this.originalVersion = null;
 		try {
 			this.originalVersion = (BusinessObject) this.clone();
