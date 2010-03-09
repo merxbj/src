@@ -1,23 +1,23 @@
 package notwa.wom;
 
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
-    private int id;
+    private int projectID;
 	private String name;
 	private UserCollection assignedUsers;
 	
 	public Project (int projectID) {
-		this.id = projectID;
+		this.projectID = projectID;
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
 		Project clone = (Project) super.clone();
 
-		clone.id = this.id;
+		clone.projectID = this.projectID;
 		clone.name = this.name;
 		clone.assignedUsers = this.assignedUsers;
 		return clone;
 	}
-	
+
 	public String getProjectName() {
 		return this.name;
 	}
@@ -35,9 +35,16 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
 	}
 	
 	@Override
+	public String toString() {
+		String returnText = new String (	this.projectID +separator+
+											this.name);
+		return returnText;
+	}
+		
+	@Override
 	public int compareTo(Project project) {
-        Integer j1 = this.id;
-        Integer j2 = project.id;
+        Integer j1 = this.projectID;
+        Integer j2 = project.projectID;
 	 
         return j1.compareTo(j2);
     }

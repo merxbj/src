@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cloneable {
 
-	private int id;
+	private int witID;
 	private String subject;
 	private WorkItemPriority priority;
 	private String description;
@@ -17,13 +17,13 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 	private NoteCollection noteCollection;
 
 	public WorkItem(int id) {
-		this.id = id;
+		this.witID = id;
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
 		WorkItem clone = (WorkItem) super.clone();
 
-		clone.id = this.id;
+		clone.witID = this.witID;
 		clone.subject = this.subject;
 		clone.priority = this.priority;
 		clone.description = this.description;
@@ -36,7 +36,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 		clone.noteCollection = this.noteCollection;
 		return clone;
 	}
-
+	
 	public String getSubject() {
 		return this.subject;
 	}
@@ -117,9 +117,32 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 	}
 
 	@Override
+	public String toString() {
+		String returnText = new String(	this.witID +separator);
+		if (this.parentWorkItem != null) {
+			returnText += this.parentWorkItem.getSubject() +separator; }
+		if (this.project != null) {
+			returnText += this.project.getProjectName() +separator; }
+		
+			returnText += this.subject +separator;
+			
+		if (this.status != null) {
+			returnText += this.status.name() +separator; }
+		if (this.assignedUser != null) {
+			returnText += this.assignedUser.getLoginName() +separator; }
+		if (this.priority != null) {
+			returnText += this.priority.name() +separator; }
+	
+			returnText += 	this.description +separator+
+							this.lastModifiedTimestamp +separator+
+							this.expectedTimestamp;
+		return returnText;
+	}
+	
+	@Override
 	public int compareTo(WorkItem wi) {
-        Integer j1 = this.id;
-        Integer j2 = wi.id;
+        Integer j1 = this.witID;
+        Integer j2 = wi.witID;
 	 
         return j1.compareTo(j2);
     }

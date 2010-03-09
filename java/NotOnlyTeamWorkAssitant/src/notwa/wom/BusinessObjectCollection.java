@@ -17,5 +17,6 @@ public abstract class BusinessObjectCollection implements Iterable<BusinessObjec
 	
 	public void remove(BusinessObject bo) {
 		collection.remove(bo);
+		bo.detach();
 	}
 }

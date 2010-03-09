@@ -2,19 +2,19 @@ package notwa.wom;
 
 public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
-	private int id;
+	private int noteID;
 	private WorkItem workItem;
 	private String text;
 	private User author;
 	
 	public Note (int noteID) {
-		this.id = noteID;
+		this.noteID = noteID;
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
 		Note clone = (Note) super.clone();
 
-		clone.id = this.id;
+		clone.noteID = this.noteID;
 		clone.workItem = this.workItem;
 		clone.text = this.text;
 		clone.author = this.author;
@@ -46,9 +46,22 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
 	}
 	
 	@Override
+	public String toString() {
+		String returnText = new String(	this.noteID +separator );
+		if(this.workItem != null) {
+			returnText += this.workItem.getSubject() +separator; }
+
+			returnText += this.text +separator;
+			
+		if(this.author != null) {
+			returnText += this.author.getLoginName(); }
+		return returnText;
+	}
+	
+	@Override
 	public int compareTo(Note note) {
-        Integer j1 = this.id;
-        Integer j2 = note.id;
+        Integer j1 = this.noteID;
+        Integer j2 = note.noteID;
 	 
         return j1.compareTo(j2);
     }

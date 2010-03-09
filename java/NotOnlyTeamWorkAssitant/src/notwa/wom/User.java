@@ -2,7 +2,7 @@ package notwa.wom;
 
 public class User extends BusinessObject implements Comparable<User>, Cloneable {
 
-	private int id;
+	private int userID;
 	private String login;
 	private String password;
 	private String firstName;
@@ -10,19 +10,28 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
 	private ProjectCollection assignedProjects;
 	
 	public User(int userID) {
-		this.id = userID;
+		this.userID = userID;
 	}
 	
 	protected Object clone() throws CloneNotSupportedException {
 		User clone = (User) super.clone();
 
-		clone.id = this.id;
+		clone.userID = this.userID;
 		clone.login = this.login;
 		clone.password = this.password;
 		clone.firstName = this.firstName;
 		clone.lastName = this.lastName;
 		clone.assignedProjects = this.assignedProjects;
 		return clone;
+	}
+	
+	@Override
+	public String toString() {
+		String returnText = new String(	this.userID +separator+
+										this.login +separator+
+										this.firstName +separator+
+										this.lastName );
+		return returnText;
 	}
 	
 	public String getLoginName() {
@@ -67,8 +76,8 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
 	
 	@Override
 	public int compareTo(User user) {
-        Integer j1 = this.id;
-        Integer j2 = user.id;
+        Integer j1 = this.userID;
+        Integer j2 = user.userID;
 	 
         return j1.compareTo(j2);
     }
