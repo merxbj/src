@@ -27,6 +27,18 @@ public class WITTable extends JPanel{
 		JTable witTable = new JTable(witTableModel);
 
 		/*
+		 * Sets columns min/max width and create new JTableCellRender for table coloring
+		 */
+	    JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
+		for (int c = 0; c < tableHeaders.length; c++) {
+			if(!tableHeaders[c].equals("Subject")) {
+			witTable.getColumnModel().getColumn(c).setMinWidth(100);
+			witTable.getColumnModel().getColumn(c).setMaxWidth(100);
+			}
+		    witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
+		}
+
+		/*
 		 * load all WorkItemPriorits from enum
 		 */
 		JComboBox priority = new JComboBox();

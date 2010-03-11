@@ -15,7 +15,7 @@ public class TabsContent extends JComponent {
 		JPanel witJPanel = new WITJPanel();
 		this.add(witJPanel);
 		
-		JPanel witInfoJPanel = new WITDetailPanel();
-		this.add(witInfoJPanel);
+		JPanel witDetailJPanel = new WITDetailPanel();
+		this.add(witDetailJPanel);
 	}
 }

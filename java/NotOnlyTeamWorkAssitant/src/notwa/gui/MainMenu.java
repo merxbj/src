@@ -1,13 +1,17 @@
 package notwa.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 @SuppressWarnings("serial")
@@ -15,9 +19,9 @@ public class MainMenu extends JMenuBar implements ActionListener {
 	private JMenu menu;
 	private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;
 	private JCheckBoxMenuItem cbWorkOffline;
+	private JTextField searchField = new JTextField("Type here ...");
 	
 	public MainMenu() {
-		
 		menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
 		this.add(menu);
@@ -44,14 +48,27 @@ public class MainMenu extends JMenuBar implements ActionListener {
 		this.add(menu);
 
 		mItemConfigure = new JMenuItem("Configure", KeyEvent.VK_C);
+		mItemConfigure.addActionListener(this);
 		menu.add(mItemConfigure);
+		
+		/*
+		 * Add search panel to MainMenu
+		 */
+		this.add(Box.createHorizontalGlue());
+
+		searchField.setMaximumSize(new Dimension(2500,20));
+		this.add(new JLabel("| Search "));
+		this.add(searchField);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		//TODO: add remaining actions
-		if(ae.getSource() == mItemExit)
-		{
+		if (ae.getSource() == mItemConfigure) {
+			SettingsDialog sd = new SettingsDialog();
+		}
+		
+		if (ae.getSource() == mItemExit)	{
 			System.exit(-1);
 		}
 	}

@@ -18,7 +18,7 @@ class TblModel extends AbstractTableModel
 	public String getColumnName(int c) {
 		return tableHeaders[c];
 	}
-
+	
 	public int getColumnCount()
 	{
 		return tableHeaders.length;

@@ -1,12 +1,14 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class WITJPanel extends JPanel {
+public class WITJPanel extends JPanel implements ActionListener {
 	JButton addButton,editButton,showHideButton,showDepButton;
 	
 	public WITJPanel() {
@@ -30,7 +32,10 @@ public class WITJPanel extends JPanel {
 		showHideButton = new JButton("Show/Hide Detail");
 		showDepButton = new JButton("Show dependency tree");
 		
-		//TODO: actions
+		addButton.addActionListener(this);
+		editButton.addActionListener(this);
+		showHideButton.addActionListener(this);
+		showDepButton.addActionListener(this);
 		
 		leftButtonsPanel.add(addButton);
 		leftButtonsPanel.add(editButton);
@@ -41,5 +46,19 @@ public class WITJPanel extends JPanel {
 		buttonsPanel.add(rightButtonsPanel, BorderLayout.LINE_END);
 		
 		return buttonsPanel;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		if(ae.getSource() == addButton) {
+			AddEditWITDialog aewitd = new AddEditWITDialog("ADD");
+		}
+		
+		if(ae.getSource() == editButton) {
+			AddEditWITDialog aewitd = new AddEditWITDialog("EDIT");
+		}
+		
+		if(ae.getSource() == showHideButton) {
+		}
 	}
 }
