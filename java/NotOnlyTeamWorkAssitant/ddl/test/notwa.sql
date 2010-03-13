@@ -1,29 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : integri
-Source Server Version : 50137
-Source Host           : 192.168.102.11:3306
-Source Database       : notwa
-
-Target Server Type    : MYSQL
-Target Server Version : 50137
-File Encoding         : 65001
-
-Date: 2010-03-14 00:35:37
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
--- ----------------------------
--- Table structure for `project`
--- ----------------------------
-DROP TABLE IF EXISTS `project`;
-CREATE TABLE `project` (
-  `project_id` decimal(19,0) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`project_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 -- ----------------------------
 -- Records of project
 -- ----------------------------
@@ -31,17 +5,6 @@ INSERT INTO `project` VALUES ('1', 'notwa');
 INSERT INTO `project` VALUES ('2', 'notwa fake');
 INSERT INTO `project` VALUES ('3', 'person');
 INSERT INTO `project` VALUES ('4', 'general');
-
--- ----------------------------
--- Table structure for `project_user_assigment`
--- ----------------------------
-DROP TABLE IF EXISTS `project_user_assigment`;
-CREATE TABLE `project_user_assigment` (
-  `project_id` decimal(19,0) NOT NULL,
-  `user_id` decimal(19,0) NOT NULL,
-  KEY `FK_Project_User_Assigment_User_user_id` (`user_id`),
-  KEY `FK_Project_User_Assigment_Project_project_id` (`project_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of project_user_assigment
@@ -57,45 +20,12 @@ INSERT INTO `project_user_assigment` VALUES ('4', '3');
 INSERT INTO `project_user_assigment` VALUES ('4', '4');
 
 -- ----------------------------
--- Table structure for `user`
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `user_id` decimal(19,0) NOT NULL,
-  `login` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `first_nam` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'mrneo', 'aaaa', 'Tom', 'St');
 INSERT INTO `user` VALUES ('2', 'eter', 'bbbb', 'Je', 'mex');
 INSERT INTO `user` VALUES ('3', 'michal', 'mmmmm', 'Mi', 'Ne');
 INSERT INTO `user` VALUES ('4', 'new1', 'new2', 'User1', 'Last2');
-
--- ----------------------------
--- Table structure for `work_item`
--- ----------------------------
-DROP TABLE IF EXISTS `work_item`;
-CREATE TABLE `work_item` (
-  `work_item_id` decimal(19,0) NOT NULL,
-  `assigned_user_id` decimal(19,0) DEFAULT NULL,
-  `project_id` decimal(19,0) NOT NULL,
-  `parent_work_item_id` decimal(19,0) DEFAULT NULL,
-  `subject` varchar(255) NOT NULL,
-  `status` smallint(6) NOT NULL,
-  `working_priority` smallint(6) NOT NULL,
-  `description` text,
-  `expected_timestamp` datetime DEFAULT NULL,
-  `last_modified_timestamp` datetime NOT NULL,
-  PRIMARY KEY (`work_item_id`),
-  KEY `FK_Work_Item_Project_assigned_project_id` (`assigned_user_id`),
-  KEY `FK_Work_Item_User_parent_work_item_id` (`parent_work_item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of work_item
@@ -110,20 +40,6 @@ INSERT INTO `work_item` VALUES ('7', '3', '4', null, 'New class implementation',
 INSERT INTO `work_item` VALUES ('8', '1', '3', null, 'Personalistika', '3', '1', '---', '2010-04-30 00:28:17', '2010-01-01 00:28:09');
 INSERT INTO `work_item` VALUES ('9', '1', '3', '8', 'Personalistika - Zdravotni prohlidky', '3', '1', 'Main dialog redesign', null, '2010-03-14 00:29:18');
 INSERT INTO `work_item` VALUES ('10', '1', '3', '9', 'Personalistika - subtask', '3', '1', 'create some subtask', '0000-00-00 00:00:00', '2010-03-14 00:30:09');
-
--- ----------------------------
--- Table structure for `work_item_note`
--- ----------------------------
-DROP TABLE IF EXISTS `work_item_note`;
-CREATE TABLE `work_item_note` (
-  `note_id` decimal(19,0) NOT NULL,
-  `work_item_id` decimal(19,0) NOT NULL,
-  `author_user_id` decimal(19,0) NOT NULL,
-  `note` text,
-  PRIMARY KEY (`note_id`,`work_item_id`),
-  KEY `FK_Work_Item_Note_Work_Item_work_item_id` (`work_item_id`),
-  KEY `FK_Work_Item_Note_User_author_user_id` (`author_user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of work_item_note
