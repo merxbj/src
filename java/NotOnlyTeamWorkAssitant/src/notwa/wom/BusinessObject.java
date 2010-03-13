@@ -11,6 +11,9 @@ public abstract class BusinessObject {
 	
 	protected String separator = new String (" | ");
 	
+	/*
+	 * Attach Business object to BO collection
+	 */
 	public void attach(BusinessObjectCollection boc) {
 		this.attachedBOC = boc;
 		try {
@@ -20,14 +23,23 @@ public abstract class BusinessObject {
 		}
 	}
 	
+	/*
+	 * Detach Business object from BO collection
+	 */
 	public void detach() {
 		this.attachedBOC = null;
 	}
-	
+
+	/*
+	 * Check if Business object is attached to BO collection
+	 */
 	public boolean isAttached() {
 		return attachedBOC != null;
 	}
 	
+	/*
+	 * Rewrites all user changes with original version
+	 */
 	public void rollback() {
 		Class<?> c = this.getClass();
 		Class<?> o = originalVersion.getClass();
@@ -44,6 +56,9 @@ public abstract class BusinessObject {
 		}
 	}
 	
+	/*
+	 * Saves all user changes to original version
+	 */
 	public void commit() {
 		this.originalVersion = null;
 		try {
