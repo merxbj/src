@@ -3,10 +3,12 @@ package notwa.sql;
 public class Parameter {
     private String name;
     private Object value;
+    private String type;
     
-    public Parameter(String name, Object value) {
+    public Parameter(String name, Object value, String type) {
         this.name = name;
         this.value = value;
+        this.type = type;
     }
     
     @Override
@@ -35,13 +37,24 @@ public class Parameter {
     public String getName() {
         return name;
     }
+    
     public void setName(String name) {
         this.name = name;
     }
+    
     public Object getValue() {
         return value;
     }
+    
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    public String getType() {
+        return this.type;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
     }
 }
