@@ -2,59 +2,59 @@ package notwa.wom;
 
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
     private int projectID;
-	private String name;
-	private UserCollection assignedUsers;
-	
-	public Project (int projectID) {
-		this.projectID = projectID;
-	}
-	
-	protected Object clone() throws CloneNotSupportedException {
-		Project clone = (Project) super.clone();
+    private String name;
+    private UserCollection assignedUsers;
+    
+    public Project (int projectID) {
+        this.projectID = projectID;
+    }
+    
+    protected Object clone() throws CloneNotSupportedException {
+        Project clone = (Project) super.clone();
 
-		clone.projectID = this.projectID;
-		clone.name = this.name;
-		clone.assignedUsers = this.assignedUsers;
-		return clone;
-	}
+        clone.projectID = this.projectID;
+        clone.name = this.name;
+        clone.assignedUsers = this.assignedUsers;
+        return clone;
+    }
 
-	public String getProjectName() {
-		return this.name;
-	}
-	
-	public UserCollection getAssignedUsers() {
-		return assignedUsers;
-	}
-	
-	public void setProjectName(String projectName) {
-		this.name = projectName;
-	}
-	
-	public void setAssignedUsers(UserCollection assignedUsers) {
-		this.assignedUsers = assignedUsers;
-	}
-	
-	@Override
-	public String toString() {
-		String returnText = new String (	this.projectID +separator+
-											this.name);
-		return returnText;
-	}
-		
-	@Override
-	public int compareTo(Project project) {
+    public String getProjectName() {
+        return this.name;
+    }
+    
+    public UserCollection getAssignedUsers() {
+        return assignedUsers;
+    }
+    
+    public void setProjectName(String projectName) {
+        this.name = projectName;
+    }
+    
+    public void setAssignedUsers(UserCollection assignedUsers) {
+        this.assignedUsers = assignedUsers;
+    }
+    
+    @Override
+    public String toString() {
+        String returnText = new String (    this.projectID +separator+
+                                            this.name);
+        return returnText;
+    }
+        
+    @Override
+    public int compareTo(Project project) {
         Integer j1 = this.projectID;
         Integer j2 = project.projectID;
-	 
+     
         return j1.compareTo(j2);
     }
-	
-	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof Project)) {
-			return false;
-		} else {
-			return (this.compareTo((Project) o) == 0);
-		}
-	}
+    
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Project)) {
+            return false;
+        } else {
+            return (this.compareTo((Project) o) == 0);
+        }
+    }
 }

@@ -11,22 +11,22 @@ import java.util.Set;
 
 public class Config {
 
-	private static Config singleton;
-	private final String CONFIG_FILE_NAME = "./notwa.config";
-	
-	public static Config getInstance() {
-		if (singleton == null)
-			singleton = new Config();
-		return singleton;
-	}
+    private static Config singleton;
+    private final String CONFIG_FILE_NAME = "./notwa.config";
+    
+    public static Config getInstance() {
+        if (singleton == null)
+            singleton = new Config();
+        return singleton;
+    }
 
-	protected Config() {
+    protected Config() {
         this.configFile = new File(CONFIG_FILE_NAME);
         this.connections = new TreeSet<ConnectionInfo>();
         try {
-        	this.parse();
+            this.parse();
         } catch (Exception ex) {
-        	LoggingInterface.getInstanece().handleException(ex);
+            LoggingInterface.getInstanece().handleException(ex);
         }
     }
 
@@ -46,16 +46,16 @@ public class Config {
 
     private void parseConnecionStrings(NodeList nodes) throws Exception {       
         XPath xp = XPathFactory.newInstance().newXPath();
-    	for (int i = 0; i < nodes.getLength(); i++) {
-        	Node n = nodes.item(i);
-        	ConnectionInfo ci = new ConnectionInfo();
-        	ci.setDbname(xp.evaluate("/@dbname", n));
-        	ci.setHost(xp.evaluate("/@host", n));
-        	ci.setUser(xp.evaluate("/@user", n));
-        	ci.setPort(xp.evaluate("/@port", n));
-        	ci.setPassword(xp.evaluate("/@password", n));
-        	ci.setLabel(xp.evaluate("/@label", n));
-        	connections.add(ci);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node n = nodes.item(i);
+            ConnectionInfo ci = new ConnectionInfo();
+            ci.setDbname(xp.evaluate("/@dbname", n));
+            ci.setHost(xp.evaluate("/@host", n));
+            ci.setUser(xp.evaluate("/@user", n));
+            ci.setPort(xp.evaluate("/@port", n));
+            ci.setPassword(xp.evaluate("/@password", n));
+            ci.setLabel(xp.evaluate("/@label", n));
+            connections.add(ci);
         }
     }
 

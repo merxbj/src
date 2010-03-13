@@ -5,66 +5,66 @@ import java.lang.reflect.Field;
 import notwa.common.LoggingInterface;
 
 public abstract class BusinessObject {
-	
-	protected BusinessObjectCollection attachedBOC;
-	protected BusinessObject originalVersion;
-	
-	protected String separator = new String (" | ");
-	
-	/*
-	 * Attach Business object to BO collection
-	 */
-	public void attach(BusinessObjectCollection boc) {
-		this.attachedBOC = boc;
-		try {
-			this.originalVersion = (BusinessObject) this.clone();
-		} catch (CloneNotSupportedException ex) {
-			LoggingInterface.getInstanece().handleException(ex);
-		}
-	}
-	
-	/*
-	 * Detach Business object from BO collection
-	 */
-	public void detach() {
-		this.attachedBOC = null;
-	}
+    
+    protected BusinessObjectCollection attachedBOC;
+    protected BusinessObject originalVersion;
+    
+    protected String separator = new String (" | ");
+    
+    /*
+     * Attach Business object to BO collection
+     */
+    public void attach(BusinessObjectCollection boc) {
+        this.attachedBOC = boc;
+        try {
+            this.originalVersion = (BusinessObject) this.clone();
+        } catch (CloneNotSupportedException ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+        }
+    }
+    
+    /*
+     * Detach Business object from BO collection
+     */
+    public void detach() {
+        this.attachedBOC = null;
+    }
 
-	/*
-	 * Check if Business object is attached to BO collection
-	 */
-	public boolean isAttached() {
-		return attachedBOC != null;
-	}
-	
-	/*
-	 * Rewrites all user changes with original version
-	 */
-	public void rollback() {
-		Class<?> c = this.getClass();
-		Class<?> o = originalVersion.getClass();
-		
-		for (Field field : c.getDeclaredFields()) {
-			try {
-				field.setAccessible(true);
-				Field ovField = o.getDeclaredField(field.getName());
-				ovField.setAccessible(true);
-       			field.set(this, ovField.get(originalVersion));
-			} catch (Exception e) {
-				LoggingInterface.getInstanece().handleException(e);
-			}
-		}
-	}
-	
-	/*
-	 * Saves all user changes to original version
-	 */
-	public void commit() {
-		this.originalVersion = null;
-		try {
-			this.originalVersion = (BusinessObject) this.clone();
-		} catch (CloneNotSupportedException e) {
-			LoggingInterface.getInstanece().handleException(e);
-		}
-	}
+    /*
+     * Check if Business object is attached to BO collection
+     */
+    public boolean isAttached() {
+        return attachedBOC != null;
+    }
+    
+    /*
+     * Rewrites all user changes with original version
+     */
+    public void rollback() {
+        Class<?> c = this.getClass();
+        Class<?> o = originalVersion.getClass();
+        
+        for (Field field : c.getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                Field ovField = o.getDeclaredField(field.getName());
+                ovField.setAccessible(true);
+                   field.set(this, ovField.get(originalVersion));
+            } catch (Exception e) {
+                LoggingInterface.getInstanece().handleException(e);
+            }
+        }
+    }
+    
+    /*
+     * Saves all user changes to original version
+     */
+    public void commit() {
+        this.originalVersion = null;
+        try {
+            this.originalVersion = (BusinessObject) this.clone();
+        } catch (CloneNotSupportedException e) {
+            LoggingInterface.getInstanece().handleException(e);
+        }
+    }
 }
