@@ -45,8 +45,8 @@ public class MainWindow extends JFrame {
 		 * create main JPanel and Load tabs 
 		 */
 		JPanel mainJP = new JPanel(new BorderLayout());
-		DataBaseTabs dbt = new DataBaseTabs();
-		mainJP.add(dbt, BorderLayout.CENTER);
+		LoadMainLayout dbt = new LoadMainLayout();
+		mainJP.add(dbt.initMainLayout(), BorderLayout.CENTER);
 		this.add(mainJP,BorderLayout.CENTER);
 		
 		/*
