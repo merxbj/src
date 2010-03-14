@@ -6,6 +6,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.*;
 import javax.xml.xpath.*;
 import notwa.common.LoggingInterface;
+import java.util.Collection;
 import java.util.TreeSet;
 import java.util.Set;
 
@@ -30,8 +31,9 @@ public class Config {
         }
     }
 
-    public ConnectionInfo[] getConnecionStrings() {
-        return (ConnectionInfo[]) connections.toArray();
+    public Collection<ConnectionInfo> getConnecionStrings() {
+        return  connections;
+
     }
 
     public void parse() throws Exception {

@@ -18,8 +18,6 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     private Getable<Note> noteDal;
     private Getable<Project> projectDal;
     
-    
-    
     public WorkItemDal(ConnectionInfo ci) {
         super(ci);
         this.userDal = new UserDal(ci);

@@ -18,7 +18,7 @@ public class SqlBuilder {
         int statementStart = sqlPattern.indexOf("/** STATEMENT");
         int statementEnd = 0;
         while (statementStart != -1) {
-            statementEnd = sqlPattern.indexOf("**/", statementStart);
+            statementEnd = sqlPattern.indexOf("**/", statementStart) + 3;
             if (statementEnd != -1) {
                 Statement s = new Statement();
                 if (s.parse(sqlPattern.substring(statementStart, statementEnd))) {

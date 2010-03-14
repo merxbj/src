@@ -13,12 +13,12 @@ public class Statement {
     private String nextRelation;
 
     public Statement() {
-        statement = new StringBuilder(type);
+        statement = new StringBuilder();
     }
 
     public boolean parse(String rawStatement) {
-        type = rawStatement.substring(rawStatement.indexOf("="), rawStatement.indexOf(";"));
-        innerRelation = rawStatement.substring(rawStatement.indexOf("=", rawStatement.indexOf("=")), rawStatement.indexOf(";", rawStatement.indexOf(";")));
+        type = rawStatement.substring(rawStatement.indexOf("=") + 1, rawStatement.indexOf(";"));
+        innerRelation = rawStatement.substring(rawStatement.indexOf("=", rawStatement.indexOf("=") + 1) + 1, rawStatement.indexOf(";", rawStatement.indexOf(";") + 1));
 
         try {
             StringTokenizer relations = new StringTokenizer(rawStatement, "{}");
@@ -26,11 +26,22 @@ public class Statement {
             while (relations.hasMoreTokens()) {
                 StringTokenizer relation = new StringTokenizer(relations.nextToken(), ";=");
                 while (relation.hasMoreTokens()) {
-                    String column = relation.nextToken();
-                    String parameter = relations.nextToken();
-                    mappings.put(column, parameter);
+                    String column = null;
+                    String parameter = null;
+                    if (relation.nextToken().equals("column")) {
+                        column = relation.nextToken();
+                    }
+                    if (relation.nextToken().equals("parameter")) {
+                        parameter = relations.nextToken();
+                    }
+                    if (column == null || parameter == null) {
+                        return false;
+                    } else {
+                        mappings.put(column, parameter);
+                    }
                 }
             }
+            statement.append(type);
         } catch (Exception ex) {
 
             LoggingInterface.getInstanece().handleException(ex);
