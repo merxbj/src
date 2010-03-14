@@ -69,7 +69,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
             } 
           }); 
         this.add(new JLabel("| Search "));
-        this.add(searchField);
+        this.add(searchField); // TODO search field is resizing when you resize mainwindow, WHY?!
     }
 
     @Override

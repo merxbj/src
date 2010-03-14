@@ -63,13 +63,12 @@ public class LoginDialog extends JFrame implements ActionListener {
         /*
          * fill combobox with all existing db connections
          */
+        //TODO make combobox to accept hasmap/table
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
-            jcb.addItem(connInfo.getLabel());
+            jcb.addItem(new JComboBoxItemCreator(connInfo,connInfo.getLabel()));
         }
-        //jcb.addItem("Integri private");
-        
         
         jp.add(new JLabel("Database"));
         jp.add(jcb);
@@ -101,21 +100,22 @@ public class LoginDialog extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            if (!   this.jcb.getSelectedItem().equals("") ||
+           /* if (!   this.jcb.getSelectedItem().equals("") ||
                     this.login.getText().isEmpty() ||
                     this.password.getPassword().length != 0) {
                 initErrorField("You must fill all fields");
             }
-            else {
+            else {  --- DISABLED FOR TESTING --- because now is everything null :D*/
                 try {
-                    ConnectionInfo ci = Security.getInstance().signIn(  this.jcb.getSelectedItem(),
-                                                                        this.login.getText(),
-                                                                        new String(this.password.getPassword()));
-                    if (ci == null) {
-                        throw new Exception ("Settings from config were not found");
+                    ConnectionInfo ci = ((JComboBoxItemCreator)this.jcb.getSelectedItem()).getAttachedConnectionInfo();
+                    if(Security.getInstance().signIn(  ci,
+                                                    this.login.getText(),
+                                                    new String(this.password.getPassword()))) {
+                        MainWindow.getTabController().createWitView(ci);
                     }
-                    
-                    MainWindow.getTabController().createWitView(ci);
+                    else {
+                        throw new Exception ("User login failed");
+                    }
                 } catch (SignInException siex) {
                     LoggingInterface.getInstanece().handleException(siex);
                 } catch (Exception ex) {
@@ -123,7 +123,7 @@ public class LoginDialog extends JFrame implements ActionListener {
                 }
                 
                 this.setVisible(false);
-            }
+            //}
         }
         if (ae.getSource() == stornoButton) {
             this.setVisible(false);

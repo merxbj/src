@@ -37,7 +37,8 @@ public class TabContent extends JComponent {
         }
         else {
 
-            sp.setDividerLocation(10000);
+            //TODO after fullscreen, is detail visible anyway ?!
+            sp.setDividerLocation(50000);
             hideDetail = true;
         }
     }
