@@ -35,17 +35,17 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     public int Fill(WorkItemCollection wic, ParameterCollection pc) {
         StringBuilder vanillaSql = new StringBuilder();
 
-        vanillaSql.append("SELECT   work_item_id,");
-        vanillaSql.append("         assigned_user_id,");
-        vanillaSql.append("         status_id,");
-        vanillaSql.append("         project_id,");
-        vanillaSql.append("         parent_work_item_id,");
-        vanillaSql.append("         subject,");
-        vanillaSql.append("         working_priority,");
-        vanillaSql.append("         description,");
-        vanillaSql.append("         expected_timestamp,");
-        vanillaSql.append("         last_modified_timestamp");
-        vanillaSql.append("FROM Work_Item");
+        vanillaSql.append("SELECT   work_item_id, ");
+        vanillaSql.append("         assigned_user_id, ");
+        vanillaSql.append("         status_id, ");
+        vanillaSql.append("         project_id, ");
+        vanillaSql.append("         parent_work_item_id, ");
+        vanillaSql.append("         subject, ");
+        vanillaSql.append("         working_priority, ");
+        vanillaSql.append("         description, ");
+        vanillaSql.append("         expected_timestamp, ");
+        vanillaSql.append("         last_modified_timestamp ");
+        vanillaSql.append("FROM Work_Item ");
         vanillaSql.append("/** STATEMENT=WHERE;RELATION=AND;");
         vanillaSql.append("        {column=work_item_id;parameter=WorkItemId;}");
         vanillaSql.append("        {column=state_id;parameter=WorkItemStatusId;}");

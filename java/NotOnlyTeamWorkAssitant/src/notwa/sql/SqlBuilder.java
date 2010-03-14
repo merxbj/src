@@ -23,9 +23,10 @@ public class SqlBuilder {
                 Statement s = new Statement();
                 if (s.parse(sqlPattern.substring(statementStart, statementEnd))) {
                     statements.add(s);
-                    sqlPattern.replace(statementStart, statementEnd, String.format("<s%d>", statements.indexOf(s)));
+                    sqlPattern.replace(statementStart, statementEnd, String.format("<s#%d>", statements.indexOf(s)));
                 }
             }
+            statementStart = sqlPattern.indexOf("/** STATEMENT", statementEnd);
         }
     }
     
