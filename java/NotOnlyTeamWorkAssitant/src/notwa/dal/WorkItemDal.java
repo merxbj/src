@@ -3,7 +3,7 @@ package notwa.dal;
 import notwa.sql.ParameterCollection;
 import notwa.sql.Parameters;
 import notwa.sql.Parameter;
-import notwa.sql.Conditions;
+import notwa.sql.Sql;
 import notwa.wom.*;
 
 import notwa.sql.SqlBuilder;
@@ -71,7 +71,8 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                 wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
                 wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
                 wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
-                wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Conditions.EQUALTY)})));
+                wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)})));
+                //wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)})));
                 // TODO Complete!
             }
         } catch (Exception ex) {

@@ -3,12 +3,12 @@ package notwa.sql;
 public class Parameter {
     private String name;
     private Object value;
-    private String type;
+    private String relation;
     
     public Parameter(String name, Object value, String type) {
         this.name = name;
         this.value = value;
-        this.type = type;
+        this.relation = type;
     }
     
     @Override
@@ -50,11 +50,11 @@ public class Parameter {
         this.value = value;
     }
     
-    public String getType() {
-        return this.type;
+    public String getRelation() {
+        return this.relation;
     }
     
-    public void setType(String type) {
-        this.type = type;
+    public void setRelation(String relation) {
+        this.relation = relation;
     }
 }

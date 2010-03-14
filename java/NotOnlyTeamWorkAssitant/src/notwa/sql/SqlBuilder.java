@@ -14,26 +14,6 @@ public class SqlBuilder {
         this.statements = new ArrayList<Statement>();
     }
     
-    private void addEqualtyCondition(Parameter parameter) {
-        
-    }
-    
-    private void addGreaterCondition(Parameter parameter) {
-        
-    }
-    
-    private void addGreaterOrEqualsCondition(Parameter parameter) {
-        
-    }
-
-    private void addLessCondition(Parameter parameter) {
-    
-    }
-
-    private void addLessOrEqualsCondition(Parameter parameter) {
-    
-    }
-    
     private void parseQuery() {
         int statementStart = sqlPattern.indexOf("/** STATEMENT");
         int statementEnd = 0;
@@ -43,7 +23,7 @@ public class SqlBuilder {
                 Statement s = new Statement();
                 if (s.parse(sqlPattern.substring(statementStart, statementEnd))) {
                     statements.add(s);
-                    sqlPattern.replace(statementStart, statementEnd, String.format("s#%d", statements.indexOf(s)));
+                    sqlPattern.replace(statementStart, statementEnd, String.format("<s%d>", statements.indexOf(s)));
                 }
             }
         }
@@ -53,9 +33,19 @@ public class SqlBuilder {
         parseQuery();
         
         for (Parameter p : parameters) {
-            
+            for (Statement s : statements) {
+                if (s.hasParameter(p.getName())) {
+                    s.appendCondition(p);
+                }
+            }
         }
 
-        return "";
+        for (Statement s : statements) {
+            String statementIdentifier = String.format("<s#%d>", statements.indexOf(s));
+            int statementStart = sqlPattern.indexOf(statementIdentifier);
+            sqlPattern.replace(statementStart, statementStart + statementIdentifier.length(), s.compileStatement());
+        }
+
+        return sqlPattern.toString();
     }
 }
