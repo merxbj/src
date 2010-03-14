@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
     private String version = new String("v0.0.1-r1"); //config?
+    private static MainLayoutLoader mll = new MainLayoutLoader();
     
     public MainWindow() {
         
@@ -45,8 +46,7 @@ public class MainWindow extends JFrame {
          * create main JPanel and Load tabs 
          */
         JPanel mainJP = new JPanel(new BorderLayout());
-        LoadMainLayout dbt = new LoadMainLayout();
-        mainJP.add(dbt.initMainLayout(), BorderLayout.CENTER);
+        mainJP.add(mll.initMainLayout(), BorderLayout.CENTER);
         this.add(mainJP,BorderLayout.CENTER);
         
         /*
@@ -56,5 +56,9 @@ public class MainWindow extends JFrame {
         this.add(jsb, BorderLayout.PAGE_END);
         
         this.setVisible(true);
+    }
+    
+    public static MainLayoutLoader getTabController() {
+        return mll;
     }
 }

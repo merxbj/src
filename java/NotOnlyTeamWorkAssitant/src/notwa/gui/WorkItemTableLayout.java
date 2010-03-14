@@ -7,14 +7,16 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import notwa.wom.WorkItemCollection;
+
 @SuppressWarnings("serial")
 public class WorkItemTableLayout extends JPanel implements ActionListener {
     JButton addButton,editButton,showHideButton,showDepButton;
     
-    public WorkItemTableLayout() {
+    public WorkItemTableLayout(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
         
-        JPanel witTable = new WorkItemTable();
+        JPanel witTable = new WorkItemTable(wic);
         this.add(witTable, BorderLayout.CENTER);
         
         JPanel ib = initButtons();
@@ -51,12 +53,12 @@ public class WorkItemTableLayout extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == addButton) {
-            AddEditWorkItem aewitd = new AddEditWorkItem();
+            WorkItemEditor aewitd = new WorkItemEditor();
             aewitd.initAddDialog();
         }
         
         if(ae.getSource() == editButton) {
-            AddEditWorkItem aewitd = new AddEditWorkItem();
+            WorkItemEditor aewitd = new WorkItemEditor();
             aewitd.initEditDialog();
         }
         

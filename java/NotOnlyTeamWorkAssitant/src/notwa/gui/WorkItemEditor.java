@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
  
 @SuppressWarnings("serial")
-public class AddEditWorkItem extends JFrame {
-    public AddEditWorkItem() {
+public class WorkItemEditor extends JFrame {
+    public WorkItemEditor() {
     }
     
     public void initAddDialog() {

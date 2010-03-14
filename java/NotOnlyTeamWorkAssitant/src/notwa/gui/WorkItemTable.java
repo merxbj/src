@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
@@ -16,13 +17,14 @@ import notwa.wom.WorkItemStatus;
 public class WorkItemTable extends JPanel{
     ArrayList<Object[]> data = new ArrayList<Object[]>();
     
-    public WorkItemTable() {
+    public WorkItemTable(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
         
         fillWits(); //temporary
         
         String[] tableHeaders = {"Product", "WIT ID", "Subject", "Priority", "Assigned", "Status"};
         
+        //TODO: change tblModel to accept WorkItemCollection
         TblModel witTableModel = new TblModel(data, tableHeaders);
         JTable witTable = new JTable(witTableModel);
 

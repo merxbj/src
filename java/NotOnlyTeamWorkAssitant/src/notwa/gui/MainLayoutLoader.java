@@ -9,16 +9,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import notwa.common.ConnectionInfo;
+import notwa.dal.WorkItemDal;
+import notwa.wom.WorkItemCollection;
+
 @SuppressWarnings("serial")
-public class LoadMainLayout extends JPanel implements ActionListener {
+public class MainLayoutLoader extends JPanel implements ActionListener {
     private JTabbedPane tabPanel;
     private JButton plusButton;
     
-    public LoadMainLayout () {
+    public MainLayoutLoader () {
     }
 
     public Component initMainLayout() {
@@ -33,7 +36,7 @@ public class LoadMainLayout extends JPanel implements ActionListener {
         
         //TODO: must be loaded from config - lastly used tabs(databases)
         TabContent tc = new TabContent();
-        tabPanel.addTab("Default", tc.initTabContent());
+        tabPanel.addTab("Default", tc.initTabContent(null));
         
         tabPanel.addTab(null,null); //create empty tab, where we will add new button
 
@@ -44,6 +47,15 @@ public class LoadMainLayout extends JPanel implements ActionListener {
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
 
         return tabPanel;        
+    }
+    
+    public void createWitView(ConnectionInfo ci) {
+        WorkItemCollection wic = new WorkItemCollection();
+        WorkItemDal wid = new WorkItemDal(ci);
+        wid.Fill(wic);
+        
+        TabContent tc = new TabContent();
+        tabPanel.addTab(ci.getLabel(), tc.initTabContent(wic));
     }
 
     @Override

@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
 
+import notwa.wom.WorkItemCollection;
+
 @SuppressWarnings("serial")
 public class TabContent extends JComponent {
     static JSplitPane sp;
@@ -13,10 +15,10 @@ public class TabContent extends JComponent {
     public TabContent() {
     }
     
-    public TabContent initTabContent() {
+    public TabContent initTabContent(WorkItemCollection wic) {
         this.setLayout(new GridLayout(1,0));
         
-        WorkItemTableLayout witl = new WorkItemTableLayout();
+        WorkItemTableLayout witl = new WorkItemTableLayout(wic);
         
         WorkItemDetail wid = new WorkItemDetail();
         

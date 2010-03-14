@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.Box;
 import javax.swing.JCheckBoxMenuItem;
@@ -57,6 +59,15 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.add(Box.createHorizontalGlue());
 
         searchField.setMaximumSize(new Dimension(2500,20));
+        searchField.addMouseListener(new MouseAdapter() { 
+            public void mousePressed(MouseEvent me) { 
+                if (me.getSource() == searchField) {
+                    if (searchField.getText().equals("Type here ...")) {
+                        searchField.setText("");
+                    }
+                }
+            } 
+          }); 
         this.add(new JLabel("| Search "));
         this.add(searchField);
     }
@@ -68,7 +79,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
             SettingsDialog sd = new SettingsDialog();
             sd.initSettingsDialog();
         }
-        
+
         if (ae.getSource() == mItemExit)    {
             System.exit(-1);
         }
