@@ -66,6 +66,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         //TODO: add remaining actions
         if (ae.getSource() == mItemConfigure) {
             SettingsDialog sd = new SettingsDialog();
+            sd.initSettingsDialog();
         }
         
         if (ae.getSource() == mItemExit)    {

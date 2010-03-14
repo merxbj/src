@@ -6,17 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
-public class SettingsDialog extends JFrame {
-    public SettingsDialog() {
+public class LoginDialog extends JFrame {
+    public LoginDialog() {
     }
     
-    public void initSettingsDialog() {
+    public void initLoginDialog() {
         this.setLayout(new BorderLayout());
-        this.setTitle("NOTWA - NOT Only Team Work Assistent - Settings");
-        this.setSize(750,300);
+        this.setTitle("NOTWA - NOT Only Team Work Assistent - Sign-in");
+        this.setSize(500,200);
         this.setLocationRelativeTo(null);
         
-        this.add(new JLabel("window for settings"));
+        this.add(new JLabel("window for sign-in"));
         
         this.setVisible(true);
     }

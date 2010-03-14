@@ -7,16 +7,25 @@ import javax.swing.JLabel;
  
 @SuppressWarnings("serial")
 public class AddEditWorkItem extends JFrame {
-    private String dialogType;
-    public AddEditWorkItem(String dialogType) {
-        this.dialogType = dialogType;
+    public AddEditWorkItem() {
+    }
+    
+    public void initAddDialog() {
+        this.setTitle("NOTWA - NOT Only Team Work Assistent - Add");
+        this.initDialog();
+        this.add(new JLabel("window for Add"));
+    }
+    
+    public void initEditDialog() {
+        this.setTitle("NOTWA - NOT Only Team Work Assistent - Edit");
+        this.initDialog();
+        this.add(new JLabel("window for Edit"));
+    }
+    
+    private void initDialog() {
         this.setLayout(new BorderLayout());
-        this.setTitle("NOTWA - NOT Only Team Work Assistent - " + dialogType);
         this.setSize(750,300);
         this.setLocationRelativeTo(null);
-         
-        this.add(new JLabel("window for " + dialogType));
-         
         this.setVisible(true);
     }
 }

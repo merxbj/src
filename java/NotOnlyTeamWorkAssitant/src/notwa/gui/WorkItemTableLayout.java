@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class WorkItemTableLayout extends LoadMainLayout implements ActionListener {
+public class WorkItemTableLayout extends JPanel implements ActionListener {
     JButton addButton,editButton,showHideButton,showDepButton;
     
     public WorkItemTableLayout() {
@@ -51,14 +51,17 @@ public class WorkItemTableLayout extends LoadMainLayout implements ActionListene
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == addButton) {
-            AddEditWorkItem aewitd = new AddEditWorkItem("ADD");
+            AddEditWorkItem aewitd = new AddEditWorkItem();
+            aewitd.initAddDialog();
         }
         
         if(ae.getSource() == editButton) {
-            AddEditWorkItem aewitd = new AddEditWorkItem("EDIT");
+            AddEditWorkItem aewitd = new AddEditWorkItem();
+            aewitd.initEditDialog();
         }
         
         if(ae.getSource() == showHideButton) {
+            TabContent.ShowHideDetail();
         }
     }
 }
