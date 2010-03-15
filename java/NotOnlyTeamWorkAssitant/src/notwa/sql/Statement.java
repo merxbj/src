@@ -10,38 +10,40 @@ public class Statement {
     private String innerRelation;
     private HashMap<String,String> mappings;
     private StringBuilder statement;
-    private String nextRelation;
+    private String nextKeyword;
 
     public Statement() {
         statement = new StringBuilder();
+        mappings = new HashMap<String,String>();
     }
 
     public boolean parse(String rawStatement) {
-        type = rawStatement.substring(rawStatement.indexOf("=") + 1, rawStatement.indexOf(";"));
-        innerRelation = rawStatement.substring(rawStatement.indexOf("=", rawStatement.indexOf("=") + 1) + 1, rawStatement.indexOf(";", rawStatement.indexOf(";") + 1));
+        type = rawStatement.substring(rawStatement.indexOf("=") + 1, rawStatement.indexOf(";")).trim();
+        innerRelation = rawStatement.substring(rawStatement.indexOf("=", rawStatement.indexOf("=") + 1) + 1, rawStatement.indexOf(";", rawStatement.indexOf(";") + 1)).trim();
 
         try {
             StringTokenizer relations = new StringTokenizer(rawStatement, "{}");
             relations.nextToken(); // skip the first token which is obviously the statement header parsed before
             while (relations.hasMoreTokens()) {
-                StringTokenizer relation = new StringTokenizer(relations.nextToken(), ";=");
+                String dbgTemp = relations.nextToken();
+                String column = null;
+                String parameter = null;
+                StringTokenizer relation = new StringTokenizer(dbgTemp, ";=");
                 while (relation.hasMoreTokens()) {
-                    String column = null;
-                    String parameter = null;
-                    if (relation.nextToken().equals("column")) {
-                        column = relation.nextToken();
+                    String token = relation.nextToken();
+                    if (token.equals("column")) {
+                        column = relation.nextToken().trim();
+                    } else if (token.equals("parameter")) {
+                        parameter = relation.nextToken().trim();
                     }
-                    if (relation.nextToken().equals("parameter")) {
-                        parameter = relations.nextToken();
-                    }
-                    if (column == null || parameter == null) {
-                        return false;
-                    } else {
-                        mappings.put(column, parameter);
+                    if (column != null && parameter != null) {
+                        mappings.put(parameter, column);
+                        column = null;
+                        parameter = null;
                     }
                 }
             }
-            statement.append(type);
+            nextKeyword = type;
         } catch (Exception ex) {
 
             LoggingInterface.getInstanece().handleException(ex);
@@ -59,13 +61,14 @@ public class Statement {
     }
 
     public void appendCondition(Parameter parameter) {
-        statement.append(" " + nextRelation);
+        statement.append(nextKeyword);
+        statement.append(" ");
         statement.append(mappings.get(parameter.getName()));
         statement.append(" ");
-        statement.append(mappings.get(parameter.getRelation()));
+        statement.append(parameter.getRelation());
         statement.append(" ");
         statement.append(formatValueForSql(parameter));
-        nextRelation = innerRelation + " ";
+        nextKeyword = " " + innerRelation;
     }
 
     private String formatValueForSql(Parameter p) {

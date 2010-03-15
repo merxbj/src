@@ -2,8 +2,7 @@ package notwa.sql;
 
 import java.util.*;
 
-
-public class ParameterCollection implements Collection<Parameter>{
+public class ParameterCollection implements Collection<Parameter> {
 
     private Collection<Parameter> parameters;
     
@@ -44,7 +43,7 @@ public class ParameterCollection implements Collection<Parameter>{
 
     @Override
     public boolean contains(Object o) {
-        return parameters.contains(o);
+        return parameters.contains((Parameter) o);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class ParameterCollection implements Collection<Parameter>{
 
     @Override
     public boolean remove(Object o) {
-        return parameters.remove(o);
+        return parameters.remove((Parameter) o);
     }
 
     @Override
