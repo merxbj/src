@@ -52,8 +52,8 @@ public class MainWindow extends JFrame {
         /*
          * create JStatusBar object
          */
-        JStatusBar jsb = new JStatusBar();
-        this.add(jsb, BorderLayout.PAGE_END);
+        //JStatusBar jsb = new JStatusBar();
+        this.add(JStatusBar.getInstance(), BorderLayout.PAGE_END);
         
         this.setVisible(true);
     }

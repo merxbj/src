@@ -58,7 +58,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
          */
         this.add(Box.createHorizontalGlue());
 
-        searchField.setMaximumSize(new Dimension(2500,20));
+        Dimension searchFieldSize = new Dimension(200,20); 
+        searchField.setMinimumSize(searchFieldSize);
+        searchField.setMaximumSize(searchFieldSize);
+        searchField.setPreferredSize(searchFieldSize);
         searchField.addMouseListener(new MouseAdapter() { 
             public void mousePressed(MouseEvent me) { 
                 if (me.getSource() == searchField) {
@@ -69,7 +72,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
             } 
           }); 
         this.add(new JLabel("| Search "));
-        this.add(searchField); // TODO search field is resizing when you resize mainwindow, WHY?!
+        this.add(searchField);
     }
 
     @Override

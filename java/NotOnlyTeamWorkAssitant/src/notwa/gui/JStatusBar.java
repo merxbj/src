@@ -9,10 +9,18 @@ import javax.swing.JProgressBar;
 
 @SuppressWarnings("serial")
 public class JStatusBar extends JPanel {
+    private static JStatusBar singleton;
     JProgressBar jpb = new JProgressBar();
     JLabel statusBarText = new JLabel();
-    public JStatusBar() {
-        
+    
+    public static JStatusBar getInstance() {
+        if (singleton == null) {
+            singleton = new JStatusBar();
+        }
+        return singleton;
+    }
+    
+    private JStatusBar() {
         // for testing
         setStatusBarText("Synchronizing with repository ...");
         setProgressBarValue(5);

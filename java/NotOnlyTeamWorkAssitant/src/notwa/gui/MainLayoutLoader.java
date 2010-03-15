@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -41,7 +40,7 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         tabPanel.addTab(null,null); //create empty tab, where we will add new button
 
         plusButton = new JButton("+");
-        plusButton.setBorder(BorderFactory.createEtchedBorder());
+        plusButton.setBorder(null);
         plusButton.setPreferredSize(new Dimension(30,20));
         plusButton.addActionListener(this);
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);

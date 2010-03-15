@@ -20,10 +20,8 @@ import javax.swing.JTextField;
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
-import notwa.dal.UserDal;
 import notwa.exception.SignInException;
 import notwa.security.Security;
-import notwa.sql.Parameters.User;
 
 @SuppressWarnings("serial")
 public class LoginDialog extends JFrame implements ActionListener {
