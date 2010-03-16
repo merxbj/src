@@ -21,5 +21,3 @@ csharp/*/bin/
 csharp/*/obj/
 *.settings
 java/.metadata
-java/*/*/build/
-java/*/*/dist/
