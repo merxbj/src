@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
 public class SettingsDialog extends JFrame {
+
     public SettingsDialog() {
     }
     

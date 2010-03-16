@@ -51,25 +51,14 @@ public class LoginDialog extends JFrame implements ActionListener {
     
     private JPanel initComponents() {
         JPanel jp = new JPanel(new GridLayout(0,2));
-        jcb = new JComboBox();
         login = new JTextField();
         password = new JPasswordField();
 
-        jcb.setEditable(false);
         login.setPreferredSize(new Dimension(150,20));
         password.setPreferredSize(new Dimension(150,20));;
-        /*
-         * fill combobox with all existing db connections
-         */
-        //TODO make combobox to accept hasmap/table
-        Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
-        for (ConnectionInfo connInfo : cci)
-        {
-            jcb.addItem(new JComboBoxItemCreator(connInfo,connInfo.getLabel()));
-        }
         
         jp.add(new JLabel("Database"));
-        jp.add(jcb);
+        jp.add(this.initComboBox());
         
         jp.add(new JLabel("Login"));
         jp.add(login);
@@ -95,36 +84,52 @@ public class LoginDialog extends JFrame implements ActionListener {
         return jp;
     }
 
+    private JComboBox initComboBox() {
+        jcb = new JComboBox();
+        jcb.setEditable(false);
+        
+        Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
+        for (ConnectionInfo connInfo : cci)
+        {
+            jcb.addItem(new JComboBoxItemCreator(connInfo,connInfo.getLabel()));
+        }
+        
+        return jcb;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-           /* if (!   this.jcb.getSelectedItem().equals("") ||
+            if (!   this.jcb.getSelectedItem().equals("") ||
                     this.login.getText().isEmpty() ||
                     this.password.getPassword().length != 0) {
                 initErrorField("You must fill all fields");
             }
-            else {  --- DISABLED FOR TESTING --- because now is everything null :D*/
-                try {
-                    ConnectionInfo ci = ((JComboBoxItemCreator)this.jcb.getSelectedItem()).getAttachedConnectionInfo();
-                    if(Security.getInstance().signIn(  ci,
-                                                    this.login.getText(),
-                                                    new String(this.password.getPassword()))) {
-                        MainWindow.getTabController().createWitView(ci);
-                    }
-                    else {
-                        throw new Exception ("User login failed");
-                    }
-                } catch (SignInException siex) {
-                    LoggingInterface.getInstanece().handleException(siex);
-                } catch (Exception ex) {
-                    LoggingInterface.getInstanece().handleException(ex);
-                }
-                
+            else {
+                this.performSignIn();
                 this.setVisible(false);
-            //}
+            }
         }
         if (ae.getSource() == stornoButton) {
             this.setVisible(false);
+        }
+    }
+
+    private void performSignIn() {
+        try {
+            ConnectionInfo ci = ((JComboBoxItemCreator) this.jcb.getSelectedItem())
+                                                                .getAttachedConnectionInfo();
+            if (Security.getInstance().signIn(  ci,
+                                                this.login.getText(),
+                                                new String(this.password.getPassword()))) {
+                MainWindow.getTabController().createWitView(ci);
+            } else {
+                throw new Exception("User login failed");
+            }
+        } catch (SignInException siex) {
+            LoggingInterface.getInstanece().handleException(siex);
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
         }
     }
 

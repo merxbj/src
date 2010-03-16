@@ -9,4 +9,5 @@ public class NoteCollection extends BusinessObjectCollection {
     protected void remove(Note note) {
         super.remove(note);
     }
+    
 }

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class WorkItemDetail extends JPanel implements ActionListener {
     JButton hideDetail = new JButton("Hide detail");
+
     public WorkItemDetail() {
         this.setLayout(new GridLayout(4,0));
         
@@ -23,7 +24,9 @@ public class WorkItemDetail extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
-        TabContent.hideDetail();
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == hideDetail) {
+            TabContent.hideDetail();
+        }
     }
 }

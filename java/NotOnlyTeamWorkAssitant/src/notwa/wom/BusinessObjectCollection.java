@@ -19,4 +19,12 @@ public abstract class BusinessObjectCollection implements Iterable<BusinessObjec
         collection.remove(bo);
         bo.detach();
     }
+    
+    public int size() {
+        return collection.size();
+    }
+    
+    public BusinessObject get(int index) {
+        return collection.get(index);
+    }
 }

@@ -21,7 +21,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenu menu;
     private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;
     private JCheckBoxMenuItem cbWorkOffline;
-    private JTextField searchField = new JTextField("Type here ...");
     
     public MainMenu() {
         menu = new JMenu("File");
@@ -33,11 +32,13 @@ public class MainMenu extends JMenuBar implements ActionListener {
         menu.add(mItemSyncAndRefresh);
 
         menu.addSeparator();
+
         cbWorkOffline = new JCheckBoxMenuItem("Work offline");
         cbWorkOffline.setMnemonic(KeyEvent.VK_O);
         menu.add(cbWorkOffline);
 
         menu.addSeparator();
+
         mItemExit = new JMenuItem("Exit", KeyEvent.VK_X);
         mItemExit.addActionListener(this);
         menu.add(mItemExit);
@@ -58,21 +59,29 @@ public class MainMenu extends JMenuBar implements ActionListener {
          */
         this.add(Box.createHorizontalGlue());
 
+        this.add(new JLabel("| Search "));
+        
+        this.add(this.addSearchField());
+    }
+
+    private JTextField addSearchField() {
+        final JTextField searchField = new JTextField("Type here ...");
+        
         Dimension searchFieldSize = new Dimension(200,20); 
         searchField.setMinimumSize(searchFieldSize);
         searchField.setMaximumSize(searchFieldSize);
         searchField.setPreferredSize(searchFieldSize);
-        searchField.addMouseListener(new MouseAdapter() { 
-            public void mousePressed(MouseEvent me) { 
+        searchField.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
                 if (me.getSource() == searchField) {
                     if (searchField.getText().equals("Type here ...")) {
                         searchField.setText("");
                     }
                 }
-            } 
-          }); 
-        this.add(new JLabel("| Search "));
-        this.add(searchField);
+            }
+        });
+        
+        return searchField;
     }
 
     @Override

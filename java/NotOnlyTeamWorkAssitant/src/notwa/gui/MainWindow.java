@@ -3,7 +3,6 @@ package notwa.gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
@@ -45,14 +44,11 @@ public class MainWindow extends JFrame {
         /*
          * create main JPanel and Load tabs 
          */
-        JPanel mainJP = new JPanel(new BorderLayout());
-        mainJP.add(mll.initMainLayout(), BorderLayout.CENTER);
-        this.add(mainJP,BorderLayout.CENTER);
+        this.add(mll.initMainLayout(), BorderLayout.CENTER);
         
         /*
          * create JStatusBar object
          */
-        //JStatusBar jsb = new JStatusBar();
         this.add(JStatusBar.getInstance(), BorderLayout.PAGE_END);
         
         this.setVisible(true);

@@ -1,8 +1,5 @@
 package notwa.security;
 
-import java.util.Collection;
-
-import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
 import notwa.exception.SignInException;

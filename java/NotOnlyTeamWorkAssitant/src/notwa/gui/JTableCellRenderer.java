@@ -17,21 +17,16 @@ public class JTableCellRenderer implements TableCellRenderer
     public Component getTableCellRendererComponent(final JTable table, final Object value,
             final boolean isSelected, final boolean hasFocus, final int row, final int column)
     {
-        final Component renderer = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        final Component renderer = DEFAULT_RENDERER.getTableCellRendererComponent
+                                    (table, value, isSelected, hasFocus, row, column);
         
-        if (isSelected)
-        {
-            renderer.setBackground(new Color(150,230,230));
-        }
-        else
-        {
-            if (row % 2 == 0)
-            {
-                renderer.setBackground(new Color(240,240,240));
-                
-            }
-            else
-            {
+        if (isSelected) {
+            renderer.setBackground(new Color(150, 230, 230));
+        } else {
+            if (row % 2 == 0) {
+                renderer.setBackground(new Color(240, 240, 240));
+
+            } else {
                 renderer.setBackground(Color.WHITE);
             }
         }

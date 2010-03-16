@@ -32,7 +32,7 @@ public class TabContent extends JComponent implements ActionListener {
         WorkItemDetail wid = new WorkItemDetail();
         
         sp = new JSplitPane(    JSplitPane.VERTICAL_SPLIT,
-                                        topPanel, wid);
+                                topPanel, wid);
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
 
@@ -59,9 +59,7 @@ public class TabContent extends JComponent implements ActionListener {
     
     private JPanel initButtons() {
         JPanel buttonsPanel = new JPanel(new BorderLayout());
-        
         JPanel leftButtonsPanel = new JPanel();
-        //JPanel rightPanel = new JPanel();
         
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
