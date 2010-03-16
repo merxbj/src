@@ -39,7 +39,7 @@ class TblModel extends AbstractTableModel {
             return getRecord(rowIndex).getProject().getProjectName();
         }
         else if (tableHeader[columnIndex].equals("WIT ID")) {
-            return getRecord(rowIndex).getAssignedUser().getLoginName();
+            return getRecord(rowIndex).getId();
         }
         else if (tableHeader[columnIndex].equals("Subject")) {
             return getRecord(rowIndex).getDescription();

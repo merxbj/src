@@ -10,7 +10,7 @@ import javax.swing.JProgressBar;
 @SuppressWarnings("serial")
 public class JStatusBar extends JPanel {
     private static JStatusBar singleton;
-    JProgressBar jpb = new JProgressBar();
+    JProgressBar mainProgressBar = new JProgressBar();
     JLabel statusBarText = new JLabel();
     
     public static JStatusBar getInstance() {
@@ -24,13 +24,13 @@ public class JStatusBar extends JPanel {
         // for testing
         setStatusBarText("Synchronizing with repository ...");
         setProgressBarValue(5);
-        
+        //
         
         this.setLayout(new BorderLayout());
         this.add(statusBarText, BorderLayout.LINE_START);
-        jpb.setPreferredSize(new Dimension(300,20));
-        jpb.setStringPainted(true);
-        this.add(jpb, BorderLayout.LINE_END);
+        mainProgressBar.setPreferredSize(new Dimension(300,20));
+        mainProgressBar.setStringPainted(true);
+        this.add(mainProgressBar, BorderLayout.LINE_END);
     }
     
     public void setStatusBarText(String text) {
@@ -39,12 +39,12 @@ public class JStatusBar extends JPanel {
     }
     
     public void setProgressBarValue(int v) {
-        jpb.setValue(v);
-        jpb.updateUI();
+        mainProgressBar.setValue(v);
+        mainProgressBar.updateUI();
     }
     
     public void setProgressBarMaximum(int v) {
-        jpb.setMaximum(v);
-        jpb.updateUI();
+        mainProgressBar.setMaximum(v);
+        mainProgressBar.updateUI();
     }
 }

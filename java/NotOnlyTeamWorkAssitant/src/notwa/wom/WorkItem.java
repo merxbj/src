@@ -37,6 +37,10 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         return clone;
     }
     
+    public int getId() {
+        return this.witID;
+    }
+    
     public String getSubject() {
         return this.subject;
     }
