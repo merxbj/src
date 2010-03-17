@@ -1,13 +1,11 @@
 package notwa.gui;
 
-import notwa.common.ConnectionInfo;
-
 public class JComboBoxItemCreator {
-    ConnectionInfo connectionInfo;
+    Object object;
     String value;
 
-    public JComboBoxItemCreator(ConnectionInfo ci, String value) {
-        this.connectionInfo = ci;
+    public JComboBoxItemCreator(Object object, String value) {
+        this.object = object;
         this.value = value;
     }
 
@@ -15,8 +13,8 @@ public class JComboBoxItemCreator {
         return value;
     }
     
-    public ConnectionInfo getAttachedConnectionInfo() {
-        return connectionInfo;
+    public Object getAttachedObject() {
+        return object;
     }
 
     @Override

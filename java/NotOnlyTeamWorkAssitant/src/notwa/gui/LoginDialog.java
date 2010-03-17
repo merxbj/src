@@ -117,8 +117,8 @@ public class LoginDialog extends JFrame implements ActionListener {
 
     private void performSignIn() {
         try {
-            ConnectionInfo ci = ((JComboBoxItemCreator) this.jcb.getSelectedItem())
-                                                                .getAttachedConnectionInfo();
+            ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator)
+                                this.jcb.getSelectedItem()).getAttachedObject();
             if (Security.getInstance().signIn(  ci,
                                                 this.login.getText(),
                                                 new String(this.password.getPassword()))) {

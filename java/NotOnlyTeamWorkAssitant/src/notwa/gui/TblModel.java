@@ -42,7 +42,7 @@ class TblModel extends AbstractTableModel {
             return getRecord(rowIndex).getId();
         }
         else if (tableHeader[columnIndex].equals("Subject")) {
-            return getRecord(rowIndex).getDescription();
+            return getRecord(rowIndex).getSubject();
         }
         else if (tableHeader[columnIndex].equals("Priority")) {
             try {
