@@ -1,5 +1,7 @@
 package notwa.wom;
 
+import notwa.exception.ContextException;
+
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
     private int projectID;
     private String name;
@@ -39,11 +41,11 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         this.assignedUsers = assignedUsers;
     }
 
-    public boolean addAssignedUser(User assignedUser) {
+    public boolean addAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.add(assignedUser);
     }
 
-    public boolean removeAssignedUser(User assignedUser) {
+    public boolean removeAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.remove(assignedUser);
     }
     

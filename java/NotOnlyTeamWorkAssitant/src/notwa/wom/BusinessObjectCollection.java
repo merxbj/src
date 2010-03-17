@@ -1,6 +1,7 @@
 package notwa.wom;
 
 import java.util.*;
+import notwa.exception.ContextException;
 
 public abstract class BusinessObjectCollection<T extends BusinessObject> implements Iterable<T> {
 
@@ -12,8 +13,9 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         return collection.iterator();
     }
     
-    public boolean add(T bo) {
-        if (bo.getCurrentContext().equals(bo.getCurrentContext())) {
+    public boolean add(T bo) throws ContextException {
+        if ((bo.getCurrentContext() != null) && (this.getCurrentContext() != null) &&
+                bo.getCurrentContext().equals(this.getCurrentContext())) {
             if (collection.add(bo)) {
                 bo.attach(this);
                 return true;
@@ -21,12 +23,13 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
                 return false;
             }
         } else {
-            return false;
+            throw new ContextException("BusinessObject lives in another context than BusinessObjectCollection!");
         }
     }
     
-    public boolean remove(T bo) {
-        if (bo.getCurrentContext().equals(bo.getCurrentContext())) {
+    public boolean remove(T bo) throws ContextException {
+        if ((bo.getCurrentContext() != null) && (this.getCurrentContext() != null) &&
+                bo.getCurrentContext().equals(this.getCurrentContext())) {
             if (collection.remove(bo)) {
                 bo.detach();
                 return true;
@@ -34,7 +37,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
                 return false;
             }
         } else {
-            return false;
+            throw new ContextException("BusinessObject lives in another context than BusinessObjectCollection!");
         }
     }
     
