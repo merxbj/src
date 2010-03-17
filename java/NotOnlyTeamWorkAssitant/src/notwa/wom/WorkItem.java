@@ -167,4 +167,10 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         hash = 37 * hash + this.witID;
         return hash;
     }
+
+    @Override
+    public void registerWithContext(Context currentContext) {
+        this.currentContext = currentContext;
+        currentContext.registerWorkItem(this);
+    }
 }

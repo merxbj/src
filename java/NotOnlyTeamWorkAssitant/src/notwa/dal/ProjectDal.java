@@ -7,13 +7,21 @@ import notwa.wom.ProjectCollection;
 import notwa.sql.SqlBuilder;
 import notwa.common.LoggingInterface;
 import notwa.exception.DalException;
+import notwa.wom.Context;
+import notwa.sql.Parameter;
+import notwa.wom.UserCollection;
+import notwa.sql.Parameters;
+import notwa.sql.Sql;
 
 import java.sql.ResultSet;
 
 public class ProjectDal extends DataAccessLayer implements Fillable<ProjectCollection>, Getable<Project> {
 
+    private ProjectToUserAssignmentDal ptuaDal;
+
     public ProjectDal(ConnectionInfo ci) {
         super(ci);
+        ptuaDal = new ProjectToUserAssignmentDal(ci);
     }
 
     @Override
@@ -44,6 +52,8 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
             while (rs.next()) {
                 Project p = new Project(rs.getInt("project_id"));
                 p.setProjectName(rs.getString("project_name"));
+                p.setAssignedUsers(getAssignedUserCollection(p.getId(), col.getCurrentContext()));
+                p.registerWithContext(col.getCurrentContext());
                 if (!col.add(p)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", p.getId());
                 }
@@ -52,6 +62,13 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
             LoggingInterface.getInstanece().handleException(ex);
         }
         return col.size();
+    }
+
+    private UserCollection getAssignedUserCollection(int projectId, Context context) throws DalException {
+        UserCollection uc = new UserCollection();
+        uc.setCurrentContext(context);
+        ptuaDal.Fill(uc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
+        return uc;
     }
 
     @Override

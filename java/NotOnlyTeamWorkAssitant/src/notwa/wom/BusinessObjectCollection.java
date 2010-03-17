@@ -5,6 +5,7 @@ import java.util.*;
 public abstract class BusinessObjectCollection<T extends BusinessObject> implements Iterable<T> {
 
     protected ArrayList<T> collection = new ArrayList<T>();
+    protected Context currentContext;
 
     @Override
     public Iterator<T> iterator() {
@@ -12,18 +13,26 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     }
     
     public boolean add(T bo) {
-        if (collection.add(bo)) {
-            bo.attach(this);
-            return true;
+        if (bo.getCurrentContext().equals(bo.getCurrentContext())) {
+            if (collection.add(bo)) {
+                bo.attach(this);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
     }
     
     public boolean remove(T bo) {
-        if (collection.remove(bo)) {
-            bo.detach();
-            return true;
+        if (bo.getCurrentContext().equals(bo.getCurrentContext())) {
+            if (collection.remove(bo)) {
+                bo.detach();
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -35,5 +44,13 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     
     public T get(int index) {
         return (T) collection.get(index);
+    }
+
+    public Context getCurrentContext() {
+        return currentContext;
+    }
+
+    public void setCurrentContext(Context currentContext) {
+        this.currentContext = currentContext;
     }
 }

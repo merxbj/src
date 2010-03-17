@@ -49,7 +49,7 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
                 
-                Note n = new Note(rs.getInt("note_id"));
+                Note n = new Note(rs.getInt("note_id"), rs.getInt("work_item_id"));
                 n.setAuthor(null);
                 if (!nc.add(n)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", n.getNoteText());

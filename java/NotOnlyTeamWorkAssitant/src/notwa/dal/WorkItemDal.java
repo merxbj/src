@@ -11,19 +11,15 @@ import notwa.common.LoggingInterface;
 
 import notwa.sql.SqlBuilder;
 import java.sql.ResultSet;
-import java.util.Hashtable;
 
 
 
 public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
 
-    private Fillable<UserCollection> userDal;
+    private Getable<User> userDal;
     private Fillable<NoteCollection> noteDal;
-    private Fillable<ProjectCollection> projectDal;
-    private ProjectUserAssignmentDal puaDal;
+    private Getable<Project> projectDal;
     private NoteCollection nc;
-    private Hashtable<Integer, User> users;
-    private Hashtable<Integer, Project> projects;
     
     public WorkItemDal(ConnectionInfo ci) {
         super(ci);
@@ -31,7 +27,6 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
         this.noteDal = new NoteDal(ci);
         this.projectDal = new ProjectDal(ci);
         this.nc = new NoteCollection();
-        this.puaDal = new ProjectUserAssignmentDal(ci);
     }
 
     @Override
@@ -42,20 +37,6 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     
     @Override
     public int Fill(WorkItemCollection wic, ParameterCollection pc) {
-        UserCollection ucol = new UserCollection();
-        userDal.Fill(ucol);
-        ProjectCollection pcol = new ProjectCollection();
-        projectDal.Fill(pcol);
-
-        puaDal.link(ucol, pcol);
-
-        for (User u : ucol) {
-            users.put(u.getId(), u);
-        }
-
-        for (Project p : pcol) {
-            projects.put(p.getId(), p);
-        }
 
         StringBuilder vanillaSql = new StringBuilder();
 
@@ -87,6 +68,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
                 WorkItem wi = new WorkItem(rs.getInt("work_item_id"));
+                nc.setCurrentContext(wic.getCurrentContext());
                 noteDal.Fill(nc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, wi.getId(), Sql.Condition.EQUALTY)}));
                 wi.setSubject(rs.getString("subject"));
                 wi.setDescription(rs.getString("description"));
@@ -94,9 +76,11 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                 wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
                 wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
                 wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
-                wi.setAssignedUser(users.get(rs.getInt("user_id")));
-                wi.setProject(projects.get(rs.getInt("project_id")));
+                wi.setAssignedUser(getContextualUser(rs.getInt("user_id"), wic.getCurrentContext()));
+                wi.setProject(getContextualProject(rs.getInt("project_id"), wic.getCurrentContext()));
                 wi.setNoteCollection(nc);
+                wi.registerWithContext(wic.getCurrentContext());
+
                 if (!wic.add(wi)) {
                     LoggingInterface.getLogger().logWarning("Work Item (work_item_id = %d) could not be added to the collection!", wi.getId());
                 }
@@ -105,6 +89,26 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
             LoggingInterface.getInstanece().handleException(ex);
         }
         return wic.size();
+    }
+
+    private User getContextualUser(int userId, Context context) throws DalException {
+        if (context.hasUser(userId)) {
+            return context.getUser(userId);
+        } else {
+            User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
+            user.registerWithContext(context);
+            return user;
+        }
+    }
+
+    private Project getContextualProject(int projectId, Context context) throws DalException {
+        if (context.hasProject(projectId)) {
+            return context.getProject(projectId);
+        } else {
+            Project project = projectDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
+            project.registerWithContext(context);
+            return project;
+        }
     }
 
     @Override

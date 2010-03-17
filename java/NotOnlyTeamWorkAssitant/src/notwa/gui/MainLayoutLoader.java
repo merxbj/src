@@ -97,7 +97,7 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         Project project = new Project(1);
         project.setProjectName("notwa");
         
-        Note note = new Note(1);
+        Note note = new Note(1, 1);
         note.setAuthor(user);
         note.setNoteText("kurva jedna zasrana");
         

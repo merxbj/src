@@ -8,9 +8,10 @@ public abstract class BusinessObject {
     
     protected BusinessObjectCollection attachedBOC;
     protected BusinessObject originalVersion;
+    protected Context currentContext;
     
-    protected String separator = new String (" | ");
-    
+    protected final String separator = new String (" | ");
+
     /*
      * Attach Business object to BO collection
      */
@@ -66,5 +67,20 @@ public abstract class BusinessObject {
         } catch (CloneNotSupportedException e) {
             LoggingInterface.getInstanece().handleException(e);
         }
+    }
+
+    /*
+     * Sets the current context which represents the actual context within
+     * this business object lives.
+     */
+    public abstract void registerWithContext(Context currentContext);
+
+    /*
+     * Context represents the actuall context within this business object
+     * has been created.
+     * Only business objects within the same context could relate with each other
+     */
+    public Context getCurrentContext() {
+        return currentContext;
     }
 }

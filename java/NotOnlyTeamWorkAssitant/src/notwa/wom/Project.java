@@ -5,7 +5,7 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     private String name;
     private UserCollection assignedUsers;
     
-    public Project (int projectID) {
+    public Project(int projectID) {
         this.projectID = projectID;
     }
     
@@ -77,4 +77,11 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         hash = 89 * hash + this.projectID;
         return hash;
     }
+
+    @Override
+    public void registerWithContext(Context currentContext) {
+        this.currentContext = currentContext;
+        currentContext.registerProject(this);
+    }
+
 }

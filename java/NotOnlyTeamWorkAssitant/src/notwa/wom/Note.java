@@ -2,20 +2,20 @@ package notwa.wom;
 
 public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
-    private int noteID;
+    private NotePrimaryKey noteId;
     private WorkItem workItem;
     private String text;
     private User author;
     
-    public Note (int noteID) {
-        this.noteID = noteID;
+    public Note (int noteId, int workItemId) {
+        this.noteId = new NotePrimaryKey(noteId, workItemId);
     }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Note clone = (Note) super.clone();
 
-        clone.noteID = this.noteID;
+        clone.noteId = (NotePrimaryKey) this.noteId.clone(); // deep copy of this
         clone.workItem = this.workItem;
         clone.text = this.text;
         clone.author = this.author;
@@ -28,6 +28,14 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     
     public String getNoteText() {
         return this.text;
+    }
+
+    public NotePrimaryKey getId() {
+        return noteId;
+    }
+
+    public String getText() {
+        return text;
     }
     
     public User getAuthor() {
@@ -48,7 +56,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     
     @Override
     public String toString() {
-        String returnText = new String(    this.noteID +separator );
+        String returnText = new String(    this.noteId +separator );
         if(this.workItem != null) {
             returnText += this.workItem.getSubject() +separator; }
 
@@ -61,17 +69,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     
     @Override
     public int compareTo(Note note) {
-        Integer id1 = this.noteID;
-        Integer id2 = note.noteID;
-        WorkItem wi1 = this.workItem;
-        WorkItem wi2 = note.workItem;
-        
-        int compare = wi1.compareTo(wi2);
-        if (compare == 0) {
-            compare = id1.compareTo(id2);
-        }
-     
-        return compare;
+        return this.noteId.compareTo(note.noteId);
     }
     
     @Override
@@ -85,9 +83,75 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + this.noteID;
-        hash = 83 * hash + (this.workItem != null ? this.workItem.hashCode() : 0);
+        int hash = 3;
+        hash = 61 * hash + (this.noteId != null ? this.noteId.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public void registerWithContext(Context currentContext) {
+        this.currentContext = currentContext;
+        currentContext.registerNote(this);
+    }
+
+    public class NotePrimaryKey implements Comparable<NotePrimaryKey>, Cloneable {
+        int noteId;
+        int workItemId;
+
+        public NotePrimaryKey(int noteId, int workItemId) {
+            this.noteId = noteId;
+            this.workItemId = workItemId;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            NotePrimaryKey clone = (NotePrimaryKey) super.clone();
+            clone.noteId = this.noteId;
+            clone.workItemId = this.workItemId;
+            return clone;
+        }
+
+        public int getNoteId() {
+            return noteId;
+        }
+
+        public int getWorkItemId() {
+            return workItemId;
+        }
+
+        @Override
+        public int compareTo(NotePrimaryKey npk) {
+            Integer id1 = this.noteId;
+            Integer id2 = npk.noteId;
+            Integer wi1 = this.workItemId;
+            Integer wi2 = npk.workItemId;
+
+            int compare = wi1.compareTo(wi2);
+            if (compare == 0) {
+                compare = id1.compareTo(id2);
+            }
+
+            return compare;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            
+            return (((NotePrimaryKey) obj).compareTo(this) == 0);
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 41 * hash + this.noteId;
+            hash = 41 * hash + this.workItemId;
+            return hash;
+        }
     }
 }

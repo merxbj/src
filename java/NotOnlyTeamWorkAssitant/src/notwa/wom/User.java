@@ -110,4 +110,11 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         hash = 67 * hash + this.userID;
         return hash;
     }
+
+    @Override
+    public void registerWithContext(Context currentContext) {
+        this.currentContext = currentContext;
+        currentContext.registerUser(this);
+    }
+
 }
