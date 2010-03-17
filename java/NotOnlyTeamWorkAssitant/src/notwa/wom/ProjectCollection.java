@@ -1,12 +1,5 @@
 package notwa.wom;
 
-public class ProjectCollection extends BusinessObjectCollection {
+public class ProjectCollection extends BusinessObjectCollection<Project> {
 
-    protected void add(Project project) {
-        super.add(project);
-    }
-    
-    protected void remove(Project project) {
-        super.remove(project);
-    }
 }

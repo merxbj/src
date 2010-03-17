@@ -10,7 +10,7 @@ public class CloningTest {
 
     private void fillWithSomeData() {
         User user = new User(1);
-        user.setLoginName("mrneo");
+        user.setLogin("mrneo");
         
         Project project = new Project(1);
         project.setProjectName("notwa");

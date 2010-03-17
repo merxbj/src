@@ -34,7 +34,7 @@ public abstract class BusinessObject {
      * Check if Business object is attached to BO collection
      */
     public boolean isAttached() {
-        return attachedBOC != null;
+        return (attachedBOC != null);
     }
     
     /*

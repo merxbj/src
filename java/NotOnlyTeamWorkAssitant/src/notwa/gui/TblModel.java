@@ -36,7 +36,7 @@ class TblModel extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (tableHeader[columnIndex].equals("Product")) {
-            return getRecord(rowIndex).getProject().getProjectName();
+            return getRecord(rowIndex).getProject().getName();
         }
         else if (tableHeader[columnIndex].equals("WIT ID")) {
             return getRecord(rowIndex).getId();
@@ -52,7 +52,7 @@ class TblModel extends AbstractTableModel {
             }
         }
         else if (tableHeader[columnIndex].equals("Assigned")) {
-            return getRecord(rowIndex).getAssignedUser().getLoginName();
+            return getRecord(rowIndex).getAssignedUser().getLogin();
         }
         else if (tableHeader[columnIndex].equals("Status")) {
             try {

@@ -1,12 +1,5 @@
 package notwa.wom;
 
-public class UserCollection extends BusinessObjectCollection{
+public class UserCollection extends BusinessObjectCollection<User> {
 
-    protected void add(User user) {
-        super.add(user);
-    }
-    
-    protected void remove(User user) {
-        super.remove(user);
-    }
 }

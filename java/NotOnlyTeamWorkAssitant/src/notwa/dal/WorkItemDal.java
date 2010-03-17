@@ -5,24 +5,33 @@ import notwa.sql.Parameters;
 import notwa.sql.Parameter;
 import notwa.sql.Sql;
 import notwa.wom.*;
-
-import notwa.sql.SqlBuilder;
-import java.sql.ResultSet;
-
+import notwa.exception.DalException;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 
+import notwa.sql.SqlBuilder;
+import java.sql.ResultSet;
+import java.util.Hashtable;
+
+
+
 public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
 
-    private Getable<User> userDal;
-    private Getable<Note> noteDal;
-    private Getable<Project> projectDal;
+    private Fillable<UserCollection> userDal;
+    private Fillable<NoteCollection> noteDal;
+    private Fillable<ProjectCollection> projectDal;
+    private ProjectUserAssignmentDal puaDal;
+    private NoteCollection nc;
+    private Hashtable<Integer, User> users;
+    private Hashtable<Integer, Project> projects;
     
     public WorkItemDal(ConnectionInfo ci) {
         super(ci);
         this.userDal = new UserDal(ci);
         this.noteDal = new NoteDal(ci);
         this.projectDal = new ProjectDal(ci);
+        this.nc = new NoteCollection();
+        this.puaDal = new ProjectUserAssignmentDal(ci);
     }
 
     @Override
@@ -33,6 +42,21 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     
     @Override
     public int Fill(WorkItemCollection wic, ParameterCollection pc) {
+        UserCollection ucol = new UserCollection();
+        userDal.Fill(ucol);
+        ProjectCollection pcol = new ProjectCollection();
+        projectDal.Fill(pcol);
+
+        puaDal.link(ucol, pcol);
+
+        for (User u : ucol) {
+            users.put(u.getId(), u);
+        }
+
+        for (Project p : pcol) {
+            projects.put(p.getId(), p);
+        }
+
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   work_item_id, ");
@@ -63,25 +87,33 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
                 WorkItem wi = new WorkItem(rs.getInt("work_item_id"));
+                noteDal.Fill(nc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, wi.getId(), Sql.Condition.EQUALTY)}));
                 wi.setSubject(rs.getString("subject"));
                 wi.setDescription(rs.getString("description"));
                 wi.setPriority(WorkItemPriority.lookup(rs.getInt("working_priority")));
                 wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
                 wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
                 wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
-                wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)})));
-                //wi.setAssignedUser(userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)})));
-                // TODO Complete!
+                wi.setAssignedUser(users.get(rs.getInt("user_id")));
+                wi.setProject(projects.get(rs.getInt("project_id")));
+                wi.setNoteCollection(nc);
+                if (!wic.add(wi)) {
+                    LoggingInterface.getLogger().logWarning("Work Item (work_item_id = %d) could not be added to the collection!", wi.getId());
+                }
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
         }
-        return 1;
+        return wic.size();
     }
 
     @Override
-    public WorkItem get(ParameterCollection primaryKey) {
-        // TODO Auto-generated method stub        
-        return new WorkItem(1);
+    public WorkItem get(ParameterCollection primaryKey) throws DalException {
+        WorkItemCollection wic = new WorkItemCollection();
+        int rows = this.Fill(wic, primaryKey);
+        if (rows > 1) {
+            throw new DalException("Supplied parameters is not a primary key!");
+        }
+        return wic.get(0);
     }
 }

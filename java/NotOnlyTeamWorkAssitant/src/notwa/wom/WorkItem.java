@@ -20,6 +20,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         this.witID = id;
     }
     
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         WorkItem clone = (WorkItem) super.clone();
 
@@ -126,14 +127,14 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         if (this.parentWorkItem != null) {
             returnText += this.parentWorkItem.getSubject() +separator; }
         if (this.project != null) {
-            returnText += this.project.getProjectName() +separator; }
+            returnText += this.project.getName() +separator; }
         
             returnText += this.subject +separator;
             
         if (this.status != null) {
             returnText += this.status.name() +separator; }
         if (this.assignedUser != null) {
-            returnText += this.assignedUser.getLoginName() +separator; }
+            returnText += this.assignedUser.getLogin() +separator; }
         if (this.priority != null) {
             returnText += this.priority.name() +separator; }
     
@@ -158,5 +159,12 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         } else {
             return (this.compareTo((WorkItem) o) == 0);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + this.witID;
+        return hash;
     }
 }

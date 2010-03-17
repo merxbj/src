@@ -11,6 +11,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
         this.noteID = noteID;
     }
 
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         Note clone = (Note) super.clone();
 
@@ -54,16 +55,23 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
             returnText += this.text +separator;
             
         if(this.author != null) {
-            returnText += this.author.getLoginName(); }
+            returnText += this.author.getLogin(); }
         return returnText;
     }
     
     @Override
     public int compareTo(Note note) {
-        Integer j1 = this.noteID;
-        Integer j2 = note.noteID;
+        Integer id1 = this.noteID;
+        Integer id2 = note.noteID;
+        WorkItem wi1 = this.workItem;
+        WorkItem wi2 = note.workItem;
+        
+        int compare = wi1.compareTo(wi2);
+        if (compare == 0) {
+            compare = id1.compareTo(id2);
+        }
      
-        return j1.compareTo(j2);
+        return compare;
     }
     
     @Override
@@ -73,5 +81,13 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
         } else {
             return (this.compareTo((Note) o) == 0);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + this.noteID;
+        hash = 83 * hash + (this.workItem != null ? this.workItem.hashCode() : 0);
+        return hash;
     }
 }

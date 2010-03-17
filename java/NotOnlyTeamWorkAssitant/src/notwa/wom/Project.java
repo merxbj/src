@@ -9,6 +9,7 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         this.projectID = projectID;
     }
     
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         Project clone = (Project) super.clone();
 
@@ -18,7 +19,11 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         return clone;
     }
 
-    public String getProjectName() {
+    public int getId() {
+        return this.projectID;
+    }
+
+    public String getName() {
         return this.name;
     }
     
@@ -32,6 +37,14 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     
     public void setAssignedUsers(UserCollection assignedUsers) {
         this.assignedUsers = assignedUsers;
+    }
+
+    public boolean addAssignedUser(User assignedUser) {
+        return this.assignedUsers.add(assignedUser);
+    }
+
+    public boolean removeAssignedUser(User assignedUser) {
+        return this.assignedUsers.remove(assignedUser);
     }
     
     @Override
@@ -56,5 +69,12 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         } else {
             return (this.compareTo((Project) o) == 0);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + this.projectID;
+        return hash;
     }
 }

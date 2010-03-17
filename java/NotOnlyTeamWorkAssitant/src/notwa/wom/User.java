@@ -13,6 +13,7 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         this.userID = userID;
     }
     
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         User clone = (User) super.clone();
 
@@ -33,12 +34,16 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
                                         this.lastName );
         return returnText;
     }
-    
-    public String getLoginName() {
+
+    public int getId() {
+        return userID;
+    }
+
+    public String getLogin() {
         return this.login;
     }
 
-    public String getLoginPass() {
+    public String getPassword() {
         return this.password;
     }
     
@@ -54,15 +59,15 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         return assignedProjects;
     }
     
-    public void setLoginName(String loginName) {
+    public void setLogin(String loginName) {
         this.login = loginName;
     }
     
-    public void setUserPassword(String userPassword) {
+    public void setPassword(String userPassword) {
         this.password = userPassword;
     }
     
-    public void setUserFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
     
@@ -72,6 +77,14 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     
     public void setAssignedProjects(ProjectCollection assignedProjects) {
         this.assignedProjects = assignedProjects;
+    }
+
+    public boolean addAssignedProject(Project assignedProject) {
+        return this.assignedProjects.add(assignedProject);
+    }
+
+    public boolean removeAssignedProject(Project assignedProject) {
+        return this.assignedProjects.remove(assignedProject);
     }
     
     @Override
@@ -89,5 +102,12 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         } else {
             return (this.compareTo((User) o) == 0);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + this.userID;
+        return hash;
     }
 }

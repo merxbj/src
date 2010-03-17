@@ -30,8 +30,8 @@ public class Security {
                                new Parameter(   Parameters.User.LOGIN,
                                                 userLogin,
                                                 Sql.Condition.EQUALTY)}));
-        if (!(user.getLoginName().equals(userLogin)
-                && user.getLoginPass().equals(userPassword))) {
+        if (!(user.getLogin().equals(userLogin)
+                && user.getPassword().equals(userPassword))) {
             throw new SignInException();
         }
 
