@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
@@ -20,8 +21,10 @@ public class WorkItemTable extends JPanel{
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private JTable witTable;
     private TblModel witTableModel;
+    private static WorkItemCollection wic;
 
     public WorkItemTable(WorkItemCollection wic) {
+        this.wic = wic;
         this.setLayout(new BorderLayout());
         
         witTableModel = new TblModel(wic, tableHeaders);
@@ -87,5 +90,9 @@ public class WorkItemTable extends JPanel{
             }
             witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
         }
+    }
+    
+    public static WorkItem getSelected() {
+        return wic.get(1);
     }
 }

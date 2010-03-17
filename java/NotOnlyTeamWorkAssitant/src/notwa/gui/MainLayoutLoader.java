@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -50,6 +51,10 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         wic.add(fillWithSomeData());
         wic.add(fillWithSomeData());
         wic.add(fillWithSomeData());
+        wic.add(fillWithAnotherData());
+        wic.add(fillWithAnotherData());
+        wic.add(fillWithAnotherData());
+        wic.add(fillWithAnotherData());
         /*
          * 
          */
@@ -104,13 +109,48 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         NoteCollection noteCollection = new NoteCollection();
         noteCollection.add(note);
         
+        WorkItem wi3 = new WorkItem(3);
+        wi3.setSubject("class Test2233322");
         
         WorkItem wi = new WorkItem(1);
         wi.setSubject("class CloningTest");
+        wi.setParentWorkItem(wi3);
         wi.setAssignedUser(user);
         wi.setDescription("create new class CloningTest for testing this code...");
         wi.setProject(project);
         wi.setNoteCollection(noteCollection);
+        wi.setExpectedTimestamp(new Date());
+        wi.setLastModifiedTimestamp(new Date());
+        
+        return wi;
+    }
+    
+    private WorkItem fillWithAnotherData() {
+        User user = new User(2);
+        user.setLogin("eter");
+        
+        Project project = new Project(2);
+        project.setProjectName("notwa fake");
+        
+        Note note = new Note(1);
+        note.setAuthor(user);
+        note.setNoteText("blablabla");
+        
+        NoteCollection noteCollection = new NoteCollection();
+        noteCollection.add(note);
+
+        WorkItem wi3 = new WorkItem(3);
+        wi3.setSubject("class Test2233322");
+        
+        WorkItem wi = new WorkItem(2);
+        wi.setSubject("class Test2222");
+        wi.setParentWorkItem(wi3);
+        wi.setAssignedUser(user);
+        wi.setDescription("create new class Test2222 for testing this code...");
+        wi.setProject(project);
+        wi.setNoteCollection(noteCollection);
+        wi.setExpectedTimestamp(new Date());
+        wi.setLastModifiedTimestamp(new Date());
         
         return wi;
     }
