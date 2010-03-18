@@ -23,7 +23,6 @@ import notwa.common.LoggingInterface;
 import notwa.exception.SignInException;
 import notwa.security.Security;
 
-@SuppressWarnings("serial")
 public class LoginDialog extends JFrame implements ActionListener {
     private JButton okButton, stornoButton;
     private JComboBox jcb;

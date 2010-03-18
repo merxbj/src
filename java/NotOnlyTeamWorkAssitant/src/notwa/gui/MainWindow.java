@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
     private String version = new String("v0.0.1-r1"); //config?
     private static MainLayoutLoader mll = new MainLayoutLoader();

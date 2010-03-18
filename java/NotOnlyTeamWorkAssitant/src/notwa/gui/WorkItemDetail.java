@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-@SuppressWarnings("serial")
 public class WorkItemDetail extends JPanel implements ActionListener {
     JButton hideDetail = new JButton("Hide detail");
     JTextArea description = new JTextArea();

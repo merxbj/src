@@ -13,7 +13,6 @@ import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-@SuppressWarnings("serial")
 public class WorkItemTable extends JPanel{
     private String[] tableHeaders = {
             "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status"};

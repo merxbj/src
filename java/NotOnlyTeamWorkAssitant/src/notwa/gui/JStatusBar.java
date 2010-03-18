@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-@SuppressWarnings("serial")
 public class JStatusBar extends JPanel {
     private static JStatusBar singleton;
     JProgressBar mainProgressBar = new JProgressBar();

@@ -14,6 +14,11 @@ import javax.swing.JTabbedPane;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.WorkItemDal;
+import notwa.exception.ContextException;
+import notwa.wom.BusinessObject;
+import notwa.wom.BusinessObjectCollection;
+import notwa.wom.Context;
+import notwa.wom.ContextManager;
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.wom.Project;
@@ -21,7 +26,6 @@ import notwa.wom.User;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 
-@SuppressWarnings("serial")
 public class MainLayoutLoader extends JPanel implements ActionListener {
     private JTabbedPane tabPanel;
     private JButton plusButton;
@@ -47,14 +51,19 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
          * TODO: delete !!!TESTING DATA!!!
          */
         WorkItemCollection wic = new WorkItemCollection();
-        wic.add(fillWithSomeData());
-        wic.add(fillWithSomeData());
-        wic.add(fillWithSomeData());
-        wic.add(fillWithSomeData());
-        wic.add(fillWithAnotherData());
-        wic.add(fillWithAnotherData());
-        wic.add(fillWithAnotherData());
-        wic.add(fillWithAnotherData());
+        wic.setCurrentContext(ContextManager.getInstance().newContext());
+        try {
+            wic.add(fillWithSomeData(wic.getCurrentContext()));
+            wic.add(fillWithSomeData(wic.getCurrentContext()));
+            wic.add(fillWithSomeData(wic.getCurrentContext()));
+            wic.add(fillWithSomeData(wic.getCurrentContext()));
+            wic.add(fillWithAnotherData(wic.getCurrentContext()));
+            wic.add(fillWithAnotherData(wic.getCurrentContext()));
+            wic.add(fillWithAnotherData(wic.getCurrentContext()));
+            wic.add(fillWithAnotherData(wic.getCurrentContext()));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         /*
          * 
          */
@@ -95,24 +104,37 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         }
     }
     
-    private WorkItem fillWithSomeData() {
+    private WorkItem fillWithSomeData(Context context) {
         User user = new User(1);
         user.setLogin("mrneo");
+        user.registerWithContext(context);
         
         Project project = new Project(1);
         project.setProjectName("notwa");
+        project.registerWithContext(context);
         
         Note note = new Note(1, 1);
+
         note.setAuthor(user);
         note.setNoteText("kurva jedna zasrana");
+        note.registerWithContext(context);
         
         NoteCollection noteCollection = new NoteCollection();
-        noteCollection.add(note);
+        noteCollection.setCurrentContext(context);
+
+        try {
+            noteCollection.add(note);
+        } catch (Exception ex) {
+            // TODO Auto-generated catch block
+            System.out.println(ex);
+        }
         
         WorkItem wi3 = new WorkItem(3);
         wi3.setSubject("class Test2233322");
+        wi3.registerWithContext(context);
         
         WorkItem wi = new WorkItem(1);
+        wi.registerWithContext(context);
         wi.setSubject("class CloningTest");
         wi.setParentWorkItem(wi3);
         wi.setAssignedUser(user);
@@ -125,28 +147,41 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         return wi;
     }
     
-    private WorkItem fillWithAnotherData() {
+    private WorkItem fillWithAnotherData(Context context) {
         User user = new User(2);
         user.setLogin("eter");
+        user.registerWithContext(context);
         
         Project project = new Project(2);
         project.setProjectName("notwa fake");
+        project.registerWithContext(context);
         
-        Note note = new Note(1,1);
+        Note note = new Note(1, 1);
+
         note.setAuthor(user);
-        note.setNoteText("blablabla");
+        note.setNoteText("blabla");
+        note.registerWithContext(context);
         
         NoteCollection noteCollection = new NoteCollection();
-        noteCollection.add(note);
+        noteCollection.setCurrentContext(context);
 
-        WorkItem wi3 = new WorkItem(3);
-        wi3.setSubject("class Test2233322");
+        try {
+            noteCollection.add(note);
+        } catch (Exception ex) {
+            // TODO Auto-generated catch block
+            System.out.println(ex);
+        }
+        
+        WorkItem wi3 = new WorkItem(4);
+        wi3.setSubject("class Test2222");
+        wi3.registerWithContext(context);
         
         WorkItem wi = new WorkItem(2);
-        wi.setSubject("class Test2222");
+        wi.registerWithContext(context);
+        wi.setSubject("class Test");
         wi.setParentWorkItem(wi3);
         wi.setAssignedUser(user);
-        wi.setDescription("create new class Test2222 for testing this code...");
+        wi.setDescription("create new class Test for testing this code...");
         wi.setProject(project);
         wi.setNoteCollection(noteCollection);
         wi.setExpectedTimestamp(new Date());

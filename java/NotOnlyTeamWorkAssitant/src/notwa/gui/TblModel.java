@@ -2,12 +2,12 @@ package notwa.gui;
 
 import javax.swing.table.AbstractTableModel;
 
+import notwa.wom.ContextManager;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-@SuppressWarnings("serial")
 class TblModel extends AbstractTableModel {
     private WorkItemCollection wic;
     private String[] tableHeader;
@@ -71,7 +71,6 @@ class TblModel extends AbstractTableModel {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     public Class getColumnClass(int columnIndex) {
         if (wic == null || wic.size() == 0) {
             return Object.class;

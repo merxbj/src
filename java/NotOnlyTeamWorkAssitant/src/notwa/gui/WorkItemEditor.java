@@ -18,7 +18,6 @@ import notwa.wom.ProjectCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
  
-@SuppressWarnings("serial")
 public class WorkItemEditor extends JFrame implements ActionListener {
     private JComboBox existingProjects,priorities,states;
     private JTextField newProjectName = new JTextField();

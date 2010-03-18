@@ -16,7 +16,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-@SuppressWarnings("serial")
 public class MainMenu extends JMenuBar implements ActionListener {
     private JMenu menu;
     private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;

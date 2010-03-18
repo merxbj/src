@@ -12,7 +12,6 @@ import javax.swing.JSplitPane;
 
 import notwa.wom.WorkItemCollection;
 
-@SuppressWarnings("serial")
 public class TabContent extends JComponent implements ActionListener {
     JButton addButton,editButton,showHideButton,showDepButton;
     static JSplitPane sp;
