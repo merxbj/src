@@ -1,4 +1,4 @@
-package FTPUploader;
+package FTPSynchronizer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+
+import FTPSynchronizer.FTPSyncMainWindow.customersArrayMap;
 
 
 public class JTableCellRenderer implements TableCellRenderer
@@ -19,15 +21,13 @@ public class JTableCellRenderer implements TableCellRenderer
 		
 		if (isSelected)
 		{
-			Color selected = new Color(150,230,230);
-
-			renderer.setBackground(selected);
+			renderer.setBackground(new Color(150,230,230));
 		}
 		else
 		{
 	    	if (row % 2 == 0)
 	    	{
-	    		renderer.setBackground(Color.LIGHT_GRAY);
+	    		renderer.setBackground(new Color(240,240,240));
 	    		
 	    	}
 	    	else
@@ -36,17 +36,17 @@ public class JTableCellRenderer implements TableCellRenderer
 	    	}
 		}
 		
-		if(row < FTPUploader.customers.size())
+		if(row < FTPSyncMainWindow.choosenCustomers.size())
 		{
-			if (value.equals(FTPUploader.customers.get(row)[0]))
+			if (value.equals(FTPSyncMainWindow.choosenCustomers.get(row)[0]))
 			{
-				if(FTPUploader.customers.get(row)[5].equals("D"))
+				if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("D"))
 				{
-					renderer.setBackground(Color.GREEN);
+					renderer.setBackground(new Color(150,255,150));
 				}
-				else if(FTPUploader.customers.get(row)[5].equals("E"))
+				else if(FTPSyncMainWindow.choosenCustomers.get(row)[customersArrayMap.UPLOADSTATUS.ordinal()].equals("E"))
 				{
-					renderer.setBackground(Color.RED);
+					renderer.setBackground(new Color(255,150,150));
 				}
 			}			
 		}

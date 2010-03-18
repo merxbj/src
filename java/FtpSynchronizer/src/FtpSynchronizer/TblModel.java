@@ -1,4 +1,4 @@
-package FTPUploader;
+package FTPSynchronizer;
 
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -38,6 +38,9 @@ class TblModel extends AbstractTableModel
 
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
+		if(columnIndex == 0) // we dont want to edit first column
+			return false;
+		
 		return true;
 	}
 

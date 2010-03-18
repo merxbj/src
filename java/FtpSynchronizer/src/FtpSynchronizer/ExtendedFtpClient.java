@@ -1,4 +1,4 @@
-package FTPUploader;
+package FTPSynchronizer;
 
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -7,9 +7,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class newFtpClient
+public class ExtendedFtpClient
 {
 	FTPClient ftp;
+
 	public boolean connect(String host,String user,String password) throws IOException
 	/*
 	 * Connects to FTP client
@@ -37,15 +38,15 @@ public class newFtpClient
 		{
 			ftp.logout();
 			ftp.disconnect();
-	    	FTPUploader.insertToLog("Disconnected");
+			FTPSyncMainWindow.log.logInfo("Disconnected");
 		}
 		catch (IOException e)
 		{
-	    	FTPUploader.insertToLog("Exception occured while disconnecting: "+e);
+	    	FTPSyncMainWindow.log.logError("Exception occured while disconnecting: "+e);
 		}
 	}
 
-	public boolean cwd(String folders) throws IOException
+	public boolean changeWorkingDir(String folders) throws IOException
 	/*
 	 * go to dir FOLDERS (/main/test/test2/test3/) / if dir does not exist create one
 	 */
@@ -58,13 +59,13 @@ public class newFtpClient
 				{
 					if(!ftp.changeWorkingDirectory(folders.split("/")[i]))
 					{
-						FTPUploader.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
+						FTPSyncMainWindow.log.logError("Create " +folders.split("/")[i]+ " : FAILED");
 						return false;						
 					}
 				}
 				else
 				{
-					FTPUploader.insertToLog("Create " +folders.split("/")[i]+ " : FAILED", true);
+					FTPSyncMainWindow.log.logError("Create " +folders.split("/")[i]+ " : FAILED");
 					return false;
 				}
 			}
@@ -103,17 +104,17 @@ public class newFtpClient
 		    
 			if(ftp.getReplyCode() == 226)
 			{
-				FTPUploader.insertToLog(file.substring(FTPUploader.rootDir.length()-1) + " : SUCCESS", true);
+				FTPSyncMainWindow.log.logInfo(file.substring(FTPSyncMain.rootDir.length()-1) + " : SUCCESS");
 			}
 			else
 			{
-				FTPUploader.insertToLog(file.substring(FTPUploader.rootDir.length()-1) + " : FAILED", true);				
+				FTPSyncMainWindow.log.logError(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED");				
 			}
 		}
 		catch (IOException e)
 		{
-			FTPUploader.insertToLog(file.substring(FTPUploader.rootDir.length()-1) + " : FAILED", true);
-			FTPUploader.insertToLog(e.toString(), true);
+			FTPSyncMainWindow.log.logError(file.substring(FTPSyncMain.rootDir.length()-1) + " : FAILED");
+			FTPSyncMainWindow.log.logError(e.toString());
 		}
 	}
 }
