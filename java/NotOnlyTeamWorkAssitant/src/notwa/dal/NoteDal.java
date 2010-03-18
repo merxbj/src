@@ -4,8 +4,6 @@ import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.common.ConnectionInfo;
 import notwa.sql.ParameterCollection;
-import notwa.wom.Project;
-import notwa.wom.ProjectCollection;
 import notwa.sql.SqlBuilder;
 import notwa.common.LoggingInterface;
 import notwa.exception.DalException;

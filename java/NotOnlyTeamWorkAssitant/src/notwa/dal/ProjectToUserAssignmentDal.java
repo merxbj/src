@@ -16,11 +16,11 @@ import java.sql.ResultSet;
 
 public class ProjectToUserAssignmentDal extends DataAccessLayer implements Fillable<UserCollection> {
 
-    Getable<User> userDal;
+    private ConnectionInfo ci;
 
     public ProjectToUserAssignmentDal(ConnectionInfo ci) {
         super(ci);
-        userDal = new UserDal(ci);
+        this.ci = ci;
     }
 
     @Override
@@ -64,6 +64,7 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
         if (context.hasUser(userId)) {
             return context.getUser(userId);
         } else {
+            Getable<User> userDal = new UserDal(ci);
             User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
             user.registerWithContext(context);
             return user;

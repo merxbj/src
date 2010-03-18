@@ -16,17 +16,16 @@ import java.sql.ResultSet;
 
 public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
 
-    private Getable<User> userDal;
     private Fillable<NoteCollection> noteDal;
-    private Getable<Project> projectDal;
     private NoteCollection nc;
+    private ConnectionInfo ci;
     
     public WorkItemDal(ConnectionInfo ci) {
         super(ci);
-        this.userDal = new UserDal(ci);
+        
         this.noteDal = new NoteDal(ci);
-        this.projectDal = new ProjectDal(ci);
         this.nc = new NoteCollection();
+        this.ci = ci;
     }
 
     @Override
@@ -95,6 +94,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
         if (context.hasUser(userId)) {
             return context.getUser(userId);
         } else {
+            Getable<User> userDal = new UserDal(ci);
             User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
             user.registerWithContext(context);
             return user;
@@ -105,6 +105,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
         if (context.hasProject(projectId)) {
             return context.getProject(projectId);
         } else {
+            Getable<Project> projectDal = new ProjectDal(ci);
             Project project = projectDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
             project.registerWithContext(context);
             return project;
