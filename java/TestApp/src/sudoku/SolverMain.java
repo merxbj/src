@@ -10,6 +10,7 @@ public class SolverMain {
         
         solvers = new ArrayList<SudokuSolver>();
         solvers.add(new BruteForceSolver());
+        solvers.add(new FindRemainingSolver());
 
         int [][] matrix = new int [][] {
             {1,0,6,0,0,0,7,0,0},
@@ -38,10 +39,10 @@ public class SolverMain {
         int [][] result;
 
         for (SudokuSolver s : solvers) {
-            /*result = s.solve(matrix);
-            printMatrix(result);*/
-            result = s.solve(hardMatrix);
+            result = s.solve(matrix);
             printMatrix(result);
+            /*result = s.solve(hardMatrix);
+            printMatrix(result);*/
         }
     }
 
