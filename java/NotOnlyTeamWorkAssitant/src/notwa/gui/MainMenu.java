@@ -15,11 +15,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class MainMenu extends JMenuBar implements ActionListener {
     private JMenu menu;
     private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;
     private JCheckBoxMenuItem cbWorkOffline;
+    private final JTextField searchField = new JTextField("Type here ...");
     
     public MainMenu() {
         menu = new JMenu("File");
@@ -64,8 +68,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     }
 
     private JTextField addSearchField() {
-        final JTextField searchField = new JTextField("Type here ...");
-        
         Dimension searchFieldSize = new Dimension(200,20); 
         searchField.setMinimumSize(searchFieldSize);
         searchField.setMaximumSize(searchFieldSize);
@@ -80,9 +82,31 @@ public class MainMenu extends JMenuBar implements ActionListener {
             }
         });
         
+        searchField.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        createFilter();
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        createFilter();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        createFilter();
+                    }
+                });
         return searchField;
     }
 
+    private void createFilter() {
+        RowFilter<TblModel, Object> rf = null;
+        try {
+            rf = RowFilter.regexFilter(searchField.getText(),0,1,2,3,4,5);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        WorkItemTable.sorter.setRowFilter(rf);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         //TODO: add remaining actions
@@ -91,7 +115,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
             sd.initSettingsDialog();
         }
 
-        if (ae.getSource() == mItemExit)    {
+        if (ae.getSource() == mItemExit) {
             System.exit(-1);
         }
     }

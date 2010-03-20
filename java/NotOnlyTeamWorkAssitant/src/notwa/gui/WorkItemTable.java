@@ -1,26 +1,34 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.TableView;
 
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-public class WorkItemTable extends JPanel{
+public class WorkItemTable extends TabContent{
     private String[] tableHeaders = {
-            "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status"};
-    
+            "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
-    private JTable witTable;
+    private static JTable witTable;
     private TblModel witTableModel;
     private static WorkItemCollection wic;
+    public static TableRowSorter sorter;
 
     public WorkItemTable(WorkItemCollection wic) {
         this.wic = wic;
@@ -28,7 +36,18 @@ public class WorkItemTable extends JPanel{
         
         witTableModel = new TblModel(wic, tableHeaders);
         witTable = new JTable(witTableModel);
+        witTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        sorter = new TableRowSorter<TblModel>(witTableModel);
+        witTable.setRowSorter(sorter);
+        
+        witTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                WorkItemDetail.getInstance().fillWithActualData();
+            }
+        });
+        
         this.resizeAndColorizeTable();
 
         witTable.getColumnModel()
@@ -45,6 +64,11 @@ public class WorkItemTable extends JPanel{
                 .getColumn(5)
                 .setCellEditor( new DefaultCellEditor(
                                 this.loadWorkItemStates()));
+        
+        /*
+         * Hide last column containing whole WorkItem for WorkItemDetail
+         */
+        witTable.getColumnModel().removeColumn(witTable.getColumnModel().getColumn(6));
         
         JScrollPane jsp = new JScrollPane(witTable);
         
@@ -82,16 +106,16 @@ public class WorkItemTable extends JPanel{
     }
     
     private void resizeAndColorizeTable() {
-        for (int c = 0; c < tableHeaders.length; c++) {
+        for (int c = 0; c < tableHeaders.length-1; c++) {
             if(!tableHeaders[c].equals("Subject")) { // we want to see as much as possible of subject
-            witTable.getColumnModel().getColumn(c).setMinWidth(100);
-            witTable.getColumnModel().getColumn(c).setMaxWidth(100);
+                witTable.getColumnModel().getColumn(c).setMinWidth(100);
+                witTable.getColumnModel().getColumn(c).setMaxWidth(100);
             }
-            witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
+                witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
         }
     }
     
     public static WorkItem getSelected() {
-        return wic.get(1);
+        return (WorkItem) witTable.getModel().getValueAt(witTable.getSelectedRow(), 6);
     }
 }

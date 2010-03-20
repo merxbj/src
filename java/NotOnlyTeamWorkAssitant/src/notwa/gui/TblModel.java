@@ -9,7 +9,7 @@ import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 class TblModel extends AbstractTableModel {
-    private WorkItemCollection wic;
+    private static WorkItemCollection wic;
     private String[] tableHeader;
 
     public TblModel(WorkItemCollection wic, String[] tableHeader) {
@@ -33,7 +33,7 @@ class TblModel extends AbstractTableModel {
         // getRecord(rowIndex)[columnIndex] = value; // TODO add setter
         super.fireTableCellUpdated(rowIndex, columnIndex);
     }
-
+    
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (tableHeader[columnIndex].equals("Product")) {
             return getRecord(rowIndex).getProject().getName();
@@ -61,7 +61,9 @@ class TblModel extends AbstractTableModel {
                 return WorkItemStatus.PLEASE_RESOLVE.name();
             }
         }
-        return null;
+        else {
+            return getRecord(rowIndex);
+        }
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -78,7 +80,7 @@ class TblModel extends AbstractTableModel {
         Object o = getValueAt(0, columnIndex);
         return o == null ? Object.class : o.getClass();
     }
-
+    
     private WorkItem getRecord(int rowIndex) {
         return (WorkItem) wic.get(rowIndex);
     }

@@ -9,6 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import notwa.wom.WorkItemCollection;
 
@@ -27,11 +29,9 @@ public class TabContent extends JComponent implements ActionListener {
         WorkItemTable wiTable = new WorkItemTable(wic);
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
-        
-        WorkItemDetail wid = new WorkItemDetail();
-        
+
         sp = new JSplitPane(    JSplitPane.VERTICAL_SPLIT,
-                                topPanel, wid);
+                                topPanel, WorkItemDetail.getInstance().initComponents());
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
 
