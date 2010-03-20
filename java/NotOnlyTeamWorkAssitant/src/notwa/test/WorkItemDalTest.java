@@ -5,7 +5,6 @@ import notwa.wom.*;
 import notwa.dal.*;
 import notwa.sql.*;
 import java.sql.Timestamp;
-import java.util.Calendar;
 
 public class WorkItemDalTest {
     WorkItemCollection wic;

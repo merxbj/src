@@ -75,7 +75,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                 wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
                 wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
                 wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
-                wi.setAssignedUser(getContextualUser(rs.getInt("user_id"), wic.getCurrentContext()));
+                wi.setAssignedUser(getContextualUser(rs.getInt("assigned_user_id"), wic.getCurrentContext()));
                 wi.setProject(getContextualProject(rs.getInt("project_id"), wic.getCurrentContext()));
                 wi.setNoteCollection(nc);
                 wi.registerWithContext(wic.getCurrentContext());

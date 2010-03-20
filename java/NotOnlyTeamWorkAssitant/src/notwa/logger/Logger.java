@@ -1,6 +1,7 @@
 package notwa.logger;
 
 import java.io.FileWriter;
+import java.io.File;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -10,17 +11,18 @@ public class Logger implements Observer {
     public Logger() {
     }
 
-    public Logger(String fileName, String moduleName) {
+    public Logger(String fileName) {
         this.fileName = fileName;
-        this.moduleName = moduleName;
+        buildDirectoryTree();
     }
 
-    public Logger(String fileName, String moduleName, LoggingExceptionHandler leh) {
+    public Logger(String fileName, LoggingExceptionHandler leh) {
         this.fileName = fileName;
-        this.moduleName = moduleName;
         this.leh = leh;
+        buildDirectoryTree();
     }
 
+    @Override
     public void update(Observable o, Object arg) {
         if (o instanceof LogDispatcher) {
             LogDispatcher ld = (LogDispatcher) o;
@@ -53,6 +55,15 @@ public class Logger implements Observer {
 
     public void error(String message) {
         error(message, (Object []) null);
+    }
+
+    private void buildDirectoryTree() {
+        try {
+            File logFile = new File(fileName.substring(0, fileName.lastIndexOf("/")));
+            logFile.mkdirs();
+        } catch (Exception ex) {
+            reportLoggingException(ex);
+        }
     }
 
     private void writeToLog(LogLevel level, String message, Object... args) {
@@ -97,7 +108,6 @@ public class Logger implements Observer {
     }
 
     private String fileName = "Application.log";
-    private String moduleName = "Default module";
     private LoggingExceptionHandler leh;
 
     public enum LogLevel {

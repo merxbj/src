@@ -20,7 +20,7 @@ public class CloningTest {
         note.setNoteText("kurva jedna zasrana");
         
         NoteCollection noteCollection = new NoteCollection();
-        noteCollection.add(note);
+        //noteCollection.add(note);
         
         
         WorkItem wi = new WorkItem(1);
@@ -31,6 +31,6 @@ public class CloningTest {
         wi.setNoteCollection(noteCollection);
         
         WorkItemCollection wic = new WorkItemCollection();
-        wic.add(wi);
+        //wic.add(wi);
     }
 }

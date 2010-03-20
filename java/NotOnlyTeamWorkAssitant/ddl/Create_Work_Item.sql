@@ -5,7 +5,7 @@ CREATE TABLE Work_Item (
     project_id              NUMERIC(19) NOT NULL,
     parent_work_item_id     NUMERIC(19) NULL,
     subject                 VARCHAR(255) NOT NULL,
-    status                  SMALLINT NOT NULL,
+    status_id               SMALLINT NOT NULL,
     working_priority        SMALLINT NOT NULL,
     description             TEXT NULL,
     expected_timestamp      DATETIME NULL,

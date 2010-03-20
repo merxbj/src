@@ -34,7 +34,7 @@ public class UserToProjectAssignmentDal extends DataAccessLayer implements Filla
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   pua.project_id ");
-        vanillaSql.append("FROM Project_User_Assigment pua ");
+        vanillaSql.append("FROM Project_User_Assignment pua ");
         vanillaSql.append("JOIN User u ");
         vanillaSql.append("ON u.user_id = pua.user_id ");
         vanillaSql.append("/** STATEMENT=WHERE;RELATION=AND;");

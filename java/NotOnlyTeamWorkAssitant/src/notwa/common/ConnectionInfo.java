@@ -31,6 +31,15 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
             return this.compareTo((ConnectionInfo) obj) == 0 ;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.host != null ? this.host.hashCode() : 0);
+        hash = 53 * hash + (this.port != null ? this.port.hashCode() : 0);
+        hash = 53 * hash + (this.dbname != null ? this.dbname.hashCode() : 0);
+        return hash;
+    }
     
     public void setLabel(String label) {
         this.label = label;
@@ -60,13 +69,19 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
         return this.label;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
     public String compileConnectionString() {
-        String cs = String.format("jdbc:mysql://%s:%s/%s,%s,%s", 
+        String cs = String.format("jdbc:mysql://%s:%s/%s", 
                 this.host,
                 this.port,
-                this.dbname,
-                this.user,
-                this.password);
+                this.dbname);
         return cs;
     }
     

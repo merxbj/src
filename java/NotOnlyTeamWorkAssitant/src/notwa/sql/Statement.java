@@ -25,10 +25,9 @@ public class Statement {
             StringTokenizer relations = new StringTokenizer(rawStatement, "{}");
             relations.nextToken(); // skip the first token which is obviously the statement header parsed before
             while (relations.hasMoreTokens()) {
-                String dbgTemp = relations.nextToken();
                 String column = null;
                 String parameter = null;
-                StringTokenizer relation = new StringTokenizer(dbgTemp, ";=");
+                StringTokenizer relation = new StringTokenizer(relations.nextToken(), ";=");
                 while (relation.hasMoreTokens()) {
                     String token = relation.nextToken();
                     if (token.equals("column")) {

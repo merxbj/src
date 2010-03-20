@@ -17,11 +17,19 @@ public class LoggingInterface {
     
     protected LoggingInterface() {
         ld = new LogDispatcher();
-        ld.registerLogger(new Logger("./log/notwa.log", "NOTWA"));
+        ld.registerLogger(new Logger("./log/notwa.log"));
     }
     
     public void handleException(Exception ex) {
-        ld.logError(ex.toString());
+        StringBuilder sb = new StringBuilder();
+        sb.append(ex.toString());
+        sb.append("\n");
+        for (StackTraceElement ste : ex.getStackTrace()) {
+            sb.append("\t at ");
+            sb.append(ste.toString());
+            sb.append("\n");
+        }
+        ld.logError(sb.toString());
     }
     
     public static LogDispatcher getLogger() {

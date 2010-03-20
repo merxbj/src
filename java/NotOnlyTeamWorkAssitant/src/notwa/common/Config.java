@@ -40,7 +40,7 @@ public class Config {
         if (configFile.exists()) {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document dom = db.parse(configFile);
-            parseConnecionStrings(dom.getElementsByTagName("connection"));
+            parseConnecionStrings(dom.getElementsByTagName("Database"));
         } else {
             throw new Exception("Config file does not exists!");
         }
@@ -51,12 +51,12 @@ public class Config {
         for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
             ConnectionInfo ci = new ConnectionInfo();
-            ci.setDbname(xp.evaluate("/@dbname", n));
-            ci.setHost(xp.evaluate("/@host", n));
-            ci.setUser(xp.evaluate("/@user", n));
-            ci.setPort(xp.evaluate("/@port", n));
-            ci.setPassword(xp.evaluate("/@password", n));
-            ci.setLabel(xp.evaluate("/@label", n));
+            ci.setDbname(xp.evaluate("./@dbname", n));
+            ci.setHost(xp.evaluate("./@host", n));
+            ci.setUser(xp.evaluate("./@user", n));
+            ci.setPort(xp.evaluate("./@port", n));
+            ci.setPassword(xp.evaluate("./@password", n));
+            ci.setLabel(xp.evaluate("./@label", n));
             connections.add(ci);
         }
     }

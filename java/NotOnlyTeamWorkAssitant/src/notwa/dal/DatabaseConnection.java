@@ -9,25 +9,53 @@ import java.sql.ResultSet;
 
 public class DatabaseConnection {
     private Connection con;
-    private boolean connected;
+    private ConnectionInfo ci;
     
     public DatabaseConnection(ConnectionInfo ci) {
-        try {
-            con = DriverManager.getConnection(ci.compileConnectionString());
-            connected = true;
-        } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-            connected = false;
-        }
+        this.ci = ci;
     }
     
     public ResultSet executeQuery(String query) throws Exception {
+        if (!isConnected()) {
+            connect();
+        }
         Statement s = con.createStatement();
         ResultSet rs = s.executeQuery(query);
         return rs;
     }
 
     public boolean isConnected() {
-        return this.connected;
+        try {
+            if (con != null) {
+                return !this.con.isClosed();
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+            return false;
+        }
+    }
+
+    public void close() {
+        if (isConnected()) {
+            try {
+                con.close();
+            } catch (Exception ex) {
+                LoggingInterface.getInstanece().handleException(ex);
+            }
+        }
+    }
+
+    private void connect() throws Exception {
+        try {
+            /*String u = ci.getUser();
+            String p = ci.getPassword();
+            String s = ci.compileConnectionString();*/
+            con = DriverManager.getConnection(ci.compileConnectionString(), ci.getUser(), ci.getPassword());
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+            throw ex;
+        }
     }
 }

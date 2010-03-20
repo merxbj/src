@@ -1,5 +1,5 @@
 -- Create Project_User_Assigment table
-CREATE TABLE Project_User_Assigment (
+CREATE TABLE Project_User_Assignment (
     project_id              NUMERIC(19) NOT NULL,
     user_id                 NUMERIC(19) NOT NULL,
     

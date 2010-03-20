@@ -4,7 +4,7 @@ import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 
 public abstract class DataAccessLayer {
-    protected DatabaseConnection dc;
+    protected static DatabaseConnection dc;
     
     public DataAccessLayer() {
         LoggingInterface.getLogger().logWarning("Creating DataAccessLayer subclass with default constructor!");
@@ -12,6 +12,8 @@ public abstract class DataAccessLayer {
     }
     
     public DataAccessLayer(ConnectionInfo ci) {
-        dc = new DatabaseConnection(ci);
+        if (dc == null) {
+            dc = new DatabaseConnection(ci);
+        }
     }
 }
