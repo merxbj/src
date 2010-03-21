@@ -7,7 +7,9 @@ import notwa.sql.Parameter;
 import notwa.sql.ParameterCollection;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
+import notwa.wom.ContextManager;
 import notwa.wom.User;
+import notwa.wom.UserCollection;
 
 public class Security {
     private static Security singleton;
@@ -24,13 +26,16 @@ public class Security {
     public boolean signIn(
             ConnectionInfo ci, String userLogin, String userPassword)
             throws SignInException,Exception {
-        UserDal ud = new UserDal(ci);
+
+        UserCollection uc = new UserCollection();
+        uc.setCurrentContext(ContextManager.getInstance().newContext());
+        UserDal ud = new UserDal(ci,uc.getCurrentContext());
         User user = ud.get( new ParameterCollection(
                             new Parameter[] {
                                new Parameter(   Parameters.User.LOGIN,
                                                 userLogin,
                                                 Sql.Condition.EQUALTY)}));
-        if (!(user.getLogin().equals(userLogin)
+        if (!(user.getLogin().toLowerCase().equals(userLogin.toLowerCase())
                 && user.getPassword().equals(userPassword))) {
             throw new SignInException();
         }

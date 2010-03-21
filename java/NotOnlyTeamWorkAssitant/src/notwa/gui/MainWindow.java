@@ -2,10 +2,10 @@ package notwa.gui;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-public class MainWindow extends JDialog {
+public class MainWindow extends JFrame {
     private String version = new String("v0.0.1-r1"); //config?
     private static MainLayoutLoader mll = new MainLayoutLoader();
     
@@ -32,7 +32,7 @@ public class MainWindow extends JDialog {
         this.setTitle("NOTWA - NOT Only Team Work Assistent " + version.toString());
         this.setSize(1000,500);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         /*
          * Load MainMenu

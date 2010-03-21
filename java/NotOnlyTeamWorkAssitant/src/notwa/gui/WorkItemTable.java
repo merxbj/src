@@ -11,6 +11,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
+import notwa.common.ConnectionInfo;
+import notwa.dal.UserDal;
+import notwa.wom.ContextManager;
+import notwa.wom.User;
+import notwa.wom.UserCollection;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
@@ -22,9 +27,11 @@ public class WorkItemTable extends TabContent{
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private static JTable witTable;
     private TblModel witTableModel;
+    private ConnectionInfo ci;
     public static TableRowSorter<TblModel> sorter;
 
-    public WorkItemTable(WorkItemCollection wic) {
+    public WorkItemTable(WorkItemCollection wic, ConnectionInfo ci) {
+        this.ci = ci;
         this.setLayout(new BorderLayout());
         
         witTableModel = new TblModel(wic, tableHeaders);
@@ -88,12 +95,16 @@ public class WorkItemTable extends TabContent{
     }
     
     private JComboBox loadProjectUsers() {
-        /*
-         * TODO: will be loaded when constructing all existing users
-         */
         JComboBox assignedUsers = new JComboBox();
-        assignedUsers.addItem("mrneo");
-        assignedUsers.addItem("eter");
+        
+        UserCollection uc = new UserCollection();
+        uc.setCurrentContext(ContextManager.getInstance().newContext());
+        UserDal ud = new UserDal(ci, uc.getCurrentContext());
+        ud.Fill(uc);
+        
+        for (User user : uc) {
+            assignedUsers.addItem(new JComboBoxItemCreator(user,user.getLogin()));
+        }
         
         return assignedUsers;
     }

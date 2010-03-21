@@ -100,9 +100,9 @@ public class LoginDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            if (!   this.jcb.getSelectedItem().equals("") ||
+            if (    this.jcb.getSelectedItem().equals("") ||
                     this.login.getText().isEmpty() ||
-                    this.password.getPassword().length != 0) {
+                    this.password.getPassword().equals("")) {
                 initErrorField("You must fill all fields");
             }
             else {

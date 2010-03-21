@@ -10,21 +10,25 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import notwa.common.ConnectionInfo;
 import notwa.wom.WorkItemCollection;
 
 public class TabContent extends JComponent implements ActionListener {
     JButton addButton,editButton,showHideButton,showDepButton;
+    private ConnectionInfo ci;
     static JSplitPane sp;
 
+    //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
     public TabContent() {
     }
     
-    public TabContent initTabContent(WorkItemCollection wic) {
+    public TabContent initTabContent(WorkItemCollection wic, ConnectionInfo ci) {
+        this.ci = ci;
         this.setLayout(new BorderLayout());
         
         JPanel topPanel = new JPanel(new BorderLayout());
-        WorkItemTable wiTable = new WorkItemTable(wic);
+        WorkItemTable wiTable = new WorkItemTable(wic, ci);
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
 
