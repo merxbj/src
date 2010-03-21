@@ -14,9 +14,6 @@ import javax.swing.JTabbedPane;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.WorkItemDal;
-import notwa.exception.ContextException;
-import notwa.wom.BusinessObject;
-import notwa.wom.BusinessObjectCollection;
 import notwa.wom.Context;
 import notwa.wom.ContextManager;
 import notwa.wom.Note;
