@@ -17,13 +17,13 @@ import java.sql.ResultSet;
 
 public class ProjectDal extends DataAccessLayer implements Fillable<ProjectCollection>, Getable<Project> {
 
-    private ProjectToUserAssignmentDal ptuaDal;
     private Context currentContext;
+    private ConnectionInfo ci;
 
     public ProjectDal(ConnectionInfo ci, Context context) {
         super(ci);
-        ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
         this.currentContext = context;
+        this.ci = ci;
     }
 
     @Override
@@ -52,10 +52,17 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
         try {
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
-                Project p = new Project(rs.getInt("project_id"));
-                p.setProjectName(rs.getString("name"));
-                p.setAssignedUsers(getAssignedUserCollection(p.getId()));
-                p.registerWithContext(currentContext);
+                Project p = null;
+                int projectId = rs.getInt("project_id");
+                if (currentContext.hasProject(projectId)) {
+                    p = currentContext.getProject(projectId);
+                } else {
+                    p = new Project(projectId);
+                    p.registerWithContext(currentContext);
+                    p.setProjectName(rs.getString("name"));
+                    p.setAssignedUsers(getAssignedUserCollection(projectId));
+                }
+                
                 if (!col.add(p)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", p.getId());
                 }
@@ -68,6 +75,7 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
 
     private UserCollection getAssignedUserCollection(int projectId) throws DalException {
         UserCollection uc = new UserCollection(currentContext);
+        ProjectToUserAssignmentDal ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
         ptuaDal.Fill(uc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
         return uc;
     }

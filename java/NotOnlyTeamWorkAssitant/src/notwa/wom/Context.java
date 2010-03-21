@@ -6,13 +6,13 @@ public class Context {
 
     private int contextId;
     private Hashtable<Integer, WorkItem> workItemMap;
-    private Hashtable<Note.NotePrimaryKey, Note> noteMap;
+    private Hashtable<NotePrimaryKey, Note> noteMap;
     private Hashtable<Integer, Project> projectMap;
     private Hashtable<Integer, User> userMap;
 
     public Context(int contextId) {
         this.contextId = contextId;
-        this.noteMap = new Hashtable<Note.NotePrimaryKey, Note>();
+        this.noteMap = new Hashtable<NotePrimaryKey, Note>();
         this.projectMap = new Hashtable<Integer, Project>();
         this.userMap = new Hashtable<Integer, User>();
         this.workItemMap = new Hashtable<Integer, WorkItem>();
@@ -59,7 +59,7 @@ public class Context {
         return workItemMap.containsKey(workItemId);
     }
 
-    public boolean hasNote(Note.NotePrimaryKey notePrimaryKey) {
+    public boolean hasNote(NotePrimaryKey notePrimaryKey) {
         return noteMap.containsKey(notePrimaryKey);
     }
 
@@ -83,7 +83,7 @@ public class Context {
         return workItemMap.get(workItemId);
     }
 
-    public Note getNote(Note.NotePrimaryKey notePrimaryKey) {
+    public Note getNote(NotePrimaryKey notePrimaryKey) {
         return noteMap.get(notePrimaryKey);
     }
 

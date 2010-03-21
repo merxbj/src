@@ -2,6 +2,7 @@ package notwa.dal;
 
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
+import notwa.wom.NotePrimaryKey;
 import notwa.common.ConnectionInfo;
 import notwa.sql.ParameterCollection;
 import notwa.sql.Parameter;
@@ -56,10 +57,19 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
         try {
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
-                Note n = new Note(rs.getInt("note_id"), rs.getInt("work_item_id"));
-                n.setAuthor(getContextualUser(rs.getInt("author_user_id")));
-                n.setNoteText(rs.getString("note"));
-                n.registerWithContext(currentContext);
+                Note n = null;
+                NotePrimaryKey npk = new NotePrimaryKey(rs.getInt("note_id"), rs.getInt("work_item_id"));
+                if (currentContext.hasNote(npk)) {
+                    n = currentContext.getNote(npk);
+                } else {
+                    Getable<User> userDal = new UserDal(ci, currentContext);
+                    User author = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)}));
+
+                    n = new Note(npk);
+                    n.registerWithContext(currentContext);
+                    n.setAuthor(author);
+                    n.setNoteText(rs.getString("note"));
+                }
                 if (!nc.add(n)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", n.getNoteText());
                 }
@@ -80,15 +90,5 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
             return null;
         }
         return nc.get(0);
-    }
-
-     private User getContextualUser(int userId) throws DalException {
-        if (currentContext.hasUser(userId)) {
-            return currentContext.getUser(userId);
-        } else {
-            Getable<User> userDal = new UserDal(ci, currentContext);
-            User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
-            return user;
-        }
     }
 }

@@ -7,17 +7,17 @@ INSERT INTO `project` VALUES ('3', 'person');
 INSERT INTO `project` VALUES ('4', 'general');
 
 -- ----------------------------
--- Records of project_user_assigment
+-- Records of project_user_assignment
 -- ----------------------------
-INSERT INTO `project_user_assigment` VALUES ('1', '1');
-INSERT INTO `project_user_assigment` VALUES ('1', '2');
-INSERT INTO `project_user_assigment` VALUES ('2', '3');
-INSERT INTO `project_user_assigment` VALUES ('2', '4');
-INSERT INTO `project_user_assigment` VALUES ('3', '1');
-INSERT INTO `project_user_assigment` VALUES ('4', '1');
-INSERT INTO `project_user_assigment` VALUES ('4', '2');
-INSERT INTO `project_user_assigment` VALUES ('4', '3');
-INSERT INTO `project_user_assigment` VALUES ('4', '4');
+INSERT INTO `project_user_assignment` VALUES ('1', '1');
+INSERT INTO `project_user_assignment` VALUES ('1', '2');
+INSERT INTO `project_user_assignment` VALUES ('2', '3');
+INSERT INTO `project_user_assignment` VALUES ('2', '4');
+INSERT INTO `project_user_assignment` VALUES ('3', '1');
+INSERT INTO `project_user_assignment` VALUES ('4', '1');
+INSERT INTO `project_user_assignment` VALUES ('4', '2');
+INSERT INTO `project_user_assignment` VALUES ('4', '3');
+INSERT INTO `project_user_assignment` VALUES ('4', '4');
 
 -- ----------------------------
 -- Records of user

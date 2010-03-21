@@ -17,13 +17,13 @@ import java.sql.ResultSet;
 
 public class UserDal extends DataAccessLayer implements Fillable<UserCollection>, Getable<User> {
 
-    private UserToProjectAssignmentDal utpaDal;
     private Context currentContext;
+    private ConnectionInfo ci;
 
     public UserDal(ConnectionInfo ci, Context context) {
         super(ci);
-        utpaDal = new UserToProjectAssignmentDal(ci, context);
         this.currentContext = context;
+        this.ci = ci;
     }
 
     @Override
@@ -51,20 +51,26 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
         vanillaSql.append("**/");
 
         SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
-        return FillProjectCollection(uc, sb.compileSql());
+        return FillUserCollection(uc, sb.compileSql());
     }
 
-    private int FillProjectCollection(UserCollection uc, String sql) {
+    private int FillUserCollection(UserCollection uc, String sql) {
         try {
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
-                User u = new User(rs.getInt("user_id"));
-                u.setFirstName(rs.getString("first_name"));
-                u.setLastName(rs.getString("last_name"));
-                u.setLogin(rs.getString("login"));
-                u.setPassword(rs.getString("password"));
-                u.setAssignedProjects(getAssignedProjectCollection(u.getId()));
-                u.registerWithContext(currentContext);
+                User u = null;
+                int userId = rs.getInt("user_id");
+                if (currentContext.hasUser(userId)) {
+                    u = currentContext.getUser(userId);
+                } else {
+                    u = new User(userId);
+                    u.registerWithContext(currentContext);
+                    u.setFirstName(rs.getString("first_name"));
+                    u.setLastName(rs.getString("last_name"));
+                    u.setLogin(rs.getString("login"));
+                    u.setPassword(rs.getString("password"));
+                    u.setAssignedProjects(getAssignedProjectCollection(userId));
+                }
                 if (!uc.add(u)) {
                     LoggingInterface.getLogger().logWarning("User (user_id = %d) could not be added to the collection!", u.getId());
                 }
@@ -77,6 +83,7 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
 
     private ProjectCollection getAssignedProjectCollection(int userId) throws DalException {
         ProjectCollection pc = new ProjectCollection(currentContext);
+        UserToProjectAssignmentDal utpaDal = new UserToProjectAssignmentDal(ci, currentContext);
         utpaDal.Fill(pc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
         return pc;
     }
