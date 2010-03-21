@@ -49,9 +49,6 @@ public class DatabaseConnection {
 
     private void connect() throws Exception {
         try {
-            /*String u = ci.getUser();
-            String p = ci.getPassword();
-            String s = ci.compileConnectionString();*/
             con = DriverManager.getConnection(ci.compileConnectionString(), ci.getUser(), ci.getPassword());
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);

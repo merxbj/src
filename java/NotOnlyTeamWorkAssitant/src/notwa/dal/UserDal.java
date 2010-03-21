@@ -18,10 +18,12 @@ import java.sql.ResultSet;
 public class UserDal extends DataAccessLayer implements Fillable<UserCollection>, Getable<User> {
 
     private UserToProjectAssignmentDal utpaDal;
+    private Context currentContext;
 
-    public UserDal(ConnectionInfo ci) {
+    public UserDal(ConnectionInfo ci, Context context) {
         super(ci);
-        utpaDal = new UserToProjectAssignmentDal(ci);
+        utpaDal = new UserToProjectAssignmentDal(ci, context);
+        this.currentContext = context;
     }
 
     @Override
@@ -61,8 +63,8 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
                 u.setLastName(rs.getString("last_name"));
                 u.setLogin(rs.getString("login"));
                 u.setPassword(rs.getString("password"));
-                u.setAssignedProjects(getAssignedProjectCollection(u.getId(), uc.getCurrentContext()));
-                u.registerWithContext(uc.getCurrentContext());
+                u.setAssignedProjects(getAssignedProjectCollection(u.getId()));
+                u.registerWithContext(currentContext);
                 if (!uc.add(u)) {
                     LoggingInterface.getLogger().logWarning("User (user_id = %d) could not be added to the collection!", u.getId());
                 }
@@ -73,19 +75,20 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
         return uc.size();
     }
 
-    private ProjectCollection getAssignedProjectCollection(int userId, Context context) throws DalException {
-        ProjectCollection pc = new ProjectCollection();
-        pc.setCurrentContext(context);
+    private ProjectCollection getAssignedProjectCollection(int userId) throws DalException {
+        ProjectCollection pc = new ProjectCollection(currentContext);
         utpaDal.Fill(pc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
         return pc;
     }
 
     @Override
     public User get(ParameterCollection primaryKey) throws DalException {
-        UserCollection uc = new UserCollection();
+        UserCollection uc = new UserCollection(currentContext);
         int rows = this.Fill(uc, primaryKey);
         if (rows > 1) {
             throw new DalException("Supplied parameters is not a primary key!");
+        } else if (rows == 0) {
+            return null;
         }
         return uc.get(0);
     }

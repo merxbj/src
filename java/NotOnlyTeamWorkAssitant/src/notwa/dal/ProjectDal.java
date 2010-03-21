@@ -18,10 +18,12 @@ import java.sql.ResultSet;
 public class ProjectDal extends DataAccessLayer implements Fillable<ProjectCollection>, Getable<Project> {
 
     private ProjectToUserAssignmentDal ptuaDal;
+    private Context currentContext;
 
-    public ProjectDal(ConnectionInfo ci) {
+    public ProjectDal(ConnectionInfo ci, Context context) {
         super(ci);
-        ptuaDal = new ProjectToUserAssignmentDal(ci);
+        ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
+        this.currentContext = context;
     }
 
     @Override
@@ -51,9 +53,9 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
                 Project p = new Project(rs.getInt("project_id"));
-                p.setProjectName(rs.getString("project_name"));
-                p.setAssignedUsers(getAssignedUserCollection(p.getId(), col.getCurrentContext()));
-                p.registerWithContext(col.getCurrentContext());
+                p.setProjectName(rs.getString("name"));
+                p.setAssignedUsers(getAssignedUserCollection(p.getId()));
+                p.registerWithContext(currentContext);
                 if (!col.add(p)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", p.getId());
                 }
@@ -64,19 +66,20 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
         return col.size();
     }
 
-    private UserCollection getAssignedUserCollection(int projectId, Context context) throws DalException {
-        UserCollection uc = new UserCollection();
-        uc.setCurrentContext(context);
+    private UserCollection getAssignedUserCollection(int projectId) throws DalException {
+        UserCollection uc = new UserCollection(currentContext);
         ptuaDal.Fill(uc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
         return uc;
     }
 
     @Override
     public Project get(ParameterCollection primaryKey) throws DalException {
-        ProjectCollection pc = new ProjectCollection();
+        ProjectCollection pc = new ProjectCollection(currentContext);
         int rows = this.Fill(pc, primaryKey);
         if (rows > 1) {
             throw new DalException("Supplied parameters is not a primary key!");
+        } else if (rows == 0) {
+            return null;
         }
         return pc.get(0);
     }

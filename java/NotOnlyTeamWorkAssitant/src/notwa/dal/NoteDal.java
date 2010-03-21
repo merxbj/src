@@ -4,16 +4,26 @@ import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.common.ConnectionInfo;
 import notwa.sql.ParameterCollection;
+import notwa.sql.Parameter;
+import notwa.sql.Parameters;
+import notwa.sql.Sql;
 import notwa.sql.SqlBuilder;
 import notwa.common.LoggingInterface;
 import notwa.exception.DalException;
+import notwa.wom.Context;
+import notwa.wom.User;
 
 import java.sql.ResultSet;
 
 public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>, Getable<Note> {
 
-    public NoteDal(ConnectionInfo ci) {
+    private Context currentContext;
+    private ConnectionInfo ci;
+
+    public NoteDal(ConnectionInfo ci, Context context) {
         super(ci);
+        this.currentContext = context;
+        this.ci = ci;
     }
 
     @Override
@@ -46,9 +56,10 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
         try {
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
-                
                 Note n = new Note(rs.getInt("note_id"), rs.getInt("work_item_id"));
-                n.setAuthor(null);
+                n.setAuthor(getContextualUser(rs.getInt("author_user_id")));
+                n.setNoteText(rs.getString("note"));
+                n.registerWithContext(currentContext);
                 if (!nc.add(n)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", n.getNoteText());
                 }
@@ -61,11 +72,23 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
 
     @Override
     public Note get(ParameterCollection primaryKey) throws DalException {
-        NoteCollection nc = new NoteCollection();
+        NoteCollection nc = new NoteCollection(currentContext);
         int rows = this.Fill(nc, primaryKey);
         if (rows > 1) {
             throw new DalException("Supplied parameters is not a primary key!");
+        } else if (rows == 0) {
+            return null;
         }
         return nc.get(0);
+    }
+
+     private User getContextualUser(int userId) throws DalException {
+        if (currentContext.hasUser(userId)) {
+            return currentContext.getUser(userId);
+        } else {
+            Getable<User> userDal = new UserDal(ci, currentContext);
+            User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
+            return user;
+        }
     }
 }

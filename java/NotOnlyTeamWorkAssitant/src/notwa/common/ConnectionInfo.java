@@ -78,7 +78,7 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
     }
 
     public String compileConnectionString() {
-        String cs = String.format("jdbc:mysql://%s:%s/%s", 
+        String cs = String.format("jdbc:mysql://%s:%s/%s?zeroDateTimeBehavior=convertToNull",
                 this.host,
                 this.port,
                 this.dbname);

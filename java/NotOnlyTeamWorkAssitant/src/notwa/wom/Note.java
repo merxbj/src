@@ -3,7 +3,6 @@ package notwa.wom;
 public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
     private NotePrimaryKey noteId;
-    private WorkItem workItem;
     private String text;
     private User author;
     
@@ -16,14 +15,13 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
         Note clone = (Note) super.clone();
 
         clone.noteId = (NotePrimaryKey) this.noteId.clone(); // deep copy of this
-        clone.workItem = this.workItem;
         clone.text = this.text;
         clone.author = this.author;
         return clone;
     }
     
     public WorkItem getWorkItem() {
-        return this.workItem;
+        return this.currentContext.getWorkItem(noteId.workItemId);
     }
     
     public String getNoteText() {
@@ -42,10 +40,6 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
         return this.author;
     }
     
-    public void setWorkItem(WorkItem wi) {
-        this.workItem = wi;
-    }
-    
     public void setNoteText(String noteText) {
         this.text = noteText;
     }
@@ -57,8 +51,8 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     @Override
     public String toString() {
         String returnText = new String(    this.noteId +separator );
-        if(this.workItem != null) {
-            returnText += this.workItem.getSubject() +separator; }
+        if(this.getWorkItem() != null) {
+            returnText += this.getWorkItem().getSubject() +separator; }
 
             returnText += this.text +separator;
             

@@ -12,16 +12,18 @@ public class WorkItemDalTest {
     ParameterCollection pc;
     Timestamp ts;
     ConnectionInfo ci;
+    Context context;
 
     public WorkItemDalTest() {
         ci = initConnectionInfo();
+        context = ContextManager.getInstance().newContext();
         wic = new WorkItemCollection();
-        wid = new WorkItemDal(ci);
+        wid = new WorkItemDal(ci, context);
         pc = new ParameterCollection(new Parameter [] {new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY)});
     }
     
     public void test() {
-        wic.setCurrentContext(ContextManager.getInstance().newContext());
+        wic.setCurrentContext(context);
         wid.Fill(wic, pc);
     }
 

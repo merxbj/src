@@ -19,13 +19,15 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     private Fillable<NoteCollection> noteDal;
     private NoteCollection nc;
     private ConnectionInfo ci;
+    private Context currentContext;
     
-    public WorkItemDal(ConnectionInfo ci) {
+    public WorkItemDal(ConnectionInfo ci, Context context) {
         super(ci);
         
-        this.noteDal = new NoteDal(ci);
-        this.nc = new NoteCollection();
+        this.noteDal = new NoteDal(ci, context);
+        this.nc = new NoteCollection(context);
         this.ci = ci;
+        this.currentContext = context;
     }
 
     @Override
@@ -67,18 +69,18 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
                 WorkItem wi = new WorkItem(rs.getInt("work_item_id"));
-                nc.setCurrentContext(wic.getCurrentContext());
                 noteDal.Fill(nc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, wi.getId(), Sql.Condition.EQUALTY)}));
                 wi.setSubject(rs.getString("subject"));
                 wi.setDescription(rs.getString("description"));
                 wi.setPriority(WorkItemPriority.lookup(rs.getInt("working_priority")));
                 wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
-                wi.setExpectedTimestamp(rs.getDate("expected_timestamp"));
-                wi.setLastModifiedTimestamp(rs.getDate("last_modified_timestamp"));
-                wi.setAssignedUser(getContextualUser(rs.getInt("assigned_user_id"), wic.getCurrentContext()));
-                wi.setProject(getContextualProject(rs.getInt("project_id"), wic.getCurrentContext()));
+                wi.setExpectedTimestamp(rs.getTimestamp("expected_timestamp"));
+                wi.setLastModifiedTimestamp(rs.getTimestamp("last_modified_timestamp"));
+                wi.setAssignedUser(getContextualUser(rs.getInt("assigned_user_id")));
+                wi.setProject(getContextualProject(rs.getInt("project_id")));
+                wi.setParentWorkItem(getContextualWorkItem(rs.getInt("parent_work_item_id")));
                 wi.setNoteCollection(nc);
-                wi.registerWithContext(wic.getCurrentContext());
+                wi.registerWithContext(currentContext);
 
                 if (!wic.add(wi)) {
                     LoggingInterface.getLogger().logWarning("Work Item (work_item_id = %d) could not be added to the collection!", wi.getId());
@@ -90,34 +92,43 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
         return wic.size();
     }
 
-    private User getContextualUser(int userId, Context context) throws DalException {
-        if (context.hasUser(userId)) {
-            return context.getUser(userId);
+    private WorkItem getContextualWorkItem(int workItemId) throws DalException {
+        if (currentContext.hasWorkItem(workItemId)) {
+            return currentContext.getWorkItem(workItemId);
         } else {
-            Getable<User> userDal = new UserDal(ci);
+            WorkItem wi = this.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.WorkItem.ID, workItemId, Sql.Condition.EQUALTY)}));
+            return wi;
+        }
+    }
+
+    private User getContextualUser(int userId) throws DalException {
+        if (currentContext.hasUser(userId)) {
+            return currentContext.getUser(userId);
+        } else {
+            Getable<User> userDal = new UserDal(ci, currentContext);
             User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
-            user.registerWithContext(context);
             return user;
         }
     }
 
-    private Project getContextualProject(int projectId, Context context) throws DalException {
-        if (context.hasProject(projectId)) {
-            return context.getProject(projectId);
+    private Project getContextualProject(int projectId) throws DalException {
+        if (currentContext.hasProject(projectId)) {
+            return currentContext.getProject(projectId);
         } else {
-            Getable<Project> projectDal = new ProjectDal(ci);
+            Getable<Project> projectDal = new ProjectDal(ci, currentContext);
             Project project = projectDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
-            project.registerWithContext(context);
             return project;
         }
     }
 
     @Override
     public WorkItem get(ParameterCollection primaryKey) throws DalException {
-        WorkItemCollection wic = new WorkItemCollection();
+        WorkItemCollection wic = new WorkItemCollection(currentContext);
         int rows = this.Fill(wic, primaryKey);
         if (rows > 1) {
             throw new DalException("Supplied parameters is not a primary key!");
+        } else if (rows == 0) {
+            return null;
         }
         return wic.get(0);
     }

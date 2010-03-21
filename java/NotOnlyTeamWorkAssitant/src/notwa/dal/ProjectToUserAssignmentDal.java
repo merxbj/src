@@ -17,10 +17,12 @@ import java.sql.ResultSet;
 public class ProjectToUserAssignmentDal extends DataAccessLayer implements Fillable<UserCollection> {
 
     private ConnectionInfo ci;
+    private Context currentContext;
 
-    public ProjectToUserAssignmentDal(ConnectionInfo ci) {
+    public ProjectToUserAssignmentDal(ConnectionInfo ci, Context context) {
         super(ci);
         this.ci = ci;
+        this.currentContext = context;
     }
 
     @Override
@@ -33,12 +35,12 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
     public int Fill(UserCollection uc, ParameterCollection pc) {
         StringBuilder vanillaSql = new StringBuilder();
 
-        vanillaSql.append("SELECT   pua.user_id AS user_id");
+        vanillaSql.append("SELECT   pua.user_id AS user_id ");
         vanillaSql.append("FROM Project_User_Assignment pua ");
         vanillaSql.append("JOIN Project p ");
         vanillaSql.append("ON p.project_id = pua.project_id ");
         vanillaSql.append("/** STATEMENT=WHERE;RELATION=AND;");
-        vanillaSql.append("        {column=project_id;parameter=ProjectId;}");
+        vanillaSql.append("        {column=pua.project_id;parameter=ProjectId;}");
         vanillaSql.append("**/");
 
         SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
@@ -49,7 +51,7 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
         try {
             ResultSet rs = dc.executeQuery(sql);
             while (rs.next()) {
-                User u = getContextualUser(rs.getInt("user_id"), uc.getCurrentContext());
+                User u = getContextualUser(rs.getInt("user_id"));
                 if (!uc.add(u)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", u.getId());
                 }
@@ -60,13 +62,12 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
         return uc.size();
     }
 
-    private User getContextualUser(int userId, Context context) throws DalException {
-        if (context.hasUser(userId)) {
-            return context.getUser(userId);
+    private User getContextualUser(int userId) throws DalException {
+        if (currentContext.hasUser(userId)) {
+            return currentContext.getUser(userId);
         } else {
-            Getable<User> userDal = new UserDal(ci);
+            Getable<User> userDal = new UserDal(ci, currentContext);
             User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
-            user.registerWithContext(context);
             return user;
         }
     }
