@@ -1,20 +1,15 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.TableView;
 
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
@@ -27,15 +22,14 @@ public class WorkItemTable extends TabContent{
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private static JTable witTable;
     private TblModel witTableModel;
-    private static WorkItemCollection wic;
-    public static TableRowSorter sorter;
+    public static TableRowSorter<TblModel> sorter;
 
     public WorkItemTable(WorkItemCollection wic) {
-        this.wic = wic;
         this.setLayout(new BorderLayout());
         
         witTableModel = new TblModel(wic, tableHeaders);
-        witTable = new JTable(witTableModel);
+        witTable = new JTable();
+        witTable.setModel(witTableModel);
         witTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         sorter = new TableRowSorter<TblModel>(witTableModel);
@@ -64,7 +58,6 @@ public class WorkItemTable extends TabContent{
                 .getColumn(5)
                 .setCellEditor( new DefaultCellEditor(
                                 this.loadWorkItemStates()));
-        
         /*
          * Hide last column containing whole WorkItem for WorkItemDetail
          */
@@ -116,6 +109,8 @@ public class WorkItemTable extends TabContent{
     }
     
     public static WorkItem getSelected() {
-        return (WorkItem) witTable.getModel().getValueAt(witTable.getSelectedRow(), 6);
+        return (WorkItem) witTable  .getModel()
+                                    .getValueAt(witTable.convertRowIndexToModel(
+                                                witTable.getSelectedRow()), 6);
     }
 }

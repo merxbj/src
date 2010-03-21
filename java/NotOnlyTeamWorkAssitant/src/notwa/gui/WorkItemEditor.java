@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,7 +17,7 @@ import notwa.wom.ProjectCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
  
-public class WorkItemEditor extends JFrame implements ActionListener {
+public class WorkItemEditor extends JDialog implements ActionListener {
     private JComboBox existingProjects,priorities,states;
     private JTextField newProjectName = new JTextField();
     private JTextField subject = new JTextField();
@@ -67,6 +66,7 @@ public class WorkItemEditor extends JFrame implements ActionListener {
         this.add(this.initButtons());
         
         this.setLocationRelativeTo(null);
+        this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setVisible(true);
     }
     

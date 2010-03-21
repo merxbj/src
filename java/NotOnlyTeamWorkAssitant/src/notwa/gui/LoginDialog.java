@@ -11,7 +11,7 @@ import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -23,7 +23,7 @@ import notwa.common.LoggingInterface;
 import notwa.exception.SignInException;
 import notwa.security.Security;
 
-public class LoginDialog extends JFrame implements ActionListener {
+public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton;
     private JComboBox jcb;
     private JTextField login;
@@ -37,6 +37,7 @@ public class LoginDialog extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Sign-in");
         this.setSize(500,200);
+        this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setLocationRelativeTo(null);
 
         this.add(this.errorField, BorderLayout.PAGE_START);

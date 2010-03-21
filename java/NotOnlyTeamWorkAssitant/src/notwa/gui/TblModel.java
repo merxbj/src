@@ -2,16 +2,15 @@ package notwa.gui;
 
 import javax.swing.table.AbstractTableModel;
 
-import notwa.wom.ContextManager;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 class TblModel extends AbstractTableModel {
-    private static WorkItemCollection wic;
+    private WorkItemCollection wic;
     private String[] tableHeader;
-
+   
     public TblModel(WorkItemCollection wic, String[] tableHeader) {
         this.wic = wic;
         this.tableHeader = tableHeader;
@@ -65,6 +64,10 @@ class TblModel extends AbstractTableModel {
             return getRecord(rowIndex);
         }
     }
+    
+    public WorkItem getRow(int rowIndex) {
+        return getRecord(rowIndex);
+    }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         // TODO: can be edited only by owner of wit and so on ...
@@ -73,7 +76,7 @@ class TblModel extends AbstractTableModel {
         return true;
     }
 
-    public Class getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex) {
         if (wic == null || wic.size() == 0) {
             return Object.class;
         }
