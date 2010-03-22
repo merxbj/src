@@ -2,8 +2,6 @@ package notwa.gui;
 
 import java.awt.BorderLayout;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -11,27 +9,18 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import notwa.common.ConnectionInfo;
-import notwa.dal.UserDal;
-import notwa.wom.ContextManager;
-import notwa.wom.User;
-import notwa.wom.UserCollection;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
-import notwa.wom.WorkItemPriority;
-import notwa.wom.WorkItemStatus;
 
-public class WorkItemTable extends TabContent{
+public class WorkItemTable extends TabContent {
     private String[] tableHeaders = {
             "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private static JTable witTable;
     private TblModel witTableModel;
-    private ConnectionInfo ci;
     public static TableRowSorter<TblModel> sorter;
 
-    public WorkItemTable(WorkItemCollection wic, ConnectionInfo ci) {
-        this.ci = ci;
+    public WorkItemTable(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
         
         witTableModel = new TblModel(wic, tableHeaders);
@@ -51,20 +40,6 @@ public class WorkItemTable extends TabContent{
         
         this.resizeAndColorizeTable();
 
-        witTable.getColumnModel()
-                .getColumn(3)
-                .setCellEditor( new DefaultCellEditor(
-                                this.loadWorkItemPriorties()));
-        
-        witTable.getColumnModel()
-                .getColumn(4)
-                .setCellEditor( new DefaultCellEditor(
-                                this.loadProjectUsers()));
-                
-        witTable.getColumnModel()
-                .getColumn(5)
-                .setCellEditor( new DefaultCellEditor(
-                                this.loadWorkItemStates()));
         /*
          * Hide last column containing whole WorkItem for WorkItemDetail
          */
@@ -73,40 +48,6 @@ public class WorkItemTable extends TabContent{
         JScrollPane jsp = new JScrollPane(witTable);
         
         this.add(jsp, BorderLayout.CENTER);
-    }
-    
-    private JComboBox loadWorkItemStates() {
-        // TODO change the way of adding items to JComboBoxItemCreator
-        JComboBox status = new JComboBox();
-        for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            status.addItem(WorkItemStatus.values()[s].name());
-        }
-        
-        return status;
-    }
-    
-    private JComboBox loadWorkItemPriorties() {
-        JComboBox priority = new JComboBox();
-        for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priority.addItem(WorkItemPriority.values()[p]);
-        }
-
-        return priority;
-    }
-    
-    private JComboBox loadProjectUsers() {
-        JComboBox assignedUsers = new JComboBox();
-        
-        UserCollection uc = new UserCollection();
-        uc.setCurrentContext(ContextManager.getInstance().newContext());
-        UserDal ud = new UserDal(ci, uc.getCurrentContext());
-        ud.Fill(uc);
-        
-        for (User user : uc) {
-            assignedUsers.addItem(new JComboBoxItemCreator(user,user.getLogin()));
-        }
-        
-        return assignedUsers;
     }
     
     private void resizeAndColorizeTable() {

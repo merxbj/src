@@ -29,9 +29,7 @@ class TblModel extends AbstractTableModel {
     }
 
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        if (tableHeader[columnIndex].equals("Priority")) { // TODO add setter
-            getRecord(rowIndex).setPriority((WorkItemPriority) value);
-        }
+        // nothing is editable
         super.fireTableCellUpdated(rowIndex, columnIndex);
     }
     
@@ -68,10 +66,7 @@ class TblModel extends AbstractTableModel {
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        // TODO: can be edited only by owner of wit and so on ...
-        if (columnIndex < 3) // this will be more accurate
-            return false;
-        return true;
+        return false;
     }
 
     public Class<?> getColumnClass(int columnIndex) {

@@ -28,7 +28,7 @@ public class TabContent extends JComponent implements ActionListener {
         this.setLayout(new BorderLayout());
         
         JPanel topPanel = new JPanel(new BorderLayout());
-        WorkItemTable wiTable = new WorkItemTable(wic, ci);
+        WorkItemTable wiTable = new WorkItemTable(wic);
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
 
@@ -104,5 +104,9 @@ public class TabContent extends JComponent implements ActionListener {
             WorkItemEditor aewitd = new WorkItemEditor();
             aewitd.initEditDialog();
         }
+    }
+    
+    public ConnectionInfo getCurrentConnectionInfo() {
+        return ci;
     }
 }
