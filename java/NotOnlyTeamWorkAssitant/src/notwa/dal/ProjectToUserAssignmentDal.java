@@ -1,27 +1,22 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.sql.ParameterSet;
 import notwa.wom.UserCollection;
 import notwa.wom.User;
 import notwa.sql.SqlBuilder;
 import notwa.common.LoggingInterface;
 import notwa.wom.Context;
 import notwa.sql.Parameters;
-import notwa.sql.Parameter;
+import notwa.sql.ParameterSet;
 import notwa.sql.Sql;
-import notwa.exception.DalException;
 
 import java.sql.ResultSet;
+import notwa.sql.Parameter;
 
 public class ProjectToUserAssignmentDal extends DataAccessLayer implements Fillable<UserCollection> {
 
-    private ConnectionInfo ci;
-    private Context currentContext;
-
     public ProjectToUserAssignmentDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.ci = ci;
+        super(ci, context);
         this.currentContext = context;
     }
 
@@ -49,9 +44,10 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
 
     private int FillUserCollection(UserCollection uc, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            Getable<User> ud = new UserDal(ci, currentContext);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
-                User u = getContextualUser(rs.getInt("user_id"));
+                User u = ud.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("user_id"), Sql.Condition.EQUALTY)));
                 if (!uc.add(u)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", u.getId());
                 }
@@ -61,16 +57,4 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
         }
         return uc.size();
     }
-
-    private User getContextualUser(int userId) throws DalException {
-        if (currentContext.hasUser(userId)) {
-            return currentContext.getUser(userId);
-        } else {
-            Getable<User> userDal = new UserDal(ci, currentContext);
-            User user = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
-            return user;
-        }
-    }
-
-
 }

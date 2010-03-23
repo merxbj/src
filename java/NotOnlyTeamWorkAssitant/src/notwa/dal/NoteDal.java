@@ -18,13 +18,8 @@ import java.sql.ResultSet;
 
 public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>, Getable<Note> {
 
-    private Context currentContext;
-    private ConnectionInfo ci;
-
     public NoteDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.currentContext = context;
-        this.ci = ci;
+        super(ci, context);
     }
 
     @Override
@@ -55,7 +50,7 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
 
     private int FillProjectCollection(NoteCollection nc, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
                 Note n = null;
                 NotePrimaryKey npk = new NotePrimaryKey(rs.getInt("note_id"), rs.getInt("work_item_id"));
@@ -63,7 +58,7 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
                     n = currentContext.getNote(npk);
                 } else {
                     Getable<User> userDal = new UserDal(ci, currentContext);
-                    User author = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)}));
+                    User author = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)));
 
                     n = new Note(npk);
                     n.registerWithContext(currentContext);
@@ -82,13 +77,29 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
 
     @Override
     public Note get(ParameterSet primaryKey) throws DalException {
-        NoteCollection nc = new NoteCollection(currentContext);
-        int rows = this.Fill(nc, primaryKey);
-        if (rows > 1) {
-            throw new DalException("Supplied parameters is not a primary key!");
-        } else if (rows == 0) {
-            return null;
+        Integer noteId = null;
+        Integer workItemId = null;
+        for (Parameter p : primaryKey) {
+            if (p.getName().equals(Parameters.Note.ID)) {
+                noteId = (Integer) p.getValue();
+            } else if (p.getName().equals(Parameters.Note.WORK_ITEM_ID)) {
+                workItemId = (Integer) p.getValue();
+            }
         }
-        return nc.get(0);
+        if (noteId != null && workItemId != null) {
+            NotePrimaryKey npk = new NotePrimaryKey(noteId, workItemId);
+            if (currentContext.hasNote(npk)) {
+                return currentContext.getNote(npk);
+            } else {
+                NoteCollection nc = new NoteCollection(currentContext);
+                int rows = this.Fill(nc, primaryKey);
+                if (rows == 1) {
+                    return nc.get(0);
+                } else if (rows == 0) {
+                    return null;
+                }
+            }
+        }
+        throw new DalException("Supplied parameters are not a primary key!");
     }
 }

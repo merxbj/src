@@ -10,19 +10,13 @@ import notwa.wom.Context;
 import notwa.sql.Parameters;
 import notwa.sql.Parameter;
 import notwa.sql.Sql;
-import notwa.exception.DalException;
 
 import java.sql.ResultSet;
 
 public class UserToProjectAssignmentDal extends DataAccessLayer implements Fillable<ProjectCollection> {
 
-    private ConnectionInfo ci;
-    private Context currentContext;
-
     public UserToProjectAssignmentDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.ci = ci;
-        this.currentContext = context;
+        super(ci, context);
     }
 
     @Override
@@ -49,9 +43,10 @@ public class UserToProjectAssignmentDal extends DataAccessLayer implements Filla
 
     private int FillProjectCollection(ProjectCollection col, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            Getable<Project> projectDal = new ProjectDal(ci, currentContext);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
-                Project p = getContextualProject(rs.getInt("project_id"));
+                Project p = projectDal.get(new ParameterSet(new Parameter(Parameters.Project.ID, rs.getInt("pua.project_id"), Sql.Condition.EQUALTY)));
                 if (!col.add(p)) {
                     LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", p.getId());
                 }
@@ -61,16 +56,4 @@ public class UserToProjectAssignmentDal extends DataAccessLayer implements Filla
         }
         return col.size();
     }
-
-    private Project getContextualProject(int projectId) throws DalException {
-        if (currentContext.hasProject(projectId)) {
-            return currentContext.getProject(projectId);
-        } else {
-            Getable<Project> projectDal = new ProjectDal(ci, currentContext);
-            Project project = projectDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
-            return project;
-        }
-    }
-
-
 }

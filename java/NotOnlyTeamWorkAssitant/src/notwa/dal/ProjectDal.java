@@ -17,13 +17,8 @@ import java.sql.ResultSet;
 
 public class ProjectDal extends DataAccessLayer implements Fillable<ProjectCollection>, Getable<Project> {
 
-    private Context currentContext;
-    private ConnectionInfo ci;
-
     public ProjectDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.currentContext = context;
-        this.ci = ci;
+        super(ci, context);
     }
 
     @Override
@@ -50,7 +45,7 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
 
     private int FillProjectCollection(ProjectCollection col, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
                 Project p = null;
                 int projectId = rs.getInt("project_id");
@@ -76,19 +71,27 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
     private UserCollection getAssignedUserCollection(int projectId) throws DalException {
         UserCollection uc = new UserCollection(currentContext);
         ProjectToUserAssignmentDal ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
-        ptuaDal.Fill(uc, new ParameterSet(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
+        ptuaDal.Fill(uc, new ParameterSet(new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)));
         return uc;
     }
 
     @Override
     public Project get(ParameterSet primaryKey) throws DalException {
-        ProjectCollection pc = new ProjectCollection(currentContext);
-        int rows = this.Fill(pc, primaryKey);
-        if (rows > 1) {
-            throw new DalException("Supplied parameters is not a primary key!");
-        } else if (rows == 0) {
-            return null;
+        Parameter p = primaryKey.first();
+        if (p.getName().equals(Parameters.Project.ID)) {
+            int projectId = (Integer) p.getValue();
+            if (currentContext.hasProject(projectId)) {
+                return currentContext.getProject(projectId);
+            } else {
+                ProjectCollection pc = new ProjectCollection(currentContext);
+                int rows = this.Fill(pc, primaryKey);
+                if (rows == 1) {
+                    return pc.get(0);
+                } else if (rows == 0) {
+                    return null;
+                }
+            }
         }
-        return pc.get(0);
+        throw new DalException("Supplied parameters are not a primary key!");
     }
 }

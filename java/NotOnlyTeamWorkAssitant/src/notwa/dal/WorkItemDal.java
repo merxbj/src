@@ -12,17 +12,10 @@ import notwa.common.LoggingInterface;
 import notwa.sql.SqlBuilder;
 import java.sql.ResultSet;
 
-
-
 public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
-
-    private ConnectionInfo ci;
-    private Context currentContext;
     
     public WorkItemDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.ci = ci;
-        this.currentContext = context;
+        super(ci, context);
     }
 
     @Override
@@ -61,7 +54,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     
     private int FillWorkItemCollection(WorkItemCollection wic, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
                 WorkItem wi = null;
                 int workItemId = rs.getInt("work_item_id");
@@ -70,13 +63,13 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                 } else {
                     Fillable<NoteCollection> noteDal = new NoteDal(ci, currentContext);
                     NoteCollection nc = new NoteCollection(currentContext);
-                    noteDal.Fill(nc, new ParameterSet(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)}));
+                    noteDal.Fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)));
 
                     Getable<Project> projectDal = new ProjectDal(ci, currentContext);
-                    Project project = projectDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)}));
+                    Project project = projectDal.get(new ParameterSet(new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)));
 
                     Getable<User> userDal = new UserDal(ci, currentContext);
-                    User user = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)}));
+                    User user = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)));
 
                     wi = new WorkItem(workItemId);
                     wi.registerWithContext(currentContext);
@@ -88,7 +81,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                     wi.setLastModifiedTimestamp(rs.getTimestamp("last_modified_timestamp"));
                     wi.setAssignedUser(user);
                     wi.setProject(project);
-                    wi.setParentWorkItem(get(new ParameterSet(new Parameter[] {new Parameter(Parameters.WorkItem.ID, rs.getInt("parent_work_item_id"), Sql.Condition.EQUALTY)})));
+                    wi.setParentWorkItem(get(new ParameterSet(new Parameter(Parameters.WorkItem.ID, rs.getInt("parent_work_item_id"), Sql.Condition.EQUALTY))));
                     wi.setNoteCollection(nc);
                 }
 
@@ -104,13 +97,22 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 
     @Override
     public WorkItem get(ParameterSet primaryKey) throws DalException {
-        WorkItemCollection wic = new WorkItemCollection(currentContext);
-        int rows = this.Fill(wic, primaryKey);
-        if (rows > 1) {
-            throw new DalException("Supplied parameters is not a primary key!");
-        } else if (rows == 0) {
-            return null;
+        Parameter p = primaryKey.first();
+        if (p.getName().equals(Parameters.WorkItem.ID)) {
+            int workItemId = (Integer) p.getValue();
+            if (currentContext.hasWorkItem(workItemId)) {
+                return currentContext.getWorkItem(workItemId);
+            } else {
+                WorkItemCollection wic = new WorkItemCollection(currentContext);
+                int rows = this.Fill(wic, primaryKey);
+                if (rows == 1) {
+                    return wic.get(0);
+                } else if (rows == 0) {
+                    return null;
+                }
+            }
         }
-        return wic.get(0);
+
+        throw new DalException("Supplied parameters are not a primary key!");
     }
 }

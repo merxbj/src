@@ -17,13 +17,8 @@ import java.sql.ResultSet;
 
 public class UserDal extends DataAccessLayer implements Fillable<UserCollection>, Getable<User> {
 
-    private Context currentContext;
-    private ConnectionInfo ci;
-
     public UserDal(ConnectionInfo ci, Context context) {
-        super(ci);
-        this.currentContext = context;
-        this.ci = ci;
+        super(ci, context);
     }
 
     @Override
@@ -56,7 +51,7 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
 
     private int FillUserCollection(UserCollection uc, String sql) {
         try {
-            ResultSet rs = dc.executeQuery(sql);
+            ResultSet rs = getConnection().executeQuery(sql);
             while (rs.next()) {
                 User u = null;
                 int userId = rs.getInt("user_id");
@@ -84,19 +79,37 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
     private ProjectCollection getAssignedProjectCollection(int userId) throws DalException {
         ProjectCollection pc = new ProjectCollection(currentContext);
         UserToProjectAssignmentDal utpaDal = new UserToProjectAssignmentDal(ci, currentContext);
-        utpaDal.Fill(pc, new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
+        utpaDal.Fill(pc, new ParameterSet(new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)));
         return pc;
     }
 
     @Override
     public User get(ParameterSet primaryKey) throws DalException {
+        Parameter p = primaryKey.first();
+        if (p.getName().equals(Parameters.User.ID)) {
+            int userId = (Integer) p.getValue();
+            if (currentContext.hasUser(userId)) {
+                return currentContext.getUser(userId);
+            } else {
+                UserCollection uc = new UserCollection(currentContext);
+                int rows = this.Fill(uc, primaryKey);
+                if (rows == 1) {
+                    return uc.get(0);
+                } else if (rows == 0) {
+                    return null;
+                }
+            }
+        }
+        throw new DalException("Supplied parameters are not a primary key!");
+    }
+
+    public User get(String login) {
         UserCollection uc = new UserCollection(currentContext);
-        int rows = this.Fill(uc, primaryKey);
-        if (rows > 1) {
-            throw new DalException("Supplied parameters is not a primary key!");
-        } else if (rows == 0) {
+        int rows = this.Fill(uc, new ParameterSet(new Parameter(Parameters.User.LOGIN, login, Sql.Condition.EQUALTY)));
+        if (rows == 1) {
+            return uc.get(0);
+        } else {
             return null;
         }
-        return uc.get(0);
     }
 }

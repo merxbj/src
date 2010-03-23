@@ -19,7 +19,7 @@ public class WorkItemDalTest {
         context = ContextManager.getInstance().newContext();
         wic = new WorkItemCollection();
         wid = new WorkItemDal(ci, context);
-        pc = new ParameterSet(new Parameter [] {new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY)});
+        pc = new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY));
     }
     
     public void test() {
