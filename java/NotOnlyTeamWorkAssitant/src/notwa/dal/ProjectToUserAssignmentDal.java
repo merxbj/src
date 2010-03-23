@@ -1,7 +1,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.sql.ParameterCollection;
+import notwa.sql.ParameterSet;
 import notwa.wom.UserCollection;
 import notwa.wom.User;
 import notwa.sql.SqlBuilder;
@@ -27,12 +27,12 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
 
     @Override
     public int Fill(UserCollection uc) {
-        ParameterCollection emptyPc = new ParameterCollection();
+        ParameterSet emptyPc = new ParameterSet();
         return Fill(uc, emptyPc);
     }
 
     @Override
-    public int Fill(UserCollection uc, ParameterCollection pc) {
+    public int Fill(UserCollection uc, ParameterSet pc) {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   pua.user_id AS user_id ");
@@ -67,7 +67,7 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
             return currentContext.getUser(userId);
         } else {
             Getable<User> userDal = new UserDal(ci, currentContext);
-            User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
+            User user = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)}));
             return user;
         }
     }

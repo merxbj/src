@@ -4,7 +4,7 @@ import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
 import notwa.exception.SignInException;
 import notwa.sql.Parameter;
-import notwa.sql.ParameterCollection;
+import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
 import notwa.wom.Context;
@@ -24,7 +24,7 @@ public class Security {
     public boolean signIn(ConnectionInfo ci, String userLogin, String userPassword) throws Exception {
         Context loginContext = ContextManager.getInstance().newContext();
         UserDal ud = new UserDal(ci, loginContext);
-        User user = ud.get( new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.LOGIN, userLogin, Sql.Condition.EQUALTY)}));
+        User user = ud.get( new ParameterSet(new Parameter[] {new Parameter(Parameters.User.LOGIN, userLogin, Sql.Condition.EQUALTY)}));
 
         if (user == null) {
             throw new SignInException("Invalid login provided.");

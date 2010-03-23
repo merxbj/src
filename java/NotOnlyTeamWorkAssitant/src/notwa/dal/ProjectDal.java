@@ -1,7 +1,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.sql.ParameterCollection;
+import notwa.sql.ParameterSet;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
 import notwa.sql.SqlBuilder;
@@ -28,12 +28,12 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
 
     @Override
     public int Fill(ProjectCollection col) {
-        ParameterCollection emptyPc = new ParameterCollection();
+        ParameterSet emptyPc = new ParameterSet();
         return Fill(col, emptyPc);
     }
 
     @Override
-    public int Fill(ProjectCollection col, ParameterCollection pc) {
+    public int Fill(ProjectCollection col, ParameterSet pc) {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   project_id, ");
@@ -76,12 +76,12 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
     private UserCollection getAssignedUserCollection(int projectId) throws DalException {
         UserCollection uc = new UserCollection(currentContext);
         ProjectToUserAssignmentDal ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
-        ptuaDal.Fill(uc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
+        ptuaDal.Fill(uc, new ParameterSet(new Parameter[] {new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)}));
         return uc;
     }
 
     @Override
-    public Project get(ParameterCollection primaryKey) throws DalException {
+    public Project get(ParameterSet primaryKey) throws DalException {
         ProjectCollection pc = new ProjectCollection(currentContext);
         int rows = this.Fill(pc, primaryKey);
         if (rows > 1) {

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class SqlBuilder {
     private StringBuilder sqlPattern;
-    private ParameterCollection parameters;
+    private ParameterSet parameters;
     private ArrayList<Statement> statements;
     
     
-    public SqlBuilder(String sqlPattern, ParameterCollection parameters) {
+    public SqlBuilder(String sqlPattern, ParameterSet parameters) {
         this.sqlPattern = new StringBuilder(sqlPattern);
         this.parameters = parameters;
         this.statements = new ArrayList<Statement>();

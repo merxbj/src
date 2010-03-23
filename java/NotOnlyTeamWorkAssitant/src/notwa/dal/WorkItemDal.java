@@ -1,6 +1,6 @@
 package notwa.dal;
 
-import notwa.sql.ParameterCollection;
+import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
 import notwa.sql.Parameter;
 import notwa.sql.Sql;
@@ -27,12 +27,12 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
 
     @Override
     public int Fill(WorkItemCollection wic) {
-        ParameterCollection emptyPc = new ParameterCollection();
+        ParameterSet emptyPc = new ParameterSet();
         return Fill(wic, emptyPc);
     }
     
     @Override
-    public int Fill(WorkItemCollection wic, ParameterCollection pc) {
+    public int Fill(WorkItemCollection wic, ParameterSet pc) {
 
         StringBuilder vanillaSql = new StringBuilder();
 
@@ -70,13 +70,13 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                 } else {
                     Fillable<NoteCollection> noteDal = new NoteDal(ci, currentContext);
                     NoteCollection nc = new NoteCollection(currentContext);
-                    noteDal.Fill(nc, new ParameterCollection(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)}));
+                    noteDal.Fill(nc, new ParameterSet(new Parameter[] {new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)}));
 
                     Getable<Project> projectDal = new ProjectDal(ci, currentContext);
-                    Project project = projectDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)}));
+                    Project project = projectDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)}));
 
                     Getable<User> userDal = new UserDal(ci, currentContext);
-                    User user = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)}));
+                    User user = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)}));
 
                     wi = new WorkItem(workItemId);
                     wi.registerWithContext(currentContext);
@@ -88,7 +88,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
                     wi.setLastModifiedTimestamp(rs.getTimestamp("last_modified_timestamp"));
                     wi.setAssignedUser(user);
                     wi.setProject(project);
-                    wi.setParentWorkItem(get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.WorkItem.ID, rs.getInt("parent_work_item_id"), Sql.Condition.EQUALTY)})));
+                    wi.setParentWorkItem(get(new ParameterSet(new Parameter[] {new Parameter(Parameters.WorkItem.ID, rs.getInt("parent_work_item_id"), Sql.Condition.EQUALTY)})));
                     wi.setNoteCollection(nc);
                 }
 
@@ -103,7 +103,7 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     }
 
     @Override
-    public WorkItem get(ParameterCollection primaryKey) throws DalException {
+    public WorkItem get(ParameterSet primaryKey) throws DalException {
         WorkItemCollection wic = new WorkItemCollection(currentContext);
         int rows = this.Fill(wic, primaryKey);
         if (rows > 1) {

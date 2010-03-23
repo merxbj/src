@@ -4,7 +4,7 @@ import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.wom.NotePrimaryKey;
 import notwa.common.ConnectionInfo;
-import notwa.sql.ParameterCollection;
+import notwa.sql.ParameterSet;
 import notwa.sql.Parameter;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
@@ -29,12 +29,12 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
 
     @Override
     public int Fill(NoteCollection nc) {
-        ParameterCollection emptyPc = new ParameterCollection();
+        ParameterSet emptyPc = new ParameterSet();
         return Fill(nc, emptyPc);
     }
 
     @Override
-    public int Fill(NoteCollection nc, ParameterCollection pc) {
+    public int Fill(NoteCollection nc, ParameterSet pc) {
         
         StringBuilder vanillaSql = new StringBuilder();
 
@@ -63,7 +63,7 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
                     n = currentContext.getNote(npk);
                 } else {
                     Getable<User> userDal = new UserDal(ci, currentContext);
-                    User author = userDal.get(new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)}));
+                    User author = userDal.get(new ParameterSet(new Parameter[] {new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)}));
 
                     n = new Note(npk);
                     n.registerWithContext(currentContext);
@@ -81,7 +81,7 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
     }
 
     @Override
-    public Note get(ParameterCollection primaryKey) throws DalException {
+    public Note get(ParameterSet primaryKey) throws DalException {
         NoteCollection nc = new NoteCollection(currentContext);
         int rows = this.Fill(nc, primaryKey);
         if (rows > 1) {

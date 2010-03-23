@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class WorkItemDalTest {
     WorkItemCollection wic;
     WorkItemDal wid;
-    ParameterCollection pc;
+    ParameterSet pc;
     Timestamp ts;
     ConnectionInfo ci;
     Context context;
@@ -19,7 +19,7 @@ public class WorkItemDalTest {
         context = ContextManager.getInstance().newContext();
         wic = new WorkItemCollection();
         wid = new WorkItemDal(ci, context);
-        pc = new ParameterCollection(new Parameter [] {new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY)});
+        pc = new ParameterSet(new Parameter [] {new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY)});
     }
     
     public void test() {
