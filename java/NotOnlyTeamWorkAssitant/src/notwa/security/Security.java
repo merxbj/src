@@ -7,37 +7,29 @@ import notwa.sql.Parameter;
 import notwa.sql.ParameterCollection;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
+import notwa.wom.Context;
 import notwa.wom.ContextManager;
 import notwa.wom.User;
-import notwa.wom.UserCollection;
 
 public class Security {
-    private static Security singleton;
-    
-    private Security() {};
+    private static Security instance;
     
     public static Security getInstance() {
-        if (singleton == null) {
-            singleton = new Security();
+        if (instance == null) {
+            instance = new Security();
         }
-        return singleton;
+        return instance;
     }
     
-    public boolean signIn(
-            ConnectionInfo ci, String userLogin, String userPassword)
-            throws SignInException,Exception {
+    public boolean signIn(ConnectionInfo ci, String userLogin, String userPassword) throws Exception {
+        Context loginContext = ContextManager.getInstance().newContext();
+        UserDal ud = new UserDal(ci, loginContext);
+        User user = ud.get( new ParameterCollection(new Parameter[] {new Parameter(Parameters.User.LOGIN, userLogin, Sql.Condition.EQUALTY)}));
 
-        UserCollection uc = new UserCollection();
-        uc.setCurrentContext(ContextManager.getInstance().newContext());
-        UserDal ud = new UserDal(ci,uc.getCurrentContext());
-        User user = ud.get( new ParameterCollection(
-                            new Parameter[] {
-                               new Parameter(   Parameters.User.LOGIN,
-                                                userLogin,
-                                                Sql.Condition.EQUALTY)}));
-        if (!(user.getLogin().toLowerCase().equals(userLogin.toLowerCase())
-                && user.getPassword().equals(userPassword))) {
-            throw new SignInException();
+        if (user == null) {
+            throw new SignInException("Invalid login provided.");
+        } else if (!user.getPassword().equals(userPassword)) {
+            throw new SignInException("Invalid login password provided.");
         }
 
         return true;
