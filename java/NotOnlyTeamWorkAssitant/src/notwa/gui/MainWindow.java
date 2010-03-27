@@ -17,7 +17,7 @@ public class MainWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            // TODO DELETE
             e.printStackTrace();
         }
         /*

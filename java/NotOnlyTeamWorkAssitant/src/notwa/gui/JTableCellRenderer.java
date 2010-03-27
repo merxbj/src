@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 //TODO: rewrite it to our use
-//TODO: load colors from config ... so on
+//    : load colors from config ... so on
 
 public class JTableCellRenderer implements TableCellRenderer
 {

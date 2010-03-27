@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.WorkItemDal;
@@ -39,6 +41,14 @@ public class MainLayoutLoader extends JPanel implements ActionListener {
         tabPanel.addTab(null, new JLabel(   "Welcome to NOT Only Team Work Assistent -" +
         		                            "To beggin working, click on \"+\" button to login into Database")); 
 
+        tabPanel.addChangeListener(new ChangeListener() { // This method is called whenever the selected tab changes
+            public void stateChanged(ChangeEvent evt) {
+                //WorkItemDetail.getInstance().removeAll();
+                
+                ((JTabbedPane)evt.getSource()).remove(WorkItemDetail.getInstance());
+                WorkItemDetail.getInstance().revalidate();
+            }
+        });
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, this.initPlusButton());
 
         return tabPanel;        

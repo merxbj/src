@@ -3,7 +3,6 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -14,18 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import notwa.dal.UserDal;
-import notwa.wom.ContextManager;
 import notwa.wom.Note;
-import notwa.wom.NoteCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 public class WorkItemDetail extends TabContent implements ActionListener {
-    private static WorkItemDetail singleton;
-    JButton hideDetail = new JButton("Hide detail");
+    private static WorkItemDetail instance;
     JButton save = new JButton("Save");
     JButton showNotesHistory = new JButton("Show notes history");
     JTextArea description = new JTextArea();
@@ -33,16 +28,17 @@ public class WorkItemDetail extends TabContent implements ActionListener {
     JTextField parent = new JTextField();
     JTextField deadline = new JTextField();
     JTextField lastModified = new JTextField();
-    JComboBox status,priority,assignedUsers;
+    JComboBox status,priority;
+    JComboBox assignedUsers = new JComboBox();
 
     private WorkItemDetail() {
     }
     
     public static WorkItemDetail getInstance() {
-        if (singleton == null) {
-            singleton = new WorkItemDetail();
+        if (instance == null) {
+            instance = new WorkItemDetail();
         }
-        return singleton;
+        return instance;
     }
     
     public Component initComponents() {
@@ -56,13 +52,8 @@ public class WorkItemDetail extends TabContent implements ActionListener {
         
         JPanel boxesPanel = new JPanel(new GridLayout(0,2));
         // {
-            boxesPanel.add(new JLabel("")); // separator
-            
-            boxesPanel.add(hideDetail);
-            hideDetail.addActionListener(this);
-            
             boxesPanel.add(new JLabel("User"));
-            boxesPanel.add(this.loadProjectUsers());
+            boxesPanel.add(assignedUsers);
             
             boxesPanel.add(new JLabel("Priority"));
             boxesPanel.add(this.loadWorkItemPriorties());
@@ -125,27 +116,17 @@ public class WorkItemDetail extends TabContent implements ActionListener {
         return priority;
     }
     
-    private JComboBox loadProjectUsers() {
-        assignedUsers = new JComboBox();
-        
-        UserCollection uc = new UserCollection();
-        uc.setCurrentContext(ContextManager.getInstance().newContext());
-        UserDal ud = new UserDal(super.getCurrentConnectionInfo(), uc.getCurrentContext());
-        ud.Fill(uc);
-        
-        for (User user : uc) {
-            assignedUsers.addItem(user.getLogin());
-        }
-
-        return assignedUsers;
-    }
-    
-    public void fillWithActualData() {
+    public void updateDisplayedData() {
+        try {
+            assignedUsers.removeAllItems();
+            UserCollection uc = WorkItemTable.getSelected().getProject().getAssignedUsers();
+            for (User user : uc) {
+                assignedUsers.addItem(user.getLogin());
+            }
+        } catch (Exception e) {};
         try {
             this.description.setText(WorkItemTable.getSelected().getDescription());
-        } catch (Exception e) {
-            //we dont care, it is possible that something is not set
-        }
+        } catch (Exception e) {};
         try {
             this.parent.setText(((Integer)WorkItemTable.getSelected().getParent().getId()).toString());
         } catch (Exception e) {};
@@ -164,17 +145,9 @@ public class WorkItemDetail extends TabContent implements ActionListener {
         try {
             status.setSelectedItem(WorkItemTable.getSelected().getStatus().name());
         } catch (Exception e){};
-        try { // show something / TODO : add to WorkItem> getLatestNote()
-            NoteCollection nc = WorkItemTable.getSelected().getNoteCollection();
-            Note note = nc.get(nc.size()-1);
-            this.latestNote.setText(note.getNoteText());
-        } catch (Exception e) {};
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == hideDetail) {
-            TabContent.hideDetail();
-        }
+        try {
+            Note note = WorkItemTable.getSelected().getNoteCollection().getLatestNote();
+            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getNoteText()));
+        } catch (Exception e) { this.latestNote.setText(null); };
     }
 }

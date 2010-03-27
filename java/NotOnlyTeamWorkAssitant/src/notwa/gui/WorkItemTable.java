@@ -34,7 +34,8 @@ public class WorkItemTable extends TabContent {
         witTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent lse) {
-                WorkItemDetail.getInstance().fillWithActualData();
+                WorkItemDetail.getInstance().updateDisplayedData();
+                WorkItemNoteHistoryTable.getInstance().updateDisplayedData();
             }
         });
         

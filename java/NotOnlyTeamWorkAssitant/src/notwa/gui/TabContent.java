@@ -32,8 +32,10 @@ public class TabContent extends JComponent implements ActionListener {
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
 
+        //WorkItemDetail.getInstance().removeAll();
+        WorkItemDetailLayout widl = new WorkItemDetailLayout();
         sp = new JSplitPane(    JSplitPane.VERTICAL_SPLIT,
-                                topPanel, WorkItemDetail.getInstance().initComponents());
+                                topPanel, widl.initDetailLayout());
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
 
@@ -41,13 +43,13 @@ public class TabContent extends JComponent implements ActionListener {
         return this;
     }
     
-    private void fillDefaultSortingItems(JComboBox jcb) {
+    private void fillDefaultSortingItems(JComboBox jcb) { // TODO
         jcb.addItem("Product");
         jcb.addItem("Status");
         jcb.addItem("Priority");
     }
     
-    private void fillUserDefinedFilterItems(JComboBox jcb) {
+    private void fillUserDefinedFilterItems(JComboBox jcb) { // TODO
         jcb.addItem("Product = notwa");
         jcb.addItem("Status = IN_PROGRESS");
         jcb.addItem("Priority = critical");

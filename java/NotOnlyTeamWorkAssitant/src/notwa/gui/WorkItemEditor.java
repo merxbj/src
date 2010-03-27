@@ -123,7 +123,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
-        if(ae.getSource() == chooseColorButton) { //TODO all colors will be used this way
+        if(ae.getSource() == chooseColorButton) { //TODO all color choosing will be used this way
             JColorChooser colorChooser = new JColorChooser();
             JDialog jd = JColorChooser.createDialog( chooseColorButton,
                                         "Project color chooser",
@@ -131,7 +131,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                                         colorChooser,
                                         this,
                                         null);
-            jd.setVisible(true); //TODO not done yet 
+            jd.setVisible(true); // not done yet 
         }
     }
 }

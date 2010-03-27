@@ -9,4 +9,7 @@ public class NoteCollection extends BusinessObjectCollection<Note> {
         this.currentContext = context;
     }
     
+    public Note getLatestNote() {
+        return this.collection.get(this.collection.size()-1); // we must provide some sorting, to 
+    }
 }
