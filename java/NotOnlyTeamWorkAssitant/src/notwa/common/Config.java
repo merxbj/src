@@ -1,10 +1,6 @@
 /*
  * Config
  *
- * Conifg.java v0.0.0.5
- *
- * 2005-03-05
- *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
  *  This program is free software: you can redistribute it and/or modify
