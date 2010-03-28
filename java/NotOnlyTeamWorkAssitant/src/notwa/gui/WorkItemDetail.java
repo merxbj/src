@@ -146,7 +146,7 @@ public class WorkItemDetail extends TabContent implements ActionListener {
             status.setSelectedItem(WorkItemTable.getSelected().getStatus().name());
         } catch (Exception e){};
         try {
-            Note note = WorkItemTable.getSelected().getNoteCollection().getLatestNote();
+            Note note = WorkItemTable.getSelected().getNoteCollection().get(0);
             this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getNoteText()));
         } catch (Exception e) { this.latestNote.setText(null); };
     }

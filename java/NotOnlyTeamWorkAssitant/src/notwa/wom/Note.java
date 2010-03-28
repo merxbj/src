@@ -7,6 +7,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     private User author;
     
     public Note (int noteId, int workItemId) {
+        super();
         this.noteId = new NotePrimaryKey(noteId, workItemId);
     }
 
