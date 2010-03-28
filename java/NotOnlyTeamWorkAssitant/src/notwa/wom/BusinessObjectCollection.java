@@ -31,7 +31,7 @@ import notwa.exception.ContextException;
  * 
  *
  * @author Tomas Studnicka
- * @authoer Jaroslav Merxbauer
+ * @author Jaroslav Merxbauer
  * @param <T>   The concrete implemntation of <code>BusinessObject</code> to be hold
  *              by this collection.
  */
@@ -42,6 +42,16 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     protected ResultSet resultSet;
     protected boolean closed;
 
+    /**
+     * The sole basic constructor providing a potential of setting the current
+     * <code>Context</code> and the initial <code>ResultSet</code> which this 
+     * collection have came from.
+     * 
+     * @param currentContext    The actual <code>Context</code> where this 
+     * <code>BusinessObjectCollection</code> lives.
+     * @param resultSet The original <code>ResultSet</code> based which this
+     *                  <code>BusinessObjectCollection</code> has been created.
+     */
     public BusinessObjectCollection(Context currentContext, ResultSet resultSet) {
         this.currentContext = currentContext;
         this.resultSet = resultSet;

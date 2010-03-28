@@ -167,17 +167,36 @@ public abstract class BusinessObject {
 
     /**
      * Marks this <code>BusinessObject</code> for deletion which could draw some
-     * restriction to certain oprations which is working with it.
+     * impact to certain oprations which is working with it.
      *
      * <p>The physical representation in the <code>BusinessObjectCollection</code>
      * is going to be removed as soon as the <code>commit</code> method is invoked
-     * usualy by the <code>DataAccessLayer.</code></p>
+     * usualy by the <code>DataAccessLayer</code>.</p>
      * 
      * @param deleted   Indicating whether this <code>BusinessObject</code> will
      *                  be marked for deletion or not.
      */
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isInserted() {
+        return inserted;
+    }
+
+    /**
+     * Marks this <code>BusinessObject</code> as inserted to the already closed
+     * <code>BusinessObjectCollection</code> which means that this object doesn't
+     * have a representation in the database.
+     *
+     * <p>This mark is going to be removed as soon as the <code>BusinessObjectCollection</code>
+     * invokes the <code>commit</code> method usualy by the <code>DataAccessLayer</code>.</p>
+     *
+     * @param inserted  Indicating whether this <code>BusinessObject</code> will
+     *                  be marked as inserted or not.
+     */
+    public void setInserted(boolean inserted) {
+        this.inserted = inserted;
     }
 
 }
