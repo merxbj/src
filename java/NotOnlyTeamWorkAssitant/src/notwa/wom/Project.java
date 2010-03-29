@@ -55,10 +55,16 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     
     public void setProjectName(String projectName) {
         this.name = projectName;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     
     public void setAssignedUsers(UserCollection assignedUsers) {
         this.assignedUsers = assignedUsers;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public boolean addAssignedUser(User assignedUser) throws ContextException {

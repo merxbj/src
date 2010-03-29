@@ -12,7 +12,7 @@ import notwa.common.LoggingInterface;
 import notwa.sql.SqlBuilder;
 import java.sql.ResultSet;
 
-public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCollection>, Getable<WorkItem> {
+public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
     
     public WorkItemDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -26,7 +26,6 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     
     @Override
     public int Fill(WorkItemCollection wic, ParameterSet pc) {
-
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   work_item_id, ");
@@ -55,20 +54,28 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
     private int FillWorkItemCollection(WorkItemCollection wic, String sql) {
         try {
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            wic.setResultSet(rs);
+            wic.setClosed(false);
+
             while (rs.next()) {
                 WorkItem wi = null;
                 int workItemId = rs.getInt("work_item_id");
                 if (currentContext.hasWorkItem(workItemId)) {
                     wi = currentContext.getWorkItem(workItemId);
                 } else {
-                    Fillable<NoteCollection> noteDal = new NoteDal(ci, currentContext);
+                    NoteDal noteDal = new NoteDal(ci, currentContext);
                     NoteCollection nc = new NoteCollection(currentContext);
                     noteDal.Fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)));
 
-                    Getable<Project> projectDal = new ProjectDal(ci, currentContext);
+                    ProjectDal projectDal = new ProjectDal(ci, currentContext);
                     Project project = projectDal.get(new ParameterSet(new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)));
 
-                    Getable<User> userDal = new UserDal(ci, currentContext);
+                    UserDal userDal = new UserDal(ci, currentContext);
                     User user = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)));
 
                     wi = new WorkItem(workItemId);
@@ -91,6 +98,14 @@ public class WorkItemDal extends DataAccessLayer implements Fillable<WorkItemCol
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            wic.setUpdateRequired(false);
+            wic.setClosed(true);
         }
         return wic.size();
     }

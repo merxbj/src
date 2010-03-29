@@ -104,41 +104,71 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 
     public void setSubject(String subject) {
         this.subject = subject;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setPriority(WorkItemPriority priority) {
         this.priority = priority;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setDescription(String description) {
         this.description = description;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setAssignedUser(User assignedUser) {
         this.assignedUser = assignedUser;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setStatus(WorkItemStatus status) {
         this.status = status;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setLastModifiedTimestamp(Date lastModifiedTimestamp) {
         this.lastModifiedTimestamp = lastModifiedTimestamp;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setProject(Project project) {
         this.project = project;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setParentWorkItem(WorkItem parentWorkItem) {
         this.parentWorkItem = parentWorkItem;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public void setExpectedTimestamp(Date expectedTimestamp) {
         this.expectedTimestamp = expectedTimestamp;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     public void setNoteCollection(NoteCollection noteCollection) {
         this.noteCollection = noteCollection;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     @Override

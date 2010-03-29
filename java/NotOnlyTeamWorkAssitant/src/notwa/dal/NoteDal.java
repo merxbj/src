@@ -16,7 +16,7 @@ import notwa.wom.User;
 
 import java.sql.ResultSet;
 
-public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>, Getable<Note> {
+public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
 
     public NoteDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -51,13 +51,21 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
     private int FillProjectCollection(NoteCollection nc, String sql) {
         try {
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            nc.setResultSet(rs);
+            nc.setClosed(false);
+
             while (rs.next()) {
                 Note n = null;
                 NotePrimaryKey npk = new NotePrimaryKey(rs.getInt("note_id"), rs.getInt("work_item_id"));
                 if (currentContext.hasNote(npk)) {
                     n = currentContext.getNote(npk);
                 } else {
-                    Getable<User> userDal = new UserDal(ci, currentContext);
+                    UserDal userDal = new UserDal(ci, currentContext);
                     User author = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)));
 
                     n = new Note(npk);
@@ -71,6 +79,14 @@ public class NoteDal extends DataAccessLayer implements Fillable<NoteCollection>
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            nc.setUpdateRequired(false);
+            nc.setClosed(true);
         }
         return nc.size();
     }

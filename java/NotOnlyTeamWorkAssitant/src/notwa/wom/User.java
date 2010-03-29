@@ -83,22 +83,37 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     
     public void setLogin(String loginName) {
         this.login = loginName;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     
     public void setPassword(String userPassword) {
         this.password = userPassword;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     
     public void setLastName(String lastName) {
         this.lastName = lastName;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
     
     public void setAssignedProjects(ProjectCollection assignedProjects) {
         this.assignedProjects = assignedProjects;
+        if (isAttached()) {
+            attachedBOC.setUpdateRequired(true);
+        }
     }
 
     public boolean addAssignedProject(Project assignedProject) throws ContextException {

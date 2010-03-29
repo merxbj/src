@@ -41,6 +41,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     protected Context currentContext;
     protected ResultSet resultSet;
     protected boolean closed;
+    protected boolean updateRequired;
 
     /**
      * The sole basic constructor providing a potential of setting the current
@@ -72,6 +73,11 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      * <li> The given <code>BusinessObject</code> isn't already present in the
      *      <code>BusinessObjectCollection</code>.</li>
      * </ul>
+     * If this <code>BusinessObjectCollection</code> has been already closed,
+     * which means that we are not building this <code>BusinessObjectCollection</code>
+     * but rather updating, we will mark this collection to require update and
+     * sets the <code>inserted</code> flag of <code>BusinessObject</code> to <code>true</code>.
+     *
      * @param bo <code>BusinessObject</code> to be added to this <code>BusinessObjectCollection</code>
      * @return <code>true</code> if the addition success, <code>false</code> otherwise
      * @throws ContextException If either the <code>BusinessObject</code> or <code>BusinessObjectCollection</code>
@@ -96,28 +102,47 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         }
 
         /*
-         * Try to add the BusinesObject to the BusinessObjectCollection and
-         * attach them together.
+         * Try to add the BusinesObject to the BusinessObjectCollection.
          */
-        if (collection.add(bo)) {
-            bo.attach(this);
-            return true;
+        if (!collection.add(bo)) {
+            return false;
+        }
+
+        
+        /*
+         * Attach BusinessObject with this BusinessObjectCollection togeather
+         */
+        bo.attach(this);
+
+        /*
+         * If this collection is already closed, which means that we cannot freely
+         * add/remove BusinessObjects from it, perform appropriate actions to
+         * remark that this new item needs to be inserted to the database during
+         * a database update
+         */
+        if (isClosed()) {
+            bo.setInserted(true);
+            setUpdateRequired(true);
         }
 
         /*
-         * If we have reached this point we were not able to add the BusinessObject
+         * If we have reached this point we have been able to add the BusinessObject
          * to the BusinessObjectCollection
          */
-        return false;
+        return true;
     }
     
     /**
      * Marks the given <code>BusinessObject</code> for deletion from this 
-     * <code>BusinessObjectCollection</code>. It is required that:
+     * <code>BusinessObjectCollection</code> if this is already closed <code>BusinessObjectCollection</code>,
+     * oterwise it will delete it physicaly from this <code>BusinessObjectCollection</code>.
+     * <p>It is required that:
      * <ul>
      * <li> Both <code>BusinessObject</code> and <code>BusinessObjectCollection</code>
      *      are <code>Context</code> aware.</li>
      * </ul>
+     * </p>
+     * 
      * @param bo    <code>BusinessObject</code> to be mark for removal from this
      *              <code>BusinessObjectCollection</code>
      * @return <code>true</code> if the mark success, <code>false</code> otherwise
@@ -141,7 +166,23 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
             return false;
         }
 
-        bo.setDeleted(true);
+        /*
+         * If this collection is already closed, mark the item as deleted and make
+         * sure that this collection is aware of that change to be updated to the
+         * database. Otherwise, just remove the BusinessObject from this collection
+         * and detach it.
+         */
+        if (isClosed()) {
+            bo.setDeleted(true);
+            setUpdateRequired(true);
+        } else {
+            collection.remove(bo);
+            bo.detach();
+        }
+
+        /*
+         * If we have reached this point, we can leave with true.
+         */
         return true;
     }
     
@@ -209,4 +250,90 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
             bo.rollback();
         }
     }
+
+    /**
+     * Sets this <code>BusinesObjectCollection</code> as closed which actually means
+     * that the current version is a mirror image of the data queried from the database.
+     * <p>This version is then changed over the time:
+     * <ul>
+     * <li>Data are modified - database update</li>
+     * <li>Data are inserted - database insert</li>
+     * <li>Data are deleted  - database delete</li>
+     * </ul>
+     * <code>BusinessObjectCollection</code> is aware of such a changes while it is
+     * being closed and makes sure that all <code>BusinessObject</code>s are aware
+     * of their current status (deleted/inserted) or the <code>BusinessObject</code>
+     * may query this status using <code>isClosed</code> and could remark that it 
+     * is changed.</p>
+     * <p>And as soon as the user performs an action which forces the data to be
+     * saved to the database, this <code>BusinessObjectCollection</code> could take
+     * appropriate steps to update the database appropriately.</p>
+     * 
+     * @param   closed <code>true</code> if this <code>BusinessObjectCollection</code>
+     *          should have been closed, <code>false</code> otherwise.
+     */
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    /**
+     * Checks whether this <code>BusinesObjectCollection</code> is closed which actually means
+     * that the current version is a mirror image of the data queried from the database.
+     * <p>This version is then changed over the time:
+     * <ul>
+     * <li>Data are modified - database update</li>
+     * <li>Data are inserted - database insert</li>
+     * <li>Data are deleted  - database delete</li>
+     * </ul>
+     * <code>BusinessObjectCollection</code> is aware of such a changes while it is
+     * being closed and makes sure that all <code>BusinessObject</code>s are aware
+     * of their current status (deleted/inserted) or the <code>BusinessObject</code>
+     * may query this status using this method and could remark that it is changed.</p>
+     * <p>And as soon as the user performs an action which forces the data to be
+     * saved to the database, this <code>BusinessObjectCollection</code> could take
+     * appropriate steps to update the database appropriately.</p>
+     * 
+     * @return  <code>true</code> if this <code>BusinessObjectCollection</code> is
+     *          already closed, <code>false</code> otherwise.
+     */
+    public boolean isClosed() {
+        return closed;
+    }
+
+    /**
+     * Checks whether this <code>BusinessObjectCollection</code> have been updated
+     * since it was marked as closed.
+     * @see #isClosed()
+     *
+     * @return  <code>true</code> if this <code>BusinessObjectCollection</code> differs
+     *          from its database representation, <code>false</code> otherwise.
+     */
+    public boolean isUpdateRequired() {
+        return updateRequired;
+    }
+
+    /**
+     * Sets whether this <code>BusinessObjectCollection</code> have been updated
+     * since it was marked as closed.
+     * @see #isClosed()
+     *
+     * @param updateRequired    <code>true</code> if this <code>BusinessObjectCollection</code>
+     *                          differs from its database representation,
+     *                          <code>false</code> otherwise.
+     */
+    public void setUpdateRequired(boolean updateRequired) {
+        this.updateRequired = updateRequired;
+    }
+
+    /**
+     * Sets the result set upon which this collection is build and through which
+     * the database can be easily updated.
+     * 
+     * @param resultSet The original <code>ResultSet</code> based which this
+     *                  <code>BusinessObjectCollection</code> has been created.
+     */
+    public void setResultSet(ResultSet resultSet) {
+        this.resultSet = resultSet;
+    }
+
 }

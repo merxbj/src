@@ -180,6 +180,17 @@ public abstract class BusinessObject {
         this.deleted = deleted;
     }
 
+    /**
+     * Checks wheter this <code>BusinessObject</code> is marked as inserted in the 
+     * already closed <code>BusinessObjectCollection</code> which means that this 
+     * object doesn't already have a representation in the database.
+     *
+     * <p>This mark is going to be removed as soon as the <code>BusinessObjectCollection</code>
+     * invokes the <code>commit</code> method usualy by the <code>DataAccessLayer</code>.</p>
+     *
+     * @param inserted  Indicating whether this <code>BusinessObject</code> will
+     *                  be marked as inserted or not.
+     */
     public boolean isInserted() {
         return inserted;
     }
@@ -187,7 +198,7 @@ public abstract class BusinessObject {
     /**
      * Marks this <code>BusinessObject</code> as inserted to the already closed
      * <code>BusinessObjectCollection</code> which means that this object doesn't
-     * have a representation in the database.
+     * already have a representation in the database.
      *
      * <p>This mark is going to be removed as soon as the <code>BusinessObjectCollection</code>
      * invokes the <code>commit</code> method usualy by the <code>DataAccessLayer</code>.</p>

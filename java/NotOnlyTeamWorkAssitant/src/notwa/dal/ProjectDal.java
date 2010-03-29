@@ -15,7 +15,7 @@ import notwa.sql.Sql;
 
 import java.sql.ResultSet;
 
-public class ProjectDal extends DataAccessLayer implements Fillable<ProjectCollection>, Getable<Project> {
+public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
 
     public ProjectDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -46,6 +46,14 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
     private int FillProjectCollection(ProjectCollection col, String sql) {
         try {
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            col.setResultSet(rs);
+            col.setClosed(false);
+
             while (rs.next()) {
                 Project p = null;
                 int projectId = rs.getInt("project_id");
@@ -64,6 +72,14 @@ public class ProjectDal extends DataAccessLayer implements Fillable<ProjectColle
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            col.setUpdateRequired(false);
+            col.setClosed(true);
         }
         return col.size();
     }

@@ -26,6 +26,7 @@ import notwa.sql.SqlBuilder;
 import notwa.sql.Parameter;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
+import notwa.wom.BusinessObjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 import notwa.wom.ProjectCollection;
@@ -46,7 +47,7 @@ import java.sql.SQLException;
  * @author eTeR
  * @version %I% %G%
  */
-public class UserDal extends DataAccessLayer implements Fillable<UserCollection>, Getable<User> {
+public class UserDal extends DataAccessLayer<User, UserCollection> {
 
     public UserDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -107,6 +108,14 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
     private int FillUserCollection(UserCollection uc, String sql) {
         try {
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            uc.setResultSet(rs);
+            uc.setClosed(false);
+
             while (rs.next()) {
                 User u = null;
                 int userId = rs.getInt("user_id");
@@ -124,9 +133,18 @@ public class UserDal extends DataAccessLayer implements Fillable<UserCollection>
                 if (!uc.add(u)) {
                     LoggingInterface.getLogger().logWarning("User (user_id = %d) could not be added to the collection!", u.getId());
                 }
+
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            uc.setUpdateRequired(false);
+            uc.setClosed(true);
         }
         return uc.size();
     }

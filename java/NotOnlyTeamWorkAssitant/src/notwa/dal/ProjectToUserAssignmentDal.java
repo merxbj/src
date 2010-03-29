@@ -1,6 +1,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
+import notwa.exception.DalException;
 import notwa.wom.UserCollection;
 import notwa.wom.User;
 import notwa.sql.SqlBuilder;
@@ -13,7 +14,7 @@ import notwa.sql.Sql;
 import java.sql.ResultSet;
 import notwa.sql.Parameter;
 
-public class ProjectToUserAssignmentDal extends DataAccessLayer implements Fillable<UserCollection> {
+public class ProjectToUserAssignmentDal extends DataAccessLayer<User, UserCollection> {
 
     public ProjectToUserAssignmentDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -44,8 +45,15 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
 
     private int FillUserCollection(UserCollection uc, String sql) {
         try {
-            Getable<User> ud = new UserDal(ci, currentContext);
+            UserDal ud = new UserDal(ci, currentContext);
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            uc.setResultSet(rs);
+            uc.setClosed(false);
             while (rs.next()) {
                 User u = ud.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("user_id"), Sql.Condition.EQUALTY)));
                 if (!uc.add(u)) {
@@ -54,7 +62,22 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer implements Filla
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            uc.setUpdateRequired(false);
+            uc.setClosed(true);
         }
         return uc.size();
     }
+
+    @Override
+    public User get(ParameterSet primaryKey) throws DalException {
+        throw new DalException("This DataAccessLayer doesn't support operation get.");
+    }
+
+
 }

@@ -22,8 +22,12 @@ package notwa.dal;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 import notwa.wom.Context;
+import notwa.wom.BusinessObject;
 
 import java.util.Hashtable;
+import notwa.exception.DalException;
+import notwa.sql.ParameterSet;
+import notwa.wom.BusinessObjectCollection;
 
 /**
  * <code>DataAccessLayer</code> is an abstract class providing a basic functionality to all
@@ -42,7 +46,7 @@ import java.util.Hashtable;
  * @author eTeR
  * @version %I% %G%
  */
-public abstract class DataAccessLayer {
+public abstract class DataAccessLayer<Object extends BusinessObject, Collection extends BusinessObjectCollection> {
     private static Hashtable<ConnectionInfo, DatabaseConnection> connections;
     protected ConnectionInfo ci;
     protected Context currentContext;
@@ -87,4 +91,8 @@ public abstract class DataAccessLayer {
     protected DatabaseConnection getConnection() {
         return connections.get(ci);
     }
+
+    public abstract int Fill(Collection boc) throws DalException;
+    public abstract int Fill(Collection boc, ParameterSet pc) throws DalException;
+    public abstract Object get(ParameterSet primaryKey) throws DalException;
 }

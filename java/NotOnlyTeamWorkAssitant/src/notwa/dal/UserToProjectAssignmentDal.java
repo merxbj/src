@@ -1,6 +1,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
+import notwa.exception.DalException;
 import notwa.sql.ParameterSet;
 import notwa.wom.ProjectCollection;
 import notwa.wom.Project;
@@ -13,7 +14,7 @@ import notwa.sql.Sql;
 
 import java.sql.ResultSet;
 
-public class UserToProjectAssignmentDal extends DataAccessLayer implements Fillable<ProjectCollection> {
+public class UserToProjectAssignmentDal extends DataAccessLayer<Project, ProjectCollection> {
 
     public UserToProjectAssignmentDal(ConnectionInfo ci, Context context) {
         super(ci, context);
@@ -43,8 +44,16 @@ public class UserToProjectAssignmentDal extends DataAccessLayer implements Filla
 
     private int FillProjectCollection(ProjectCollection col, String sql) {
         try {
-            Getable<Project> projectDal = new ProjectDal(ci, currentContext);
+            ProjectDal projectDal = new ProjectDal(ci, currentContext);
             ResultSet rs = getConnection().executeQuery(sql);
+
+            /*
+             * Open the collection and make sure that it is aware of its original
+             * ResultSet!
+             */
+            col.setResultSet(rs);
+            col.setClosed(false);
+
             while (rs.next()) {
                 Project p = projectDal.get(new ParameterSet(new Parameter(Parameters.Project.ID, rs.getInt("pua.project_id"), Sql.Condition.EQUALTY)));
                 if (!col.add(p)) {
@@ -53,7 +62,22 @@ public class UserToProjectAssignmentDal extends DataAccessLayer implements Filla
             }
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            col.setUpdateRequired(false);
+            col.setClosed(true);
         }
         return col.size();
     }
+
+    @Override
+    public Project get(ParameterSet primaryKey) throws DalException {
+        throw new DalException("This DataAccessLayer doesn't support operation get.");
+    }
+
+
 }
