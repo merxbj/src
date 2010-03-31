@@ -1,20 +1,70 @@
+/*
+ * ContextManager
+ *
+ * Copyright (C) 2010  Jaroslav Merxbauer
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package notwa.wom;
 
+/**
+ * <code>Note</code> represents a single note taken within its parrent {@link WorkItem}>.
+ * Every <code>Note</code> has a noteId which uniqely identifies it within its
+ * parrent<code>WorkItem</code> and it is sorted by a descending order to have the
+ * latest <code>Note</code>s on the top of the sorted collection.
+ *
+ * @author Jaroslav Merxbauer
+ * @author Tomas Studnicka
+ */
 public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
     private NotePrimaryKey noteId;
     private String text;
     private User author;
     
+    /**
+     * The simplier contructor accepting noteId and workItemId which uniquely
+     * identifies this <code>Note</code>.
+     * Constructor then creates a new {@link NotePrimaryKey} based on given
+     * parameters and use it as an uniqe identifier.
+     *
+     * @param noteId The note id which is uniqe always under one <code>WorkItem</code>.
+     * @param workItemId The workItemId where this <code>Note</code> is valid.
+     */
     public Note (int noteId, int workItemId) {
         super();
         this.noteId = new NotePrimaryKey(noteId, workItemId);
     }
 
+    /**
+     * The contructor accepting already existing <code>NotePrimaryKey</code> which
+     * uniquely identifies this <code>Note</code>.
+     *
+     * @param npk   The <code>NotePrimaryKey</code> which consist from noteId and
+     *              workItemId.
+     */
     public Note (NotePrimaryKey npk) {
         this.noteId = npk;
     }
 
+    /**
+     * Creates a shallow copy of this <code>Note</code>.
+     *
+     * @return New <code>Note</code> cloned from this <code>Note</code>.
+     * @throws CloneNotSupportedException When cloning error occures.
+     */
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Note clone = (Note) super.clone();
@@ -24,7 +74,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
         clone.author = this.author;
         return clone;
     }
-    
+
     public WorkItem getWorkItem() {
         return this.currentContext.getWorkItem(noteId.workItemId);
     }
