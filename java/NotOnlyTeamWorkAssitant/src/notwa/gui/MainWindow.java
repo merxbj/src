@@ -37,8 +37,7 @@ public class MainWindow extends JFrame {
         /*
          * Load MainMenu
          */
-        MainMenu mm = new MainMenu();
-        this.setJMenuBar(mm);
+        this.setJMenuBar(MainMenu.getInstance().initMainMenu());
         
         /*
          * create main JPanel and Load tabs 

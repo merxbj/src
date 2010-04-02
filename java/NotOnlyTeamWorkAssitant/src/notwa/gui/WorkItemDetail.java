@@ -19,10 +19,9 @@ import notwa.wom.UserCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-public class WorkItemDetail extends TabContent implements ActionListener {
+public class WorkItemDetail extends WorkItemDetailLayout implements ActionListener {
     private static WorkItemDetail instance;
     JButton save = new JButton("Save");
-    JButton showNotesHistory = new JButton("Show notes history");
     JTextArea description = new JTextArea();
     JTextArea latestNote = new JTextArea();
     JTextField parent = new JTextField();
@@ -31,7 +30,7 @@ public class WorkItemDetail extends TabContent implements ActionListener {
     JComboBox status,priority;
     JComboBox assignedUsers = new JComboBox();
 
-    private WorkItemDetail() {
+    public WorkItemDetail() {
     }
     
     public static WorkItemDetail getInstance() {
@@ -85,7 +84,6 @@ public class WorkItemDetail extends TabContent implements ActionListener {
             
         JPanel buttonsPanel = new JPanel();
         
-        buttonsPanel.add(showNotesHistory);
         buttonsPanel.add(save);
         
         JPanel bottomPanel = new JPanel(new BorderLayout(5,5));
@@ -116,38 +114,60 @@ public class WorkItemDetail extends TabContent implements ActionListener {
         return priority;
     }
     
-    public void updateDisplayedData() {
+    public void setDescription(String description) {
+        this.description.setText(description);
+    }
+    
+    public void setParent(int id) {
+        this.parent.setText(((Integer)id).toString());
+    }
+    
+    public void setDeadline(String deadline) {
+        this.deadline.setText(deadline);
+    }
+    
+    public void setLastModified(String lastModified) {
+        this.lastModified.setText(lastModified);
+    }
+    
+    public void setPriority(WorkItemPriority wip) {
+        this.priority.setSelectedItem(wip);
+    }
+    
+    public void setStatus(WorkItemStatus wis) {
+        this.status.setSelectedItem(wis.name());
+    }
+    
+    public void setLastNote(Note note) {
+        try {
+            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getNoteText()));
+        } catch (Exception e) {
+            this.latestNote.setText("There are no notes yet");
+        }
+    }
+    
+    public void setAssignedUsers(UserCollection uc) {
         try {
             assignedUsers.removeAllItems();
-            UserCollection uc = WorkItemTable.getSelected().getProject().getAssignedUsers();
             for (User user : uc) {
                 assignedUsers.addItem(user.getLogin());
             }
-        } catch (Exception e) {};
-        try {
-            this.description.setText(WorkItemTable.getSelected().getDescription());
-        } catch (Exception e) {};
-        try {
-            this.parent.setText(((Integer)WorkItemTable.getSelected().getParent().getId()).toString());
-        } catch (Exception e) {};
-        try {
-            this.deadline.setText(WorkItemTable.getSelected().getExpectedTimestamp().toString());
-        } catch (Exception e) {};
-        try {
-            this.lastModified.setText(WorkItemTable.getSelected().getLastModifiedTimestamp().toString());
-        } catch (Exception e) {};
-        try {
-            assignedUsers.setSelectedItem(WorkItemTable.getSelected().getAssignedUser().getLogin());
-        } catch (Exception e){};
-        try {
-            priority.setSelectedItem(WorkItemTable.getSelected().getPriority());
-        } catch (Exception e){};
-        try {
-            status.setSelectedItem(WorkItemTable.getSelected().getStatus().name());
-        } catch (Exception e){};
-        try {
-            Note note = WorkItemTable.getSelected().getNoteCollection().get(0);
-            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getNoteText()));
-        } catch (Exception e) { this.latestNote.setText(null); };
+        } catch (Exception e) {
+            this.assignedUsers.addItem("unspecified");
+        }; 
+    }
+    
+    public void selectUser(String user) {
+        this.assignedUsers.setSelectedItem(user);
+    }
+
+    public void setAllToNull() {
+        this.setAssignedUsers(null);
+        this.setDeadline("");
+        this.setDescription("");
+        this.setLastNote(null);
+        this.setLastModified("");
+        this.setParent(0);
+        this.setPriority(null);
     }
 }

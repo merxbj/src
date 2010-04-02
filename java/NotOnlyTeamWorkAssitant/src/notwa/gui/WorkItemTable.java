@@ -2,6 +2,7 @@ package notwa.gui;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -11,14 +12,16 @@ import javax.swing.table.TableRowSorter;
 
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
+import notwa.wom.WorkItemPriority;
+import notwa.wom.WorkItemStatus;
 
-public class WorkItemTable extends TabContent {
+public class WorkItemTable extends JComponent implements ListSelectionListener {
     private String[] tableHeaders = {
             "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
-    private static JTable witTable;
+    private JTable witTable;
     private TblModel witTableModel;
-    public static TableRowSorter<TblModel> sorter;
+    static TableRowSorter<TblModel> sorter;
 
     public WorkItemTable(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
@@ -31,13 +34,7 @@ public class WorkItemTable extends TabContent {
         sorter = new TableRowSorter<TblModel>(witTableModel);
         witTable.setRowSorter(sorter);
         
-        witTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent lse) {
-                WorkItemDetail.getInstance().updateDisplayedData();
-                WorkItemNoteHistoryTable.getInstance().updateDisplayedData();
-            }
-        });
+        witTable.getSelectionModel().addListSelectionListener(this);
         
         this.resizeAndColorizeTable();
 
@@ -61,9 +58,62 @@ public class WorkItemTable extends TabContent {
         }
     }
     
-    public static WorkItem getSelected() {
-        return (WorkItem) witTable  .getModel()
-                                    .getValueAt(witTable.convertRowIndexToModel(
-                                                witTable.getSelectedRow()), 6);
+    public WorkItem getSelected() {
+        return (WorkItem) this.witTable .getModel()
+                                        .getValueAt(witTable.convertRowIndexToModel(
+                                                    witTable.getSelectedRow()), 6);
+    }
+    
+    @Override
+    public void valueChanged(ListSelectionEvent lse) {
+        try {
+            WorkItemDetail.getInstance().setDescription(this.getSelected().getDescription());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setDescription("");
+        }
+        try {
+            WorkItemDetail.getInstance().setParent(this.getSelected().getParent().getId());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setParent(0);
+        }
+        try {
+            WorkItemDetail.getInstance().setDeadline(this.getSelected().getExpectedTimestamp().toString());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setDeadline("unspecified");
+        }
+        try {
+            WorkItemDetail.getInstance().setLastModified(this.getSelected().getLastModifiedTimestamp().toString());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setLastModified("unspecified");
+        }
+        try {
+            WorkItemDetail.getInstance().setAssignedUsers(this.getSelected().getProject().getAssignedUsers());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setAssignedUsers(null);
+        }
+        try {
+            WorkItemDetail.getInstance().selectUser(this.getSelected().getAssignedUser().getLogin());
+        } catch (Exception e) {};
+        try {
+            WorkItemDetail.getInstance().setPriority(this.getSelected().getPriority());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setPriority(WorkItemPriority.UNNECESSARY);
+        }
+        try {
+            WorkItemDetail.getInstance().setStatus(this.getSelected().getStatus());
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setStatus(WorkItemStatus.WAITING);
+        }
+        try {
+            WorkItemDetail.getInstance().setLastNote(this.getSelected().getNoteCollection().get(0));
+        } catch (Exception e) {
+            WorkItemDetail.getInstance().setLastNote(null);
+        }
+        
+        try {
+            WorkItemNoteHistoryTable.getInstance().setNoteCollection(this.getSelected().getNoteCollection());
+        } catch (Exception e) {
+            WorkItemNoteHistoryTable.getInstance().setNoteCollection(null);
+        }
     }
 }

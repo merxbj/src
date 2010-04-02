@@ -18,14 +18,26 @@ import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.TableRowSorter;
 
 public class MainMenu extends JMenuBar implements ActionListener {
+    private static MainMenu instance;
     private JMenu menu;
     private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;
     private JCheckBoxMenuItem cbWorkOffline;
     private final JTextField searchField = new JTextField("Type here ...");
+    public TableRowSorter<TblModel> sorter;
     
-    public MainMenu() {
+    public static MainMenu getInstance() {
+        if (instance == null) {
+            instance = new MainMenu();
+        }
+        return instance;
+    }
+    
+    private MainMenu() { }
+    
+    public MainMenu initMainMenu() {
         menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         this.add(menu);
@@ -65,6 +77,8 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.add(new JLabel("| Search "));
         
         this.add(this.addSearchField());
+        
+        return this;
     }
 
     private JTextField addSearchField() {
@@ -96,7 +110,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
                 });
         return searchField;
     }
-
+    
     private void createFilter() {
         RowFilter<TblModel, Object> rf = null;
         try {

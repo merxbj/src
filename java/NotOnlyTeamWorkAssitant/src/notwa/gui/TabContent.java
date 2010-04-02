@@ -14,9 +14,9 @@ import notwa.common.ConnectionInfo;
 import notwa.wom.WorkItemCollection;
 
 public class TabContent extends JComponent implements ActionListener {
-    JButton addButton,editButton,showHideButton,showDepButton;
+    JButton addButton,showHideButton,showDepButton;
     private ConnectionInfo ci;
-    static JSplitPane sp;
+    private WorkItemTable wiTable;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
@@ -28,18 +28,11 @@ public class TabContent extends JComponent implements ActionListener {
         this.setLayout(new BorderLayout());
         
         JPanel topPanel = new JPanel(new BorderLayout());
-        WorkItemTable wiTable = new WorkItemTable(wic);
+        wiTable = new WorkItemTable(wic);
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
-
-        //WorkItemDetail.getInstance().removeAll();
-        WorkItemDetailLayout widl = new WorkItemDetailLayout();
-        sp = new JSplitPane(    JSplitPane.VERTICAL_SPLIT,
-                                topPanel, widl.initDetailLayout());
-        sp.setResizeWeight(0.9);
-        sp.setContinuousLayout(true);
-
-        this.add(sp, BorderLayout.CENTER);
+        
+        this.add(topPanel, BorderLayout.CENTER);
         return this;
     }
     
@@ -55,24 +48,16 @@ public class TabContent extends JComponent implements ActionListener {
         jcb.addItem("Priority = critical");
     }
     
-    public static void hideDetail() {
-        //TODO after fullscreen, is detail visible anyway ?!
-        sp.setDividerLocation(50000);
-    }
-    
     private JPanel initButtons() {
         JPanel buttonsPanel = new JPanel(new BorderLayout());
         JPanel leftButtonsPanel = new JPanel();
         
         addButton = new JButton("Add");
-        editButton = new JButton("Edit");
         /*TODO showDepButton = new JButton("Show dependency tree");*/
         
         addButton.addActionListener(this);
-        editButton.addActionListener(this);
         
         leftButtonsPanel.add(addButton);
-        leftButtonsPanel.add(editButton);
         
         buttonsPanel.add(leftButtonsPanel, BorderLayout.LINE_START);
         buttonsPanel.add(this.initFilteringComboBoxes(), BorderLayout.LINE_END);
@@ -101,14 +86,13 @@ public class TabContent extends JComponent implements ActionListener {
             WorkItemEditor aewitd = new WorkItemEditor();
             aewitd.initAddDialog();
         }
-        
-        if(ae.getSource() == editButton) {
-            WorkItemEditor aewitd = new WorkItemEditor();
-            aewitd.initEditDialog();
-        }
     }
     
     public ConnectionInfo getCurrentConnectionInfo() {
         return ci;
+    }
+
+    public WorkItemTable getWorkItemTable() {
+        return wiTable;
     }
 }

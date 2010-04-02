@@ -9,7 +9,7 @@ import javax.swing.ListSelectionModel;
 
 import notwa.wom.NoteCollection;
 
-public class WorkItemNoteHistoryTable extends JComponent{
+public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
     private static WorkItemNoteHistoryTable instance;
     private TblModel nhTableModel;
     private JTable nhTable;
@@ -17,10 +17,6 @@ public class WorkItemNoteHistoryTable extends JComponent{
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     
     private NoteCollection noteCollection;
-
-    private WorkItemNoteHistoryTable() {
-        
-    }
     
     public static WorkItemNoteHistoryTable getInstance() {
         if (instance == null) {
@@ -44,17 +40,21 @@ public class WorkItemNoteHistoryTable extends JComponent{
         
         return this;
     }
-
-    public void updateDisplayedData() {
-        try {
-            nhTable.setModel(new TblModel(WorkItemTable.getSelected().getNoteCollection(), tableHeaders));
-            this.resizeAndColorizeTable();
-        } catch (Exception e) { };
-    }
     
     private void resizeAndColorizeTable() {
                 nhTable.getColumnModel().getColumn(0).setMaxWidth(100);
                 nhTable.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
                 nhTable.getColumnModel().getColumn(1).setCellRenderer(tableCellRenderer);
+    }
+    
+    public void setNoteCollection(NoteCollection nc) {
+        try {
+            nhTable.setModel(new TblModel(nc, tableHeaders));
+            this.resizeAndColorizeTable();
+        } catch (Exception e) {};        
+    }
+
+    public void setAllToNull() {
+        this.setNoteCollection(null);
     }
 }
