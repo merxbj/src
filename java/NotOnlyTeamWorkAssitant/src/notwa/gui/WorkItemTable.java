@@ -97,7 +97,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         }
         try {
             WorkItemDetail.getInstance().selectUser(this.getSelected().getAssignedUser().getLogin());
-        } catch (Exception e) {};
+        } catch (Exception e) {}
         try {
             WorkItemDetail.getInstance().setPriority(this.getSelected().getPriority());
         } catch (Exception e) {

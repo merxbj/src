@@ -92,6 +92,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         searchField.setMaximumSize(searchFieldSize);
         searchField.setPreferredSize(searchFieldSize);
         searchField.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 if (me.getSource() == searchField) {
                     if (searchField.getText().equals("Type here ...")) {
@@ -103,12 +104,15 @@ public class MainMenu extends JMenuBar implements ActionListener {
         
         searchField.getDocument().addDocumentListener(
                 new DocumentListener() {
+                    @Override
                     public void changedUpdate(DocumentEvent e) {
                         createFilter();
                     }
+                    @Override
                     public void insertUpdate(DocumentEvent e) {
                         createFilter();
                     }
+                    @Override
                     public void removeUpdate(DocumentEvent e) {
                         createFilter();
                     }

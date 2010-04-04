@@ -154,7 +154,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             }
         } catch (Exception e) {
             this.assignedUsers.addItem("unspecified");
-        }; 
+        }
     }
     
     public void selectUser(String user) {

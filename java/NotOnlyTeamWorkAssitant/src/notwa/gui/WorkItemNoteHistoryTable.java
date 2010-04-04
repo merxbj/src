@@ -51,7 +51,7 @@ public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
         try {
             nhTable.setModel(new TblModel(nc, tableHeaders));
             this.resizeAndColorizeTable();
-        } catch (Exception e) {};        
+        } catch (Exception e) {} 
     }
 
     public void setAllToNull() {

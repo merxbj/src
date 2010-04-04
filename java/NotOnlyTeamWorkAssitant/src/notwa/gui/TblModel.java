@@ -8,7 +8,7 @@ import notwa.wom.WorkItem;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-class TblModel extends AbstractTableModel {
+public class TblModel extends AbstractTableModel {
     private BusinessObjectCollection<?> boc;
     private String[] tableHeader;
    
@@ -17,23 +17,28 @@ class TblModel extends AbstractTableModel {
         this.tableHeader = tableHeader;
     }
 
+    @Override
     public String getColumnName(int c) {
         return tableHeader[c];
     }
 
+    @Override
     public int getColumnCount() {
         return tableHeader.length;
     }
 
+    @Override
     public int getRowCount() {
         return boc == null ? 0 : boc.size();
     }
 
+    @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         // nothing is editable
         super.fireTableCellUpdated(rowIndex, columnIndex);
     }
     
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (tableHeader[columnIndex].equals("Product")) {
             return ((WorkItem)getRecord(rowIndex)).getProject().getName();
@@ -72,10 +77,12 @@ class TblModel extends AbstractTableModel {
         }
     }
 
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
     }
 
+    @Override
     public Class<?> getColumnClass(int columnIndex) {
         if (boc == null || boc.size() == 0) {
             return Object.class;

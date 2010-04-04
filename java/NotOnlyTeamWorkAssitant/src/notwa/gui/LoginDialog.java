@@ -111,7 +111,7 @@ public class LoginDialog extends JDialog implements ActionListener {
         if (ae.getSource() == okButton) {
             if (    this.jcb.getSelectedItem().equals("") ||
                     this.login.getText().isEmpty() ||
-                    this.password.getPassword().equals("")) {
+                    this.password.getPassword().length == 0) {
                 initErrorField("You must fill all fields");
             }
             else {
