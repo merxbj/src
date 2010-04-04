@@ -67,7 +67,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
         WorkItemCollection wic = new WorkItemCollection();
         wic.setCurrentContext(ContextManager.getInstance().newContext());
         WorkItemDal wid = new WorkItemDal(ci,wic.getCurrentContext());
-        wid.Fill(wic);
+        wid.fill(wic);
         
         tc = new TabContent();
         tabPanel.insertTab(ci.getLabel(), null, tc.initTabContent(wic, ci), null, tabPanel.getTabCount()-1);

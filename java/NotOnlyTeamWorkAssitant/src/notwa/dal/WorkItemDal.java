@@ -1,3 +1,22 @@
+/*
+ * WorkItemDal
+ *
+ * Copyright (C) 2010  Jaroslav Merxbauer
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package notwa.dal;
 
 import notwa.sql.ParameterSet;
@@ -7,11 +26,21 @@ import notwa.sql.Sql;
 import notwa.wom.*;
 import notwa.exception.DalException;
 import notwa.common.ConnectionInfo;
-import notwa.common.LoggingInterface;
 
-import notwa.sql.SqlBuilder;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
+/**
+ * <code>WorkItemDal</code> is a <code>DataAccessLayer</code> concrete implementation
+ * providing the actual data and methods how to maintain the work item data persisted
+ * in the database.
+ * <p>The actuall workflow is maintained by the base class itself.</p>
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
     
     public WorkItemDal(ConnectionInfo ci, Context context) {
@@ -19,13 +48,7 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
     }
 
     @Override
-    public int Fill(WorkItemCollection wic) {
-        ParameterSet emptyPc = new ParameterSet();
-        return Fill(wic, emptyPc);
-    }
-    
-    @Override
-    public int Fill(WorkItemCollection wic, ParameterSet pc) {
+    protected String getSqlTemplate() {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   work_item_id, ");
@@ -46,88 +69,91 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
         vanillaSql.append("        {column=assigned_user_id;parameter=WorkItemAssignedUserId;}");
         vanillaSql.append("        {column=expected_timestamp;parameter=WorkItemDeadline;}");
         vanillaSql.append("**/");
-        
-        SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
-        return FillWorkItemCollection(wic, sb.compileSql());
-    }
-    
-    private int FillWorkItemCollection(WorkItemCollection wic, String sql) {
-        try {
-            ResultSet rs = getConnection().executeQuery(sql);
 
-            /*
-             * Open the collection and make sure that it is aware of its original
-             * ResultSet!
-             */
-            wic.setResultSet(rs);
-            wic.setClosed(false);
-
-            while (rs.next()) {
-                WorkItem wi = null;
-                int workItemId = rs.getInt("work_item_id");
-                if (currentContext.hasWorkItem(workItemId)) {
-                    wi = currentContext.getWorkItem(workItemId);
-                } else {
-                    NoteDal noteDal = new NoteDal(ci, currentContext);
-                    NoteCollection nc = new NoteCollection(currentContext);
-                    noteDal.Fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)));
-
-                    ProjectDal projectDal = new ProjectDal(ci, currentContext);
-                    Project project = projectDal.get(new ParameterSet(new Parameter(Parameters.Project.ID, rs.getInt("project_id"), Sql.Condition.EQUALTY)));
-
-                    UserDal userDal = new UserDal(ci, currentContext);
-                    User user = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("assigned_user_id"), Sql.Condition.EQUALTY)));
-
-                    wi = new WorkItem(workItemId);
-                    wi.registerWithContext(currentContext);
-                    wi.setSubject(rs.getString("subject"));
-                    wi.setDescription(rs.getString("description"));
-                    wi.setPriority(WorkItemPriority.lookup(rs.getInt("working_priority")));
-                    wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
-                    wi.setExpectedTimestamp(rs.getTimestamp("expected_timestamp"));
-                    wi.setLastModifiedTimestamp(rs.getTimestamp("last_modified_timestamp"));
-                    wi.setAssignedUser(user);
-                    wi.setProject(project);
-                    wi.setParentWorkItem(get(new ParameterSet(new Parameter(Parameters.WorkItem.ID, rs.getInt("parent_work_item_id"), Sql.Condition.EQUALTY))));
-                    wi.setNoteCollection(nc);
-                }
-
-                if (!wic.add(wi)) {
-                    LoggingInterface.getLogger().logWarning("Work Item (work_item_id = %d) could not be added to the collection!", wi.getId());
-                }
-            }
-        } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-        } finally {
-            /*
-             * Make sure that the collection knows that it is up-to-date and close
-             * it. This will ensure that any further addition/removal will be properly
-             * remarked!
-             */
-            wic.setUpdateRequired(false);
-            wic.setClosed(true);
-        }
-        return wic.size();
+        return vanillaSql.toString();
     }
 
     @Override
-    public WorkItem get(ParameterSet primaryKey) throws DalException {
-        Parameter p = primaryKey.first();
-        if (p.getName().equals(Parameters.WorkItem.ID)) {
-            int workItemId = (Integer) p.getValue();
-            if (currentContext.hasWorkItem(workItemId)) {
-                return currentContext.getWorkItem(workItemId);
-            } else {
-                WorkItemCollection wic = new WorkItemCollection(currentContext);
-                int rows = this.Fill(wic, primaryKey);
-                if (rows == 1) {
-                    return wic.get(0);
-                } else if (rows == 0) {
-                    return null;
-                }
-            }
+    protected Object getPrimaryKey(ResultSet rs) throws DalException {
+        try {
+            return rs.getInt("work_item_id");
+        } catch (SQLException sex) {
+            throw new DalException("Unable to read the work item id from the database!", sex);
         }
+    }
 
-        throw new DalException("Supplied parameters are not a primary key!");
+    @Override
+    protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
+        return new ParameterSet(new Parameter(Parameters.WorkItem.ID, primaryKey, Sql.Condition.EQUALTY));
+    }
+
+    @Override
+    protected boolean isInCurrentContext(Object primaryKey) throws DalException {
+        try {
+            return currentContext.hasWorkItem((Integer) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected WorkItem getBusinessObject(Object primaryKey) throws DalException {
+        try {
+            return currentContext.getWorkItem((Integer) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected WorkItem getBusinessObject(Object primaryKey, ResultSet rs) throws DalException {
+        try {
+            int workItemId = (Integer) primaryKey;
+
+            NoteDal noteDal = new NoteDal(ci, currentContext);
+            NoteCollection nc = new NoteCollection(currentContext);
+            noteDal.fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)));
+
+            ProjectDal projectDal = new ProjectDal(ci, currentContext);
+            Project project = projectDal.get(rs.getInt("project_id"));
+
+            UserDal userDal = new UserDal(ci, currentContext);
+            User user = userDal.get(rs.getInt("assigned_user_id"));
+
+            WorkItem wi = new WorkItem(workItemId);
+            wi.registerWithContext(currentContext);
+            wi.setSubject(rs.getString("subject"));
+            wi.setDescription(rs.getString("description"));
+            wi.setPriority(WorkItemPriority.lookup(rs.getInt("working_priority")));
+            wi.setStatus(WorkItemStatus.lookup(rs.getInt("status_id")));
+            wi.setExpectedTimestamp(rs.getTimestamp("expected_timestamp"));
+            wi.setLastModifiedTimestamp(rs.getTimestamp("last_modified_timestamp"));
+            wi.setAssignedUser(user);
+            wi.setProject(project);
+            wi.setParentWorkItem(get(rs.getInt("parent_work_item_id")));
+            wi.setNoteCollection(nc);
+
+            return wi;
+        } catch (Exception ex) {
+            throw new DalException("Error while parsing the WorkItem from ResultSet!", ex);
+        }
+    }
+
+    @Override
+    protected void updateSingleRow(ResultSet rs, WorkItem wi) throws Exception {
+        Timestamp now = new Timestamp(Calendar.getInstance().getTimeInMillis());
+
+        rs.updateInt("work_item_id", wi.getId());
+        rs.updateString("subject", wi.getSubject());
+        rs.updateString("description", wi.getDescription());
+        rs.updateInt("working_priority", wi.getPriority().getValue());
+        rs.updateInt("status_id", wi.getStatus().getValue());
+        rs.updateTimestamp("expected_timestamp", new Timestamp(wi.getExpectedTimestamp().getTime()));
+        rs.updateTimestamp("last_modified_timestamp", now);
+        rs.updateInt("assigned_user_id", wi.getAssignedUser().getId());
+        rs.updateInt("project_id", wi.getProject().getId());
+        rs.updateInt("parent_work_item_id", wi.getParent().getId());
+
+        wi.setLastModifiedTimestamp(now);
     }
 }

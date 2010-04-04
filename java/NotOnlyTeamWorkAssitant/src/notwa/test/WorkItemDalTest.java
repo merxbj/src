@@ -24,7 +24,7 @@ public class WorkItemDalTest {
     
     public void test() {
         wic.setCurrentContext(context);
-        wid.Fill(wic, pc);
+        wid.fill(wic, pc);
     }
 
     private ConnectionInfo initConnectionInfo() {

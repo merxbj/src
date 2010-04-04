@@ -66,7 +66,7 @@ public class DatabaseConnection {
         if (!isConnected()) {
             connect();
         }
-        Statement s = con.createStatement();
+        Statement s = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = s.executeQuery(query);
         return rs;
     }
@@ -92,7 +92,7 @@ public class DatabaseConnection {
             connect();
         }
 
-        Statement s = con.createStatement();
+        Statement s = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         ResultSet rs = s.executeQuery(query);
         if (rs.next()) {
             return rs.getObject(1);

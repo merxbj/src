@@ -1,3 +1,22 @@
+/*
+ * NoteDal
+ *
+ * Copyright (C) 2010  Jaroslav Merxbauer
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package notwa.dal;
 
 import notwa.wom.Note;
@@ -8,13 +27,12 @@ import notwa.sql.ParameterSet;
 import notwa.sql.Parameter;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
-import notwa.sql.SqlBuilder;
-import notwa.common.LoggingInterface;
 import notwa.exception.DalException;
 import notwa.wom.Context;
 import notwa.wom.User;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
 
@@ -23,14 +41,7 @@ public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
     }
 
     @Override
-    public int Fill(NoteCollection nc) {
-        ParameterSet emptyPc = new ParameterSet();
-        return Fill(nc, emptyPc);
-    }
-
-    @Override
-    public int Fill(NoteCollection nc, ParameterSet pc) {
-        
+    protected String getSqlTemplate() {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   note_id, ");
@@ -44,78 +55,68 @@ public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
         vanillaSql.append("        {column=author_user_id;parameter=NoteAuthorUserId;}");
         vanillaSql.append("**/");
 
-        SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
-        return FillProjectCollection(nc, sb.compileSql());
-    }
-
-    private int FillProjectCollection(NoteCollection nc, String sql) {
-        try {
-            ResultSet rs = getConnection().executeQuery(sql);
-
-            /*
-             * Open the collection and make sure that it is aware of its original
-             * ResultSet!
-             */
-            nc.setResultSet(rs);
-            nc.setClosed(false);
-
-            while (rs.next()) {
-                Note n = null;
-                NotePrimaryKey npk = new NotePrimaryKey(rs.getInt("note_id"), rs.getInt("work_item_id"));
-                if (currentContext.hasNote(npk)) {
-                    n = currentContext.getNote(npk);
-                } else {
-                    UserDal userDal = new UserDal(ci, currentContext);
-                    User author = userDal.get(new ParameterSet(new Parameter(Parameters.User.ID, rs.getInt("author_user_id"), Sql.Condition.EQUALTY)));
-
-                    n = new Note(npk);
-                    n.registerWithContext(currentContext);
-                    n.setAuthor(author);
-                    n.setNoteText(rs.getString("note"));
-                }
-                if (!nc.add(n)) {
-                    LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", n.getNoteText());
-                }
-            }
-        } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-        } finally {
-            /*
-             * Make sure that the collection knows that it is up-to-date and close
-             * it. This will ensure that any further addition/removal will be properly
-             * remarked!
-             */
-            nc.setUpdateRequired(false);
-            nc.setClosed(true);
-        }
-        return nc.size();
+        return vanillaSql.toString();
     }
 
     @Override
-    public Note get(ParameterSet primaryKey) throws DalException {
-        Integer noteId = null;
-        Integer workItemId = null;
-        for (Parameter p : primaryKey) {
-            if (p.getName().equals(Parameters.Note.ID)) {
-                noteId = (Integer) p.getValue();
-            } else if (p.getName().equals(Parameters.Note.WORK_ITEM_ID)) {
-                workItemId = (Integer) p.getValue();
-            }
+    protected Object getPrimaryKey(ResultSet rs) throws DalException {
+        try {
+            return new NotePrimaryKey(rs.getInt("note_id"), rs.getInt("work_item_id"));
+        } catch (SQLException sex) {
+            throw new DalException("Unable to read the note primary key from the database!", sex);
         }
-        if (noteId != null && workItemId != null) {
-            NotePrimaryKey npk = new NotePrimaryKey(noteId, workItemId);
-            if (currentContext.hasNote(npk)) {
-                return currentContext.getNote(npk);
-            } else {
-                NoteCollection nc = new NoteCollection(currentContext);
-                int rows = this.Fill(nc, primaryKey);
-                if (rows == 1) {
-                    return nc.get(0);
-                } else if (rows == 0) {
-                    return null;
-                }
-            }
+    }
+
+    @Override
+    protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
+        NotePrimaryKey npk = (NotePrimaryKey) primaryKey;
+        Parameter noteId = new Parameter(Parameters.Note.ID, npk.getNoteId(), Sql.Condition.EQUALTY);
+        Parameter workItemId = new Parameter(Parameters.Note.WORK_ITEM_ID, npk.getWorkItemId(), Sql.Condition.EQUALTY);
+        return new ParameterSet(new Parameter[] {noteId, workItemId});
+    }
+
+    @Override
+    protected boolean isInCurrentContext(Object primaryKey) throws DalException {
+        try {
+            return currentContext.hasNote((NotePrimaryKey) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
         }
-        throw new DalException("Supplied parameters are not a primary key!");
+    }
+
+    @Override
+    protected Note getBusinessObject(Object primaryKey) throws DalException {
+        try {
+            return currentContext.getNote((NotePrimaryKey) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected Note getBusinessObject(Object primaryKey, ResultSet rs) throws DalException {
+        try {
+            NotePrimaryKey npk = (NotePrimaryKey) primaryKey;
+
+            UserDal userDal = new UserDal(ci, currentContext);
+            User author = userDal.get(rs.getInt("author_user_id"));
+
+            Note n = new Note(npk);
+            n.registerWithContext(currentContext);
+            n.setAuthor(author);
+            n.setNoteText(rs.getString("note"));
+
+            return n;
+        } catch (Exception ex) {
+            throw new DalException("Error while parsing the Note from ResultSet!", ex);
+        }
+    }
+
+    @Override
+    protected void updateSingleRow(ResultSet rs, Note n) throws Exception {
+        rs.updateInt("note_id", n.getId().getNoteId());
+        rs.updateInt("work_item_id", n.getId().getWorkItemId());
+        rs.updateInt("author_user_id", n.getAuthor().getId());
+        rs.updateString("note", n.getText());
     }
 }

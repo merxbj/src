@@ -1,5 +1,5 @@
 /*
- * DalException
+ * DeveloperException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -22,25 +22,25 @@ package notwa.exception;
 /**
  * <code>Throwable</code> exception which should be (acutally shouldn't be) caught
  * after the DAL processing.
- * 
+ *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class DalException extends Exception {
+public class DeveloperException extends Exception {
 
     /**
      * Default constructor.
      */
-    public DalException() {
+    public DeveloperException() {
     }
 
     /**
      * Constructor providing you with the possibility to specify the exception
      * message which should briefly descrie the reason of the exception.
-     * 
+     *
      * @param message Brief description of cause of the exceptional situtation.
      */
-    public DalException(String message) {
+    public DeveloperException(String message) {
         super(message);
     }
 
@@ -54,22 +54,22 @@ public class DalException extends Exception {
      * @param cause The actual exception which is going to be wrapped by this new instance.
      *              Usually refered to as inner exeption.
      */
-    public DalException(Throwable cause) {
+    public DeveloperException(Throwable cause) {
         super(cause);
     }
 
     /**
-     * Constructor providing you with the possibility to specify the exception 
+     * Constructor providing you with the possibility to specify the exception
      * message which should briefly describe the reason of the exception and the
      * inner exception which was probably caught by some general <code>catch</code>
      * statement and is going to be wrapped into this new instance which should be
      * definitely more descriptive.
-     * 
+     *
      * @param message Brief description of cause of the exceptional situtation.
      * @param cause The actual exception which is going to be wrapped by this new instance.
      *              Usually refered to as inner exeption.
      */
-    public DalException(String message, Throwable cause) {
+    public DeveloperException(String message, Throwable cause) {
         super(message, cause);
     }
 

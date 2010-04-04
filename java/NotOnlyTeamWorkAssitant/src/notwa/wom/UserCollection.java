@@ -20,19 +20,54 @@
 package notwa.wom;
 
 import java.sql.ResultSet;
+import java.util.Collections;
+import notwa.exception.DeveloperException;
 
+/**
+ * This class represents a concrete implmenetation of <code>BusinessObjectCollection</code>
+ * keeping and maintaining the <code>Users</code>s.
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class UserCollection extends BusinessObjectCollection<User> {
 
+    /**
+     * The default constructor setting the current <code>Context</code> and <code>
+     * ResultSet</code> to <code>null</code>.
+     */
     public UserCollection() {
         super(null, null);
     }
 
+    /**
+     * The constructor setting the current <code>Context</code> according to the 
+     * given value and <code>ResultSet</code> to <code>null</code>.
+     */
     public UserCollection(Context context) {
         super(context, null);
     }
 
+    /**
+     * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
+     * to according to the given values.
+     */
     public UserCollection(Context currentContext, ResultSet resultSet) {
         super(currentContext, resultSet);
     }
 
+    @Override
+    public User getByPrimaryKey(Object primaryKey) throws DeveloperException {
+        int userIndex;
+        try {
+            userIndex = Collections.binarySearch(collection, new User((Integer) primaryKey));
+            if (userIndex >= 0) {
+                return super.get(userIndex);
+            } else {
+                return null;
+            }
+        } catch (ClassCastException ccex) {
+            throw new DeveloperException("Developer haven't provided correct comparing and equaling methods for User!", ccex);
+        }
+    }
 }

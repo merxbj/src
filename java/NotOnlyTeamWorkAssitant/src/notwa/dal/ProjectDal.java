@@ -1,11 +1,28 @@
+/*
+ * ProjectDal
+ *
+ * Copyright (C) 2010  Jaroslav Merxbauer
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
 import notwa.sql.ParameterSet;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
-import notwa.sql.SqlBuilder;
-import notwa.common.LoggingInterface;
 import notwa.exception.DalException;
 import notwa.wom.Context;
 import notwa.sql.Parameter;
@@ -14,7 +31,18 @@ import notwa.sql.Parameters;
 import notwa.sql.Sql;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
+
+/**
+ * <code>ProjectDal</code> is a <code>DataAccessLayer</code> concrete implementation
+ * providing the actual data and methods how to maintain the project data persisted
+ * in the database.
+ * <p>The actuall workflow is maintained by the base class itself.</p>
+ * 
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
 
     public ProjectDal(ConnectionInfo ci, Context context) {
@@ -22,13 +50,7 @@ public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
     }
 
     @Override
-    public int Fill(ProjectCollection col) {
-        ParameterSet emptyPc = new ParameterSet();
-        return Fill(col, emptyPc);
-    }
-
-    @Override
-    public int Fill(ProjectCollection col, ParameterSet pc) {
+    protected String getSqlTemplate() {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   project_id, ");
@@ -39,75 +61,67 @@ public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
         vanillaSql.append("        {column=name;parameter=ProjectName;}");
         vanillaSql.append("**/");
 
-        SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
-        return FillProjectCollection(col, sb.compileSql());
+        return vanillaSql.toString();
+    }
+    
+    @Override
+    protected Object getPrimaryKey(ResultSet rs) throws DalException {
+        try {
+            return rs.getInt("project_id");
+        } catch (SQLException sex) {
+            throw new DalException("Unable to read the project id from the database!", sex);
+        }
     }
 
-    private int FillProjectCollection(ProjectCollection col, String sql) {
+    @Override
+    protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
+        return new ParameterSet(new Parameter(Parameters.Project.ID, primaryKey, Sql.Condition.EQUALTY));
+    }
+
+    @Override
+    protected boolean isInCurrentContext(Object primaryKey) throws DalException {
         try {
-            ResultSet rs = getConnection().executeQuery(sql);
-
-            /*
-             * Open the collection and make sure that it is aware of its original
-             * ResultSet!
-             */
-            col.setResultSet(rs);
-            col.setClosed(false);
-
-            while (rs.next()) {
-                Project p = null;
-                int projectId = rs.getInt("project_id");
-                if (currentContext.hasProject(projectId)) {
-                    p = currentContext.getProject(projectId);
-                } else {
-                    p = new Project(projectId);
-                    p.registerWithContext(currentContext);
-                    p.setProjectName(rs.getString("name"));
-                    p.setAssignedUsers(getAssignedUserCollection(projectId));
-                }
-                
-                if (!col.add(p)) {
-                    LoggingInterface.getLogger().logWarning("Project (project_id = %d) could not be added to the collection!", p.getId());
-                }
-            }
+            return currentContext.hasProject((Integer) primaryKey);
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-        } finally {
-            /*
-             * Make sure that the collection knows that it is up-to-date and close
-             * it. This will ensure that any further addition/removal will be properly
-             * remarked!
-             */
-            col.setUpdateRequired(false);
-            col.setClosed(true);
+            throw new DalException("Invalid primary key provided for context query!", ex);
         }
-        return col.size();
+    }
+
+    @Override
+    protected Project getBusinessObject(Object primaryKey) throws DalException {
+        try {
+            return currentContext.getProject((Integer) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected Project getBusinessObject(Object primaryKey, ResultSet rs) throws DalException {
+        try {
+            int projectId = (Integer) primaryKey;
+
+            Project p = new Project(projectId);
+            p.registerWithContext(currentContext);
+            p.setProjectName(rs.getString("name"));
+            p.setAssignedUsers(getAssignedUserCollection(projectId));
+
+            return p;
+        } catch (Exception ex) {
+            throw new DalException("Error while parsing the Project from ResultSet!", ex);
+        }
     }
 
     private UserCollection getAssignedUserCollection(int projectId) throws DalException {
         UserCollection uc = new UserCollection(currentContext);
         ProjectToUserAssignmentDal ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
-        ptuaDal.Fill(uc, new ParameterSet(new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)));
+        ptuaDal.fill(uc, new ParameterSet(new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)));
         return uc;
     }
-
+    
     @Override
-    public Project get(ParameterSet primaryKey) throws DalException {
-        Parameter p = primaryKey.first();
-        if (p.getName().equals(Parameters.Project.ID)) {
-            int projectId = (Integer) p.getValue();
-            if (currentContext.hasProject(projectId)) {
-                return currentContext.getProject(projectId);
-            } else {
-                ProjectCollection pc = new ProjectCollection(currentContext);
-                int rows = this.Fill(pc, primaryKey);
-                if (rows == 1) {
-                    return pc.get(0);
-                } else if (rows == 0) {
-                    return null;
-                }
-            }
-        }
-        throw new DalException("Supplied parameters are not a primary key!");
+    protected void updateSingleRow(ResultSet rs, Project p) throws Exception {
+        rs.updateInt("project_id", p.getId());
+        rs.updateString("name", p.getName());
     }
 }

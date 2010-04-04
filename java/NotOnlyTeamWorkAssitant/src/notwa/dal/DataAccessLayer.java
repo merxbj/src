@@ -19,6 +19,7 @@
  */
 package notwa.dal;
 
+import java.sql.ResultSet;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 import notwa.wom.Context;
@@ -27,6 +28,7 @@ import notwa.wom.BusinessObject;
 import java.util.Hashtable;
 import notwa.exception.DalException;
 import notwa.sql.ParameterSet;
+import notwa.sql.SqlBuilder;
 import notwa.wom.BusinessObjectCollection;
 
 /**
@@ -46,11 +48,10 @@ import notwa.wom.BusinessObjectCollection;
  * @author eTeR
  * @version %I% %G%
  */
-public abstract class DataAccessLayer<Object extends BusinessObject, Collection extends BusinessObjectCollection> {
+public abstract class DataAccessLayer<TObject extends BusinessObject, TCollection extends BusinessObjectCollection<TObject>> {
     private static Hashtable<ConnectionInfo, DatabaseConnection> connections;
     protected ConnectionInfo ci;
     protected Context currentContext;
-    
     /**
      * The default constructor which should never been invoked.
      * Any attempt of constructing any DAL using this constructor will be logged
@@ -92,7 +93,265 @@ public abstract class DataAccessLayer<Object extends BusinessObject, Collection 
         return connections.get(ci);
     }
 
-    public abstract int Fill(Collection boc) throws DalException;
-    public abstract int Fill(Collection boc, ParameterSet pc) throws DalException;
-    public abstract Object get(ParameterSet primaryKey) throws DalException;
+    /**
+     * Fills the given <code>BusinessObjectCollection</code> with all possible data.
+     *
+     * @param boc The <code>BusinessObjectCollection</code> to fill.
+     * @return The number of <code>BusinessObjects</code>s filled into the <code>Collection</code>.
+     */
+    public int fill(TCollection boc) {
+        ParameterSet emptyPc = new ParameterSet();
+        return fill(boc, emptyPc);
+    }
+
+    /**
+     * Fills the given <code>BusinessObjectCollection</code> with data based on 
+     * the given <code>ParameterSet</code>.
+     * @see Parameters
+     *
+     * @param boc The <code>BusinessObjectCollection</code> to fill.
+     * @return The number of <code>BusinessObject</code>s filled into the <code>Collection</code>.
+     */
+    public int fill(TCollection boc, ParameterSet pc) {
+        String sql = getSqlTemplate();
+        SqlBuilder sb = new SqlBuilder(sql, pc);
+        try {
+            ResultSet rs = getConnection().executeQuery(sb.compileSql());
+            boc.setClosed(false);
+            boc.setResultSet(rs);
+
+            while (rs.next()) {
+                TObject bo = null;
+                Object pk = getPrimaryKey(rs);
+                if (isInCurrentContext(pk)) {
+                    bo = getBusinessObject(pk);
+                } else {
+                    bo = getBusinessObject(pk, rs);
+                }
+
+                if (!boc.add(bo)) {
+                    LoggingInterface.getLogger().logWarning("BusinessObject %s could not be added to the collection!", bo.toString());
+                }
+            }
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+        } finally {
+            /*
+             * Make sure that the collection knows that it is up-to-date and close
+             * it. This will ensure that any further addition/removal will be properly
+             * remarked!
+             */
+            boc.setUpdateRequired(false);
+            boc.setClosed(true);
+        }
+        
+        return boc.size();
+    }
+
+    /**
+     * Gets the single <code>BusinessObject</code> from the database based on the given
+     * primary key.
+     * If <code>BusinessObject> with the same primary key is already present in
+     * the current <code>Context</code>, it is rather picked up from that context
+     * instead of creating a new one and wasting the time with waiting for the
+     * database to process the query.
+     *
+     * @param primaryKey It should be the primary key of requested <code>BusinessObject</code>.
+     * @return  The requested <code>BusinessObject</code> instance.
+     *          <code>null</code if there is no such a <code>BusinessObject</code>.
+     * @throws DalException Whenever the given primaryKey actually isn't a
+     *                      primary key or a database connection issue occures.
+     */
+    public TObject get(Object primaryKey) throws DalException {
+        if (isInCurrentContext(primaryKey)) {
+            return getBusinessObject(primaryKey);
+        } else {
+            String sql = getSqlTemplate();
+            ParameterSet ps = getPrimaryKeyParams(primaryKey);
+            SqlBuilder sb = new SqlBuilder(sql, ps);
+
+            try {
+                ResultSet rs = getConnection().executeQuery(sb.compileSql());
+
+                if (!rs.last()) {
+                    return null;
+                }
+
+                if (rs.getRow() == 1) {
+                    return getBusinessObject(primaryKey, rs);
+                } else {
+                    throw new DalException("Supplied parameters are not a primary key!");
+                }
+            } catch (Exception ex) {
+                throw new DalException(String.format("Unexpected error occured while getting a BusinessObject with primary key %s!", primaryKey.toString()), ex);
+            }
+        }
+    }
+
+    /**
+     * Updates the database representation of the given concrete implementation
+     * of <code>BusinessObjectCollection</code>.
+     * <p>It is required that the given <code>BusinessObjectCollection</code>
+     * has been built by this DAL, otherwise now action will be taken! Moreover,
+     * it will skip the processing if there have been no changes made.</p>
+     * <p>It utilizes already existing <code>ResultSet</code> used previously to
+     * build the given <code>BusinessObjectCollection</code> to make the actuall
+     * update/insert/delete againts the database.</p>
+     *
+     * @param boc   The <code>BusinessObjectCollection</code> which changes should
+     *              be mirrored to the database.
+     */
+    public void update(TCollection boc) {
+        if (boc.getResultSet() == null && !boc.isUpdateRequired()) {
+            return;
+        }
+
+        ResultSet rs = boc.getResultSet();
+        try {
+            rs.beforeFirst();
+
+            /*
+             * Make sure that all existing rows gets updated
+             */
+            while (rs.next()) {
+                Object primaryKey = getPrimaryKey(rs);
+                TObject bo = boc.getByPrimaryKey(primaryKey);
+                if (bo.isDeleted()) {
+                    rs.deleteRow();
+                } else {
+                    updateSingleRow(rs, bo);
+                    rs.updateRow();
+                }
+            }
+
+            /*
+             * Proceed with inserting of new rows
+             */
+            for (TObject bo : boc) {
+                if (bo.isInserted()) {
+                    rs.moveToInsertRow();
+                    updateSingleRow(rs, bo);
+                    rs.moveToCurrentRow();
+                }
+            }
+
+            /*
+             * Commit when and only when we succesfuly pass the whole update process!
+             */
+            boc.commit();
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+        }
+    }
+
+    /**
+     * Gets the parametrized sql template which shall be provided by every concrete
+     * implmentation of the DataAccessLayer.
+     * <p>This sql actually describes how to obtain the concrete data from the
+     * database and its used to build the <code>RecordSet</code> which is then
+     * used to build the concrete <code>BusinessObjectCollection</code</p> and
+     * the concrete implementation should know how it wants to build its data.
+     *
+     * @return  The actuall sql parametrized template to fill the concrete <code>
+     *          BusinessObjectCollection</code> implementation.
+     */
+    protected abstract String getSqlTemplate();
+
+    /**
+     * Parses the concrete <code>BusinessObject</code> from the given <code>ResultSet</code>.
+     * <p>This method is called only if the concrete <code>BusinessObject</code> has
+     * not been found wihtin a current <code>Context</code> and the concrete
+     * implementation should know how to obtain the requested data from the given
+     * <code>ResultSet</code>
+     *
+     * @param primaryKey    The actuall primarky key identyfying the concrete
+     *                      implementation of <code>BusinessObject</code>
+     *
+     * @param rs <code>ResultSet</code> where the data will be parsed from.
+     * @return Built concrete implementation of <code>BusinessObject</code>.
+     * @throws DalException Whenever error occures during the <code>ResultSet</code>
+     *                      parsing, which should indicate that there is a column
+     *                      missing in the database. This should be a rare occurance.
+     */
+    protected abstract TObject getBusinessObject(Object primaryKey, ResultSet rs) throws DalException;
+
+    /**
+     * Gets the concrete <code>BusinessObject</code> from the actual <code>Context</code>,
+     * if there is one.
+     * <p>This method always preceedes the {@link #getBusinessObject(java.lang.Object, java.sql.ResultSet)}
+     * if the current <code>Context</code> contains the <code>BusinessObject</code>
+     * identyfied by its primary key and the concrete implementation should know
+     * how to obtain its concrete <code>BusinessObject</cpdo> from <code>Context</code>.</p>
+     *
+     * @param primaryKey    The actuall primary key identyfying the concrete
+     *                      implementation of <code>BusinessObject</code>.
+     * @return  Concrete implementation of <code>BusinessObject</code> acquired from
+     *          the current <code>Context</code>.
+     * @throws DalException Whenever error occures during the primary key recognition,
+     *                      which should point to incorrect parameter passing. The
+     *                      caller probably passed the primary key represented as
+     *                      an unexpected datatype.
+     */
+    protected abstract TObject getBusinessObject(Object primaryKey) throws DalException;
+
+    /**
+     * Parses the primary key of the concrete <code>BusinessObject</code> from
+     * the given <code>ResultSet</code>.
+     *
+     * @param rs    The <code>ResultSet</code> where the primary key shall be parsed
+     *              from. The concrete implementation knows what is/are the primary
+     *              key column(s).
+     * @return  The parsed primary key.
+     * @throws DalException Whenever the concrete implementation doesn't find the
+     *                      expected columns in the given <code>ResultSet</code>.
+     */
+    protected abstract Object getPrimaryKey(ResultSet rs) throws DalException;
+
+    /**
+     * Checks whether the concrete implementation of <code>BusinessObject</code>
+     * identyfied by the given primary key is not already present in the current
+     * <code>Context</code>.
+     * <p>The concrete implementation should know how to query the <code>Context</code>
+     * for the concrete implementation of <code>BusinessObject</code>.</p>
+     * 
+     * @param primaryKey    The actuall primary key identyfying the concrete
+     *                      implementation of <code>BusinessObject</code>.
+     * @return  <code>true</code> if the queried concrete <code>BusinessObject</code>
+     *          is already maintained within the current <code>Context</code>,
+     *          <code>false</code> otherwise.
+     * @throws DalException Whenever the concrete implementation doesn't find the
+     *                      expected columns in the given <code>ResultSet</code>.
+     */
+    protected abstract boolean isInCurrentContext(Object primaryKey) throws DalException;
+
+    /**
+     * Builds the <code>ParameterSet</code> which will then identify the one and
+     * only concrete <code>BusinessObject</code> when there is a need to query
+     * such a <code>BusinessObject</code> from the database.
+     * <p>The concrete implementation shoudl know how exactly build the <code>ParameterSet</code>
+     * using the given primary key.</p>
+     * @param primaryKey    The actuall primary key identyfying the concrete
+     *                      implementation of <code>BusinessObject</code>.
+     * @return  The built <code>ParameterSet</code> which could then by used to
+     *          obtain the one and only <code>BusinessObject</code> from database.
+     * @throws DalException Whenever error occures during the primary key recognition,
+     *                      which should point to incorrect parameter passing. The
+     *                      caller probably passed the primary key represented as
+     *                      an unexpected datatype.
+     */
+    protected abstract ParameterSet getPrimaryKeyParams(Object primaryKey);
+
+    /**
+     * Updates the single row in the given <code>ResultSet</code> based on the
+     * given concrete implementation of <code>BusinessObject</code>.
+     * <p>The concrete implementation should know which columns should be updated
+     * based on which values from the given <code>BusinessObject</code>.</p>
+     *
+     * @param rs The <code>ResultSet</code> to be updated.
+     * @param bo    The <code>BusinessObject</code> to be used to update the given
+     *              <code>ResultSet</code>.
+     * @throws Exception    Whenever the concrete implementation doesn't find the
+     *                      expected columns in the given <code>ResultSet</code>.
+     */
+    protected abstract void updateSingleRow(ResultSet rs, TObject bo) throws Exception;
 }

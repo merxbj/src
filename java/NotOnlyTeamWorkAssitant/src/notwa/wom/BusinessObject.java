@@ -119,7 +119,7 @@ public abstract class BusinessObject {
     }
     
     /**
-     * Saves all user changes to original version
+     * Saves all user changes to original version and clears the inserted flag.
      */
     public void commit() {
         this.originalVersion = null;
@@ -128,6 +128,8 @@ public abstract class BusinessObject {
         } catch (CloneNotSupportedException e) {
             LoggingInterface.getInstanece().handleException(e);
         }
+
+        this.setInserted(false);
     }
 
     /**

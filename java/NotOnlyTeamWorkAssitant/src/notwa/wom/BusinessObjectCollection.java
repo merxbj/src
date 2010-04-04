@@ -23,9 +23,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import notwa.exception.ContextException;
+import notwa.exception.DeveloperException;
 
 /**
- * Abstract class providing an general behavior connected with maintaining a
+ * Abstract class providing a general behavior connected with maintaining a
  * collection of <code>BusinessObject</code>s.
  * <p>This collection is usualy build upon the data queried from the database.</p>
  * 
@@ -45,7 +46,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
 
     /**
      * The sole basic constructor providing a potential of setting the current
-     * <code>Context</code> and the initial <code>ResultSet</code> which this 
+     * <code>Context</code> and the initial <code>ResultSet</code> where this
      * collection have came from.
      * 
      * @param currentContext    The actual <code>Context</code> where this 
@@ -167,12 +168,14 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         }
 
         /*
-         * If this collection is already closed, mark the item as deleted and make
-         * sure that this collection is aware of that change to be updated to the
-         * database. Otherwise, just remove the BusinessObject from this collection
+         * If this collection is already closed and the BusinessObject hasn't
+         * been previously inserted to the collection (so there is no need for
+         * a database update, mark the item as deleted and make sure that this
+         * collection is aware of that change to be updated to the database.
+         * Otherwise, just remove the BusinessObject from this collection
          * and detach it.
          */
-        if (isClosed()) {
+        if (isClosed() && !bo.isInserted()) {
             bo.setDeleted(true);
             setUpdateRequired(true);
         } else {
@@ -240,6 +243,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
             }
         }
         collection.removeAll(garbage);
+        setUpdateRequired(false);
     }
 
     /**
@@ -249,6 +253,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         for (BusinessObject bo : collection) {
             bo.rollback();
         }
+        setUpdateRequired(false);
     }
 
     /**
@@ -335,5 +340,31 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     public void setResultSet(ResultSet resultSet) {
         this.resultSet = resultSet;
     }
+
+    /**
+     * Gets the result set upon which this collection is build and through which
+     * the database can be easily updated.
+     *
+     * @return resultSet The original <code>ResultSet</code> based which this
+     *                  <code>BusinessObjectCollection</code> has been created.
+     */
+    public ResultSet getResultSet() {
+        return resultSet;
+    }
+
+    /**
+     * Gets the concrete implementation of <code>BusinessObject</code> by its
+     * primary key.
+     * <p>The concrete implementation should know how to handle the given primary
+     * key</p>
+     * @param primaryKey    The actuall primary key which should be used to the
+     *                      <code>BusinessObject</code> lookup.
+     * @return  The found concrete implementation of the <code>BusinessObject</code>,
+     *          <code>null</code> if there is none such.
+     * @throws DeveloperException   If the developer haven't precisely specified the
+     *                              comparing methods for the concrete implementation
+     *                              of <code>BusinessObject</code>.
+     */
+    public abstract T getByPrimaryKey(Object primaryKey) throws DeveloperException;
 
 }

@@ -20,18 +20,56 @@
 package notwa.wom;
 
 import java.sql.ResultSet;
+import java.util.Collections;
+import notwa.exception.DeveloperException;
 
+/**
+ * This class represents a concrete implmenetation of <code>BusinessObjectCollection</code>
+ * keeping and maintaining the <code>Note</code>s.
+ * 
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class NoteCollection extends BusinessObjectCollection<Note> {
 
+    /**
+     * The default constructor setting the current <code>Context</code> and <code>
+     * ResultSet</code> to <code>null</code>.
+     */
     public NoteCollection() {
         super(null, null);
     }
 
+    /**
+     * The constructor setting the current <code>Context</code> according to the 
+     * given value and <code>ResultSet</code> to <code>null</code>.
+     */
     public NoteCollection(Context context) {
         super(context, null);
     }
 
+    /**
+     * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
+     * to according to the given values.
+     */
     public NoteCollection(Context currentContext, ResultSet resultSet) {
         super(currentContext, resultSet);
     }
+
+    @Override
+    public Note getByPrimaryKey(Object primaryKey) throws DeveloperException {
+        int noteIndex;
+        try {
+            NotePrimaryKey npk = (NotePrimaryKey) primaryKey;
+            noteIndex = Collections.binarySearch(collection, new Note(npk));
+            if (noteIndex >= 0) {
+                return super.get(noteIndex);
+            } else {
+                return null;
+            }
+        } catch (ClassCastException ccex) {
+            throw new DeveloperException("Developer haven't provided correct comparing and equaling methods for Note!", ccex);
+        }
+    }
+
 }

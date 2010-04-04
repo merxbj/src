@@ -22,11 +22,9 @@ package notwa.dal;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 import notwa.sql.ParameterSet;
-import notwa.sql.SqlBuilder;
 import notwa.sql.Parameter;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
-import notwa.wom.BusinessObjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 import notwa.wom.ProjectCollection;
@@ -37,14 +35,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Data Access Layer providing an access to the User sql table.
- * It provides a several methods to:
- * <ul>
- * <li>Fill the given <code>UserCollection</code></li>
- * <li>Retrieve the single <code>User</code> or finally</li>
- * <li>Get the password for the given login.</li>
- *
- * @author eTeR
+ * <code>UserDal</code> is a <code>DataAccessLayer</code> concrete implementation
+ * providing the actual data and methods how to maintain the user data persisted
+ * in the database.
+ * <p>The actuall workflow is maintained by the base class itself.</p>
+ * 
+ * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class UserDal extends DataAccessLayer<User, UserCollection> {
@@ -53,28 +49,8 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
         super(ci, context);
     }
 
-    /**
-     * Fills the given <code>UserCollection</code> with all possible data.
-     * 
-     * @param uc The <code>UserCollection</code> to fill.
-     * @return The number of <code>User</code>s filled into the <code>Collection</code>.
-     */
     @Override
-    public int Fill(UserCollection uc) {
-        ParameterSet emptyPc = new ParameterSet();
-        return Fill(uc, emptyPc);
-    }
-
-    /**
-     * Fills the given <code>UserCollection</code> with data based on the given
-     * <code>ParameterSet</code>.
-     * @see Parameters
-     *
-     * @param uc The <code>UserCollection</code> to fill.
-     * @return The number of <code>User</code>s filled into the <code>Collection</code>.
-     */
-    @Override
-    public int Fill(UserCollection uc, ParameterSet pc) {
+    protected String getSqlTemplate() {
         StringBuilder vanillaSql = new StringBuilder();
 
         vanillaSql.append("SELECT   user_id, ");
@@ -91,62 +67,58 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
         vanillaSql.append("        {column=last_name;parameter=UserLastName;}");
         vanillaSql.append("**/");
 
-        SqlBuilder sb = new SqlBuilder(vanillaSql.toString(), pc);
-        return FillUserCollection(uc, sb.compileSql());
+        return vanillaSql.toString();
     }
 
-    /**
-     * Fills the given <code>UserCollection</code> based upon the given sql string.
-     * If user with the same user id already lives in the same context as this
-     * <code>DataAccessLayer</code> it is rather picked up from the context than
-     * recreated again
-     *
-     * @param uc <code>UserCollection</code> to be filled.
-     * @param sql Already parametrized SQL Query.
-     * @return Number of the actual <code>User</code>s filled into the <code>Collection</code>
-     */
-    private int FillUserCollection(UserCollection uc, String sql) {
+    @Override
+    protected Object getPrimaryKey(ResultSet rs) throws DalException {
         try {
-            ResultSet rs = getConnection().executeQuery(sql);
-
-            /*
-             * Open the collection and make sure that it is aware of its original
-             * ResultSet!
-             */
-            uc.setResultSet(rs);
-            uc.setClosed(false);
-
-            while (rs.next()) {
-                User u = null;
-                int userId = rs.getInt("user_id");
-                if (currentContext.hasUser(userId)) {
-                    u = currentContext.getUser(userId);
-                } else {
-                    u = new User(userId);
-                    u.registerWithContext(currentContext);
-                    u.setFirstName(rs.getString("first_name"));
-                    u.setLastName(rs.getString("last_name"));
-                    u.setLogin(rs.getString("login"));
-                    u.setPassword(rs.getString("password"));
-                    u.setAssignedProjects(getAssignedProjectCollection(userId));
-                }
-                if (!uc.add(u)) {
-                    LoggingInterface.getLogger().logWarning("User (user_id = %d) could not be added to the collection!", u.getId());
-                }
-
-            }
-        } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-        } finally {
-            /*
-             * Make sure that the collection knows that it is up-to-date and close
-             * it. This will ensure that any further addition/removal will be properly
-             * remarked!
-             */
-            uc.setUpdateRequired(false);
-            uc.setClosed(true);
+            return rs.getInt("user_id");
+        } catch (SQLException sex) {
+            throw new DalException("Unable to read the user id from the database!", sex);
         }
-        return uc.size();
+    }
+
+    @Override
+    protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
+        return new ParameterSet(new Parameter(Parameters.User.ID, primaryKey, Sql.Condition.EQUALTY));
+    }
+    
+    @Override
+    protected boolean isInCurrentContext(Object pk) throws DalException {
+        try {
+            return currentContext.hasUser((Integer) pk);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected User getBusinessObject(Object primaryKey) throws DalException {
+        try {
+            return currentContext.getUser((Integer) primaryKey);
+        } catch (Exception ex) {
+            throw new DalException("Invalid primary key provided for context query!", ex);
+        }
+    }
+
+    @Override
+    protected User getBusinessObject(Object primaryKey, ResultSet rs) throws DalException {
+        try {
+            int userId = (Integer) primaryKey;
+
+            User u = new User(userId);
+            u.registerWithContext(currentContext);
+            u.setFirstName(rs.getString("first_name"));
+            u.setLastName(rs.getString("last_name"));
+            u.setLogin(rs.getString("login"));
+            u.setPassword(rs.getString("password"));
+            u.setAssignedProjects(getAssignedProjectCollection(userId));
+
+            return u;
+        } catch (Exception ex) {
+            throw new DalException("Error while parsing the User from ResultSet!", ex);
+        }
     }
 
     /**
@@ -161,42 +133,16 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
     private ProjectCollection getAssignedProjectCollection(int userId) throws DalException {
         ProjectCollection pc = new ProjectCollection(currentContext);
         UserToProjectAssignmentDal utpaDal = new UserToProjectAssignmentDal(ci, currentContext);
-        utpaDal.Fill(pc, new ParameterSet(new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)));
+        utpaDal.fill(pc, new ParameterSet(new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)));
         return pc;
     }
 
-    /**
-     * Gets the single <code>User</code> from the database based on the given
-     * <code>ParameterSet</code> which should actually represent the user primary key.
-     * If user the same primary key is alread present in the current context, it is
-     * rather picked up from that context instead of creating a new one and wasting the
-     * time with waiting for the database to process the query.
-     *
-     * @param primaryKey It should be the user id of requested user.
-     * @return  The requested <code>User</code> instance.
-     *          <code>null</code if there is no such a <code>User</code>.
-     * @throws DalException Whenever the given <code>ParameterSet</code> doesn't
-     *                      represent the requested primary key or a database
-     *                      connection issue occures.
-     */
     @Override
-    public User get(ParameterSet primaryKey) throws DalException {
-        Parameter p = primaryKey.first();
-        if (p.getName().equals(Parameters.User.ID)) {
-            int userId = (Integer) p.getValue();
-            if (currentContext.hasUser(userId)) {
-                return currentContext.getUser(userId);
-            } else {
-                UserCollection uc = new UserCollection(currentContext);
-                int rows = this.Fill(uc, primaryKey);
-                if (rows == 1) {
-                    return uc.get(0);
-                } else if (rows == 0) {
-                    return null;
-                }
-            }
-        }
-        throw new DalException("Supplied parameters are not a primary key!");
+    protected void updateSingleRow(ResultSet rs, User u) throws Exception {
+        rs.updateInt("user_ud", u.getId());
+        rs.updateString("first_name", u.getFirstName());
+        rs.updateString("last_name", u.getLastName());
+        rs.updateString("password", u.getPassword());
     }
 
     /**
