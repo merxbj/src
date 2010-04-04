@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -93,6 +92,19 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
 
     @Override
     public void stateChanged(ChangeEvent ce) {
+        /*
+         *  Sets currently used sorter by MainMenu to currently selected instance of WorkItemTable
+         */
+        try {
+            MainMenu.getInstance().setSorter(   ((TabContent)
+                                                        ((JTabbedPane)ce.getSource()).getSelectedComponent()) // get currently selected Tab
+                                                .getWorkItemTable()
+                                                .getSorter());
+        } catch (Exception e) { }
+        
+        /*
+         * Set all showed data in Detail's to nulls
+         */
         WorkItemDetail.getInstance().setAllToNull();
         WorkItemNoteHistoryTable.getInstance().setAllToNull();
     }

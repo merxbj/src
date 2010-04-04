@@ -21,7 +21,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private JTable witTable;
     private TblModel witTableModel;
-    static TableRowSorter<TblModel> sorter;
+    private TableRowSorter<TblModel> sorter;
 
     public WorkItemTable(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
@@ -62,6 +62,10 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         return (WorkItem) this.witTable .getModel()
                                         .getValueAt(witTable.convertRowIndexToModel(
                                                     witTable.getSelectedRow()), 6);
+    }
+    
+    public TableRowSorter<TblModel> getSorter() {
+        return this.sorter;
     }
     
     @Override

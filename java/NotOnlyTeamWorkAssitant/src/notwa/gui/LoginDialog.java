@@ -2,9 +2,7 @@ package notwa.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -24,11 +22,12 @@ import notwa.exception.SignInException;
 import notwa.security.Security;
 
 public class LoginDialog extends JDialog implements ActionListener {
+    //private JPanel componentsPanel;
     private JButton okButton, stornoButton;
     private JComboBox jcb;
     private JTextField login;
     private JPasswordField password;
-    private JLabel errorField = new JLabel();
+    private JLabel errorField = new JLabel(" ");
     
     public LoginDialog() {
     }
@@ -39,9 +38,8 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.setSize(500,200);
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setLocationRelativeTo(null);
-
-        this.add(this.errorField, BorderLayout.PAGE_START);
-        
+        this.setResizable(false);
+                
         this.add(this.initComponents(), BorderLayout.CENTER);
 
         this.add(this.initButtons(), BorderLayout.PAGE_END);
@@ -50,23 +48,33 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
     
     private JPanel initComponents() {
-        JPanel jp = new JPanel(new GridLayout(0,2));
+        JPanel componentsPanel = new JPanel();
+        componentsPanel.setLayout(null);
+        
         login = new JTextField();
         password = new JPasswordField();
 
-        login.setPreferredSize(new Dimension(150,20));
-        password.setPreferredSize(new Dimension(150,20));;
+        JLabel lDatabase = new JLabel("Database"); 
+        lDatabase.setBounds(90, 19, 66, 15);
+        componentsPanel.add(lDatabase);
+        componentsPanel.add(initComboBox());
         
-        jp.add(new JLabel("Database"));
-        jp.add(this.initComboBox());
+        JLabel lLogin = new JLabel("Login");
+        lLogin.setBounds(90, 48, 66, 15);
+        componentsPanel.add(lLogin);
+        componentsPanel.add(login);
+        login.setBounds(243, 46, 150, 20);
         
-        jp.add(new JLabel("Login"));
-        jp.add(login);
+        JLabel lPassword = new JLabel("Password");
+        lPassword.setBounds(90, 77, 66, 15);
+        componentsPanel.add(lPassword);
+        componentsPanel.add(password);
+        password.setBounds(243, 75, 150, 20);
+
+        componentsPanel.add(errorField);
+        errorField.setBounds(156, 107, 192, 20);
         
-        jp.add(new JLabel("Password"));
-        jp.add(password);
-        
-        return jp;
+        return componentsPanel;
     }
     
     private JPanel initButtons() {
@@ -87,7 +95,8 @@ public class LoginDialog extends JDialog implements ActionListener {
     private JComboBox initComboBox() {
         jcb = new JComboBox();
         jcb.setEditable(false);
-        
+        jcb.setBounds(243, 15, 150, 22);
+
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
@@ -136,7 +145,7 @@ public class LoginDialog extends JDialog implements ActionListener {
     private void initErrorField(String errorMessage) {
         Font boldedFont = new Font( this.errorField.getFont().getFamily(),
                                     Font.BOLD,
-                                    this.errorField.getFont().getSize()+3);
+                                    15);
         
         this.errorField.setText(errorMessage);
         this.errorField.setForeground(new Color(255,0,0));

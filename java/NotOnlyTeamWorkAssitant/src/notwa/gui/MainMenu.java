@@ -23,10 +23,10 @@ import javax.swing.table.TableRowSorter;
 public class MainMenu extends JMenuBar implements ActionListener {
     private static MainMenu instance;
     private JMenu menu;
-    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure;
+    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering;
     private JCheckBoxMenuItem cbWorkOffline;
     private final JTextField searchField = new JTextField("Type here ...");
-    public TableRowSorter<TblModel> sorter;
+    private TableRowSorter<TblModel> sorter;
     
     public static MainMenu getInstance() {
         if (instance == null) {
@@ -65,9 +65,14 @@ public class MainMenu extends JMenuBar implements ActionListener {
         menu.setMnemonic(KeyEvent.VK_S);
         this.add(menu);
 
-        mItemConfigure = new JMenuItem("Configure", KeyEvent.VK_C);
+        mItemConfigure = new JMenuItem("Application settings", KeyEvent.VK_A);
         mItemConfigure.addActionListener(this);
+        
+        mItemFiltering = new JMenuItem("Configure Sorting / Filtering");
+        mItemFiltering.addActionListener(this);
+        
         menu.add(mItemConfigure);
+        menu.add(mItemFiltering);
         
         /*
          * Add search panel to MainMenu
@@ -118,7 +123,11 @@ public class MainMenu extends JMenuBar implements ActionListener {
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
-        WorkItemTable.sorter.setRowFilter(rf);
+        this.sorter.setRowFilter(rf);
+    }
+    
+    public void setSorter(TableRowSorter<TblModel> sorter) {
+        this.sorter = sorter;
     }
     
     @Override
@@ -127,6 +136,11 @@ public class MainMenu extends JMenuBar implements ActionListener {
         if (ae.getSource() == mItemConfigure) {
             SettingsDialog sd = new SettingsDialog();
             sd.initSettingsDialog();
+        }
+        
+        if (ae.getSource() == mItemFiltering) {
+            FilteringDialog fd = new FilteringDialog();
+            fd.initFilteringDialog();
         }
 
         if (ae.getSource() == mItemExit) {

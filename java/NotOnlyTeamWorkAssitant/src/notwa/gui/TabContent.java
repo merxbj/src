@@ -9,6 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.wom.WorkItemCollection;
@@ -17,6 +19,7 @@ public class TabContent extends JComponent implements ActionListener {
     JButton addButton,showHideButton,showDepButton;
     private ConnectionInfo ci;
     private WorkItemTable wiTable;
+    private JComboBox userDefinedFiltersBox, defaultSortBox;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
@@ -46,6 +49,7 @@ public class TabContent extends JComponent implements ActionListener {
         jcb.addItem("Product = notwa");
         jcb.addItem("Status = IN_PROGRESS");
         jcb.addItem("Priority = critical");
+        jcb.addItem("Configure ..."); //TODO same ref as mainMenu>Configure sort/filter
     }
     
     private JPanel initButtons() {
@@ -68,8 +72,10 @@ public class TabContent extends JComponent implements ActionListener {
     private JPanel initFilteringComboBoxes() {
         JPanel jp = new JPanel();
         
-        JComboBox defaultSortBox = new JComboBox();
-        JComboBox userDefinedFiltersBox = new JComboBox();
+        defaultSortBox = new JComboBox();
+        defaultSortBox.addActionListener(this);
+        userDefinedFiltersBox = new JComboBox();
+        userDefinedFiltersBox.addActionListener(this);
         
         fillDefaultSortingItems(defaultSortBox);
         fillUserDefinedFilterItems(userDefinedFiltersBox);
@@ -80,19 +86,26 @@ public class TabContent extends JComponent implements ActionListener {
         return jp; 
     }
     
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == addButton) {
-            WorkItemEditor aewitd = new WorkItemEditor();
-            aewitd.initAddDialog();
-        }
-    }
-    
     public ConnectionInfo getCurrentConnectionInfo() {
         return ci;
     }
 
     public WorkItemTable getWorkItemTable() {
         return wiTable;
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == addButton) {
+            WorkItemEditor wie = new WorkItemEditor();
+            wie.initAddDialog();
+        }
+        
+        if(ae.getSource() == userDefinedFiltersBox) {
+            if(userDefinedFiltersBox.getSelectedItem().equals("Configure ...")) {
+                FilteringDialog fd = new FilteringDialog();
+                fd.initFilteringDialog();
+            }
+        }
     }
 }

@@ -1,15 +1,17 @@
 package notwa.gui;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
  
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import notwa.wom.Project;
@@ -21,6 +23,9 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private JComboBox existingProjects,priorities,states;
     private JTextField newProjectName = new JTextField();
     private JTextField subject = new JTextField();
+    private JTextField eParentId = new JTextField();
+    private JTextField eExpectingDate = new JTextField();
+    private JTextArea eDescription;
     private JButton okButton, stornoButton, chooseColorButton;
     
     public WorkItemEditor() {
@@ -28,42 +33,69 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     
     public void initAddDialog() {
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Add");
-        this.initDialog();
-    }
-    
-    public void initEditDialog() {
-        this.setTitle("NOTWA - NOT Only Team Work Assistent - Edit");
-        this.initDialog();
-    }
-    
-    private void initDialog() {
-        this.setLayout(new GridLayout(2,0));
-        this.setSize(750,300);
+        this.setLayout(new BorderLayout());
+        this.setSize(750,400);
 
-        JPanel jp = new JPanel(new GridLayout(0,2));
+        JPanel jp = new JPanel();
+        jp.setLayout(null);
 
-        jp.add(new JLabel("Attach to existing project"));
-        jp.add(this.loadExistingProjects());
+        JLabel lExistingProject = new JLabel("Attach to existing project");
+        lExistingProject.setBounds(63, 5, 152, 22);
+        jp.add(lExistingProject);
+        jp.add(loadExistingProjects());
         
-        jp.add(new JLabel("Create new Project"));
+        JLabel lCreateProject = new JLabel("Create new Project");
+        lCreateProject.setBounds(63, 39, 124, 15);
+        jp.add(lCreateProject);
+        newProjectName.setBounds(227, 36, 138, 22);
         jp.add(newProjectName);
         
-        jp.add(new JLabel("Choose project color"));
         chooseColorButton = new JButton("Browse");
+        chooseColorButton.setBounds(377, 36, 103, 22);
+        chooseColorButton.setText("choose color");
         chooseColorButton.addActionListener(this);
         jp.add(chooseColorButton);
-        
-        jp.add(new JLabel("Subject"));
+
+        JLabel lSubject = new JLabel("Subject");
+        lSubject.setBounds(63, 96, 78, 15);
+        jp.add(lSubject);
         jp.add(subject);
+        subject.setBounds(227, 93, 138, 22);
+
+        JLabel lPriority = new JLabel("Priority");
+        lPriority.setBounds(63, 212, 56, 15);
+        jp.add(lPriority);
+        jp.add(loadWorkItemPriorties());
         
-        jp.add(new JLabel("Priority"));
-        jp.add(this.loadWorkItemPriorties());
+        JLabel lState = new JLabel("State");
+        lState.setBounds(63, 240, 50, 15);
+        jp.add(lState);
+        jp.add(loadWorkItemStates());
         
-        jp.add(new JLabel("State"));
-        jp.add(this.loadWorkItemStates());
+        JLabel lDescription = new JLabel("Description");
+        lDescription.setBounds(63, 123, 84, 15);
+        jp.add(lDescription);
+        eDescription = new JTextArea();
+        eDescription.setBorder(BorderFactory.createEtchedBorder());
+        eDescription.setBounds(227, 120, 458, 76);
+        jp.add(eDescription);
         
-        this.add(jp);
-        this.add(this.initButtons());
+        JLabel lParent = new JLabel("Parent WIT ID");
+        lParent.setBounds(63, 68, 91, 15);
+        jp.add(lParent);
+        eParentId = new JTextField("0");
+        eParentId.setBounds(227, 65, 54, 22);
+        jp.add(eParentId);
+        
+        JLabel lExpectingDate = new JLabel("Expecting date");
+        lExpectingDate.setBounds(63, 267, 101, 15);
+        jp.add(lExpectingDate);
+        eExpectingDate = new JTextField("04.04.2010 00:00");
+        eExpectingDate.setBounds(227, 264, 138, 22);
+        jp.add(eExpectingDate);
+        
+        this.add(jp, BorderLayout.CENTER);
+        this.add(this.initButtons(), BorderLayout.PAGE_END);
         
         this.setLocationRelativeTo(null);
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
@@ -87,6 +119,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     
     private JComboBox loadExistingProjects() {
         existingProjects = new JComboBox();
+        existingProjects.setBounds(227, 5, 138, 22);
+
         ProjectCollection pc = new ProjectCollection();
         for (Project p : pc) {
             existingProjects.addItem(new JComboBoxItemCreator(p, p.getName()));
@@ -97,6 +131,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     
     private JComboBox loadWorkItemStates() {
         states = new JComboBox();
+        states.setBounds(227, 236, 138, 22);
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
             states.addItem(new JComboBoxItemCreator(WorkItemStatus.values()[s].getValue(),
                                                     WorkItemStatus.values()[s].name()));
@@ -107,6 +142,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     
     private JComboBox loadWorkItemPriorties() {
         priorities = new JComboBox();
+        priorities.setBounds(227, 208, 138, 22);
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
             priorities.addItem(new JComboBoxItemCreator(WorkItemPriority.values()[p].getValue(),
                                                         WorkItemPriority.values()[p].name()));
