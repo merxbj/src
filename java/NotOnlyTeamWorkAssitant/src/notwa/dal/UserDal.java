@@ -33,6 +33,7 @@ import notwa.exception.DalException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import notwa.security.Credentials;
 
 /**
  * <code>UserDal</code> is a <code>DataAccessLayer</code> concrete implementation
@@ -145,6 +146,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
         rs.updateString("password", u.getPassword());
     }
 
+    // TODO: Update javadoc here!
     /**
      * Gets the password assigned to the user based on the the supplied login.
      *
@@ -152,14 +154,27 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
      *              log in to the database.
      * @return Always not <code>null</code> password string.
      */
-    public String get(String login) {
-        String sql = String.format("SELECT password FROM User WHERE login = '%s'", login);
+    public boolean validateCredentials(Credentials credentials) {
+        String sql = String.format("SELECT password, user_id FROM User WHERE login = '%s'", credentials.getLogin());
         String password = null;
+        int userId = 0;
+
         try {
-            password = (String) getConnection().executeScalar(sql);
+            ResultSet rs = getConnection().executeQuery(sql);
+            if (rs.next()) {
+                password = rs.getString("password");
+                userId = rs.getInt("user_id");
+            }
         } catch (SQLException sex) {
             LoggingInterface.getInstanece().handleException(sex);
+            return false;
         }
-        return (password != null) ? password : "";
+
+        if (password != null && password.equals(credentials.getPassword())) {
+            credentials.setUserId(userId);
+            credentials.setValid(true);
+        }
+
+        return credentials.isValid();
     }
 }

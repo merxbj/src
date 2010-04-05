@@ -61,7 +61,7 @@ public class DatabaseConnection {
      *                      whenever there is a problem with retrieving data from
      *                      the database or accessing the ResultSet.
      */
-    public ResultSet executeQuery(String query) throws Exception {
+    public ResultSet executeQuery(String query) throws SQLException {
         /* Make sure that you are connected, otherwise try to reconnect */
         if (!isConnected()) {
             connect();

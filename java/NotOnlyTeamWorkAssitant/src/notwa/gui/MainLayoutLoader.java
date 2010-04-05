@@ -17,8 +17,13 @@ import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.WorkItemDal;
+import notwa.security.Credentials;
+import notwa.sql.Parameter;
+import notwa.sql.ParameterSet;
+import notwa.sql.Parameters;
 import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
+import notwa.sql.Sql;
 
 public class MainLayoutLoader extends JComponent implements ActionListener,ChangeListener {
     private JTabbedPane tabPanel;
@@ -62,11 +67,11 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
         return plusButton;
     }
 
-    public void createWitView(ConnectionInfo ci) {
+    public void createWitView(ConnectionInfo ci, Credentials credentials) {
         WorkItemCollection wic = new WorkItemCollection();
         wic.setCurrentContext(ContextManager.getInstance().newContext());
         WorkItemDal wid = new WorkItemDal(ci,wic.getCurrentContext());
-        wid.fill(wic);
+        wid.fill(wic, new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Condition.EQUALTY)));
         
         tc = new TabContent();
         tabPanel.insertTab(ci.getLabel(), null, tc.initTabContent(wic, ci), null, tabPanel.getTabCount()-1);

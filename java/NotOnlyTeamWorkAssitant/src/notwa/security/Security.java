@@ -55,6 +55,7 @@ public class Security {
         return instance;
     }
     
+    // TODO: Update javadoc here!
     /**
      * Validates the given credentials to be valid againts the given
      * <code>ConnectionInfo</code>.
@@ -68,14 +69,11 @@ public class Security {
      *          credentials. <code>false</code> otherwise.
      * @throws SignInException When invalid login or password has been provided.
      */
-    public boolean signIn(ConnectionInfo ci, String userLogin, String userPassword) throws SignInException {
+    public boolean signIn(ConnectionInfo ci, Credentials credentials) throws SignInException {
         UserDal ud = new UserDal(ci, null);
-        String password = ud.get(userLogin);
 
-        if (password.equals("")) {
-            throw new SignInException("Invalid login provided.");
-        } else if (!password.equals(userPassword)) {
-            throw new SignInException("Invalid login password provided.");
+        if (!ud.validateCredentials(credentials)) {
+            throw new SignInException("Invalid login or password provided.");
         }
 
         return true;

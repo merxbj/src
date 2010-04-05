@@ -19,6 +19,7 @@ import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.common.LoggingInterface;
 import notwa.exception.SignInException;
+import notwa.security.Credentials;
 import notwa.security.Security;
 
 public class LoginDialog extends JDialog implements ActionListener {
@@ -128,10 +129,9 @@ public class LoginDialog extends JDialog implements ActionListener {
         try {
             ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator)
                                 this.jcb.getSelectedItem()).getAttachedObject();
-            if (Security.getInstance().signIn(  ci,
-                                                this.login.getText(),
-                                                new String(this.password.getPassword()))) {
-                MainWindow.getTabController().createWitView(ci);
+            Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
+            if (Security.getInstance().signIn(ci, credentials)) {
+                MainWindow.getTabController().createWitView(ci, credentials);
             } else {
                 throw new Exception("User login failed");
             }
