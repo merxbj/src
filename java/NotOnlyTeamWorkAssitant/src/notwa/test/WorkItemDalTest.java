@@ -5,6 +5,8 @@ import notwa.wom.*;
 import notwa.dal.*;
 import notwa.sql.*;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import notwa.common.LoggingInterface;
 
 public class WorkItemDalTest {
     WorkItemCollection wic;
@@ -15,16 +17,49 @@ public class WorkItemDalTest {
     Context context;
 
     public WorkItemDalTest() {
-        ci = initConnectionInfo();
-        context = ContextManager.getInstance().newContext();
-        wic = new WorkItemCollection();
-        wid = new WorkItemDal(ci, context);
-        pc = new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY));
-    }
-    
-    public void test() {
-        wic.setCurrentContext(context);
-        wid.fill(wic, pc);
+        try {
+            ci = initConnectionInfo();
+            context = ContextManager.getInstance().newContext();
+            wic = new WorkItemCollection();
+            wid = new WorkItemDal(ci, context);
+            pc = new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY));
+            ts = new Timestamp(Calendar.getInstance().getTimeInMillis());
+
+            wic.setCurrentContext(context);
+            wid.fill(wic, pc);
+
+            boolean found = false;
+            for (WorkItem wi : wic) {
+                System.out.println(wi.toString());
+                if (wi.getId() < 3) {
+                    wi.setExpectedTimestamp(ts);
+                }
+                if (wi.getId() == 50) {
+                    wic.remove(wi);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                WorkItem wi = new WorkItem(50);
+                wi.registerWithContext(context);
+                wi.setAssignedUser(context.getUser(1));
+                wi.setProject(context.getProject(1));
+                wi.setDescription("Test!");
+                wi.setExpectedTimestamp(ts);
+                wi.setNoteCollection(null);
+                wi.setParentWorkItem(null);
+                wi.setPriority(WorkItemPriority.CRITICAL);
+                wi.setStatus(WorkItemStatus.CLOSED);
+                wi.setSubject("Testuju ...");
+                wic.add(wi);
+            }
+
+            wid.update(wic);
+        } catch (Exception ex) {
+            LoggingInterface.getInstanece().handleException(ex);
+        }
+
     }
 
     private ConnectionInfo initConnectionInfo() {

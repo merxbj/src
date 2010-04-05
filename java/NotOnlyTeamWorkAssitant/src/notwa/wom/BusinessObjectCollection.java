@@ -352,6 +352,16 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         return resultSet;
     }
 
+    // TODO: Update javadoc here!
+    /**
+     *
+     * @param businessObject
+     */
+    public void setUpdated(T businessObject) {
+        setUpdateRequired(true);
+        businessObject.setUpdated(true);
+    }
+
     /**
      * Gets the concrete implementation of <code>BusinessObject</code> by its
      * primary key.

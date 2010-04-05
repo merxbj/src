@@ -45,6 +45,7 @@ public abstract class BusinessObject {
     protected BusinessObjectCollection attachedBOC;
     protected BusinessObject originalVersion;
     protected Context currentContext;
+    protected boolean updated;
     protected boolean deleted;
     protected boolean inserted;
     
@@ -210,6 +211,23 @@ public abstract class BusinessObject {
      */
     public void setInserted(boolean inserted) {
         this.inserted = inserted;
+    }
+
+    // TODO: Update javadoc here!
+    /**
+     * 
+     * @return
+     */
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    /**
+     * 
+     * @param updated
+     */
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
     }
 
 }

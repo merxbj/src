@@ -98,14 +98,14 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     public void setNoteText(String noteText) {
         this.text = noteText;
         if (isAttached()) {
-            attachedBOC.setUpdateRequired(true);
+            attachedBOC.setUpdated(this);
         }
     }
     
     public void setAuthor(User author) {
         this.author = author;
         if (isAttached()) {
-            attachedBOC.setUpdateRequired(true);
+            attachedBOC.setUpdated(this);
         }
     }
     

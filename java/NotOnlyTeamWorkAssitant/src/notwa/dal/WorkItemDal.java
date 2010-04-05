@@ -148,11 +148,11 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
         rs.updateString("description", wi.getDescription());
         rs.updateInt("working_priority", wi.getPriority().getValue());
         rs.updateInt("status_id", wi.getStatus().getValue());
-        rs.updateTimestamp("expected_timestamp", new Timestamp(wi.getExpectedTimestamp().getTime()));
+        rs.updateTimestamp("expected_timestamp", (wi.getExpectedTimestamp() != null) ? new Timestamp(wi.getExpectedTimestamp().getTime()) : null);
         rs.updateTimestamp("last_modified_timestamp", now);
-        rs.updateInt("assigned_user_id", wi.getAssignedUser().getId());
-        rs.updateInt("project_id", wi.getProject().getId());
-        rs.updateInt("parent_work_item_id", wi.getParent().getId());
+        rs.updateInt("assigned_user_id", (wi.getAssignedUser() != null) ? wi.getAssignedUser().getId() : 0);
+        rs.updateInt("project_id", (wi.getProject() != null) ? wi.getProject().getId() : 0);
+        rs.updateInt("parent_work_item_id", (wi.getParent() != null) ? wi.getParent().getId() : 0);
 
         wi.setLastModifiedTimestamp(now);
     }

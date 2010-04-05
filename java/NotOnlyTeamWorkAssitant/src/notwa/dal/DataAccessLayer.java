@@ -218,7 +218,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
                 TObject bo = boc.getByPrimaryKey(primaryKey);
                 if (bo.isDeleted()) {
                     rs.deleteRow();
-                } else {
+                } else if (bo.isUpdated()) {
                     updateSingleRow(rs, bo);
                     rs.updateRow();
                 }
@@ -231,6 +231,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
                 if (bo.isInserted()) {
                     rs.moveToInsertRow();
                     updateSingleRow(rs, bo);
+                    rs.insertRow();
                     rs.moveToCurrentRow();
                 }
             }
