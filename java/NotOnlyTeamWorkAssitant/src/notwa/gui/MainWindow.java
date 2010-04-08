@@ -33,7 +33,7 @@ import javax.swing.UIManager;
 public class MainWindow extends JFrame {
     private String version = new String("v0.5.0-r1"); //config?
     private static MainLayoutLoader mll = new MainLayoutLoader();
-    
+
     /**
      * Constructor only calls method to initialize MainWindow
      */
@@ -53,6 +53,7 @@ public class MainWindow extends JFrame {
          */
         
         initMainWindow();
+        startup();
     }
 
     /**
@@ -92,5 +93,18 @@ public class MainWindow extends JFrame {
      */
     public static MainLayoutLoader getTabController() {
         return mll;
+    }
+    
+    /**
+     * Processes that have to be done only at startup of application
+     */
+    private void startup() {
+        mll.hideDetail(); // hide detail on startup - is unneeded
+        
+        /*
+         * Show login dialog
+         */
+        LoginDialog ld = new LoginDialog();
+        ld.initLoginDialog();
     }
 }

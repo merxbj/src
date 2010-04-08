@@ -70,7 +70,7 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == hideDetail) {
-            MainLayoutLoader.hideDetail();
+            MainWindow.getTabController().hideDetail();
         }
     }
 }

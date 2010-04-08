@@ -82,8 +82,19 @@ public class MainMenu extends JMenuBar implements ActionListener {
          */
         menu = new JMenu("Settings");
         menu.setMnemonic(KeyEvent.VK_S);
-        this.add(menu);
-
+        
+        JMenu projectSubmenu = new JMenu("");
+        mItemConfigure = new JMenuItem("");
+        mItemConfigure.addActionListener(this);
+        
+        mItemFiltering = new JMenuItem("");
+        mItemFiltering.addActionListener(this);
+        
+        projectSubmenu.add(mItemConfigure);
+        projectSubmenu.add(mItemFiltering);
+        menu.add(projectSubmenu);
+        menu.addSeparator();
+        
         mItemConfigure = new JMenuItem("Application settings", KeyEvent.VK_A);
         mItemConfigure.addActionListener(this);
         
@@ -92,6 +103,8 @@ public class MainMenu extends JMenuBar implements ActionListener {
         
         menu.add(mItemConfigure);
         menu.add(mItemFiltering);
+        
+        this.add(menu);
         
         /*
          * Add search panel to MainMenu

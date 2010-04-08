@@ -42,7 +42,6 @@ import notwa.security.Credentials;
 import notwa.security.Security;
 
 public class LoginDialog extends JDialog implements ActionListener {
-    //private JPanel componentsPanel;
     private JButton okButton, stornoButton;
     private JComboBox jcb;
     private JTextField login;
@@ -129,6 +128,14 @@ public class LoginDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
+            /*
+             * TODO del
+             */
+            login.setText("mrneo");
+            password.setText("aaaa");
+            /*
+             * 
+             */
             if (    this.jcb.getSelectedItem().equals("") ||
                     this.login.getText().isEmpty() ||
                     this.password.getPassword().length == 0) {

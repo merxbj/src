@@ -44,6 +44,7 @@ import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
 import notwa.sql.Sql;
 
+//TODO: must be loaded from config - lastly used tabs(databases) etc.
 public class MainLayoutLoader extends JComponent implements ActionListener,ChangeListener {
     private JTabbedPane tabPanel;
     private JButton plusButton;
@@ -51,13 +52,11 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
     private TabContent tc;
     
     public MainLayoutLoader () {
-        //TODO: must be loaded from config - lastly used tabs(databases) etc.
     }
 
     public Component initMainLayout() {
         this.setLayout(new GridLayout(1,0));
-        sp = new JSplitPane(    JSplitPane.VERTICAL_SPLIT,
-                loadTabs(), WorkItemDetailLayout.getInstance().initDetailLayout());
+        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), WorkItemDetailLayout.getInstance().initDetailLayout());
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
         this.add(sp);
@@ -97,7 +96,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
         tabPanel.setSelectedIndex(tabPanel.getTabCount()-2);
     }
     
-    public static void hideDetail() {
+    public void hideDetail() {
         //TODO after fullscreen, is detail visible anyway ?!
         sp.setDividerLocation(50000);
     }

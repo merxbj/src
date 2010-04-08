@@ -1,5 +1,5 @@
 /*
- * JTableCellRender
+ * JTableCellRenderer
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -19,15 +19,17 @@
  */
 package notwa.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import notwa.common.Colors;
+import notwa.wom.WorkItemPriority;
+import notwa.wom.WorkItemStatus;
+
 //TODO: rewrite it to our use
-//    : load colors from config ... so on
 
 public class JTableCellRenderer implements TableCellRenderer
 {
@@ -39,17 +41,28 @@ public class JTableCellRenderer implements TableCellRenderer
     {
         final Component renderer = DEFAULT_RENDERER.getTableCellRendererComponent
                                     (table, value, isSelected, hasFocus, row, column);
-        
         if (isSelected) {
-            renderer.setBackground(new Color(150, 230, 230));
-        } else {
+            renderer.setBackground(Colors.getTableSelectedRowColor());
+        }
+        else {
             if (row % 2 == 0) {
-                renderer.setBackground(new Color(240, 240, 240));
+                renderer.setBackground(Colors.getTableSecondColor());
 
             } else {
-                renderer.setBackground(Color.WHITE);
+                renderer.setBackground(Colors.getTableFirstColor());
             }
+            
+            /*
+             * Colorize Priority and status cells with colors loaded from Colors class
+             */
+            try {
+                renderer.setBackground((WorkItemPriority.valueOf((String)value)).getColor());
+            } catch (Exception e) { }
+            try {
+                renderer.setBackground((WorkItemStatus.valueOf((String)value)).getColor());
+            } catch (Exception e) { }
         }
+        
         return renderer;
     }
 }
