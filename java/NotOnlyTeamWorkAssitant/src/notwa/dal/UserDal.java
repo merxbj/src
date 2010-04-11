@@ -140,7 +140,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
 
     @Override
     protected void updateSingleRow(ResultSet rs, User u) throws Exception {
-        rs.updateInt("user_ud", u.getId());
+        rs.updateInt("user_id", u.getId());
         rs.updateString("first_name", u.getFirstName());
         rs.updateString("last_name", u.getLastName());
         rs.updateString("password", u.getPassword());

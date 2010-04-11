@@ -3,28 +3,34 @@ package inheritance;
 public class InheritanceTest {
     
     public static void main(String[] args) {
-        Comparable comp1 = new Child(1);
-        Comparable comp2 = new Child(2);
-        System.out.println(comp1.compareTo(comp2));
+        Parent p = new Parent();
+        System.out.println(p);
+        Child c = (Child) p;
+        System.out.println(c);
     }
 
-    public static class Child extends Parent<Child> {
-
+    public static class Child extends Parent {
         int id;
 
         public Child(int id) {
             this.id = id;
         }
-        
+
         @Override
-        public int compareTo(Child o) {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public String toString() {
+            return ((Integer) id).toString();
         }
     }
 
-    public static abstract class Parent<T extends Parent> implements Comparable<T> {
+    public static class Parent {
 
-        public abstract int compareTo(T o);
+        public Parent() {
+        }
+
+        @Override
+        public String toString() {
+            return "Parent";
+        }
 
     }
 }

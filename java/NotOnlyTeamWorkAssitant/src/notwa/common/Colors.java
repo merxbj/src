@@ -73,11 +73,11 @@ public class Colors {
         }
     }
     
-    public static Color getTableFirstColor() {
+    public static Color getTableOddRowColor() {
         return white;
     }
     
-    public static Color getTableSecondColor() {
+    public static Color getTableEvenRowColor() {
         return lightGray;
     }
     

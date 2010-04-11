@@ -23,12 +23,12 @@ import notwa.exception.ContextException;
 
 public class User extends BusinessObject implements Comparable<User>, Cloneable {
 
-    private int userID;
-    private String login;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private ProjectCollection assignedProjects;
+    protected int userID;
+    protected String login;
+    protected String password;
+    protected String firstName;
+    protected String lastName;
+    protected ProjectCollection assignedProjects;
     
     public User(int userID) {
         super();
@@ -109,15 +109,22 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         }
     }
     
-    public void setAssignedProjects(ProjectCollection assignedProjects) {
-        this.assignedProjects = assignedProjects;
+    public void setAssignedProjects(ProjectCollection assignedProjects) throws ContextException {
+        this.assignedProjects = new ProjectCollection(currentContext, assignedProjects.getResultSet());
+        for (Project p : assignedProjects) {
+            this.assignedProjects.add(new AssignedProject(p, this));
+        }
+
+        this.assignedProjects.setClosed(assignedProjects.isClosed());
+        this.assignedProjects.setUpdateRequired(assignedProjects.isUpdateRequired());
+
         if (isAttached()) {
             attachedBOC.setUpdated(this);
         }
     }
 
     public boolean addAssignedProject(Project assignedProject) throws ContextException {
-        return this.assignedProjects.add(assignedProject);
+        return this.assignedProjects.add(new AssignedProject(assignedProject, this));
     }
 
     public boolean removeAssignedProject(Project assignedProject) throws ContextException {

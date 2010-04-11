@@ -46,10 +46,10 @@ public class JTableCellRenderer implements TableCellRenderer
         }
         else {
             if (row % 2 == 0) {
-                renderer.setBackground(Colors.getTableSecondColor());
+                renderer.setBackground(Colors.getTableEvenRowColor());
 
             } else {
-                renderer.setBackground(Colors.getTableFirstColor());
+                renderer.setBackground(Colors.getTableOddRowColor());
             }
             
             /*

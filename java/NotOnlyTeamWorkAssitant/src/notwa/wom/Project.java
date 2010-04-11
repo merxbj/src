@@ -22,9 +22,9 @@ package notwa.wom;
 import notwa.exception.ContextException;
 
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
-    private int projectID;
-    private String name;
-    private UserCollection assignedUsers;
+    protected int projectID;
+    protected String name;
+    protected UserCollection assignedUsers;
     
     public Project(int projectID) {
         super();
@@ -60,15 +60,22 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         }
     }
     
-    public void setAssignedUsers(UserCollection assignedUsers) {
-        this.assignedUsers = assignedUsers;
+    public void setAssignedUsers(UserCollection assignedUsers) throws ContextException {
+        this.assignedUsers = new UserCollection(currentContext, assignedUsers.getResultSet());
+        for (User u : assignedUsers) {
+            this.assignedUsers.add(new AssignedUser(u, this));
+        }
+
+        this.assignedUsers.setClosed(assignedUsers.isClosed());
+        this.assignedUsers.setUpdateRequired(assignedUsers.isUpdateRequired());
+
         if (isAttached()) {
             attachedBOC.setUpdated(this);
         }
     }
 
     public boolean addAssignedUser(User assignedUser) throws ContextException {
-        return this.assignedUsers.add(assignedUser);
+        return this.assignedUsers.add(new AssignedUser(assignedUser, this));
     }
 
     public boolean removeAssignedUser(User assignedUser) throws ContextException {

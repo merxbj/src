@@ -23,6 +23,7 @@ import notwa.common.ConnectionInfo;
 import notwa.exception.DalException;
 import notwa.wom.UserCollection;
 import notwa.wom.User;
+import notwa.wom.AssignedUser;
 import notwa.wom.Context;
 import notwa.sql.Parameters;
 import notwa.sql.ParameterSet;
@@ -107,9 +108,11 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer<User, UserCollec
         throw new DalException("This DataAccessLayer doesn't support operation get.");
     }
 
-    // TODO: HOW TO UPDATE project_id COLUMN?????
+    // TODO: Update javadoc here!
     @Override
     protected void updateSingleRow(ResultSet rs, User u) throws Exception {
-        rs.updateInt("user_id", u.getId());
+        AssignedUser au = (AssignedUser) u;
+        rs.updateInt("project_id", au.getAssignedProject().getId());
+        rs.updateInt("user_id", au.getId());
     }
 }
