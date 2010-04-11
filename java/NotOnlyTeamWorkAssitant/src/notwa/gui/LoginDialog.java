@@ -156,11 +156,8 @@ public class LoginDialog extends JDialog implements ActionListener {
             ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator)
                                 this.jcb.getSelectedItem()).getAttachedObject();
             Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
-            if (Security.getInstance().signIn(ci, credentials)) {
-                MainWindow.getTabController().createWitView(ci, credentials);
-            } else {
-                throw new Exception("User login failed");
-            }
+            Security.getInstance().signIn(ci, credentials);
+            MainWindow.getTabController().createWitView(ci, credentials);
         } catch (SignInException siex) {
             LoggingInterface.getInstanece().handleException(siex);
         } catch (Exception ex) {

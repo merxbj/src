@@ -352,10 +352,13 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         return resultSet;
     }
 
-    // TODO: Update javadoc here!
     /**
+     * Notifies this <code>BusinessObjectCollection</code> that its owned
+     * <code>BusinessObject</code> has been updated.
+     * This results in marking this collection as well as the object to be updated.
      *
-     * @param businessObject
+     * @param businessObject    The actuall <code>BusinessObject</code> that has
+     *                          been updated.
      */
     public void setUpdated(T businessObject) {
         setUpdateRequired(true);

@@ -55,27 +55,21 @@ public class Security {
         return instance;
     }
     
-    // TODO: Update javadoc here!
     /**
-     * Validates the given credentials to be valid againts the given
-     * <code>ConnectionInfo</code>.
+     * Checks the given <code>Credentials</code> to be valid againts the given
+     * <code>ConnectionInfo</code>. If yes, the actual user id is will be supplied
+     * within the given <code>Credentials</code> instance.
      * 
      * @param ci The <code>ConnectionInfo</code> againts the given credetials should be validated
-     * @param userLogin The actual login string assigned to the user who is trying to
-     *                  connect to the database.
-     * @param userPassword  The actual password assigned to the user who is trying to
-     *                      connect to the database.
-     * @return  <code>true</code> if the given combinations generates the valid
-     *          credentials. <code>false</code> otherwise.
-     * @throws SignInException When invalid login or password has been provided.
+     * @param credentials The actual <code>Credentials</code> to be validated.
+     *
+     * @throws SignInException When invalid credentials have been supplied.
      */
-    public boolean signIn(ConnectionInfo ci, Credentials credentials) throws SignInException {
+    public void signIn(ConnectionInfo ci, Credentials credentials) throws SignInException {
         UserDal ud = new UserDal(ci, null);
 
         if (!ud.validateCredentials(credentials)) {
             throw new SignInException("Invalid login or password provided.");
         }
-
-        return true;
     }
 }

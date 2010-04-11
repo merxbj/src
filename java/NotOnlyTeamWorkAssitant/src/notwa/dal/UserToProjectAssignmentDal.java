@@ -107,9 +107,12 @@ public class UserToProjectAssignmentDal extends DataAccessLayer<Project, Project
         throw new DalException("This DataAccessLayer doesn't support operation get.");
     }
 
-    // TODO: Update javadoc here!
     @Override
     protected void updateSingleRow(ResultSet rs, Project p) throws Exception {
+        /*
+         * We should always make project to user assignment update on assignment
+         * aware User!
+         */
         AssignedProject ap = (AssignedProject) p;
         rs.updateInt("user_id", ap.getAssignedUser().getId());
         rs.updateInt("project_id", ap.getId());

@@ -213,21 +213,29 @@ public abstract class BusinessObject {
         this.inserted = inserted;
     }
 
-    // TODO: Update javadoc here!
     /**
+     * Gets whether this <code>BusinessObject</code> has been updated since it has
+     * become a member of a <code>BusinessObjectCollection</code>.
+     * This flag is removed as soon as the {@link #commit()} method is called to
+     * facticaly save the updated information.
      * 
-     * @return
+     * @return  <code>true</code> if this <code>BusinessObject</code> has been updated,
+     *          <code>false</code> otherwise.
      */
     public boolean isUpdated() {
         return updated;
     }
 
     /**
-     * 
-     * @param updated
+     * Sets whether this <code>BusinessObject</code> has been updated since it has
+     * become a member of a <code>BusinessObjectCollection</code>.
+     * This flag is removed as soon as the {@link #commit()} method is called to
+     * facticaly save the updated information.
+     *
+     * @param updated   <code>true</code> if this <code>BusinessObject</code> has 
+     *                  been updated, <code>false</code> otherwise.
      */
     public void setUpdated(boolean updated) {
         this.updated = updated;
     }
-
 }

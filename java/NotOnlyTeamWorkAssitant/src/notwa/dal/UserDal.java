@@ -146,13 +146,15 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
         rs.updateString("password", u.getPassword());
     }
 
-    // TODO: Update javadoc here!
     /**
-     * Gets the password assigned to the user based on the the supplied login.
+     * Validates that given <code>Credentials</code> are valid in scope of actual
+     * database connection. If yes, the actual user id of user, identified
+     * by login, is suplied within the credentials instance.
      *
-     * @param login The actual login of the <code>User</code> who is attempting to
-     *              log in to the database.
-     * @return Always not <code>null</code> password string.
+     * @param credentials   The actual credentials of user who is attempting to
+     *                      connect to the work item database.
+     * @return  <code>true</code> if the credentials were valid, <code>false</code>
+     *          otherwise.
      */
     public boolean validateCredentials(Credentials credentials) {
         String sql = String.format("SELECT password, user_id FROM User WHERE login = '%s'", credentials.getLogin());
