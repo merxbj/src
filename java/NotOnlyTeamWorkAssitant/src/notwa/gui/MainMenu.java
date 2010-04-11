@@ -42,7 +42,7 @@ import javax.swing.table.TableRowSorter;
 public class MainMenu extends JMenuBar implements ActionListener {
     private static MainMenu instance;
     private JMenu menu;
-    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering;
+    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering,mItemNewUser,mItemUserManager;
     private JCheckBoxMenuItem cbWorkOffline;
     private final JTextField searchField = new JTextField("Type here ...");
     private TableRowSorter<TblModel> sorter;
@@ -83,18 +83,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
         menu = new JMenu("Settings");
         menu.setMnemonic(KeyEvent.VK_S);
         
-        JMenu projectSubmenu = new JMenu("");
-        mItemConfigure = new JMenuItem("");
-        mItemConfigure.addActionListener(this);
-        
-        mItemFiltering = new JMenuItem("");
-        mItemFiltering.addActionListener(this);
-        
-        projectSubmenu.add(mItemConfigure);
-        projectSubmenu.add(mItemFiltering);
-        menu.add(projectSubmenu);
-        menu.addSeparator();
-        
         mItemConfigure = new JMenuItem("Application settings", KeyEvent.VK_A);
         mItemConfigure.addActionListener(this);
         
@@ -103,6 +91,23 @@ public class MainMenu extends JMenuBar implements ActionListener {
         
         menu.add(mItemConfigure);
         menu.add(mItemFiltering);
+        
+        this.add(menu);
+        /*
+         * Build tools menu bar.
+         */
+//TODO
+        menu = new JMenu("Tools");
+        menu.setMnemonic(KeyEvent.VK_T);
+        
+        mItemNewUser = new JMenuItem("Create new user");
+        mItemNewUser.addActionListener(this);
+        
+        mItemUserManager = new JMenuItem("User manager");
+        mItemUserManager.addActionListener(this);
+        
+        menu.add(mItemNewUser);
+        menu.add(mItemUserManager);
         
         this.add(menu);
         
@@ -178,7 +183,17 @@ public class MainMenu extends JMenuBar implements ActionListener {
             FilteringDialog fd = new FilteringDialog();
             fd.initFilteringDialog();
         }
-
+        
+        if (ae.getSource() == mItemNewUser) {
+            UserEditor ue = new UserEditor();
+            ue.initEditorDialog();
+        }
+        
+        if (ae.getSource() == mItemUserManager) {
+            UserManager um = new UserManager();
+            um.initManagerDialog();
+        }
+        
         if (ae.getSource() == mItemExit) {
             System.exit(-1);
         }
