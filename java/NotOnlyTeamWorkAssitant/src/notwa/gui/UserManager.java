@@ -43,8 +43,10 @@ import notwa.wom.ProjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
-public class UserManager extends JDialog implements ActionListener{
-    private JButton okButton, stornoButton;
+
+//TODO on project change ask if changes may to be saved or not
+public class UserManager extends JDialog implements ActionListener {
+    private JButton okButton, stornoButton, addButton, removeButton;
     private JComboBox projects;
     private JList users, currentlyAssignedUsers;
     private Context context;
@@ -82,13 +84,25 @@ public class UserManager extends JDialog implements ActionListener{
         JLabel lAllRegisteredUsers = new JLabel("All registered users");
         componentsPanel.add(lAllRegisteredUsers);
         lAllRegisteredUsers.setBounds(75, 56, 135, 15);
+
+        users = new JList(usersModel);
         JScrollPane allUsersPanel = new JScrollPane(users);
         allUsersPanel.setBounds(70, 77, 112, 131);
         componentsPanel.add(allUsersPanel);
         
+        addButton = new JButton("Add >");
+        addButton.addActionListener(this);
+        removeButton = new JButton("< Remove");
+        removeButton.addActionListener(this);
+        componentsPanel.add(addButton);
+        addButton.setBounds(194, 99, 75, 20);
+        componentsPanel.add(removeButton);
+        removeButton.setBounds(194, 124, 75, 20);
+
         JLabel lAssignedUsers = new JLabel("Already assigned users");
         componentsPanel.add(lAssignedUsers);
         lAssignedUsers.setBounds(279, 52, 152, 22);
+        currentlyAssignedUsers = new JList(projectUsersModel);
         JScrollPane assignedUsersPanel = new JScrollPane(currentlyAssignedUsers);
         assignedUsersPanel.setBounds(288, 74, 114, 129);
         componentsPanel.add(assignedUsersPanel);
@@ -129,7 +143,6 @@ public class UserManager extends JDialog implements ActionListener{
                 usersModel.addElement(user.getLogin());
         }
         
-        users = new JList(usersModel);
     }
     
     private void getAllProjectUsers() {
@@ -149,7 +162,6 @@ public class UserManager extends JDialog implements ActionListener{
             assignedUsers.add(user.getLogin());
         }
 
-        currentlyAssignedUsers = new JList(projectUsersModel);
     }
     
     private JPanel initButtons() {
@@ -179,9 +191,27 @@ public class UserManager extends JDialog implements ActionListener{
         
         if (ae.getSource() == projects) {
             this.getAllProjectUsers();
-            currentlyAssignedUsers.updateUI();
+            try {
+                currentlyAssignedUsers.updateUI();
+            } catch (Exception e) { }
             this.getAllUsers();
-            users.updateUI();
+            try {
+                users.updateUI();
+            } catch (Exception e) { }
+        }
+        
+        if (ae.getSource() == addButton) {
+            for (int i=0; i<users.getSelectedValues().length+1; i++) {
+                projectUsersModel.addElement(users.getSelectedValues()[i]);
+                usersModel.removeElement(users.getSelectedValues()[i]);
+            }
+        }
+        
+        if (ae.getSource() == removeButton) {
+            for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
+                usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
+                projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);
+            }
         }
     }
 }
