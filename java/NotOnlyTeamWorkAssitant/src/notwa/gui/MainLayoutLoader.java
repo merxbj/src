@@ -35,28 +35,27 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
-import notwa.dal.WorkItemDal;
+import notwa.common.EventHandler;
 import notwa.security.Credentials;
 import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
-import notwa.wom.ContextManager;
-import notwa.wom.WorkItemCollection;
 import notwa.sql.Sql;
 
 //TODO: must be loaded from config - lastly used tabs(databases) etc.
-public class MainLayoutLoader extends JComponent implements ActionListener,ChangeListener {
+public class MainLayoutLoader extends JComponent implements ActionListener, ChangeListener {
+    static JSplitPane sp;
     private JTabbedPane tabPanel;
     private JButton plusButton;
-    static JSplitPane sp;
-    private TabContent tc;
+    private EventHandler handler;
     
-    public MainLayoutLoader () {
+    public MainLayoutLoader (EventHandler handler) {
+        this.handler = handler;
     }
 
     public Component initMainLayout() {
         this.setLayout(new GridLayout(1,0));
-        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), WorkItemDetailLayout.getInstance().initDetailLayout());
+        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), WorkItemDetailLayout.getInstance().initDetailLayout(handler));
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
         this.add(sp);
@@ -86,14 +85,9 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
     }
 
     public void createWitView(ConnectionInfo ci, Credentials credentials) {
-        WorkItemCollection wic = new WorkItemCollection();
-        wic.setCurrentContext(ContextManager.getInstance().newContext());
-        WorkItemDal wid = new WorkItemDal(ci,wic.getCurrentContext());
-        wid.fill(wic, new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Condition.EQUALTY)));
-        
-        tc = new TabContent();
-        tabPanel.insertTab(ci.getLabel(), null, tc.initTabContent(wic, ci), null, tabPanel.getTabCount()-1);
-        tabPanel.setSelectedIndex(tabPanel.getTabCount()-2);
+        TabContent tc = new TabContent(ci, new ParameterSet( new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Condition.EQUALTY)));
+        tabPanel.insertTab(ci.getLabel(), null, tc, null, tabPanel.getTabCount() - 1);
+        tabPanel.setSelectedIndex(tabPanel.getTabCount() - 2);
     }
     
     public void hideDetail() {
@@ -104,40 +98,31 @@ public class MainLayoutLoader extends JComponent implements ActionListener,Chang
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == plusButton) {
-            LoginDialog ld = new LoginDialog();
+            LoginDialog ld = new LoginDialog(handler);
             ld.initLoginDialog();
         }
     }
 
-    public TabContent getTabContent() {
-        return tc;
+    public TabContent getActiveTab() {
+        return (TabContent) tabPanel.getComponentAt(tabPanel.getSelectedIndex());
     }
 
+    /**
+     * Sets currently used sorter by MainMenu to currently selected instance of WorkItemTable
+     * @param ce
+     */
     @Override
     public void stateChanged(ChangeEvent ce) {
-        /*
-         *  Sets currently used sorter by MainMenu to currently selected instance of WorkItemTable
-         */
         try {
-            MainMenu.getInstance().setSorter(   ((TabContent)
-                                                        ((JTabbedPane)ce.getSource()).getSelectedComponent()) // get currently selected Tab
-                                                .getWorkItemTable()
-                                                .getSorter());
-        } catch (Exception e) { }
-        
-        try {
-            /*
-             * If row in WorkItemTable is selected for currently selected tab, fill WorkItemDetailLayout with their content
-             */
-            ((TabContent)
-                ((JTabbedPane)ce.getSource()).getSelectedComponent()) // get currently selected Tab
-            .getWorkItemTable().refreshContent();
+            MainMenu.getInstance().setSorter(getActiveTab().getWorkItemTable().getSorter());
+            getActiveTab().refresh();
         } catch (Exception e) {
-            /*
-             * Set all showed data in Detail's to nulls
-             */
             WorkItemDetail.getInstance().setAllToNull();
             WorkItemNoteHistoryTable.getInstance().setAllToNull();
         }
+    }
+
+    public synchronized void refreshActiveTab() {
+        getActiveTab().refresh();
     }
 }

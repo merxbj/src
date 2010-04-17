@@ -212,6 +212,23 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     }
 
     /**
+     * Shake away all <code>BusinessObject</code>s attached to this 
+     * <code>BusinessObjectCollection</code>. This factically means:
+     * <ol>
+     * <li>Detach all <code>BusinessObject</code>s from colletion</li>
+     * <li>Clear this collection</li>
+     * <li>Clear the current context</li>
+     * </ol>
+     */
+    public void shakeAway() {
+        for (BusinessObject bo : collection) {
+            bo.detach();
+        }
+        collection.clear();
+        currentContext.clear();
+    }
+
+    /**
      * Gets the <code>Context</code> where this collection currently lives.
      *
      * @return The current <code>Context</code>

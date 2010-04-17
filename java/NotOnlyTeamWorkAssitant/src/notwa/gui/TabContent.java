@@ -29,20 +29,39 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import notwa.common.ConnectionInfo;
+import notwa.dal.WorkItemDal;
+import notwa.sql.ParameterSet;
+import notwa.wom.Context;
+import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
 
 public class TabContent extends JComponent implements ActionListener {
     JButton addButton,showHideButton,showDepButton;
     private ConnectionInfo ci;
+    private WorkItemDal dal;
+    private Context currentContext;
+    private WorkItemCollection wic;
+    private ParameterSet ps;
     private WorkItemTable wiTable;
     private JComboBox userDefinedFiltersBox, defaultSortBox;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
-    public TabContent() {
+    public TabContent(ConnectionInfo ci) {
+        init(ci, new ParameterSet());
+    }
+
+    public TabContent(ConnectionInfo ci, ParameterSet ps) {
+        init(ci, ps);
     }
     
-    public TabContent initTabContent(WorkItemCollection wic, ConnectionInfo ci) {
+    public void init(ConnectionInfo ci, ParameterSet ps) {
+        currentContext = ContextManager.getInstance().newContext();
+        dal = new WorkItemDal(ci, currentContext);
+        wic = new WorkItemCollection(currentContext);
+        this.ps = ps;
+        dal.fill(wic, ps);
+
         this.ci = ci;
         this.setLayout(new BorderLayout());
         
@@ -52,7 +71,6 @@ public class TabContent extends JComponent implements ActionListener {
         topPanel.add(wiTable, BorderLayout.CENTER);
         
         this.add(topPanel, BorderLayout.CENTER);
-        return this;
     }
     
     private void fillDefaultSortingItems(JComboBox jcb) { // TODO
@@ -106,8 +124,17 @@ public class TabContent extends JComponent implements ActionListener {
         return ci;
     }
 
+    public Context getCurrentContext() {
+        return currentContext;
+    }
+
     public WorkItemTable getWorkItemTable() {
         return wiTable;
+    }
+
+    public void refresh() {
+        dal.refresh(wic, ps);
+        wiTable.refresh();
     }
     
     @Override

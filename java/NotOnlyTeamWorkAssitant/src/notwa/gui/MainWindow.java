@@ -19,10 +19,21 @@
  */
 package notwa.gui;
 
+import notwa.common.EventHandler;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import notwa.common.ConnectionInfo;
+import notwa.common.Event;
+import notwa.common.LoggingInterface;
+import notwa.security.SecurityEvent;
+import notwa.security.SecurityEventParams;
+import notwa.threading.Action;
+import notwa.threading.IndeterminateProgressThread;
+import notwa.wom.Context;
 
 /**
  * Class <code>MainWindow</code>
@@ -30,9 +41,10 @@ import javax.swing.UIManager;
  * @author mrneo
  * @version %I% %G%
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements EventHandler {
     private String version = new String("v0.5.0-r1"); //config?
-    private static MainLayoutLoader mll = new MainLayoutLoader();
+    private MainLayoutLoader mll = new MainLayoutLoader(this);
+    private List<EventHandler> handlers;
 
     /**
      * Constructor only calls method to initialize MainWindow
@@ -51,7 +63,7 @@ public class MainWindow extends JFrame {
         /*
          * end.
          */
-        
+        initEventHandlers();
         initMainWindow();
         startup();
     }
@@ -71,7 +83,7 @@ public class MainWindow extends JFrame {
         /*
          * Load MainMenu
          */
-        this.setJMenuBar(MainMenu.getInstance().initMainMenu());
+        this.setJMenuBar(MainMenu.getInstance().initMainMenu(this));
         
         /*
          * create main JPanel and Load tabs 
@@ -91,7 +103,7 @@ public class MainWindow extends JFrame {
      *
      * @return the tab controller
      */
-    public static MainLayoutLoader getTabController() {
+    public MainLayoutLoader getTabController() {
         return mll;
     }
     
@@ -104,7 +116,124 @@ public class MainWindow extends JFrame {
         /*
          * Show login dialog
          */
-        LoginDialog ld = new LoginDialog();
+        LoginDialog ld = new LoginDialog(this);
         ld.initLoginDialog();
+    }
+
+    private ConnectionInfo getActiveConnectionInfo() {
+        return mll.getActiveTab().getCurrentConnectionInfo();
+    }
+
+    private Context getActivetContext() {
+        return mll.getActiveTab().getCurrentContext();
+    }
+
+    @Override
+    public void handleEvent(Event e) {
+        for (EventHandler handler : handlers) {
+            handler.handleEvent(e);
+        }
+    }
+
+    private void initEventHandlers() {
+        handlers = new ArrayList<EventHandler>();
+
+        handlers.add(new EventHandler() {
+            @Override
+            public void handleEvent(Event e) {
+                if (e instanceof GuiEvent) {
+                    handleMenuEvent((GuiEvent) e);
+                }
+            }
+        });
+
+        handlers.add(new EventHandler() {
+            @Override
+            public void handleEvent(Event e) {
+                if (e instanceof SecurityEvent) {
+                    handleSecurityEvent((SecurityEvent) e);
+                }
+            }
+        });
+    }
+
+    public void handleMenuEvent(GuiEvent e) {
+        switch (e.getEventId()) {
+            case GuiEventParams.MENU_EVENT_CONFIGURE:
+                invokeConfigure(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_EXIT:
+                invokeExit(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_FILTERING:
+                invokeFiltering(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_NEW_USER:
+                invokeNewUser(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_SYNC_AND_REFRESH:
+                invokeSyncAndRefresh(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_USER_MANAGER:
+                invokeUserManager(e.getParams());
+                break;
+            default:
+                LoggingInterface.getLogger().logError("Unexpected event: %s", e.toString());
+                break;
+        }
+    }
+
+    public void handleSecurityEvent(SecurityEvent e) {
+        switch (e.getEventId()) {
+            case SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN:
+                invokeSuccessfulLogin(e.getParams());
+                break;
+            default:
+                LoggingInterface.getLogger().logError("Unexpected event: %s", e.toString());
+                break;
+        }
+    }
+
+    private void invokeConfigure(GuiEventParams params) {
+        SettingsDialog sd = new SettingsDialog();
+        sd.initSettingsDialog();
+    }
+
+    private void invokeExit(GuiEventParams params) {
+        System.exit(0);
+    }
+
+    private void invokeFiltering(GuiEventParams params) {
+        FilteringDialog fd = new FilteringDialog();
+        fd.initFilteringDialog();
+    }
+
+    private void invokeNewUser(GuiEventParams params) {
+        UserEditor ue = new UserEditor();
+        ue.initEditorDialog();
+    }
+
+    private void invokeSyncAndRefresh(GuiEventParams params) {
+        IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action() {
+            @Override
+            public void perform() {
+                mll.refreshActiveTab();
+            }
+        });
+
+        ipt.run();
+    }
+
+    private void invokeUserManager(GuiEventParams params) {
+        UserManager um = new UserManager(getActiveConnectionInfo(), getActivetContext());
+        um.initManagerDialog();
+    }
+
+    private void invokeHideDetail(GuiEventParams params) {
+        getTabController().hideDetail();
+    }
+
+    private void invokeSuccessfulLogin(SecurityEventParams params) {
+        getTabController().createWitView(params.getConnectionInfo(), params.getCredentials());
     }
 }

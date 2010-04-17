@@ -48,7 +48,7 @@ public class TblModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return boc == null ? 0 : boc.size();
+        return (boc == null) ? 0 : boc.size();
     }
 
     @Override
@@ -103,11 +103,11 @@ public class TblModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (boc == null || boc.size() == 0) {
+        if ((boc == null) || (boc.size() == 0)) {
             return Object.class;
         }
         Object o = getValueAt(0, columnIndex);
-        return o == null ? Object.class : o.getClass();
+        return (o == null) ? Object.class : o.getClass();
     }
     
     private Object getRecord(int rowIndex) {

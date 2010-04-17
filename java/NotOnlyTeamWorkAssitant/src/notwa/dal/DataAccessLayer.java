@@ -100,8 +100,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      * @return The number of <code>BusinessObjects</code>s filled into the <code>Collection</code>.
      */
     public int fill(TCollection boc) {
-        ParameterSet emptyPc = new ParameterSet();
-        return fill(boc, emptyPc);
+        return fill(boc, new ParameterSet());
     }
 
     /**
@@ -243,6 +242,32 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
         } catch (Exception ex) {
             LoggingInterface.getInstanece().handleException(ex);
         }
+    }
+
+    /**
+     * Refresh all the data contained in given <code>BusinessObjectCollection</code>.
+     * At first, it completely clears the given </code>BusinessObjectCollection</code>
+     * by calling the {@link BusinessObjectCollection#shakeAway()}. Then it simply
+     * refills the <code>BusinessObjectCollection</code> from the database.
+     * 
+     * @param boc The <code>BusinessObjectCollection</code to be refreshed.
+     */
+    public void refresh(TCollection boc) {
+        refresh(boc, new ParameterSet());
+    }
+
+    /**
+     * Refresh all the data contained in given <code>BusinessObjectCollection</code>.
+     * At first, it completely clears the given </code>BusinessObjectCollection</code>
+     * by calling the {@link BusinessObjectCollection#shakeAway()}. Then it simply
+     * refills the <code>BusinessObjectCollection</code> from the database taking
+     * in account the given <coded>ParameterSet</code>.
+     *
+     * @param boc The <code>BusinessObjectCollection</code to be refreshed.
+     */
+    public void refresh(TCollection boc, ParameterSet ps) {
+        boc.shakeAway();
+        fill(boc, ps);
     }
 
     /**

@@ -36,10 +36,15 @@ import javax.swing.JTextField;
 
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
+import notwa.common.EventHandler;
 import notwa.common.LoggingInterface;
 import notwa.exception.SignInException;
 import notwa.security.Credentials;
 import notwa.security.Security;
+import notwa.security.SecurityEvent;
+import notwa.security.SecurityEventParams;
+import notwa.threading.Action;
+import notwa.threading.IndeterminateProgressThread;
 
 public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton;
@@ -47,8 +52,10 @@ public class LoginDialog extends JDialog implements ActionListener {
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
+    private EventHandler<SecurityEvent> handler;
     
-    public LoginDialog() {
+    public LoginDialog(EventHandler<SecurityEvent> handler) {
+        this.handler = handler;
     }
     
     public void initLoginDialog() {
@@ -152,17 +159,22 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private void performSignIn() {
-        try {
-            ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator)
-                                this.jcb.getSelectedItem()).getAttachedObject();
-            Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
-            Security.getInstance().signIn(ci, credentials);
-            MainWindow.getTabController().createWitView(ci, credentials);
-        } catch (SignInException siex) {
-            LoggingInterface.getInstanece().handleException(siex);
-        } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
-        }
+        ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
+        Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
+
+        IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<SignInParams>(new SignInParams(ci, credentials)) {
+            @Override
+            public void perform() {
+                try {
+                    Security.getInstance().signIn(params.ci, params.c);
+                    handler.handleEvent(new SecurityEvent(new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN, params.c, params.ci)));
+                } catch (SignInException siex) {
+                    LoggingInterface.getInstanece().handleException(siex);
+                }
+            }
+        });
+
+        ipt.run();
     }
 
     private void initErrorField(String errorMessage) {
@@ -174,5 +186,15 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.errorField.setForeground(new Color(255,0,0));
         this.errorField.setFont(boldedFont);
         this.errorField.updateUI();
+    }
+
+    private class SignInParams {
+        public final ConnectionInfo ci;
+        public final Credentials c;
+
+        public SignInParams(ConnectionInfo ci, Credentials c) {
+            this.ci = ci;
+            this.c = c;
+        }
     }
 }

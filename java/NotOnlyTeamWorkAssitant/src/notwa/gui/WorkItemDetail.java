@@ -55,6 +55,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox assignedUsers = new JComboBox();
 
     public WorkItemDetail() {
+
     }
     
     public static WorkItemDetail getInstance() {

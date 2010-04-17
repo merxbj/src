@@ -19,6 +19,7 @@
  */
 package notwa.gui;
 
+import notwa.common.EventHandler;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,6 +47,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JCheckBoxMenuItem cbWorkOffline;
     private final JTextField searchField = new JTextField("Type here ...");
     private TableRowSorter<TblModel> sorter;
+    private EventHandler<GuiEvent> handler;
     
     public static MainMenu getInstance() {
         if (instance == null) {
@@ -56,13 +58,14 @@ public class MainMenu extends JMenuBar implements ActionListener {
     
     private MainMenu() { }
     
-    public MainMenu initMainMenu() {
+    public MainMenu initMainMenu(EventHandler listener) {
         menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         this.add(menu);
 
         mItemSyncAndRefresh = new JMenuItem("Synchronize & Refresh", KeyEvent.VK_F5);
         mItemSyncAndRefresh.setAccelerator(KeyStroke.getKeyStroke("F5"));
+        mItemSyncAndRefresh.addActionListener(this);
         menu.add(mItemSyncAndRefresh);
 
         menu.addSeparator();
@@ -115,10 +118,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
          * Add search panel to MainMenu
          */
         this.add(Box.createHorizontalGlue());
-
         this.add(new JLabel("| Search "));
-        
         this.add(this.addSearchField());
+
+        this.handler = listener;
         
         return this;
     }
@@ -175,27 +178,18 @@ public class MainMenu extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         //TODO: add remaining actions
         if (ae.getSource() == mItemConfigure) {
-            SettingsDialog sd = new SettingsDialog();
-            sd.initSettingsDialog();
-        }
-        
-        if (ae.getSource() == mItemFiltering) {
-            FilteringDialog fd = new FilteringDialog();
-            fd.initFilteringDialog();
-        }
-        
-        if (ae.getSource() == mItemNewUser) {
-            UserEditor ue = new UserEditor();
-            ue.initEditorDialog();
-        }
-        
-        if (ae.getSource() == mItemUserManager) {
-            UserManager um = new UserManager();
-            um.initManagerDialog();
-        }
-        
-        if (ae.getSource() == mItemExit) {
-            System.exit(-1);
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_CONFIGURE)));
+        } else if (ae.getSource() == mItemFiltering) {
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_FILTERING)));
+        } else if (ae.getSource() == mItemNewUser) {
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_NEW_USER)));
+        } else if (ae.getSource() == mItemUserManager) {
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_USER_MANAGER)));
+        } else if (ae.getSource() == mItemExit) {
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_EXIT)));
+        } else if (ae.getSource() == mItemSyncAndRefresh) {
+            handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_SYNC_AND_REFRESH)));
         }
     }
+
 }

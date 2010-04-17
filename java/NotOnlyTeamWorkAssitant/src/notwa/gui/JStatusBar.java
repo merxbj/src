@@ -30,6 +30,7 @@ public class JStatusBar extends JPanel {
     private static JStatusBar singleton;
     JProgressBar mainProgressBar = new JProgressBar();
     JLabel statusBarText = new JLabel();
+    private final String idleMessage = "Welcome to Not Only Team Work Assistant!";
     
     public static JStatusBar getInstance() {
         if (singleton == null) {
@@ -39,10 +40,8 @@ public class JStatusBar extends JPanel {
     }
     
     private JStatusBar() {
-        // for testing
-        setStatusBarText("Synchronizing with repository ...");
-        setProgressBarValue(5);
-        //
+        setStatusBarText(idleMessage);
+        setProgressBarValue(0);
         
         this.setLayout(new BorderLayout());
         this.add(statusBarText, BorderLayout.LINE_START);
@@ -64,5 +63,16 @@ public class JStatusBar extends JPanel {
     public void setProgressBarMaximum(int v) {
         mainProgressBar.setMaximum(v);
         mainProgressBar.updateUI();
+    }
+
+    public void beginAnimate() {
+        statusBarText.setText("Synchronizing with repository ...");
+        mainProgressBar.setValue(mainProgressBar.getMinimum());
+        mainProgressBar.setIndeterminate(true);
+    }
+
+    public void endAnimate() {
+        mainProgressBar.setIndeterminate(false);
+        statusBarText.setText(idleMessage);
     }
 }

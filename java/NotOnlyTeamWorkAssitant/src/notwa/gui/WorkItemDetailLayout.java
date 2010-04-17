@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+import notwa.common.EventHandler;
 
 public class WorkItemDetailLayout extends JComponent implements ActionListener {
     private static WorkItemDetailLayout instance;
@@ -34,6 +35,7 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     JButton hideDetail = new JButton("Hide detail");
     private WorkItemDetail wid;
     private WorkItemNoteHistoryTable winht;
+    private EventHandler<GuiEvent> handler;
 
     public WorkItemDetailLayout() {
     }
@@ -45,7 +47,7 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         return instance;
     }
     
-    public Component initDetailLayout() {
+    public Component initDetailLayout(EventHandler<GuiEvent> handler) {
         this.setLayout(new BorderLayout());
     
         this.add(hideDetail, BorderLayout.PAGE_START);
@@ -55,6 +57,8 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         detailTabs.addTab("Notes history", WorkItemNoteHistoryTable.getInstance().initNoteHistoryTable());
 
         this.add(detailTabs, BorderLayout.CENTER);
+
+        this.handler = handler;
             
         return this;
     }
@@ -69,8 +73,6 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == hideDetail) {
-            MainWindow.getTabController().hideDetail();
-        }
+        handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.ACTION_EVENT_HIDE_DETAIL)));
     }
 }

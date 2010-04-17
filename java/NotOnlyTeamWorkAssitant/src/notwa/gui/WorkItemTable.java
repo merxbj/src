@@ -87,7 +87,16 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         return this.sorter;
     }
     
-    public void refreshContent() {
+    public void refresh() {
+        refreshTable();
+        refreshDetail();
+    }
+
+    public void refreshTable() {
+        witTableModel.fireTableDataChanged();
+    }
+
+    public void refreshDetail() {
         try {
             WorkItemDetail.getInstance().setDescription(this.getSelected().getDescription());
         } catch (Exception e) {
@@ -131,7 +140,6 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         } catch (Exception e) {
             WorkItemDetail.getInstance().setLastNote(null);
         }
-        
         try {
             WorkItemNoteHistoryTable.getInstance().setNoteCollection(this.getSelected().getNoteCollection());
         } catch (Exception e) {
@@ -141,6 +149,6 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     
     @Override
     public void valueChanged(ListSelectionEvent lse) {
-        this.refreshContent();
+        this.refreshDetail();
     }
 }

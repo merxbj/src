@@ -50,13 +50,14 @@ public class UserManager extends JDialog implements ActionListener {
     private JComboBox projects;
     private JList users, currentlyAssignedUsers;
     private Context context;
-    private ConnectionInfo ci = MainWindow.getTabController().getTabContent().getCurrentConnectionInfo();
+    private ConnectionInfo ci;
     private DefaultListModel projectUsersModel = new DefaultListModel(); // TODO make our own abstractListModel to
     private DefaultListModel usersModel = new DefaultListModel();       // make possible to assign object to element
     private ArrayList<String> assignedUsers = new ArrayList<String>(); //used only for checking if user is already assigned to project
     
-    public UserManager() {
-        context = ContextManager.getInstance().newContext();
+    public UserManager(ConnectionInfo ci, Context context) {
+        this.context = context;
+        this.ci = ci;
     }
     
     public void initManagerDialog() {
