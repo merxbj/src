@@ -20,6 +20,7 @@
 
 package notwa.threading;
 
+import notwa.common.LoggingInterface;
 import notwa.gui.JStatusBar;
 
 /**
@@ -59,8 +60,13 @@ public class IndeterminateProgressThread {
 
         @Override
         public void run() {
-            action.perform();
-            callback.onTerminate();
+            try {
+                action.perform();
+            } catch (Exception ex) {
+                LoggingInterface.getInstanece().handleException(ex);
+            } finally {
+                callback.onTerminate();
+            }
         }
     }
 

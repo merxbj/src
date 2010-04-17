@@ -66,7 +66,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         this.setLayout(new BorderLayout());
         tabPanel = new JTabbedPane();
 
-        //create empty tab, where we will attach new button
+        //create empty tab, where we will attach a new button
         tabPanel.addTab(null, new JLabel(   "Welcome to NOT Only Team Work Assistent -" +
         		                            "To beggin working, click on \"+\" button to login into Database"));
         tabPanel.addChangeListener(this);
@@ -104,7 +104,8 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     public TabContent getActiveTab() {
-        return (TabContent) tabPanel.getComponentAt(tabPanel.getSelectedIndex());
+        Component comp = tabPanel.getComponentAt(tabPanel.getSelectedIndex());
+        return (comp instanceof TabContent) ? (TabContent) comp : null;
     }
 
     /**
@@ -122,7 +123,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         }
     }
 
-    public synchronized void refreshActiveTab() {
-        getActiveTab().refresh();
+    public synchronized void refreshDataOnActiveTab() {
+        getActiveTab().dataRefresh();
     }
 }

@@ -121,11 +121,13 @@ public class MainWindow extends JFrame implements EventHandler {
     }
 
     private ConnectionInfo getActiveConnectionInfo() {
-        return mll.getActiveTab().getCurrentConnectionInfo();
+        TabContent tc = mll.getActiveTab();
+        return (tc == null) ? null : tc.getCurrentConnectionInfo();
     }
 
     private Context getActivetContext() {
-        return mll.getActiveTab().getCurrentContext();
+        TabContent tc = mll.getActiveTab();
+        return (tc == null) ? null : tc.getCurrentContext();
     }
 
     @Override
@@ -177,6 +179,8 @@ public class MainWindow extends JFrame implements EventHandler {
             case GuiEventParams.MENU_EVENT_USER_MANAGER:
                 invokeUserManager(e.getParams());
                 break;
+            case GuiEventParams.ACTION_EVENT_HIDE_DETAIL:
+                invokeHideDetail(e.getParams());
             default:
                 LoggingInterface.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
@@ -217,7 +221,7 @@ public class MainWindow extends JFrame implements EventHandler {
         IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action() {
             @Override
             public void perform() {
-                mll.refreshActiveTab();
+                mll.refreshDataOnActiveTab();
             }
         });
 

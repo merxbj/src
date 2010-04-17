@@ -132,8 +132,12 @@ public class TabContent extends JComponent implements ActionListener {
         return wiTable;
     }
 
-    public void refresh() {
+    public void dataRefresh() {
         dal.refresh(wic, ps);
+        wiTable.refresh();
+    }
+
+    public void refresh() {
         wiTable.refresh();
     }
     
