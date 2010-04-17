@@ -238,4 +238,27 @@ public abstract class BusinessObject {
     public void setUpdated(boolean updated) {
         this.updated = updated;
     }
+
+    /**
+     * Gets whether the queried <code>BusinessObject</code> is uniqely indentified.
+     * This means whether it has it's id. If not, it is up to the
+     * <code>BusinessObjectCollection</code> to acquire it.
+     *
+     * @return  <code>true</code> if the item has not-null or non-zero id, <code>false</code
+     *          otherwise.
+     */
+    public abstract boolean hasUniqeIdentifier();
+
+    /**
+     * Sets the uniqe identifier of the concrete implementation of this
+     * <Code>BusinessObject</code>.
+     */
+    public abstract void setUniqeIdentifier(int value);
+
+    /**
+     * Gets the uniqe identifier of the concrete implementation of this
+     * <Code>BusinessObject</code>.
+     * @return The id.
+     */
+    public abstract int getUniqeIdentifier();
 }

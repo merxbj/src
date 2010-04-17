@@ -23,23 +23,28 @@ import notwa.exception.ContextException;
 
 public class User extends BusinessObject implements Comparable<User>, Cloneable {
 
-    protected int userID;
+    protected int userId;
     protected String login;
     protected String password;
     protected String firstName;
     protected String lastName;
     protected ProjectCollection assignedProjects;
-    
-    public User(int userID) {
+
+    public User() {
         super();
-        this.userID = userID;
+        this.userId = 0;
+    }
+
+    public User(int userId) {
+        super();
+        this.userId = userId;
     }
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
         User clone = (User) super.clone();
 
-        clone.userID = this.userID;
+        clone.userId = this.userId;
         clone.login = this.login;
         clone.password = this.password;
         clone.firstName = this.firstName;
@@ -50,7 +55,7 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     
     @Override
     public String toString() {
-        String returnText = new String(    this.userID +separator+
+        String returnText = new String(    this.userId +separator+
                                         this.login +separator+
                                         this.firstName +separator+
                                         this.lastName );
@@ -58,7 +63,7 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     }
 
     public int getId() {
-        return userID;
+        return userId;
     }
 
     public String getLogin() {
@@ -123,6 +128,12 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
         }
     }
 
+    public void setUserId(int userId) {
+        if (!isAttached()) {
+            this.userId = userId;
+        }
+    }
+
     public boolean addAssignedProject(Project assignedProject) throws ContextException {
         return this.assignedProjects.add(new AssignedProject(assignedProject, this));
     }
@@ -133,8 +144,8 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     
     @Override
     public int compareTo(User user) {
-        Integer j1 = this.userID;
-        Integer j2 = user.userID;
+        Integer j1 = this.userId;
+        Integer j2 = user.userId;
      
         return j1.compareTo(j2);
     }
@@ -151,7 +162,7 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 67 * hash + this.userID;
+        hash = 67 * hash + this.userId;
         return hash;
     }
 
@@ -159,6 +170,21 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
     public void registerWithContext(Context currentContext) {
         this.currentContext = currentContext;
         currentContext.registerUser(this);
+    }
+
+    @Override
+    public boolean hasUniqeIdentifier() {
+        return (this.userId > 0);
+    }
+
+    @Override
+    public void setUniqeIdentifier(int value) {
+        this.userId = value;
+    }
+
+    @Override
+    public int getUniqeIdentifier() {
+        return getId();
     }
 
 }

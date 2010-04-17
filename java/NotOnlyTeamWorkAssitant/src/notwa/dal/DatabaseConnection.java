@@ -73,8 +73,7 @@ public class DatabaseConnection {
 
     /**
      * Executes the given SQL Query and returns a single scalar value.
-     * The caller is responsible to know what type it should be and do the
-     * appropriate type-cast.
+     * The caller is responsible specify the output type of this method.
      *
      * @param query The SQL Query that should be executed againts the server.
      *              Please make sure that this query result to one row with a
@@ -86,7 +85,7 @@ public class DatabaseConnection {
      *                      whenever there is a problem with retrieving data from
      *                      the database or accessing the ResultSet.
      */
-    public Object executeScalar(String query) throws SQLException {
+    public <TOutput> TOutput executeScalar(String query) throws SQLException {
         /* Make sure that you are connected, otherwise try to reconnect */
         if (!isConnected()) {
             connect();
@@ -95,7 +94,7 @@ public class DatabaseConnection {
         Statement s = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         ResultSet rs = s.executeQuery(query);
         if (rs.next()) {
-            return rs.getObject(1);
+            return (TOutput) rs.getObject(1);
         } else {
             return null;
         }

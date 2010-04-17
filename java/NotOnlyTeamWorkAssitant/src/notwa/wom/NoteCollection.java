@@ -21,6 +21,7 @@ package notwa.wom;
 
 import java.sql.ResultSet;
 import java.util.Collections;
+import java.util.Hashtable;
 import notwa.exception.DeveloperException;
 
 /**
@@ -31,6 +32,8 @@ import notwa.exception.DeveloperException;
  * @version %I% %G%
  */
 public class NoteCollection extends BusinessObjectCollection<Note> {
+
+    private static Hashtable<Integer, Integer> nextWorkItemNoteId = new Hashtable<Integer, Integer>() ;
 
     /**
      * The default constructor setting the current <code>Context</code> and <code>
@@ -72,4 +75,17 @@ public class NoteCollection extends BusinessObjectCollection<Note> {
         }
     }
 
+    @Override
+    protected void acquireUniqeIdentifier(Note n) {
+        int workItemId = n.getId().getWorkItemId();
+        if (nextWorkItemNoteId.containsKey(workItemId)) {
+            Integer nextNoteId = nextWorkItemNoteId.get(workItemId);
+            n.getId().setNoteId(nextNoteId);
+            nextWorkItemNoteId.put(workItemId, ++nextNoteId);
+        } else {
+            Integer nextNoteId = 1000000;
+            n.getId().setNoteId(nextNoteId++);
+            nextWorkItemNoteId.put(workItemId, nextNoteId);
+        }
+    }
 }

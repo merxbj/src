@@ -118,4 +118,8 @@ public class UserToProjectAssignmentDal extends DataAccessLayer<Project, Project
         rs.updateInt("project_id", ap.getId());
     }
 
+    @Override
+    protected String getHighestUniqeIdentifierSql(Project bo) {
+        throw new UnsupportedOperationException("This table has not uniqe identifier!");
+    }
 }

@@ -156,4 +156,11 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
 
         wi.setLastModifiedTimestamp(now);
     }
+
+    @Override
+    protected String getHighestUniqeIdentifierSql(WorkItem wi) {
+        return "SELECT work_item_id FROM Work_Item ORDER BY work_item_id DESC";
+    }
+
+    
 }

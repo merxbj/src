@@ -179,4 +179,9 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
 
         return credentials.isValid();
     }
+
+    @Override
+    protected String getHighestUniqeIdentifierSql(User bo) {
+        return "SELECT user_id FROM User ORDER BY user_id DESC";
+    }
 }

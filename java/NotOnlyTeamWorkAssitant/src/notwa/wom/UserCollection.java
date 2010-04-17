@@ -32,6 +32,8 @@ import notwa.exception.DeveloperException;
  */
 public class UserCollection extends BusinessObjectCollection<User> {
 
+    private static int nextUserId = 1000000;
+
     /**
      * The default constructor setting the current <code>Context</code> and <code>
      * ResultSet</code> to <code>null</code>.
@@ -69,5 +71,10 @@ public class UserCollection extends BusinessObjectCollection<User> {
         } catch (ClassCastException ccex) {
             throw new DeveloperException("Developer haven't provided correct comparing and equaling methods for User!", ccex);
         }
+    }
+
+    @Override
+    protected void acquireUniqeIdentifier(User u) {
+        u.setUserId(nextUserId++);
     }
 }

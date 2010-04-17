@@ -22,27 +22,32 @@ package notwa.wom;
 import notwa.exception.ContextException;
 
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
-    protected int projectID;
+    protected int projectId;
     protected String name;
     protected UserCollection assignedUsers;
-    
-    public Project(int projectID) {
+
+    public Project() {
         super();
-        this.projectID = projectID;
+        this.projectId = 0;
+    }
+    
+    public Project(int projectId) {
+        super();
+        this.projectId = projectId;
     }
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Project clone = (Project) super.clone();
 
-        clone.projectID = this.projectID;
+        clone.projectId = this.projectId;
         clone.name = this.name;
         clone.assignedUsers = this.assignedUsers;
         return clone;
     }
 
     public int getId() {
-        return this.projectID;
+        return this.projectId;
     }
 
     public String getName() {
@@ -81,18 +86,24 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     public boolean removeAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.remove(assignedUser);
     }
+
+    public void setProjectId(int projectId) {
+        if (!isAttached()) {
+            this.projectId = projectId;
+        }
+    }
     
     @Override
     public String toString() {
-        String returnText = new String (    this.projectID +separator+
+        String returnText = new String (    this.projectId +separator+
                                             this.name);
         return returnText;
     }
         
     @Override
     public int compareTo(Project project) {
-        Integer j1 = this.projectID;
-        Integer j2 = project.projectID;
+        Integer j1 = this.projectId;
+        Integer j2 = project.projectId;
      
         return j1.compareTo(j2);
     }
@@ -109,7 +120,7 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 89 * hash + this.projectID;
+        hash = 89 * hash + this.projectId;
         return hash;
     }
 
@@ -119,4 +130,18 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         currentContext.registerProject(this);
     }
 
+    @Override
+    public boolean hasUniqeIdentifier() {
+        return (this.projectId > 0);
+    }
+
+    @Override
+    public void setUniqeIdentifier(int value) {
+        this.projectId = value;
+    }
+
+    @Override
+    public int getUniqeIdentifier() {
+        return getId();
+    }
 }

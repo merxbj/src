@@ -95,6 +95,13 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         }
 
         /*
+         * If the given BO is id-less, acquire correct temporary index for it
+         */
+        if (!bo.hasUniqeIdentifier()) {
+            acquireUniqeIdentifier(bo);
+        }
+
+        /*
          * Make sure that the same BusinessObject isn't already present in the
          * collection.
          */
@@ -396,5 +403,15 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      *                              of <code>BusinessObject</code>.
      */
     public abstract T getByPrimaryKey(Object primaryKey) throws DeveloperException;
+
+    /**
+     * Provides the given concrete implementation of <code>BusinessObject</code>
+     * with valid temporary uniqe identifiyer.
+     * This is going to be replaced with valid one after the database update.
+     *
+     * @param bo    Concrete implementation of <code>BusinessObject</code> to be
+     *              provided with uniqe identifier.
+     */
+    protected abstract void acquireUniqeIdentifier(T bo);
 
 }

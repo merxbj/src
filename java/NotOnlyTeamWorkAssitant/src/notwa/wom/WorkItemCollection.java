@@ -32,6 +32,8 @@ import notwa.exception.DeveloperException;
  */
 public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
 
+    private static int nextWorkItemId = 1000000;
+
     /**
      * The default constructor setting the current <code>Context</code> and <code>
      * ResultSet</code> to <code>null</code>.
@@ -69,6 +71,11 @@ public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
         } catch (ClassCastException ccex) {
             throw new DeveloperException("Developer haven't provided correct comparing and equaling methods for WorkItem!", ccex);
         }
+    }
+
+    @Override
+    protected void acquireUniqeIdentifier(WorkItem wi) {
+        wi.setWitId(nextWorkItemId++);
     }
 
 }

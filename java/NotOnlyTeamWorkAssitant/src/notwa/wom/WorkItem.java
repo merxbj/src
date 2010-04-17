@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cloneable {
 
-    private int witID;
+    private int witId;
     private String subject;
     private WorkItemPriority priority;
     private String description;
@@ -35,16 +35,21 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     private Date expectedTimestamp;
     private NoteCollection noteCollection;
 
+    public WorkItem() {
+        super();
+        this.witId = 0;
+    }
+
     public WorkItem(int id) {
         super();
-        this.witID = id;
+        this.witId = id;
     }
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
         WorkItem clone = (WorkItem) super.clone();
 
-        clone.witID = this.witID;
+        clone.witId = this.witId;
         clone.subject = this.subject;
         clone.priority = this.priority;
         clone.description = this.description;
@@ -59,7 +64,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     }
     
     public int getId() {
-        return this.witID;
+        return this.witId;
     }
     
     public String getSubject() {
@@ -171,9 +176,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    public void setWitId(int witId) {
+        if (!isAttached()) {
+            this.witId = witId;
+        }
+    }
+
     @Override
     public String toString() {
-        String returnText = new String(    this.witID +separator);
+        String returnText = new String(    this.witId +separator);
         if (this.parentWorkItem != null) {
             returnText += this.parentWorkItem.getSubject() +separator; }
         if (this.project != null) {
@@ -196,8 +207,8 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     
     @Override
     public int compareTo(WorkItem wi) {
-        Integer j1 = this.witID;
-        Integer j2 = wi.witID;
+        Integer j1 = this.witId;
+        Integer j2 = wi.witId;
      
         return j1.compareTo(j2);
     }
@@ -214,7 +225,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + this.witID;
+        hash = 37 * hash + this.witId;
         return hash;
     }
 
@@ -222,5 +233,20 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     public void registerWithContext(Context currentContext) {
         this.currentContext = currentContext;
         currentContext.registerWorkItem(this);
+    }
+
+    @Override
+    public boolean hasUniqeIdentifier() {
+        return (this.witId > 0);
+    }
+
+    @Override
+    public void setUniqeIdentifier(int value) {
+        this.witId = value;
+    }
+
+    @Override
+    public int getUniqeIdentifier() {
+        return getId();
     }
 }

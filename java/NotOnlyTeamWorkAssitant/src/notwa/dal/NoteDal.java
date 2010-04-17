@@ -119,4 +119,10 @@ public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
         rs.updateInt("author_user_id", n.getAuthor().getId());
         rs.updateString("note", n.getText());
     }
+
+    @Override
+    protected String getHighestUniqeIdentifierSql(Note n) {
+        String sql = String.format("SELECT note_id FROM Work_Items_Note WHERE work_item_id = %d ORDER BY note_id DESC", n.getId().getWorkItemId());
+        return sql;
+    }
 }

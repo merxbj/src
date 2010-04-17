@@ -124,4 +124,9 @@ public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
         rs.updateInt("project_id", p.getId());
         rs.updateString("name", p.getName());
     }
+
+    @Override
+    protected String getHighestUniqeIdentifierSql(Project bo) {
+        return "SELECT project_id FROM Project ORDER BY project_id DESC";
+    }
 }

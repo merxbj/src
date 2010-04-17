@@ -33,7 +33,19 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     private NotePrimaryKey noteId;
     private String text;
     private User author;
-    
+
+    /**
+     * The constructor which identifies this <code>Note</code> with the parent
+     * <code>WorkItem</code> only and waiting to acquire the noteId during the
+     * addition to the <code>BusinessObjectCollection</code>.
+     * @param workItemId    The id of the <code>WorkItem</code> this <code>Note<code>
+     *                      is bound to.
+     */
+    public Note(int workItemId) {
+        super();
+        this.noteId = new NotePrimaryKey(0, workItemId);
+    }
+
     /**
      * The simplier contructor accepting noteId and workItemId which uniquely
      * identifies this <code>Note</code>.
@@ -43,7 +55,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
      * @param noteId The note id which is uniqe always under one <code>WorkItem</code>.
      * @param workItemId The workItemId where this <code>Note</code> is valid.
      */
-    public Note (int noteId, int workItemId) {
+    public Note(int noteId, int workItemId) {
         super();
         this.noteId = new NotePrimaryKey(noteId, workItemId);
     }
@@ -147,5 +159,20 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     public void registerWithContext(Context currentContext) {
         this.currentContext = currentContext;
         currentContext.registerNote(this);
+    }
+
+    @Override
+    public boolean hasUniqeIdentifier() {
+        return (this.noteId.getNoteId() > 0);
+    }
+
+    @Override
+    public void setUniqeIdentifier(int value) {
+        this.getId().setNoteId(value);
+    }
+
+    @Override
+    public int getUniqeIdentifier() {
+        return getId().getNoteId();
     }
 }

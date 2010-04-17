@@ -32,6 +32,8 @@ import notwa.exception.DeveloperException;
  */
 public class ProjectCollection extends BusinessObjectCollection<Project> {
 
+    private static int nextProjectId = 1000000;
+
     /**
      * The default constructor setting the current <code>Context</code> and <code>
      * ResultSet</code> to <code>null</code>.
@@ -71,5 +73,8 @@ public class ProjectCollection extends BusinessObjectCollection<Project> {
         }
     }
 
-
+    @Override
+    protected void acquireUniqeIdentifier(Project p) {
+        p.setProjectId(nextProjectId++);
+    }
 }
