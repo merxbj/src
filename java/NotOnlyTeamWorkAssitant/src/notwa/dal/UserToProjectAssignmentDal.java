@@ -53,7 +53,8 @@ public class UserToProjectAssignmentDal extends DataAccessLayer<Project, Project
     protected String getSqlTemplate() {
         StringBuilder vanillaSql = new StringBuilder();
 
-        vanillaSql.append("SELECT   pua.project_id as project_id ");
+        vanillaSql.append("SELECT   pua.project_id AS project_id, ");
+        vanillaSql.append("         pua.user_id    AS user_id ");
         vanillaSql.append("FROM Project_User_Assignment pua ");
         vanillaSql.append("JOIN User u ");
         vanillaSql.append("ON u.user_id = pua.user_id ");
