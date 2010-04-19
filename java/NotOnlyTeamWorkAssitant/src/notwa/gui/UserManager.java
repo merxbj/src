@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -30,19 +31,22 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import notwa.common.ConnectionInfo;
+import notwa.common.LoggingInterface;
 import notwa.dal.ProjectDal;
+import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
+import notwa.dal.UserToProjectAssignmentDal;
+import notwa.exception.ContextException;
 import notwa.wom.Context;
-import notwa.wom.ContextManager;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
-
 
 //TODO on project change ask if changes may to be saved or not
 public class UserManager extends JDialog implements ActionListener {
@@ -51,9 +55,10 @@ public class UserManager extends JDialog implements ActionListener {
     private JList users, currentlyAssignedUsers;
     private Context context;
     private ConnectionInfo ci;
-    private DefaultListModel projectUsersModel = new DefaultListModel(); // TODO make our own abstractListModel to
-    private DefaultListModel usersModel = new DefaultListModel();       // make possible to assign object to element
+    private ListModel projectUsersModel = new ListModel();
+    private ListModel usersModel = new ListModel();
     private ArrayList<String> assignedUsers = new ArrayList<String>(); //used only for checking if user is already assigned to project
+    private Project currentlySelectedProject;
     
     public UserManager(ConnectionInfo ci, Context context) {
         this.context = context;
@@ -141,9 +146,8 @@ public class UserManager extends JDialog implements ActionListener {
         
         for (User user : uc) {
             if (!assignedUsers.contains(user.getLogin()))
-                usersModel.addElement(user.getLogin());
+                usersModel.addElement(new JListItemCreator(user, user.getLogin()));
         }
-        
     }
     
     private void getAllProjectUsers() {
@@ -159,10 +163,9 @@ public class UserManager extends JDialog implements ActionListener {
         UserCollection usersInProject = ((Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject()).getAssignedUsers();
         
         for (User user : usersInProject) {
-            projectUsersModel.addElement(user.getLogin());
+            projectUsersModel.addElement(new JListItemCreator(user, user.getLogin()));
             assignedUsers.add(user.getLogin());
         }
-
     }
     
     private JPanel initButtons() {
@@ -191,6 +194,14 @@ public class UserManager extends JDialog implements ActionListener {
         }
         
         if (ae.getSource() == projects) {
+            if (    !assignedUsers.containsAll(Arrays.asList(projectUsersModel.toArray())) ||
+                    !Arrays.asList(projectUsersModel.toArray()).containsAll(assignedUsers)) { // check if something has changed
+                if (JOptionPane.showConfirmDialog(this, "Do you really want to save changes?") == 0) {
+                    ProjectToUserAssignmentDal ptuad = new ProjectToUserAssignmentDal(ci, context);
+                    ptuad.update(currentlySelectedProject.getAssignedUsers());
+                }
+            }
+            
             this.getAllProjectUsers();
             try {
                 currentlyAssignedUsers.updateUI();
@@ -202,16 +213,34 @@ public class UserManager extends JDialog implements ActionListener {
         }
         
         if (ae.getSource() == addButton) {
-            for (int i=0; i<users.getSelectedValues().length+1; i++) {
-                projectUsersModel.addElement(users.getSelectedValues()[i]);
-                usersModel.removeElement(users.getSelectedValues()[i]);
+            currentlySelectedProject = (Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject();
+            if (users.getSelectedValues().length != 0) {
+                for (int i=0; i<users.getSelectedValues().length+1; i++) {
+                    try {
+                        User user = (User)((JListItemCreator)users.getSelectedValues()[i]).getAttachedObject();
+                        currentlySelectedProject.addAssignedUser(user);
+                    } catch (Exception e) {
+                        LoggingInterface.getInstanece().handleException(e);
+                    }
+                    projectUsersModel.addElement(users.getSelectedValues()[i]);
+                    usersModel.removeElement(users.getSelectedValues()[i]);
+                }
             }
         }
         
         if (ae.getSource() == removeButton) {
-            for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
-                usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
-                projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);
+            currentlySelectedProject = (Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject();
+            if (currentlyAssignedUsers.getSelectedValues().length != 0) {
+                for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
+                    try {
+                        User user = (User)((JListItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
+                        currentlySelectedProject.removeAssignedUser(user);
+                    } catch (Exception e) {
+                        LoggingInterface.getInstanece().handleException(e);
+                    }
+                    usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
+                    projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);
+                }
             }
         }
     }
