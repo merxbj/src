@@ -20,7 +20,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -75,6 +75,7 @@ public class DatabaseConnection {
      * Executes the given SQL Query and returns a single scalar value.
      * The caller is responsible specify the output type of this method.
      *
+     * @param <TOutput> The output type the caller is expecting to receive.
      * @param query The SQL Query that should be executed againts the server.
      *              Please make sure that this query result to one row with a
      *              single column to acquire the correct data.
@@ -86,6 +87,7 @@ public class DatabaseConnection {
      *                      the database or accessing the ResultSet.
      */
     public <TOutput> TOutput executeScalar(String query) throws SQLException {
+
         /* Make sure that you are connected, otherwise try to reconnect */
         if (!isConnected()) {
             connect();
@@ -116,7 +118,7 @@ public class DatabaseConnection {
                 return false;
             }
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
             return false;
         }
     }
@@ -129,7 +131,7 @@ public class DatabaseConnection {
             try {
                 con.close();
             } catch (Exception ex) {
-                LoggingInterface.getInstanece().handleException(ex);
+                LoggingFacade.getInstanece().handleException(ex);
             }
         }
     }
@@ -143,7 +145,7 @@ public class DatabaseConnection {
         try {
             con = DriverManager.getConnection(ci.compileConnectionString(), ci.getUser(), ci.getPassword());
         } catch (SQLException ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
             throw ex;
         }
     }

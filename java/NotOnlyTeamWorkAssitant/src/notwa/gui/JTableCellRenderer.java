@@ -25,7 +25,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import notwa.common.Colors;
+import notwa.common.ColorManager;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
@@ -42,18 +42,18 @@ public class JTableCellRenderer implements TableCellRenderer
         final Component renderer = DEFAULT_RENDERER.getTableCellRendererComponent
                                     (table, value, isSelected, hasFocus, row, column);
         if (isSelected) {
-            renderer.setBackground(Colors.getTableSelectedRowColor());
+            renderer.setBackground(ColorManager.getTableSelectedRowColor());
         }
         else {
             if (row % 2 == 0) {
-                renderer.setBackground(Colors.getTableEvenRowColor());
+                renderer.setBackground(ColorManager.getTableEvenRowColor());
 
             } else {
-                renderer.setBackground(Colors.getTableOddRowColor());
+                renderer.setBackground(ColorManager.getTableOddRowColor());
             }
             
             /*
-             * Colorize Priority and status cells with colors loaded from Colors class
+             * Colorize Priority and status cells with colors loaded from ColorManager class
              */
             try {
                 renderer.setBackground((WorkItemPriority.valueOf((String)value)).getColor());

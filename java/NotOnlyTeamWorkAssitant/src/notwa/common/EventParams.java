@@ -21,17 +21,36 @@
 package notwa.common;
 
 /**
+ * Parameters that comes altogether with an, usually, handled {@link Event}.
+ * Specific implementation of the base <code>Event</code> usually provides a
+ * specific implementation of this <code>class</code>.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class EventParams {
+
+    /**
+     * The uniqe identifier of the <code>Event</code> being fired and handled.
+     */
     protected int eventId;
 
+    /**
+     * The sole constructor of the base implementation accepts only the <code>Event</code>
+     * identifier.
+     * 
+     * @param eventId The actual event identifier.
+     */
     public EventParams(int eventId) {
         this.eventId = eventId;
     }
 
+    /**
+     * Gets the actual <code>Event</code> identifier which uniqely identifies
+     * the type of <code>Event</code> fired.
+     *
+     * @return The <code>Event</code> identifier.
+     */
     public int getEventId() {
         return eventId;
     }

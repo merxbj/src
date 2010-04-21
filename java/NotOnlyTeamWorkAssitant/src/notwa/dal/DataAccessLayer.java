@@ -21,7 +21,7 @@ package notwa.dal;
 
 import java.sql.ResultSet;
 import notwa.common.ConnectionInfo;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.BusinessObject;
 
@@ -44,21 +44,39 @@ import notwa.wom.BusinessObjectCollection;
  * before, so it is not neccessary to ask the database for the data and recreate the entity again.
  * The <code>Context</code> instance hold all entities created within the same context,
  * in literal meaning.</p>
+ *
+ * @param <TObject> The <code>BusinessObject</code> concrete implementation to
+ *                  be used as <code>BusinessObject</code> unit being created
+ *                  by the concrete <code>DataAccessLayer</code>.
+ *
+ * @param <TCollection> The <code>BusinessObjectCollection</code> concrete implementation
+ *                      to be filled by this concrete <code>DataAccessLayer</code>.
  * 
- * @author eTeR
+ * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public abstract class DataAccessLayer<TObject extends BusinessObject, TCollection extends BusinessObjectCollection<TObject>> {
     private static Hashtable<ConnectionInfo, DatabaseConnection> connections;
+
+    /**
+     * The <code>ConnectionInfo</code> which is used to connect to the 
+     * database for this concrete <code>DataAcessLayer</code>
+     */
     protected ConnectionInfo ci;
+
+    /**
+     * The <code>Context</code> within which this concrete <code>DataAcessLayer</code>
+     * figuratively lives.
+     */
     protected Context currentContext;
+
     /**
      * The default constructor which should never been invoked.
      * Any attempt of constructing any DAL using this constructor will be logged
      * as an error!
      */
     protected DataAccessLayer() {
-        LoggingInterface.getLogger().logWarning("Creating DataAccessLayer subclass with default constructor!");
+        LoggingFacade.getLogger().logDebug("Creating DataAccessLayer subclass with default constructor!");
     }
     
     /**
@@ -109,6 +127,8 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      * @see Parameters
      *
      * @param boc The <code>BusinessObjectCollection</code> to fill.
+     * @param pc    The <code>ParameterSet</code> upon which the given collection
+     *              will be filled.
      * @return The number of <code>BusinessObject</code>s filled into the <code>Collection</code>.
      */
     public int fill(TCollection boc, ParameterSet pc) {
@@ -129,11 +149,11 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
                 }
 
                 if (!boc.add(bo)) {
-                    LoggingInterface.getLogger().logWarning("BusinessObject %s could not be added to the collection!", bo.toString());
+                    LoggingFacade.getLogger().logDebug("BusinessObject %s could not be added to the collection!", bo.toString());
                 }
             }
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
         } finally {
             /*
              * Make sure that the collection knows that it is up-to-date and close
@@ -247,7 +267,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
              */
             boc.commit();
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
         }
     }
 
@@ -271,6 +291,8 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      * in account the given <coded>ParameterSet</code>.
      *
      * @param boc The <code>BusinessObjectCollection</code to be refreshed.
+     * @param ps    The <code>ParameterSet</code> upon which the given collection
+     *              will be refreshed.
      */
     public void refresh(TCollection boc, ParameterSet ps) {
         boc.shakeAway();
@@ -385,10 +407,6 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      *                      implementation of <code>BusinessObject</code>.
      * @return  The built <code>ParameterSet</code> which could then by used to
      *          obtain the one and only <code>BusinessObject</code> from database.
-     * @throws DalException Whenever error occures during the primary key recognition,
-     *                      which should point to incorrect parameter passing. The
-     *                      caller probably passed the primary key represented as
-     *                      an unexpected datatype.
      */
     protected abstract ParameterSet getPrimaryKeyParams(Object primaryKey);
 
@@ -413,7 +431,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      * <code>SELECT primary_key_column FROM table SORT BY primary_key_column DESC</code>
      *
      * @param bo <code>BusinessObject</code> for which we are building the query.
-     * returns The requested query.
+     * @return The requested query.
      */
     protected abstract String getHighestUniqeIdentifierSql(TObject bo);
 }

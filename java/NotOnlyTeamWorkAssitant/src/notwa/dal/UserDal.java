@@ -20,7 +20,7 @@
 package notwa.dal;
 
 import notwa.common.ConnectionInfo;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameter;
 import notwa.sql.Parameters;
@@ -46,6 +46,14 @@ import notwa.security.Credentials;
  */
 public class UserDal extends DataAccessLayer<User, UserCollection> {
 
+    /**
+     * The sole constructor delegating all the work to the base <code>class</code>.
+     *
+     * @param ci    The <code>ConnectionInfo</code> which refers the actual database
+     *              where we want to collect data from.
+     * @param context   The actual <code>Context</code> where we want to let the DAL
+     *                  live its pittyful life of collectiong data.
+     */
     public UserDal(ConnectionInfo ci, Context context) {
         super(ci, context);
     }
@@ -168,7 +176,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
                 userId = rs.getInt("user_id");
             }
         } catch (SQLException sex) {
-            LoggingInterface.getInstanece().handleException(sex);
+            LoggingFacade.getInstanece().handleException(sex);
             return false;
         }
 

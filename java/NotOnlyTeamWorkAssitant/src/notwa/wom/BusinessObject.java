@@ -21,7 +21,7 @@
 package notwa.wom;
 
 import java.lang.reflect.Field;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import notwa.exception.ContextException;
 
 /**
@@ -71,7 +71,7 @@ public abstract class BusinessObject {
         try {
             this.originalVersion = (BusinessObject) this.clone();
         } catch (CloneNotSupportedException ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
         }
     }
     
@@ -86,7 +86,7 @@ public abstract class BusinessObject {
             this.attachedBOC.remove(this);
             this.attachedBOC = null;
         } catch (ContextException cex) {
-            LoggingInterface.getInstanece().handleException(cex);
+            LoggingFacade.getInstanece().handleException(cex);
         }
     }
 
@@ -114,7 +114,7 @@ public abstract class BusinessObject {
                 ovField.setAccessible(true);
                    field.set(this, ovField.get(originalVersion));
             } catch (Exception e) {
-                LoggingInterface.getInstanece().handleException(e);
+                LoggingFacade.getInstanece().handleException(e);
             }
         }
     }
@@ -127,7 +127,7 @@ public abstract class BusinessObject {
         try {
             this.originalVersion = (BusinessObject) this.clone();
         } catch (CloneNotSupportedException e) {
-            LoggingInterface.getInstanece().handleException(e);
+            LoggingFacade.getInstanece().handleException(e);
         }
 
         this.setInserted(false);

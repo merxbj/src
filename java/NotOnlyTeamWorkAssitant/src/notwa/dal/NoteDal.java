@@ -34,8 +34,25 @@ import notwa.wom.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * <code>NoteDal</code> is a <code>DataAccessLayer</code> concrete implementation
+ * providing the actual data and methods how to maintain the note data persisted
+ * in the database.
+ * <p>The actuall workflow is maintained by the base class itself.</p>
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
 
+    /**
+     * The sole constructor delegating all the work to the base <code>class</code>.
+     *
+     * @param ci    The <code>ConnectionInfo</code> which refers the actual database
+     *              where we want to collect data from.
+     * @param context   The actual <code>Context</code> where we want to let the DAL
+     *                  live its pittyful life of collectiong data.
+     */
     public NoteDal(ConnectionInfo ci, Context context) {
         super(ci, context);
     }

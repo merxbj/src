@@ -37,7 +37,7 @@ import javax.swing.JTextField;
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import notwa.exception.SignInException;
 import notwa.security.Credentials;
 import notwa.security.Security;
@@ -169,7 +169,7 @@ public class LoginDialog extends JDialog implements ActionListener {
                     Security.getInstance().signIn(params.ci, params.c);
                     handler.handleEvent(new SecurityEvent(new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN, params.c, params.ci)));
                 } catch (SignInException siex) {
-                    LoggingInterface.getInstanece().handleException(siex);
+                    LoggingFacade.getInstanece().handleException(siex);
                 }
             }
         });

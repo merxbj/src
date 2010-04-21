@@ -45,9 +45,16 @@ import notwa.sql.Parameter;
  */
 public class ProjectToUserAssignmentDal extends DataAccessLayer<User, UserCollection> {
 
+    /**
+     * The sole constructor delegating all the work to the base <code>class</code>.
+     *
+     * @param ci    The <code>ConnectionInfo</code> which refers the actual database
+     *              where we want to collect data from.
+     * @param context   The actual <code>Context</code> where we want to let the DAL
+     *                  live its pittyful life of collectiong data.
+     */
     public ProjectToUserAssignmentDal(ConnectionInfo ci, Context context) {
         super(ci, context);
-        this.currentContext = context;
     }
 
     @Override

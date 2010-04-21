@@ -22,10 +22,10 @@ package notwa.wom;
 import java.awt.Color;
 import java.util.TreeMap;
 
-import notwa.common.Colors;
+import notwa.common.ColorManager;
 
 public enum WorkItemStatus {
-    PLEASE_RESOLVE(1),    WAITING(2), IN_PROGRESS(3), CLOSED(4), DELETED(5);
+    PLEASE_RESOLVE(1), WAITING(2), IN_PROGRESS(3), CLOSED(4), DELETED(5);
     
     private int value;
     
@@ -50,6 +50,6 @@ public enum WorkItemStatus {
     }
     
     public Color getColor() {
-        return Colors.getStateColor(this);
+        return ColorManager.getStateColor(this);
     }
 }

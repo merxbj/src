@@ -21,22 +21,47 @@
 package notwa.common;
 
 /**
+ * Class representing an Event which may occurs within the application that may
+ * be handled by the appropriate {@link EventHandler}.
+ * <p><code>Event</code> comes along with its {@link EventParams} that are specific
+ * to the Event implementation.
+ *
+ * @param <T> Represents the <code>EventParams</code> that this <code>Event</code>
+ *          will carry together.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class Event<T extends EventParams> {
-    T params;
+    private T params;
 
+    /**
+     * The sole constructor accepting <code>EventParams</code> as the only and
+     * required parameter.
+     * 
+     * @param params The actual event parameter.
+     */
     public Event(T params) {
         this.params = params;
     }
 
+    /**
+     * Returns the actual <code>Event</code> parameter.
+     * 
+     * @return The <code>EventParameter</code>.
+     */
     public T getParams() {
         return params;
     }
 
+    /**
+     * Returns the actual <code>Event</code> identifier which is stored within
+     * the <code>EventParams</code>. If the <code>EventParams</code> doesn't
+     * exists, returns -1.
+     *
+     * @return The event identifier if applicable, -1 otherwise.
+     */
     public int getEventId() {
-        return params.eventId;
+        return (params != null) ? params.eventId : -1;
     }
 }

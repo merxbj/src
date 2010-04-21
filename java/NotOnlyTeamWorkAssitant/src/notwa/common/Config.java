@@ -20,6 +20,7 @@
 
 package notwa.common;
 
+import notwa.logger.LoggingFacade;
 import java.io.File;
 import java.util.Collection;
 import java.util.TreeSet;
@@ -59,7 +60,7 @@ public class Config {
         try {
             this.parse();
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
         }
     }
 

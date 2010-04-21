@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import notwa.common.Colors;
+import notwa.common.ColorManager;
 import notwa.wom.Note;
 import notwa.wom.User;
 import notwa.wom.UserCollection;

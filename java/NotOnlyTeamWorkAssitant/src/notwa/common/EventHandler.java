@@ -21,10 +21,21 @@
 package notwa.common;
 
 /**
+ * <code>EventHandler</code> contracts implementing of the {@link #handleEvent(notwa.common.Event)}
+ * method which main and only purpose is to notify the subscriber about the
+ * <code>Event</code> being fired.
+ *
+ * @param <T>   The actual <code>Event</code> implementation the implementer is
+ *              subscribing for.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public interface EventHandler<T extends Event> {
+    /**
+     * Notifies the implementer that the given <code>Event</code> occures.
+     * 
+     * @param e The actul <code>Event</code> occured.
+     */
     public void handleEvent(T e);
 }

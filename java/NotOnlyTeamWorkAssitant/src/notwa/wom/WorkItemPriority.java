@@ -22,7 +22,7 @@ package notwa.wom;
 import java.awt.Color;
 import java.util.TreeMap;
 
-import notwa.common.Colors;
+import notwa.common.ColorManager;
 
 public enum WorkItemPriority {
     CRITICAL(4), IMPORTANT(3), NORMAL(2), NICE_TO_HAVE(1), UNNECESSARY(0);
@@ -50,6 +50,6 @@ public enum WorkItemPriority {
     }
     
     public Color getColor() {
-        return Colors.getPriorityColor(this);
+        return ColorManager.getPriorityColor(this);
     }
 }

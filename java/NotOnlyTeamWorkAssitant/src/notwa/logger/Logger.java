@@ -1,116 +1,166 @@
+/*
+ * Logger
+ *
+ * Copyright (C) 2010  Jaroslav Merxbauer
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package notwa.logger;
 
-import java.io.FileWriter;
-import java.io.File;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
+/**
+ * The base class for all loggers. It mandates implementation of methods performing
+ * the core logging implementation.
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
+public abstract class Logger {
+    
+    /**
+     * The exception handler for the exceptions thrown during logging. This is more
+     * exceptional than any exception so let's have a exceptional member for such
+     * purposes.
+     */
+    protected LoggingExceptionHandler leh;
 
-public class Logger implements Observer {
-
-    public Logger() {
+    /**
+     * The simple constructor doesn't providing the <code>LoggingExceptionHandler</code>.
+     */
+    protected Logger() {
+        this.leh = null;
     }
-
-    public Logger(String fileName) {
-        this.fileName = fileName;
-        buildDirectoryTree();
-    }
-
-    public Logger(String fileName, LoggingExceptionHandler leh) {
-        this.fileName = fileName;
+    
+    /**
+     * The complex constructor providing the <code>LoggingExceptionHanlder</code>.
+     * This handler is than used whenever the unexpected exceptional exception is
+     * thrown during the logging.
+     * <p>Please, be wise and do not use this <code>Logger</code> to act as
+     * the <code>LoggingExceptionHandler</code>.</p>
+     *
+     * @param leh The actual <code>LoggingExceptionHandler</code>.
+     */
+    protected Logger(LoggingExceptionHandler leh) {
         this.leh = leh;
-        buildDirectoryTree();
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof LogDispatcher) {
-            LogDispatcher ld = (LogDispatcher) o;
-            writeToLog(ld.getLogLevel(), ld.getMessage(), ld.getArgs());
-        } else {
-            reportLoggingException(new LoggingException("Invalid observable object got during observer update"));
+    /**
+     * Method notifying the <code>LoggingExceptionHandler</code> that the exception
+     * state occurs and the <code>Exception</code> has been thrown during the 
+     * logging process.
+     * 
+     * @param ex The exception to be handled.
+     */
+    protected void reportLoggingException(Exception ex) {
+        if (leh != null) {
+            leh.handle(ex);
         }
     }
 
-    public void info(String message, Object... args) {
-        writeToLog(LogLevel.LOG_LEVEL_INFO, message, args);
-    }
-
-    public void debug(String message, Object... args) {
-
-        writeToLog(LogLevel.LOG_LEVEL_DEBUG, message, args);
-    }
-
-    public void error(String message, Object... args) {
-        writeToLog(LogLevel.LOG_LEVEL_ERROR, message, args);
-    }
-
-    public void info(String message) {
+    /**
+     * Logs a message with an info priority.
+     *
+     * @param message The message to be logged.
+     */
+    public void info(String message)
+    {
         info(message, (Object []) null);
     }
 
+    /**
+     * Logs a message with a debug priority.
+     * 
+     * @param message The message to be logged.
+     */
     public void debug(String message) {
         debug(message, (Object []) null);
     }
 
+     /**
+     * Logs a message with an error priority.
+     * 
+     * @param message The message to be logged.
+     */
     public void error(String message) {
         error(message, (Object []) null);
     }
 
-    private void buildDirectoryTree() {
-        try {
-            File logFile = new File(fileName.substring(0, fileName.lastIndexOf("/")));
-            logFile.mkdirs();
-        } catch (Exception ex) {
-            reportLoggingException(ex);
-        }
-    }
+    /**
+     * Logs a message with an info priority altogeather with additional parameters
+     * for the message to be formated with.
+     * 
+     * @param message The format string of the message to be logged.
+     * @param args The arguments to be formated into the given message.
+     */
+    public abstract void info(String message, Object... args);
 
-    private void writeToLog(LogLevel level, String message, Object... args) {
-        if (message == null)
-            reportLoggingException(new LoggingException("Null message has been requested to be logged!"));
+    /**
+     * Logs a message with a debug priority altogeather with additional parameters
+     * for the message to be formated with.
+     *
+     * @param message The format string of the message to be logged.
+     * @param args The arguments to be formated into the given message.
+     */
+    public abstract void debug(String message, Object... args);
 
-        FileWriter fw = null;
-        try {
-            String formattedMesage = String.format(message, args);
-            fw = new FileWriter(fileName, true /* append */);
-            Date dt = new Date();
-            fw.append(String.format("%28s | %5s | %s\n", dt.toString(), logLevelToString(level), formattedMesage));
-        } catch (Exception ex) {
-            // Exception caught during writing to log occurred
-            reportLoggingException(ex);
-        } finally {
-            try {
-                fw.close();
-            } catch (Exception ex) {
-                reportLoggingException(ex);
-            }
-        }
-    }
+    /**
+     * Logs a message with an error priority altogeather with additional parameters
+     * for the message to be formated with.
+     *
+     * @param message The format string of the message to be logged.
+     * @param args The arguments to be formated into the given message.
+     */
+    public abstract void error(String message, Object... args);
 
-    private String logLevelToString(LogLevel level) throws LoggingException {
-        switch (level) {
-            case LOG_LEVEL_DEBUG:
-                return "DEBUG";
-            case LOG_LEVEL_ERROR:
-                return "ERROR";
-            case LOG_LEVEL_INFO:
-                return "INFO";
-            default:
-                throw new LoggingException("Unexpected logging level!");
-        }
-    }
-
-    private void reportLoggingException(Exception ex) {
-        if (leh != null) {
-            leh.loggingExceptionOccured(ex);
-        }
-    }
-
-    private String fileName = "Application.log";
-    private LoggingExceptionHandler leh;
-
+    /**
+     * Describes the actual value of the message logged.
+     */
     public enum LogLevel {
-        LOG_LEVEL_ERROR, LOG_LEVEL_INFO, LOG_LEVEL_DEBUG
+
+        /**
+         * The message with this level is considered to inform about a bad
+         * or exceptional behavior that must be investigated or reported as soon
+         * as possible.
+         */
+        LOG_LEVEL_ERROR {
+            @Override
+            public String toString() {
+                return "ERROR";
+            }
+        },
+
+        /**
+         * The message with this level is considered to inform about a usual
+         * behavior that deserves to be reported.
+         */
+        LOG_LEVEL_INFO {
+            @Override
+            public String toString() {
+                return "INFO";
+            }
+        },
+
+        /**
+         * The message with htis level is considered to be useful during the
+         * debugging or for the problem-solving purposes.
+         */
+        LOG_LEVEL_DEBUG {
+            @Override
+            public String toString() {
+                return "DEBUG";
+            }
+        };
     }
 }

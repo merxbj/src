@@ -1,6 +1,6 @@
 package notwa.sql;
 
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.sql.Timestamp;
@@ -45,7 +45,7 @@ public class Statement {
             nextKeyword = type;
         } catch (Exception ex) {
 
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
             return false;
         }
         return true;

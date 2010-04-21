@@ -6,7 +6,7 @@ import notwa.dal.*;
 import notwa.sql.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 
 public class WorkItemDalTest {
     WorkItemCollection wic;
@@ -57,7 +57,7 @@ public class WorkItemDalTest {
 
             wid.update(wic);
         } catch (Exception ex) {
-            LoggingInterface.getInstanece().handleException(ex);
+            LoggingFacade.getInstanece().handleException(ex);
         }
 
     }

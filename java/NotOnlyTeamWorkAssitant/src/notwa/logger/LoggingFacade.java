@@ -1,5 +1,5 @@
 /*
- * LoggingInterface
+ * LoggingFacade
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,10 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package notwa.common;
-
-import notwa.logger.LogDispatcher;
-import notwa.logger.Logger;
+package notwa.logger;
 
 /**
  * The class, implemented as a singleton, providing an unified access to the
@@ -32,9 +29,9 @@ import notwa.logger.Logger;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class LoggingInterface {
+public class LoggingFacade {
     
-    private static LoggingInterface singleton;
+    private static LoggingFacade singleton;
     private LogDispatcher ld;
     
     /**
@@ -42,9 +39,9 @@ public class LoggingInterface {
      *
      * @return The actuall instance of this class.
      */
-    public static LoggingInterface getInstanece() {
+    public static LoggingFacade getInstanece() {
         if (singleton == null) {
-            singleton = new LoggingInterface();
+            singleton = new LoggingFacade();
         }
         return singleton;
     }
@@ -52,9 +49,9 @@ public class LoggingInterface {
     /**
      * The hidden constructor meant to be used only from within this class.
      */
-    protected LoggingInterface() {
+    protected LoggingFacade() {
         ld = new LogDispatcher();
-        ld.registerLogger(new Logger("./log/notwa.log"));
+        ld.registerLogger(new FileLogger("./log/notwa.log"));
     }
 
     /**

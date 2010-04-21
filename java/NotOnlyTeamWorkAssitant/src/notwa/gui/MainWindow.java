@@ -28,7 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import notwa.common.ConnectionInfo;
 import notwa.common.Event;
-import notwa.common.LoggingInterface;
+import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
 import notwa.threading.Action;
@@ -182,7 +182,7 @@ public class MainWindow extends JFrame implements EventHandler {
             case GuiEventParams.ACTION_EVENT_HIDE_DETAIL:
                 invokeHideDetail(e.getParams());
             default:
-                LoggingInterface.getLogger().logError("Unexpected event: %s", e.toString());
+                LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
         }
     }
@@ -193,7 +193,7 @@ public class MainWindow extends JFrame implements EventHandler {
                 invokeSuccessfulLogin(e.getParams());
                 break;
             default:
-                LoggingInterface.getLogger().logError("Unexpected event: %s", e.toString());
+                LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
         }
     }
