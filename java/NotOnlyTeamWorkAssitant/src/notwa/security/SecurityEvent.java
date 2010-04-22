@@ -23,12 +23,18 @@ package notwa.security;
 import notwa.common.Event;
 
 /**
+ * Event fired during any security operation informing about the security operation
+ * progress or status, such as successful user login.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class SecurityEvent extends Event<SecurityEventParams> {
 
+    /**
+     * The sole constructor providing the <code>SecurityEventParams</code>.
+     * @param params The event parameters.
+     */
     public SecurityEvent(SecurityEventParams params) {
         super(params);
     }

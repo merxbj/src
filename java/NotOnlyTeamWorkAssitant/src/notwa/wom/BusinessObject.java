@@ -71,7 +71,7 @@ public abstract class BusinessObject {
         try {
             this.originalVersion = (BusinessObject) this.clone();
         } catch (CloneNotSupportedException ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
         }
     }
     
@@ -86,7 +86,7 @@ public abstract class BusinessObject {
             this.attachedBOC.remove(this);
             this.attachedBOC = null;
         } catch (ContextException cex) {
-            LoggingFacade.getInstanece().handleException(cex);
+            LoggingFacade.handleException(cex);
         }
     }
 
@@ -114,7 +114,7 @@ public abstract class BusinessObject {
                 ovField.setAccessible(true);
                    field.set(this, ovField.get(originalVersion));
             } catch (Exception e) {
-                LoggingFacade.getInstanece().handleException(e);
+                LoggingFacade.handleException(e);
             }
         }
     }
@@ -127,7 +127,7 @@ public abstract class BusinessObject {
         try {
             this.originalVersion = (BusinessObject) this.clone();
         } catch (CloneNotSupportedException e) {
-            LoggingFacade.getInstanece().handleException(e);
+            LoggingFacade.handleException(e);
         }
 
         this.setInserted(false);

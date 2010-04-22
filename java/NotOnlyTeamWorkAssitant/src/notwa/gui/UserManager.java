@@ -220,7 +220,7 @@ public class UserManager extends JDialog implements ActionListener {
                         User user = (User)((JListItemCreator)users.getSelectedValues()[i]).getAttachedObject();
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
-                        LoggingFacade.getInstanece().handleException(e);
+                        LoggingFacade.handleException(e);
                     }
                     projectUsersModel.addElement(users.getSelectedValues()[i]);
                     usersModel.removeElement(users.getSelectedValues()[i]);
@@ -236,7 +236,7 @@ public class UserManager extends JDialog implements ActionListener {
                         User user = (User)((JListItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
                         currentlySelectedProject.removeAssignedUser(user);
                     } catch (Exception e) {
-                        LoggingFacade.getInstanece().handleException(e);
+                        LoggingFacade.handleException(e);
                     }
                     usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
                     projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);

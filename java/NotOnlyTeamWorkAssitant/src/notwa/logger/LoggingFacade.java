@@ -39,7 +39,7 @@ public class LoggingFacade {
      *
      * @return The actuall instance of this class.
      */
-    public static LoggingFacade getInstanece() {
+    public static LoggingFacade getInstance() {
         if (singleton == null) {
             singleton = new LoggingFacade();
         }
@@ -64,7 +64,7 @@ public class LoggingFacade {
      * @return The actuall logger.
      */
     public static LogDispatcher getLogger() {
-        return getInstanece().ld;
+        return getInstance().ld;
     }
     
     /**
@@ -75,8 +75,9 @@ public class LoggingFacade {
      *
      * @param ex <code>Exception<code> to be handled.
      */
-    public void handleException(Throwable ex) {
-        ld.logError(formatException(ex));
+    public static void handleException(Throwable ex) {
+        LoggingFacade lf = getInstance();
+        lf.ld.logError(lf.formatException(ex));
     }
 
     /**

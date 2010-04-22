@@ -90,7 +90,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
 
     @Override
     protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
-        return new ParameterSet(new Parameter(Parameters.User.ID, primaryKey, Sql.Condition.EQUALTY));
+        return new ParameterSet(new Parameter(Parameters.User.ID, primaryKey, Sql.Relation.EQUALTY));
     }
     
     @Override
@@ -142,7 +142,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
     private ProjectCollection getAssignedProjectCollection(int userId) throws DalException {
         ProjectCollection pc = new ProjectCollection(currentContext);
         UserToProjectAssignmentDal utpaDal = new UserToProjectAssignmentDal(ci, currentContext);
-        utpaDal.fill(pc, new ParameterSet(new Parameter(Parameters.User.ID, userId, Sql.Condition.EQUALTY)));
+        utpaDal.fill(pc, new ParameterSet(new Parameter(Parameters.User.ID, userId, Sql.Relation.EQUALTY)));
         return pc;
     }
 
@@ -176,7 +176,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
                 userId = rs.getInt("user_id");
             }
         } catch (SQLException sex) {
-            LoggingFacade.getInstanece().handleException(sex);
+            LoggingFacade.handleException(sex);
             return false;
         }
 

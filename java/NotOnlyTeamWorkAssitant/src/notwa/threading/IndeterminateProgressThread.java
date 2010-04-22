@@ -63,7 +63,7 @@ public class IndeterminateProgressThread {
             try {
                 action.perform();
             } catch (Exception ex) {
-                LoggingFacade.getInstanece().handleException(ex);
+                LoggingFacade.handleException(ex);
             } finally {
                 callback.onTerminate();
             }

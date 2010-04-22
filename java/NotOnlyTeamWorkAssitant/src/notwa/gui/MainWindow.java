@@ -21,13 +21,9 @@ package notwa.gui;
 
 import notwa.common.EventHandler;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import notwa.common.ConnectionInfo;
-import notwa.common.Event;
 import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
@@ -41,10 +37,9 @@ import notwa.wom.Context;
  * @author mrneo
  * @version %I% %G%
  */
-public class MainWindow extends JFrame implements EventHandler {
+public class MainWindow extends JFrame {
     private String version = new String("v0.5.0-r1"); //config?
-    private MainLayoutLoader mll = new MainLayoutLoader(this);
-    private List<EventHandler> handlers;
+    private MainLayoutLoader mll = new MainLayoutLoader();
 
     /**
      * Constructor only calls method to initialize MainWindow
@@ -63,8 +58,7 @@ public class MainWindow extends JFrame implements EventHandler {
         /*
          * end.
          */
-        initEventHandlers();
-        initMainWindow();
+        init();
         startup();
     }
 
@@ -73,7 +67,7 @@ public class MainWindow extends JFrame implements EventHandler {
      * 
      * 
      */
-    private void initMainWindow() {
+    private void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent " + version.toString());
         this.setSize(1000,500);
@@ -81,14 +75,21 @@ public class MainWindow extends JFrame implements EventHandler {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         /*
-         * Load MainMenu
+         * Load MainMenu and register for event notification
          */
-        this.setJMenuBar(MainMenu.getInstance().initMainMenu(this));
+        MainMenu mm = MainMenu.getInstance();
+        this.setJMenuBar(mm);
+        mm.onFireGuiEvent(new EventHandler<GuiEvent>() {
+            @Override
+            public void handleEvent(GuiEvent e) {
+                handleGuiEvent(e);
+            }
+        });
         
         /*
          * create main JPanel and Load tabs 
          */
-        this.add(mll.initMainLayout(), BorderLayout.CENTER);
+        this.add(mll.init(), BorderLayout.CENTER);
         
         /*
          * create JStatusBar object
@@ -116,8 +117,13 @@ public class MainWindow extends JFrame implements EventHandler {
         /*
          * Show login dialog
          */
-        LoginDialog ld = new LoginDialog(this);
-        ld.initLoginDialog();
+        LoginDialog ld = new LoginDialog();
+        ld.onFireSecurityEvent(new EventHandler<SecurityEvent>() {
+            @Override
+            public void handleEvent(SecurityEvent e) {
+                handleSecurityEvent(e);
+            }
+        });
     }
 
     private ConnectionInfo getActiveConnectionInfo() {
@@ -130,36 +136,7 @@ public class MainWindow extends JFrame implements EventHandler {
         return (tc == null) ? null : tc.getCurrentContext();
     }
 
-    @Override
-    public void handleEvent(Event e) {
-        for (EventHandler handler : handlers) {
-            handler.handleEvent(e);
-        }
-    }
-
-    private void initEventHandlers() {
-        handlers = new ArrayList<EventHandler>();
-
-        handlers.add(new EventHandler() {
-            @Override
-            public void handleEvent(Event e) {
-                if (e instanceof GuiEvent) {
-                    handleMenuEvent((GuiEvent) e);
-                }
-            }
-        });
-
-        handlers.add(new EventHandler() {
-            @Override
-            public void handleEvent(Event e) {
-                if (e instanceof SecurityEvent) {
-                    handleSecurityEvent((SecurityEvent) e);
-                }
-            }
-        });
-    }
-
-    public void handleMenuEvent(GuiEvent e) {
+    public void handleGuiEvent(GuiEvent e) {
         switch (e.getEventId()) {
             case GuiEventParams.MENU_EVENT_CONFIGURE:
                 invokeConfigure(e.getParams());

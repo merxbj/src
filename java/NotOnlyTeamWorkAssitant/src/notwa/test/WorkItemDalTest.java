@@ -22,7 +22,7 @@ public class WorkItemDalTest {
             context = ContextManager.getInstance().newContext();
             wic = new WorkItemCollection();
             wid = new WorkItemDal(ci, context);
-            pc = new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Condition.EQUALTY));
+            pc = new ParameterSet(new Parameter(Parameters.WorkItem.ASSIGNED_USER, 1, Sql.Relation.EQUALTY));
             ts = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
             wic.setCurrentContext(context);
@@ -57,7 +57,7 @@ public class WorkItemDalTest {
 
             wid.update(wic);
         } catch (Exception ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
         }
 
     }

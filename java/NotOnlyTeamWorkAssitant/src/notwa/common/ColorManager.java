@@ -43,7 +43,6 @@ public class ColorManager {
      * Gets the color for the given priority.
      * 
      * @param wip Priority to be colorfully expressed.
-     * 
      * @return <code>Color</code> expressing the given priority.
      */
     public static Color getPriorityColor(WorkItemPriority wip) {
@@ -67,7 +66,6 @@ public class ColorManager {
      * Gets the color for the given status.
      * 
      * @param wis Status to be colorfully expressed.
-     * 
      * @return <code>Color</code> expressing the given status.
      */
     public static Color getStateColor(WorkItemStatus wis) {
@@ -89,7 +87,6 @@ public class ColorManager {
     
     /**
      * Gets the color of the odd row of the table.
-     * 
      * @return The <code>Color</code>
      */
     public static Color getTableOddRowColor() {
@@ -98,7 +95,6 @@ public class ColorManager {
     
     /**
      * Gets the color of the even row of the table.
-     * 
      * @return The <code>Color</code>
      */
     public static Color getTableEvenRowColor() {
@@ -107,7 +103,6 @@ public class ColorManager {
     
     /**
      * Gets the color of the selected row of the table.
-     * 
      * @return The <code>Color</code>
      */
     public static Color getTableSelectedRowColor() {

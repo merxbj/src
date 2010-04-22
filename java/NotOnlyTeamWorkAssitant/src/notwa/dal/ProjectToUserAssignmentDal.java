@@ -84,7 +84,7 @@ public class ProjectToUserAssignmentDal extends DataAccessLayer<User, UserCollec
 
     @Override
     protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
-        return new ParameterSet(new Parameter(Parameters.User.ID, primaryKey, Sql.Condition.EQUALTY));
+        return new ParameterSet(new Parameter(Parameters.User.ID, primaryKey, Sql.Relation.EQUALTY));
     }
 
     @Override

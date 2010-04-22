@@ -118,7 +118,7 @@ public class DatabaseConnection {
                 return false;
             }
         } catch (Exception ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
             return false;
         }
     }
@@ -131,7 +131,7 @@ public class DatabaseConnection {
             try {
                 con.close();
             } catch (Exception ex) {
-                LoggingFacade.getInstanece().handleException(ex);
+                LoggingFacade.handleException(ex);
             }
         }
     }
@@ -145,7 +145,7 @@ public class DatabaseConnection {
         try {
             con = DriverManager.getConnection(ci.compileConnectionString(), ci.getUser(), ci.getPassword());
         } catch (SQLException ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
             throw ex;
         }
     }

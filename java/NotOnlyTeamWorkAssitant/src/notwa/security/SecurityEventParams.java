@@ -24,27 +24,52 @@ import notwa.common.ConnectionInfo;
 import notwa.common.EventParams;
 
 /**
- *
+ * The parameters coming together with the {@link SecurityEvent}.
+ * 
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class SecurityEventParams extends EventParams {
     
+    /**
+     * Event informing its handler about the successful state of the login process.
+     */
     public static final int SECURITY_EVENT_SUCCESSFUL_LOGIN = 1;
     
     private Credentials credentials;
     private ConnectionInfo connectionInfo;
 
+    /**
+     * The sole constructor providing the actual event identification as well as the
+     * credentials and connection info to be carried together with the event.
+     * <p>The credentials and connection info are usually those parameters which
+     * compiles the security handling that has been done before this event has
+     * been fired.</p>
+     *
+     * @param eventId The event identifier.
+     * @param credentials The user credetials.
+     * @param connectionInfo The connection info to the secure database.
+     */
     public SecurityEventParams(int eventId, Credentials credentials, ConnectionInfo connectionInfo) {
         super(eventId);
         this.credentials = credentials;
         this.connectionInfo = connectionInfo;
     }
 
+    /**
+     * Gets the connection info against which the security operation has been done.
+     * 
+     * @return The <code>ConnectionInfo</code>
+     */
     public ConnectionInfo getConnectionInfo() {
         return connectionInfo;
     }
 
+    /**
+     * Gets the user credentials the security operation has been done with.
+     *
+     * @return The <code>Credentials</code>
+     */
     public Credentials getCredentials() {
         return credentials;
     }

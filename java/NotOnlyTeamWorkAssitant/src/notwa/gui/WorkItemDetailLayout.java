@@ -35,7 +35,7 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     JButton hideDetail = new JButton("Hide detail");
     private WorkItemDetail wid;
     private WorkItemNoteHistoryTable winht;
-    private EventHandler<GuiEvent> handler;
+    private EventHandler<GuiEvent> guiHandler;
 
     public WorkItemDetailLayout() {
     }
@@ -47,7 +47,7 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         return instance;
     }
     
-    public Component initDetailLayout(EventHandler<GuiEvent> handler) {
+    public Component initDetailLayout() {
         this.setLayout(new BorderLayout());
     
         this.add(hideDetail, BorderLayout.PAGE_START);
@@ -57,10 +57,12 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         detailTabs.addTab("Notes history", WorkItemNoteHistoryTable.getInstance().initNoteHistoryTable());
 
         this.add(detailTabs, BorderLayout.CENTER);
-
-        this.handler = handler;
             
         return this;
+    }
+
+    public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
+        this.guiHandler = guiHandler;
     }
 
     public WorkItemDetail getWorkItemDetail() {
@@ -73,6 +75,6 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        handler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.ACTION_EVENT_HIDE_DETAIL)));
+        guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.ACTION_EVENT_HIDE_DETAIL)));
     }
 }

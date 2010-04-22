@@ -37,6 +37,7 @@ import javax.swing.event.ChangeListener;
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
 import notwa.security.Credentials;
+import notwa.security.SecurityEvent;
 import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
@@ -47,15 +48,28 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     static JSplitPane sp;
     private JTabbedPane tabPanel;
     private JButton plusButton;
-    private EventHandler handler;
+    private EventHandler<GuiEvent> guiHandler;
+    private EventHandler<SecurityEvent> securityHandler;
     
-    public MainLayoutLoader (EventHandler handler) {
-        this.handler = handler;
+    public MainLayoutLoader () {
     }
 
-    public Component initMainLayout() {
+    public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
+        this.guiHandler = guiHandler;
+    }
+
+    public void onFireSecurityEvent(EventHandler<SecurityEvent> securityHandler) {
+        this.securityHandler = securityHandler;
+    }
+
+    public Component init() {
         this.setLayout(new GridLayout(1,0));
-        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), WorkItemDetailLayout.getInstance().initDetailLayout(handler));
+        WorkItemDetailLayout widl = WorkItemDetailLayout.getInstance();
+        if (widl != null) {
+            widl.initDetailLayout();
+            widl.onFireGuiEvent(guiHandler);
+        }
+        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), widl);
         sp.setResizeWeight(0.9);
         sp.setContinuousLayout(true);
         this.add(sp);
@@ -85,7 +99,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     public void createWitView(ConnectionInfo ci, Credentials credentials) {
-        TabContent tc = new TabContent(ci, new ParameterSet( new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Condition.EQUALTY)));
+        TabContent tc = new TabContent(ci, new ParameterSet( new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Relation.EQUALTY)));
         tabPanel.insertTab(ci.getLabel(), null, tc, null, tabPanel.getTabCount() - 1);
         tabPanel.setSelectedIndex(tabPanel.getTabCount() - 2);
     }
@@ -98,8 +112,8 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == plusButton) {
-            LoginDialog ld = new LoginDialog(handler);
-            ld.initLoginDialog();
+            LoginDialog ld = new LoginDialog();
+            ld.onFireSecurityEvent(securityHandler);
         }
     }
 

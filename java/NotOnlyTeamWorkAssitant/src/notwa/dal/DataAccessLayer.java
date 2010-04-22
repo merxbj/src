@@ -153,7 +153,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
                 }
             }
         } catch (Exception ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
         } finally {
             /*
              * Make sure that the collection knows that it is up-to-date and close
@@ -267,7 +267,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
              */
             boc.commit();
         } catch (Exception ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
         }
     }
 

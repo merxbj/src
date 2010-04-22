@@ -52,13 +52,13 @@ public class LoginDialog extends JDialog implements ActionListener {
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
-    private EventHandler<SecurityEvent> handler;
+    private EventHandler<SecurityEvent> securityHandler;
     
-    public LoginDialog(EventHandler<SecurityEvent> handler) {
-        this.handler = handler;
+    public LoginDialog() {
+        init();
     }
     
-    public void initLoginDialog() {
+    public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Sign-in");
         this.setSize(500,200);
@@ -71,6 +71,10 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.add(this.initButtons(), BorderLayout.PAGE_END);
         
         this.setVisible(true);
+    }
+
+    public void onFireSecurityEvent(EventHandler<SecurityEvent> securityHandler) {
+        this.securityHandler = securityHandler;
     }
     
     private JPanel initComponents() {
@@ -167,9 +171,9 @@ public class LoginDialog extends JDialog implements ActionListener {
             public void perform() {
                 try {
                     Security.getInstance().signIn(params.ci, params.c);
-                    handler.handleEvent(new SecurityEvent(new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN, params.c, params.ci)));
+                    securityHandler.handleEvent(new SecurityEvent(new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN, params.c, params.ci)));
                 } catch (SignInException siex) {
-                    LoggingFacade.getInstanece().handleException(siex);
+                    LoggingFacade.handleException(siex);
                 }
             }
         });

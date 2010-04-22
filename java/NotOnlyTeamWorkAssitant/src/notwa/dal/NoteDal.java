@@ -87,8 +87,8 @@ public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
     @Override
     protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
         NotePrimaryKey npk = (NotePrimaryKey) primaryKey;
-        Parameter noteId = new Parameter(Parameters.Note.ID, npk.getNoteId(), Sql.Condition.EQUALTY);
-        Parameter workItemId = new Parameter(Parameters.Note.WORK_ITEM_ID, npk.getWorkItemId(), Sql.Condition.EQUALTY);
+        Parameter noteId = new Parameter(Parameters.Note.ID, npk.getNoteId(), Sql.Relation.EQUALTY);
+        Parameter workItemId = new Parameter(Parameters.Note.WORK_ITEM_ID, npk.getWorkItemId(), Sql.Relation.EQUALTY);
         return new ParameterSet(new Parameter[] {noteId, workItemId});
     }
 

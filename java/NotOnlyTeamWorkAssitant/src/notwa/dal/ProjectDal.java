@@ -83,7 +83,7 @@ public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
 
     @Override
     protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
-        return new ParameterSet(new Parameter(Parameters.Project.ID, primaryKey, Sql.Condition.EQUALTY));
+        return new ParameterSet(new Parameter(Parameters.Project.ID, primaryKey, Sql.Relation.EQUALTY));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ProjectDal extends DataAccessLayer<Project, ProjectCollection> {
     private UserCollection getAssignedUserCollection(int projectId) throws DalException {
         UserCollection uc = new UserCollection(currentContext);
         ProjectToUserAssignmentDal ptuaDal = new ProjectToUserAssignmentDal(ci, currentContext);
-        ptuaDal.fill(uc, new ParameterSet(new Parameter(Parameters.Project.ID, projectId, Sql.Condition.EQUALTY)));
+        ptuaDal.fill(uc, new ParameterSet(new Parameter(Parameters.Project.ID, projectId, Sql.Relation.EQUALTY)));
         return uc;
     }
     

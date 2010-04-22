@@ -92,7 +92,7 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
 
     @Override
     protected ParameterSet getPrimaryKeyParams(Object primaryKey) {
-        return new ParameterSet(new Parameter(Parameters.WorkItem.ID, primaryKey, Sql.Condition.EQUALTY));
+        return new ParameterSet(new Parameter(Parameters.WorkItem.ID, primaryKey, Sql.Relation.EQUALTY));
     }
 
     @Override
@@ -120,7 +120,7 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
 
             NoteDal noteDal = new NoteDal(ci, currentContext);
             NoteCollection nc = new NoteCollection(currentContext);
-            noteDal.fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Condition.EQUALTY)));
+            noteDal.fill(nc, new ParameterSet(new Parameter(Parameters.Note.WORK_ITEM_ID, workItemId, Sql.Relation.EQUALTY)));
 
             ProjectDal projectDal = new ProjectDal(ci, currentContext);
             Project project = projectDal.get(rs.getInt("project_id"));

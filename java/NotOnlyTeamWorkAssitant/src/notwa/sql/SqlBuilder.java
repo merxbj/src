@@ -36,7 +36,7 @@ public class SqlBuilder {
         for (Parameter p : parameters) {
             for (Statement s : statements) {
                 if (s.hasParameter(p.getName())) {
-                    s.appendCondition(p);
+                    s.appendRelation(p);
                 }
             }
         }

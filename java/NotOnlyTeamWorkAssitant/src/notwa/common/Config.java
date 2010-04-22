@@ -60,7 +60,7 @@ public class Config {
         try {
             this.parse();
         } catch (Exception ex) {
-            LoggingFacade.getInstanece().handleException(ex);
+            LoggingFacade.handleException(ex);
         }
     }
 
