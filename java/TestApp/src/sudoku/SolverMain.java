@@ -37,12 +37,9 @@ public class SolverMain {
 
         int [][] result;
 
-        for (SudokuSolver s : solvers) {
-            /*result = s.solve(matrix);
-            printMatrix(result);*/
-            result = s.solve(hardMatrix);
-            printMatrix(result);
-        }
+        SudokuSolver s = new LastRemainingSolver();
+        result = s.solve(hardMatrix);
+        printMatrix(result);
     }
 
     public static void printMatrix(int[][] matrix) {
