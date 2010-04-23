@@ -31,8 +31,8 @@ public class GuiEventParams extends EventParams {
 
     public static final int MENU_EVENT_CONFIGURE           = 1;
     public static final int MENU_EVENT_FILTERING           = 2;
-    public static final int MENU_EVENT_NEW_USER            = 3;
-    public static final int MENU_EVENT_USER_MANAGER        = 4;
+    public static final int MENU_EVENT_USER_MANAGEMENT            = 3;
+    public static final int MENU_EVENT_ASSIGNMENT_MANAGER        = 4;
     public static final int MENU_EVENT_EXIT                = 5;
     public static final int MENU_EVENT_SYNC_AND_REFRESH    = 6;
     public static final int ACTION_EVENT_HIDE_DETAIL       = 7;

@@ -30,12 +30,16 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import notwa.common.ConnectionInfo;
+import notwa.dal.UserDal;
+import notwa.exception.ContextException;
+import notwa.wom.Context;
+import notwa.wom.ContextManager;
 import notwa.wom.User;
+import notwa.wom.UserCollection;
 
 /**
  * User editor is used to create new or edit existing user.
- * setUserToEdit method is used to determinate which user we
- * want to edit.
  * 
  * @author mrneo
  */
@@ -43,13 +47,23 @@ public class UserEditor extends JDialog implements ActionListener{
     private JButton okButton, stornoButton;
     private JTextField login,firstName,lastName;
     private JPasswordField password,secondPassword;
-    private User existingUser;
     private String originalUserPassword;
+    private User user;
     
-    public UserEditor() {
+    public UserEditor(User user) {
+        this.user = user;
+        
+        if (user != null) {
+            this.login.setText(user.getLogin());
+            this.password.setText("");
+            this.secondPassword.setText("");
+            this.firstName.setText(user.getFirstName());
+            this.lastName.setText(user.getLastName());
+            this.originalUserPassword = user.getPassword();
+        }
     }
     
-    public void initEditorDialog() {
+    public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - User Editor");
         this.setSize(500,300);
@@ -60,17 +74,6 @@ public class UserEditor extends JDialog implements ActionListener{
         this.add(this.initButtons(), BorderLayout.PAGE_END);
         
         this.setVisible(true);
-    }
-    
-    public void setUserToEdit(User user) {
-        this.existingUser = user;
-        
-        this.login.setText(user.getLogin());
-        this.password.setText("");
-        this.secondPassword.setText("");
-        this.firstName.setText(user.getFirstName());
-        this.lastName.setText(user.getLastName());
-        this.originalUserPassword = user.getPassword();
     }
     
     private JPanel initMainComponents() {
@@ -133,12 +136,6 @@ public class UserEditor extends JDialog implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            if (existingUser != null) {
-                // new user
-            }
-            else {
-                // existing user changes
-            }
             this.setVisible(false);
         }
         

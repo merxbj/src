@@ -147,14 +147,14 @@ public class MainWindow extends JFrame {
             case GuiEventParams.MENU_EVENT_FILTERING:
                 invokeFiltering(e.getParams());
                 break;
-            case GuiEventParams.MENU_EVENT_NEW_USER:
-                invokeNewUser(e.getParams());
+            case GuiEventParams.MENU_EVENT_USER_MANAGEMENT:
+                invokeUserManagement(e.getParams());
                 break;
             case GuiEventParams.MENU_EVENT_SYNC_AND_REFRESH:
                 invokeSyncAndRefresh(e.getParams());
                 break;
-            case GuiEventParams.MENU_EVENT_USER_MANAGER:
-                invokeUserManager(e.getParams());
+            case GuiEventParams.MENU_EVENT_ASSIGNMENT_MANAGER:
+                invokeAssignmentManager(e.getParams());
                 break;
             case GuiEventParams.ACTION_EVENT_HIDE_DETAIL:
                 invokeHideDetail(e.getParams());
@@ -189,9 +189,9 @@ public class MainWindow extends JFrame {
         fd.initFilteringDialog();
     }
 
-    private void invokeNewUser(GuiEventParams params) {
-        UserEditor ue = new UserEditor();
-        ue.initEditorDialog();
+    private void invokeUserManagement(GuiEventParams params) {
+        UserManagement um = new UserManagement(getActiveConnectionInfo(), getActivetContext());
+        um.init();
     }
 
     private void invokeSyncAndRefresh(GuiEventParams params) {
@@ -205,8 +205,8 @@ public class MainWindow extends JFrame {
         ipt.run();
     }
 
-    private void invokeUserManager(GuiEventParams params) {
-        UserManager um = new UserManager(getActiveConnectionInfo(), getActivetContext());
+    private void invokeAssignmentManager(GuiEventParams params) {
+        AssignmentManager um = new AssignmentManager(getActiveConnectionInfo(), getActivetContext());
         um.initManagerDialog();
     }
 
