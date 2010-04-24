@@ -156,7 +156,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox loadWorkItemStatuses() {
         status = new JComboBox();
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            status.addItem(WorkItemStatus.values()[s].toString());
+            status.addItem(WorkItemStatus.values()[s]);
         }
         
         return status;

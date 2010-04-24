@@ -35,8 +35,8 @@ import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 public class WorkItemTable extends JComponent implements ListSelectionListener {
-    private String[] tableHeaders = {
-            "Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
+
+    private String[] tableHeaders = {"Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private JTable witTable;
     private TblModel witTableModel;

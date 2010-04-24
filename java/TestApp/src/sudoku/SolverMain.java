@@ -36,10 +36,22 @@ public class SolverMain {
             {0,0,0,0,4,0,0,0,9}
         };
 
+        int [][] insaneMatrix = new int [][] {
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,8,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0}
+        };
+
         int [][] result;
 
-        SudokuSolver s = new LastRemainingSolver();
-        result = s.solve(hardMatrix);
+        SudokuSolver s = new BruteForceSolver();
+        result = s.solve(insaneMatrix);
         printMatrix(result);
     }
 

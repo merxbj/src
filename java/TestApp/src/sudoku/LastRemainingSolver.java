@@ -3,7 +3,7 @@ package sudoku;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class LastRemainingSolver implements SudokuSolver {
+public class LastRemainingSolver extends SudokuSolver {
 
     private Element[][] elements;
 
