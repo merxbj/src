@@ -43,7 +43,7 @@ import javax.swing.table.TableRowSorter;
 public class MainMenu extends JMenuBar implements ActionListener {
     private static MainMenu instance;
     private JMenu menu;
-    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering,mItemNewUser,mItemUserManager;
+    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering,mItemUserManagement,mItemAssignmentManager;
     private JCheckBoxMenuItem cbWorkOffline;
     private final JTextField searchField = new JTextField("Type here ...");
     private TableRowSorter<TblModel> sorter;
@@ -105,14 +105,14 @@ public class MainMenu extends JMenuBar implements ActionListener {
         menu = new JMenu("Tools");
         menu.setMnemonic(KeyEvent.VK_T);
         
-        mItemNewUser = new JMenuItem("Create new user");
-        mItemNewUser.addActionListener(this);
+        mItemUserManagement = new JMenuItem("User management");
+        mItemUserManagement.addActionListener(this);
         
-        mItemUserManager = new JMenuItem("User manager");
-        mItemUserManager.addActionListener(this);
+        mItemAssignmentManager = new JMenuItem("Assignment manager");
+        mItemAssignmentManager.addActionListener(this);
         
-        menu.add(mItemNewUser);
-        menu.add(mItemUserManager);
+        menu.add(mItemUserManagement);
+        menu.add(mItemAssignmentManager);
         
         this.add(menu);
         
@@ -185,10 +185,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_CONFIGURE)));
         } else if (ae.getSource() == mItemFiltering) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_FILTERING)));
-        } else if (ae.getSource() == mItemNewUser) {
-            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_NEW_USER)));
-        } else if (ae.getSource() == mItemUserManager) {
-            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_USER_MANAGER)));
+        } else if (ae.getSource() == mItemUserManagement) {
+            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_USER_MANAGEMENT)));
+        } else if (ae.getSource() == mItemAssignmentManager) {
+            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_ASSIGNMENT_MANAGER)));
         } else if (ae.getSource() == mItemExit) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_EXIT)));
         } else if (ae.getSource() == mItemSyncAndRefresh) {

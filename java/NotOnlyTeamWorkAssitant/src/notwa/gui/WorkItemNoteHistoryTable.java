@@ -52,10 +52,8 @@ public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
         nhTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         this.resizeAndColorizeTable();
-        
-        JScrollPane jsp = new JScrollPane(nhTable);
 
-        this.add(jsp);
+        this.add(new JScrollPane(nhTable));
         
         return this;
     }

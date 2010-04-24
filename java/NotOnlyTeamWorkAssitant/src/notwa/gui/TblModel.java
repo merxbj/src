@@ -23,6 +23,7 @@ import javax.swing.table.AbstractTableModel;
 
 import notwa.wom.BusinessObjectCollection;
 import notwa.wom.Note;
+import notwa.wom.User;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
@@ -90,6 +91,15 @@ public class TblModel extends AbstractTableModel {
         }
         else if (tableHeader[columnIndex].equals("Text")) {
             return ((Note)getRecord(rowIndex)).getText();
+        }
+        else if (tableHeader[columnIndex].equals("Login")) {
+            return ((User)getRecord(rowIndex)).getLogin();
+        }
+        else if (tableHeader[columnIndex].equals("Name")) {
+            return ((User)getRecord(rowIndex)).getFirstName();
+        }
+        else if (tableHeader[columnIndex].equals("Last name")) {
+            return ((User)getRecord(rowIndex)).getLastName();
         }
         else {
             return getRecord(rowIndex);
