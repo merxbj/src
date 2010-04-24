@@ -45,6 +45,8 @@ public class UserCollection extends BusinessObjectCollection<User> {
     /**
      * The constructor setting the current <code>Context</code> according to the 
      * given value and <code>ResultSet</code> to <code>null</code>.
+     *
+     * @param context The current <code>Context</code>.
      */
     public UserCollection(Context context) {
         super(context, null);
@@ -53,9 +55,12 @@ public class UserCollection extends BusinessObjectCollection<User> {
     /**
      * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
      * to according to the given values.
+     *
+     * @param context The current <code>Context</code>.
+     * @param resultSet The originating <code>ResultSet</code>.
      */
-    public UserCollection(Context currentContext, ResultSet resultSet) {
-        super(currentContext, resultSet);
+    public UserCollection(Context context, ResultSet resultSet) {
+        super(context, resultSet);
     }
 
     @Override
@@ -75,6 +80,6 @@ public class UserCollection extends BusinessObjectCollection<User> {
 
     @Override
     protected void acquireUniqeIdentifier(User u) {
-        u.setUserId(nextUserId++);
+        u.setUniqeIdentifier(nextUserId++);
     }
 }

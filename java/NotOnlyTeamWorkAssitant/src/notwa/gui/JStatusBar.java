@@ -25,8 +25,9 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import notwa.threading.IndeterminablePrgoressExpressioner;
 
-public class JStatusBar extends JPanel {
+public class JStatusBar extends JPanel implements IndeterminablePrgoressExpressioner {
     private static JStatusBar singleton;
     JProgressBar mainProgressBar = new JProgressBar();
     JLabel statusBarText = new JLabel();
@@ -65,13 +66,15 @@ public class JStatusBar extends JPanel {
         mainProgressBar.updateUI();
     }
 
-    public void beginAnimate() {
+    @Override
+    public void beginIndetermination() {
         statusBarText.setText("Synchronizing with repository ...");
         mainProgressBar.setValue(mainProgressBar.getMinimum());
         mainProgressBar.setIndeterminate(true);
     }
 
-    public void endAnimate() {
+    @Override
+    public void endIndetermination() {
         mainProgressBar.setIndeterminate(false);
         statusBarText.setText(idleMessage);
     }

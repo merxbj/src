@@ -21,43 +21,96 @@ package notwa.wom;
 
 import notwa.exception.ContextException;
 
+/**
+ * <code>Project</code> represents a single project maintainable under this application.
+ *
+ * @author Jaroslav Merxbauer
+ * @author Tomas Studnicka
+ */
 public class Project extends BusinessObject implements Comparable<Project>, Cloneable {
-    protected int projectId;
+
+    /**
+     * The uniqe identifier of this <code>Project</code>.
+     */
+    protected int id;
+    
+    /**
+     * The name of this <code>Project</code>.
+     */
     protected String name;
+
+    /**
+     * The collection of <code>User</code>s assigned to this <code>Project</code>.
+     */
     protected UserCollection assignedUsers;
 
+    /**
+     * The simple construtor expecting that the uniqe identifier will be supplied
+     * later.
+     */
     public Project() {
         super();
-        this.projectId = 0;
+        this.id = 0;
     }
     
-    public Project(int projectId) {
+    /**
+     * Full feature constructor.
+     *
+     * @param id The id of this <code>Project</code>.
+     */
+    public Project(int id) {
         super();
-        this.projectId = projectId;
+        this.id = id;
     }
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Project clone = (Project) super.clone();
 
-        clone.projectId = this.projectId;
+        clone.id = this.id;
         clone.name = this.name;
         clone.assignedUsers = this.assignedUsers;
         return clone;
     }
 
+    /**
+     * Gets this <code>Project</code> uniqe identifier.
+     *
+     * @return The <code>Project</code> uniqe identifier.
+     */
     public int getId() {
-        return this.projectId;
+        return this.id;
     }
 
+    /**
+     * Gets this project name.
+     *
+     * @return The project name.
+     */
     public String getName() {
         return this.name;
     }
     
+    /**
+     * Gets the <code>UserCollection</code> of<code>User</code>s assigned to this
+     * <code>Project</code>.
+     * This collection should contain instances of {@link AssignedUsers}.
+     *
+     * @return The <code>AssignedUser</code> collection.
+     */
     public UserCollection getAssignedUsers() {
         return assignedUsers;
     }
     
+    /**
+     * Sets this <code>Project</code> name.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param projectName The new project name.
+     */
     public void setProjectName(String projectName) {
         this.name = projectName;
         if (isAttached()) {
@@ -65,45 +118,54 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
         }
     }
     
+    /**
+     * Sets a new collection of <code>AssignedUser</code>s.
+     * 
+     * @param assignedUsers The new collection of <code>AssignedUser</code>s.
+     * @throws ContextException In case this <code>Project</code>s context do not
+     *                          match to the <code>AssignedUser</code>s collection.
+     */
     public void setAssignedUsers(UserCollection assignedUsers) throws ContextException {
         this.assignedUsers = new UserCollection(currentContext, assignedUsers.getResultSet());
         for (User u : assignedUsers) {
             this.assignedUsers.add(new AssignedUser(u, this));
         }
-
-        this.assignedUsers.setClosed(assignedUsers.isClosed());
-        this.assignedUsers.setUpdateRequired(assignedUsers.isUpdateRequired());
-
-        if (isAttached()) {
-            attachedBOC.setUpdated(this);
-        }
     }
 
+    /**
+     * Adds the given <code>User</code> transfomed to a <code>AssignedUser</code>
+     * to the assignedUsers collection.
+     *
+     * @param assignedUser The <code>AssignedUser</code>.
+     * @return <code>true</code> if the addition succeeded, <code>false</code> otherwise.
+     * @throws ContextException If the given <code>User</code> doesn't live in the
+     *                          same <code>Context</code> as its collection.
+     */
     public boolean addAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.add(new AssignedUser(assignedUser, this));
     }
 
+    /**
+     * Removes the given <code>User</code> from the assignedUsers collection.
+     *
+     * @param assignedUser The <code>User</code> to be removed.
+     * @return <code>true</code> if the removal succeeded, <code>false</code> otherwise.
+     * @throws ContextException If the given <code>User</code> doesn't live in the
+     *                          same <code>Context</code> as its collection.
+     */
     public boolean removeAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.remove(assignedUser);
-    }
-
-    public void setProjectId(int projectId) {
-        if (!isAttached()) {
-            this.projectId = projectId;
-        }
     }
     
     @Override
     public String toString() {
-        String returnText = new String (    this.projectId +separator+
-                                            this.name);
-        return returnText;
+        return String.format("%d | %s", id, name);
     }
         
     @Override
     public int compareTo(Project project) {
-        Integer j1 = this.projectId;
-        Integer j2 = project.projectId;
+        Integer j1 = this.id;
+        Integer j2 = project.id;
      
         return j1.compareTo(j2);
     }
@@ -120,7 +182,7 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 89 * hash + this.projectId;
+        hash = 89 * hash + this.id;
         return hash;
     }
 
@@ -132,12 +194,12 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
 
     @Override
     public boolean hasUniqeIdentifier() {
-        return (this.projectId > 0);
+        return (this.id > 0);
     }
 
     @Override
     public void setUniqeIdentifier(int value) {
-        this.projectId = value;
+        this.id = value;
     }
 
     @Override

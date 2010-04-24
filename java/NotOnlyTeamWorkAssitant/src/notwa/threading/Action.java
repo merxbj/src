@@ -21,19 +21,39 @@
 package notwa.threading;
 
 /**
- *
+ * Class representing a single action that can be performed by its executor.
+ * It actually suplies a delegate accepting a single parameter.
+ * 
+ * @param <T>   The actual parameter to be accepted by the concrete implementation of
+ *              this <code>Action</code>
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public abstract class Action<T> {
+    
+    /**
+     * Parameter to be accepted by the action.
+     */
     protected T params;
 
+    /**
+     * Simple parameter-less contructor.
+     */
     public Action() {
     }
 
+    /**
+     * Constructor acceptiong the specified parameter.
+     *
+     * @param params The parameter.
+     */
     public Action(T params) {
         this.params = params;
     }
 
+    /**
+     * By implementing this function you should provide a code to be performed by
+     * the action executor.
+     */
     public abstract void perform();
 }

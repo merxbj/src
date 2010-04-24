@@ -19,15 +19,38 @@
  */
 package notwa.wom;
 
+/**
+ * Class representing a composite primary key of the <code>Note</code>. The primary
+ * key is made from the <code>Note</code> identifier and the identifier of
+ * <code>WorkItem</code> this <code>Note</code> is assigned to.
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public class NotePrimaryKey implements Comparable<NotePrimaryKey>, Cloneable {
-    int noteId;
-    int workItemId;
+    
+    private int noteId;
+    private int workItemId;
 
+    /**
+     * The constructor accepting only the workItemId. The expection is that someone
+     * will supply the noteId later.
+     * <p>This is usually done when we don't alrady know the new noteId and expecting
+     * the database update to provide it with us.</p>
+     *
+     * @param workItemId The workItemid.
+     */
     public NotePrimaryKey(int workItemId) {
         this.workItemId = workItemId;
         this.noteId = 0;
     }
 
+    /**
+     * Full feature constructor.
+     *
+     * @param noteId The noteId.
+     * @param workItemId The workItemId.
+     */
     public NotePrimaryKey(int noteId, int workItemId) {
         this.noteId = noteId;
         this.workItemId = workItemId;
@@ -41,14 +64,30 @@ public class NotePrimaryKey implements Comparable<NotePrimaryKey>, Cloneable {
         return clone;
     }
 
+    /**
+     * Gets the noteId. Please be advised that the return value may be 0 for newly
+     * inserted notes before they get updated againts the database.
+     *
+     * @return The noteId.
+     */
     public int getNoteId() {
         return noteId;
     }
 
+    /**
+     * Gets the workItemId.
+     * 
+     * @return The workItemId.
+     */
     public int getWorkItemId() {
         return workItemId;
     }
 
+    /**
+     * Sets the noteId.
+     * 
+     * @param noteId The new noteId.
+     */
     public void setNoteId(int noteId) {
         this.noteId = noteId;
     }

@@ -56,10 +56,10 @@ public class JTableCellRenderer implements TableCellRenderer
              * Colorize Priority and status cells with colors loaded from ColorManager class
              */
             try {
-                renderer.setBackground((WorkItemPriority.valueOf((String)value)).getColor());
+                renderer.setBackground(ColorManager.getPriorityColor((WorkItemPriority.valueOf((String)value))));
             } catch (Exception e) { }
             try {
-                renderer.setBackground((WorkItemStatus.valueOf((String)value)).getColor());
+                renderer.setBackground(ColorManager.getStatusColor(WorkItemStatus.valueOf((String)value)));
             } catch (Exception e) { }
         }
         

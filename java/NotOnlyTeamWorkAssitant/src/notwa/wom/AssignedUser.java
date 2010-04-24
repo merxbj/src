@@ -21,6 +21,17 @@
 package notwa.wom;
 
 /**
+ * A simple extension of a <code>User</code> that is aware of the <code>Project</code>
+ * it is assigned to.
+ *
+ * <p>Actually the common <code>User</code> has the similar feature as well, however,
+ * it is aware of ALL <code>Project</code>s that it is assigned to. This project, 
+ * however, is aware of that ONE AND ONLY user from that collection, which it is
+ * currently regarding to in the specific context</p>.
+ *
+ * <p>Please note that the underlying <code>User</code> is UNDISTINGUISHABLE of 
+ * that one present in the current <code>Context</code> which making this extension
+ * only as an added value, which is good!</p>
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
@@ -30,9 +41,11 @@ public class AssignedUser extends User {
     private Project project;
 
     /**
-     * 
-     * @param user
-     * @param project
+     * The sole constructor building up the inner inherited <code>Project</code>
+     * by that given through the parameter and assigning it to the given user.
+     *
+     * @param user The underlying <code>User</code>.
+     * @param project The <code>Project</code> which this <code>User</code> is assigned to.
      */
     public AssignedUser(User user, Project project) {
         super(user.getId());
@@ -52,10 +65,11 @@ public class AssignedUser extends User {
     }
 
     /**
-     * 
-     * @return
+     * Gets the <code>Project</code> we are assigned to in this context.
+     *
+     * @return The Project.
      */
-    public Project getAssignedProject() {
+    public Project getProject() {
         return project;
     }
 }

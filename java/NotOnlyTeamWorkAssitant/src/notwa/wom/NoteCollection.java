@@ -44,8 +44,10 @@ public class NoteCollection extends BusinessObjectCollection<Note> {
     }
 
     /**
-     * The constructor setting the current <code>Context</code> according to the 
+     * The constructor seting the current <code>Context</code> according to the 
      * given value and <code>ResultSet</code> to <code>null</code>.
+     *
+     * @param context The current <code>Context</code>.
      */
     public NoteCollection(Context context) {
         super(context, null);
@@ -54,9 +56,12 @@ public class NoteCollection extends BusinessObjectCollection<Note> {
     /**
      * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
      * to according to the given values.
+     *
+     * @param context The current <code>Context</code>.
+     * @param resultSet The originating <code>ResultSet</code>.
      */
-    public NoteCollection(Context currentContext, ResultSet resultSet) {
-        super(currentContext, resultSet);
+    public NoteCollection(Context context, ResultSet resultSet) {
+        super(context, resultSet);
     }
 
     @Override

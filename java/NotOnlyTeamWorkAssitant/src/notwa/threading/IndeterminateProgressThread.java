@@ -21,51 +21,99 @@
 package notwa.threading;
 
 import notwa.logger.LoggingFacade;
-import notwa.gui.JStatusBar;
 
 /**
+ * Intention of this <code>class</code> is to provide a unified way to run some
+ * action in a bacground thread which progress is being considered as indeterminate
+ * and this fact is expressed by the element implemnting an {@link IndeterminablePrgoressExpressioner}
+ * interface which actually means that this elemnt is capabale of expressing of
+ * a such progress state.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class IndeterminateProgressThread {
-    Action action;
-    WorkerThread worker;
+    
+    /**
+     * The action to be run in a background.
+     */
+    protected Action action;
 
-    public IndeterminateProgressThread(Action action) {
+    /**
+     * The background thread to hold the action.
+     */
+    protected WorkerThread worker;
+
+    /**
+     * The element to express the indeterminate progress.
+     */
+    protected IndeterminablePrgoressExpressioner progress;
+
+    /**
+     * The sole constructor accepting the action to be performed and the element
+     * to express the progress.
+     *
+     * @param action The action.
+     * @param ipe The expressioner.
+     */
+    public IndeterminateProgressThread(Action action, IndeterminablePrgoressExpressioner ipe) {
         this.action = action;
-        this.worker = new WorkerThread(action, new TerminateCallback() {
+        this.progress = ipe;
+        this.worker = new WorkerThread(action, new Action() {
             @Override
-            public void onTerminate() {
-                JStatusBar.getInstance().endAnimate();
+            public void perform() {
+                progress.endIndetermination();
             }
         });
     }
 
+    /**
+     * Begins the execution of the action.
+     */
     public void run() {
-        JStatusBar.getInstance().beginAnimate();
+        progress.beginIndetermination();
         worker.start();
     }
 
-    private class WorkerThread extends Thread {
+    /**
+     * The bacground thread implementation.
+     */
+    protected class WorkerThread extends Thread {
 
-        Action action;
-        TerminateCallback callback;
+        /**
+         * The action to be run in a background.
+         */
+        protected Action onRun;
 
-        public WorkerThread(Action action, TerminateCallback callback) {
+        /**
+         * The action to be done upon this worker thread termination.
+         */
+        protected Action onTerminate;
+
+        /**
+         * The sole constructor of the background thread accepting two actions:
+         * <ul>
+         * <li>The action to be run in a background.</li>
+         * <li>The action to be done upon this worker thread termination.</li>
+         * </ul>
+         *
+         * @param onRun The action to be run in a background.
+         * @param onTerminate The action to be done upon this worker thread termination.
+         */
+        public WorkerThread(Action onRun, Action onTerminate) {
             super();
-            this.action = action;
-            this.callback = callback;
+            this.onRun = onRun;
+            this.onTerminate = onTerminate;
         }
 
         @Override
         public void run() {
             try {
-                action.perform();
+                onRun.perform();
             } catch (Exception ex) {
                 LoggingFacade.handleException(ex);
             } finally {
-                callback.onTerminate();
+                onTerminate.perform();
             }
         }
     }

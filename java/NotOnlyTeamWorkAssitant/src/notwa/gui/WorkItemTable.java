@@ -128,12 +128,12 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         try {
             WorkItemDetail.getInstance().setPriority(this.getSelected().getPriority());
         } catch (Exception e) {
-            WorkItemDetail.getInstance().setPriority(WorkItemPriority.UNNECESSARY);
+            WorkItemDetail.getInstance().setPriority(WorkItemPriority.NICE_TO_HAVE);
         }
         try {
             WorkItemDetail.getInstance().setStatus(this.getSelected().getStatus());
         } catch (Exception e) {
-            WorkItemDetail.getInstance().setStatus(WorkItemStatus.WAITING);
+            WorkItemDetail.getInstance().setStatus(WorkItemStatus.WATCH);
         }
         try {
             WorkItemDetail.getInstance().setLastNote(this.getSelected().getNoteCollection().get(0));

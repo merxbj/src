@@ -30,7 +30,7 @@ package notwa.wom;
  */
 public class Note extends BusinessObject implements Comparable<Note>, Cloneable {
 
-    private NotePrimaryKey noteId;
+    private NotePrimaryKey id;
     private String text;
     private User author;
 
@@ -43,7 +43,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
      */
     public Note(int workItemId) {
         super();
-        this.noteId = new NotePrimaryKey(0, workItemId);
+        this.id = new NotePrimaryKey(0, workItemId);
     }
 
     /**
@@ -52,12 +52,12 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
      * Constructor then creates a new {@link NotePrimaryKey} based on given
      * parameters and use it as an uniqe identifier.
      *
-     * @param noteId The note id which is uniqe always under one <code>WorkItem</code>.
+     * @param id The note id which is uniqe always under one <code>WorkItem</code>.
      * @param workItemId The workItemId where this <code>Note</code> is valid.
      */
-    public Note(int noteId, int workItemId) {
+    public Note(int id, int workItemId) {
         super();
-        this.noteId = new NotePrimaryKey(noteId, workItemId);
+        this.id = new NotePrimaryKey(id, workItemId);
     }
 
     /**
@@ -68,7 +68,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
      *              workItemId.
      */
     public Note (NotePrimaryKey npk) {
-        this.noteId = npk;
+        this.id = npk;
     }
 
     /**
@@ -81,39 +81,73 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     protected Object clone() throws CloneNotSupportedException {
         Note clone = (Note) super.clone();
 
-        clone.noteId = (NotePrimaryKey) this.noteId.clone(); // deep copy of this
+        clone.id = (NotePrimaryKey) this.id.clone(); // deep copy of this
         clone.text = this.text;
         clone.author = this.author;
         return clone;
     }
 
+    /**
+     * Gets the <code>WorkItem</code> this <code>Note</code> is assigned to.
+     *
+     * @return The <code>WorkItem</code>
+     */
     public WorkItem getWorkItem() {
-        return this.currentContext.getWorkItem(noteId.workItemId);
-    }
-    
-    public String getNoteText() {
-        return this.text;
+        return this.currentContext.getWorkItem(id.getWorkItemId());
     }
 
+    /**
+     * Gets this <code>Note</code> primary key.
+     *
+     * @return The primary key.
+     */
     public NotePrimaryKey getId() {
-        return noteId;
+        return id;
     }
 
+    /**
+     * Gets this <code>Note</code> text.
+     *
+     * @return The text.
+     */
     public String getText() {
         return text;
     }
     
+    /**
+     * Gets this <code>Note</code> author.
+     *
+     * @return The author.
+     */
     public User getAuthor() {
         return this.author;
     }
     
-    public void setNoteText(String noteText) {
-        this.text = noteText;
+    /**
+     * Sets this <code>Note</code> text.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Note</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param text The new text.
+     */
+    public void setNoteText(String text) {
+        this.text = text;
         if (isAttached()) {
             attachedBOC.setUpdated(this);
         }
     }
     
+    /**
+     * Sets this <code>Note</code> new author.
+     *
+     * <p>Please consider the consequences when changing this property when 
+     * this <code>Note</code> is already a member of a closed 
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param author The new author.
+     */
     public void setAuthor(User author) {
         this.author = author;
         if (isAttached()) {
@@ -123,20 +157,18 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     
     @Override
     public String toString() {
-        String returnText = new String(    this.noteId +separator );
-        if(this.getWorkItem() != null) {
-            returnText += this.getWorkItem().getSubject() +separator; }
+        String returnText = String.format("%d | %s | %s | %s",
+                id,
+                (getWorkItem() != null) ? getWorkItem().getSubject() : "wi:null",
+                text,
+                (author != null) ? author.getLogin() : "u:null");
 
-            returnText += this.text +separator;
-            
-        if(this.author != null) {
-            returnText += this.author.getLogin(); }
         return returnText;
     }
     
     @Override
     public int compareTo(Note note) {
-        return this.noteId.compareTo(note.noteId);
+        return this.id.compareTo(note.id);
     }
     
     @Override
@@ -151,7 +183,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 61 * hash + (this.noteId != null ? this.noteId.hashCode() : 0);
+        hash = 61 * hash + (this.id != null ? this.id.hashCode() : 0);
         return hash;
     }
 
@@ -163,7 +195,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
 
     @Override
     public boolean hasUniqeIdentifier() {
-        return (this.noteId.getNoteId() > 0);
+        return (this.id.getNoteId() > 0);
     }
 
     @Override

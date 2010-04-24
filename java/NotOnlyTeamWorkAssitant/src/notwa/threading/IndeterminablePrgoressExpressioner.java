@@ -1,5 +1,5 @@
 /*
- * TerminateCallback
+ * IndeterminablePrgoressExpressioner
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -21,10 +21,24 @@
 package notwa.threading;
 
 /**
+ * The implemntor of this interface, tipicaly some kind of progress indicator, will
+ * implement this to provide a unified interface to express an indeterminate progress
+ * state which may begin and also may end.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public interface TerminateCallback {
-    public void onTerminate();
+public interface IndeterminablePrgoressExpressioner {
+
+    /**
+     * Invoking this method should force the implementor to begin indicate that
+     * the current progress status is indeterminate.
+     */
+    public void beginIndetermination();
+
+    /**
+     * Invoking this method should force the implementor to end indicate that
+     * the current progress status is indeterminate.
+     */
+    public void endIndetermination();
 }

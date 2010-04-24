@@ -72,7 +72,7 @@ public class TblModel extends AbstractTableModel {
             try {
                 return ((WorkItem)getRecord(rowIndex)).getPriority().toString();
             } catch (Exception e) {
-                return WorkItemPriority.UNNECESSARY.name();
+                return WorkItemPriority.NICE_TO_HAVE.toString();
             }
         }
         else if (tableHeader[columnIndex].equals("Assigned")) {
@@ -82,7 +82,7 @@ public class TblModel extends AbstractTableModel {
             try {
                 return ((WorkItem)getRecord(rowIndex)).getStatus().toString();
             } catch (Exception e) {
-                return WorkItemStatus.PLEASE_RESOLVE.name();
+                return WorkItemStatus.RESOLVE.toString();
             }
         }
         else if (tableHeader[columnIndex].equals("Note author")) {

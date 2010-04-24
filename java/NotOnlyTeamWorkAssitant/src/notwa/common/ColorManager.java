@@ -49,13 +49,13 @@ public class ColorManager {
         switch(wip) {
             case CRITICAL:
                 return lightRed;
-            case IMPORTANT:
+            case HIGH:
                 return lighterRed;
-            case NORMAL:
+            case MEDIUM:
                 return white;
-            case NICE_TO_HAVE:
+            case LOW:
                 return lightGreen;
-            case UNNECESSARY:
+            case NICE_TO_HAVE:
                 return lightGray;
             default:
                 return white;
@@ -68,17 +68,17 @@ public class ColorManager {
      * @param wis Status to be colorfully expressed.
      * @return <code>Color</code> expressing the given status.
      */
-    public static Color getStateColor(WorkItemStatus wis) {
+    public static Color getStatusColor(WorkItemStatus wis) {
         switch(wis) {
-            case PLEASE_RESOLVE:
+            case RESOLVE:
                 return lightRed;
-            case WAITING:
+            case WATCH:
                 return lighterRed;
-            case IN_PROGRESS:
+            case REEVALUATE:
                 return lightGreen;
             case CLOSED:
                 return white;
-            case DELETED:
+            case VERIFIED:
                 return lightGray;
             default:
                 return white;

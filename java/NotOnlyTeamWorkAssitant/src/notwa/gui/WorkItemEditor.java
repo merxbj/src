@@ -153,7 +153,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         states.setBounds(227, 236, 138, 22);
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
             states.addItem(new JComboBoxItemCreator(WorkItemStatus.values()[s].getValue(),
-                                                    WorkItemStatus.values()[s].name()));
+                                                    WorkItemStatus.values()[s].toString()));
         }
         
         return states;
@@ -164,7 +164,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         priorities.setBounds(227, 208, 138, 22);
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
             priorities.addItem(new JComboBoxItemCreator(WorkItemPriority.values()[p].getValue(),
-                                                        WorkItemPriority.values()[p].name()));
+                                                        WorkItemPriority.values()[p].toString()));
         }
 
         return priorities;

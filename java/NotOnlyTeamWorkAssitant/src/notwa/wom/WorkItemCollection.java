@@ -45,6 +45,8 @@ public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
     /**
      * The constructor setting the current <code>Context</code> according to the 
      * given value and <code>ResultSet</code> to <code>null</code>.
+     *
+     * @param context The current <code>Context</code>.
      */
     public WorkItemCollection(Context context) {
         super(context, null);
@@ -53,9 +55,12 @@ public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
     /**
      * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
      * to according to the given values.
+     *
+     * @param context The current <code>Context</code>.
+     * @param resultSet The originating <code>ResultSet</code>.
      */
-    public WorkItemCollection(Context currentContext, ResultSet resultSet) {
-        super(currentContext, resultSet);
+    public WorkItemCollection(Context context, ResultSet resultSet) {
+        super(context, resultSet);
     }
 
     @Override
@@ -75,7 +80,7 @@ public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
 
     @Override
     protected void acquireUniqeIdentifier(WorkItem wi) {
-        wi.setWitId(nextWorkItemId++);
+        wi.setUniqeIdentifier(nextWorkItemId++);
     }
 
 }

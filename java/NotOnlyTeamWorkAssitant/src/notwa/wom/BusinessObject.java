@@ -42,20 +42,66 @@ import notwa.exception.ContextException;
  */
 public abstract class BusinessObject {
     
+    /**
+     * The <code>BusinessObjectCollection</code> we are attached to.
+     */
     protected BusinessObjectCollection attachedBOC;
-    protected BusinessObject originalVersion;
-    protected Context currentContext;
-    protected boolean updated;
-    protected boolean deleted;
-    protected boolean inserted;
     
-    protected final String separator = new String (" | ");
+    /**
+     * The original version of this <code>BusinessObject</code> which could be
+     * picked up and replaced with the current state by calling the {@link #rollback()}.
+     */
+    protected BusinessObject originalVersion;
 
     /**
-     * The sole constructor.
+     * The current <code>Context</code> we are living within. This <code>Context</code>
+     * keeps all the <code>BusinessObjects</code> related to our literal context.
+     */
+    protected Context currentContext;
+
+    /**
+     * The flag indicating that the content of this <code>BusinessObject</code> have
+     * been updated.
+     *
+     * <p>Please note that this flag has sense only as soon as this <code>BusinessObject</code>
+     * is attached ({@link #attach(notwa.wom.BusinessObjectCollection)}) to the
+     * closed ({@link BusinessObjectCollection#closed}) <code>BusinessObjectCollection</code>.
+     * </p>
+     */
+    protected boolean updated;
+
+    /**
+     * The flag indicating that this <code>BusinessObject</code> have been marked
+     * for deletion.
+     *
+     * <p>Please note that this flag has sense only as soon as this <code>BusinessObject</code>
+     * is attached ({@link #attach(notwa.wom.BusinessObjectCollection)}) to the
+     * closed ({@link BusinessObjectCollection#closed}) <code>BusinessObjectCollection</code>.
+     * </p>
+     */
+    protected boolean deleted;
+    
+    /**
+     * The flag indicating that this <code>BusinessObject</code> has been newly
+     * added to the attached <code>BusinessObjectCollection</code>.
+     *
+     * <p>Please note that this flag has sense only as soon as this <code>BusinessObject</code>
+     * is attached ({@link #attach(notwa.wom.BusinessObjectCollection)}) to the
+     * closed ({@link BusinessObjectCollection#closed}) <code>BusinessObjectCollection</code>.
+     * </p>
+     */
+    protected boolean inserted;
+
+    /**
+     * The sole constructor making sure that all members are set to their default
+     * values.
      */
     public BusinessObject() {
         this.deleted = false;
+        this.inserted = false;
+        this.updated = false;
+        this.currentContext = null;
+        this.originalVersion = null;
     }
 
     /**
@@ -65,6 +111,8 @@ public abstract class BusinessObject {
      * and part of its collection.</p>
      * <p>It also helps to hold the bidirectional information of who is keeping
      * who and who is being kept by who.</p>
+     *
+     * @param boc The attached <code>BusinessObjectCollection</code>.
      */
     public void attach(BusinessObjectCollection boc) {
         this.attachedBOC = boc;
@@ -191,8 +239,8 @@ public abstract class BusinessObject {
      * <p>This mark is going to be removed as soon as the <code>BusinessObjectCollection</code>
      * invokes the <code>commit</code> method usualy by the <code>DataAccessLayer</code>.</p>
      *
-     * @param inserted  Indicating whether this <code>BusinessObject</code> will
-     *                  be marked as inserted or not.
+     * @return <code>true</code> if this <code>BusinessObject</code> is marked as
+     * inserted, <code>false</code> otherwise.
      */
     public boolean isInserted() {
         return inserted;
@@ -252,13 +300,16 @@ public abstract class BusinessObject {
     /**
      * Sets the uniqe identifier of the concrete implementation of this
      * <Code>BusinessObject</code>.
+     *
+     * @param value The uniqe identifier.
      */
     public abstract void setUniqeIdentifier(int value);
 
     /**
      * Gets the uniqe identifier of the concrete implementation of this
      * <Code>BusinessObject</code>.
-     * @return The id.
+     *
+     * @return The uniqe identifier.
      */
     public abstract int getUniqeIdentifier();
 }

@@ -123,7 +123,7 @@ public class UserToProjectAssignmentDal extends DataAccessLayer<Project, Project
          * aware User!
          */
         AssignedProject ap = (AssignedProject) p;
-        rs.updateInt("user_id", ap.getAssignedUser().getId());
+        rs.updateInt("user_id", ap.getUser().getId());
         rs.updateInt("project_id", ap.getId());
     }
 

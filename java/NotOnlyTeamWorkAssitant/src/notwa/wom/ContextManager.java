@@ -30,7 +30,7 @@ import java.util.Hashtable;
  * @author jmerxbauer
  */
 public class ContextManager {
-    protected static ContextManager instance;
+    private static ContextManager instance;
     private Hashtable<Integer, Context> contexts;
     private int nextContextId;
 

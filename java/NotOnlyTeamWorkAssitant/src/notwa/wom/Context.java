@@ -142,8 +142,8 @@ public class Context {
      * Checks whether given <code>Note</code> has been ever managed within this
      * <code>Context</code>.
      * 
-     * @param noteId    Uniqe identifier of the <code>Note</code> we are looking for
-     *                  in this <code>Context</code>
+     * @param notePrimaryKey    Uniqe identifier of the <code>Note</code> we are
+     *                          looking for in this <code>Context</code>
      * @return  <code>true</code> if the queried <code>Note</code> is maintained within
      *          this <code>Context</code>, <code>false</code> oterwise.
      */

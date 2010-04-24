@@ -19,25 +19,109 @@
  */
 package notwa.wom;
 
-import java.awt.Color;
 import java.util.TreeMap;
 
-import notwa.common.ColorManager;
-
+/**
+ * Enumeration representing the status of the <code>WorkItem</code>.
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public enum WorkItemStatus {
-    PLEASE_RESOLVE(1), WAITING(2), IN_PROGRESS(3), CLOSED(4), DELETED(5);
+    
+    /**
+     * The initial state of every <code>WorkItem</code>.
+     * The <code>WorkItem</code> is waiting to be evaluated and eventually assigned.
+     */
+    EVALUATE(0) {
+        @Override
+        public String toString() {
+            return "Please Evaluate";
+        }
+    },
+    
+    /**
+     * The <code>WorkItem</code> has been evaluated as defect or enhancement and
+     * is currently being resolved.
+     */
+    RESOLVE(1) {
+        @Override
+        public String toString() {
+            return "Please Resolve";
+        }
+    },
+
+    /**
+     * The <code>WorkItem</code> has been evaluated as unreproducible but the
+     * suspicion that it could raise again still prevails.
+     */
+    WATCH(2) {
+        @Override
+        public String toString() {
+            return "Please Watch";
+        }
+    },
+
+    /**
+     * The <code>WorkItem</code> has been considered as unjustified. It should be
+     * therefore returned back to its originator to be eventually closed.
+     */
+    REEVALUATE(3) {
+        @Override
+        public String toString() {
+            return "Please Reevaluate";
+        }
+    },
+
+    /**
+     * The <code>WorkItem</code> has been considered unjastified and has been therefore
+     * brought into the close state.
+     */
+    CLOSED(4) {
+        @Override
+        public String toString() {
+            return "Closed";
+        }
+    },
+
+    /**
+     * The <code>WorkItem</code> has been evaluated as defect or enhancement and
+     * it has been already resolved and verified.
+     */
+    VERIFIED(5) {
+        @Override
+        public String toString() {
+            return "Verified";
+        }
+    };
     
     private int value;
     
+    /**
+     * "Overriden" enum constructor allowing simple association of the enum numerical
+     * representation with its object representation.
+     *
+     * @param value The value of the enumeration.
+     */
     WorkItemStatus(int value) {
         this.value = value;
     }
     
+    /**
+     * Gets the assigned value of this enumeration.
+     * 
+     * @return The numerical value.
+     */
     public int getValue() {
         return this.value;
     }
     
     private static TreeMap<Integer, WorkItemStatus> map;
+    
+    /**
+     * Static constructor of this enumeration initializing the numerical representation
+     * to the object representation mapping.
+     */
     static {
         map = new TreeMap<Integer, WorkItemStatus>();
         for (WorkItemStatus wis : WorkItemStatus.values()) {
@@ -45,11 +129,13 @@ public enum WorkItemStatus {
         }
     }
     
+    /**
+     * Gets the object enum representation of the given numberical representation.
+     *
+     * @param value The numberical representation.
+     * @return The object enum representation.
+     */
     public static WorkItemStatus lookup(int value) {
         return map.get(new Integer(value));
-    }
-    
-    public Color getColor() {
-        return ColorManager.getStateColor(this);
     }
 }

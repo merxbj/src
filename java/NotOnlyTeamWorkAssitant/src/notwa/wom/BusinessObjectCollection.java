@@ -38,10 +38,34 @@ import notwa.exception.DeveloperException;
  */
 public abstract class BusinessObjectCollection<T extends BusinessObject> implements Iterable<T> {
 
+    /**
+     * The inner collection holding all the <code>BusinessObjects</code>.
+     */
     protected ArrayList<T> collection;
+
+    /**
+     * The current <code>Context</code> we are living within. This <code>Context</code>
+     * keeps all the <code>BusinessObjects</code> related to our literal context.
+     */
     protected Context currentContext;
+
+    /**
+     * The <code>ResultSet</code> we are originated from, if there is one. This
+     * <code>RecordSet</code> could than be utilized during the databese update
+     * process.
+     */
     protected ResultSet resultSet;
+
+    /**
+     * The flag indicating that this collection is "closed" which actually means
+     * that all changes made from this point should be tracked and properly updated
+     * to the data source.
+     */
     protected boolean closed;
+
+    /**
+     * This flag turns to true as soon as any change is made to the closed collection.
+     */
     protected boolean updateRequired;
 
     /**

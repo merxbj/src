@@ -21,9 +21,16 @@ package notwa.wom;
 
 import java.util.Date;
 
+/**
+ * <code>WorkItem</code> represents a single work item which is the main object
+ * of interested of this application.
+ *
+ * @author Jaroslav Merxbauer
+ * @author Tomas Studnicka
+ */
 public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cloneable {
 
-    private int witId;
+    private int id;
     private String subject;
     private WorkItemPriority priority;
     private String description;
@@ -35,21 +42,30 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     private Date expectedTimestamp;
     private NoteCollection noteCollection;
 
+    /**
+     * The simple construtor expecting that the uniqe identifier will be supplied
+     * later.
+     */
     public WorkItem() {
         super();
-        this.witId = 0;
+        this.id = 0;
     }
 
+    /**
+     * Full feature constructor.
+     *
+     * @param id The id of this <code>WorkItem</code>.
+     */
     public WorkItem(int id) {
         super();
-        this.witId = id;
+        this.id = id;
     }
     
     @Override
     protected Object clone() throws CloneNotSupportedException {
         WorkItem clone = (WorkItem) super.clone();
 
-        clone.witId = this.witId;
+        clone.id = this.id;
         clone.subject = this.subject;
         clone.priority = this.priority;
         clone.description = this.description;
@@ -63,50 +79,115 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         return clone;
     }
     
+    /**
+     * Gets this <code>WorkItem</code> uniqe identifier.
+     *
+     * @return The <code>WorkItem</code> uniqe identifier.
+     */
     public int getId() {
-        return this.witId;
+        return this.id;
     }
     
+    /**
+     * Gets this <code>WorkItem</code> subject.
+     *
+     * @return The <code>WorkItem</code> subject.
+     */
     public String getSubject() {
         return this.subject;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> priority.
+     *
+     * @return The <code>WorkItem</code> priority.
+     */
     public WorkItemPriority getPriority() {
         return this.priority;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> description.
+     *
+     * @return The <code>WorkItem</code> description.
+     */
     public String getDescription() {
         return this.description;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> status.
+     *
+     * @return The <code>WorkItem</code> status.
+     */
     public WorkItemStatus getStatus() {
         return this.status;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> last modified timestamp.
+     *
+     * @return The <code>WorkItem</code> last modified timestamp.
+     */
     public Date getLastModifiedTimestamp() {
         return this.lastModifiedTimestamp;
     }
 
+    /**
+     * Gets the <code>Project</code> this <code>WorkItem</code> belongs to.
+     *
+     * @return The <code>Project</code>.
+     */
     public Project getProject() {
         return this.project;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> parent <code>WorkItem</code>.
+     *
+     * @return The parent <code>WorkItem</code>.
+     */
     public WorkItem getParent() {
         return this.parentWorkItem;
     }
 
+    /**
+     * Gets this <code>WorkItem</code> expected timestamp (deadline).
+     *
+     * @return The expected timestamp.
+     */
     public Date getExpectedTimestamp() {
         return this.expectedTimestamp;
     }
     
+    /**
+     * Gets the <code>User</code> currently assigned to this <code>WorkItem</code>.
+     *
+     * @return The assigned <code>User</code>.
+     */
     public User getAssignedUser() {
         return assignedUser;
     }
     
+    /**
+     * Gets the <code>NoteCollection</code> which have been written regarding this
+     * <code>WorkItem</code>.
+     *
+     * @return The <code>NoteCollection</code>.
+     */
     public NoteCollection getNoteCollection() {
         return noteCollection;
     }
 
+    /**
+     * Sets this <code>WorkItem</code> subject.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param subject The <code>WorkItem</code> subject.
+     */
     public void setSubject(String subject) {
         this.subject = subject;
         if (isAttached()) {
@@ -114,6 +195,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> priority.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param priority The <code>WorkItem</code> priority.
+     */
     public void setPriority(WorkItemPriority priority) {
         this.priority = priority;
         if (isAttached()) {
@@ -121,6 +211,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> description.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param description The <code>WorkItem</code> description.
+     */
     public void setDescription(String description) {
         this.description = description;
         if (isAttached()) {
@@ -128,6 +227,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> assigned user.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param assignedUser The <code>WorkItem</code> assigned user.
+     */
     public void setAssignedUser(User assignedUser) {
         this.assignedUser = assignedUser;
         if (isAttached()) {
@@ -135,6 +243,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> status.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param status The <code>WorkItem</code> status.
+     */
     public void setStatus(WorkItemStatus status) {
         this.status = status;
         if (isAttached()) {
@@ -142,6 +259,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> last modified timestamp.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param lastModifiedTimestamp The <code>WorkItem</code> last modified timestamp.
+     */
     public void setLastModifiedTimestamp(Date lastModifiedTimestamp) {
         this.lastModifiedTimestamp = lastModifiedTimestamp;
         if (isAttached()) {
@@ -149,6 +275,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> project.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param project The <code>WorkItem</code> project.
+     */
     public void setProject(Project project) {
         this.project = project;
         if (isAttached()) {
@@ -156,6 +291,15 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> parent <code>WorkItem</code>.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param parentWorkItem The <code>WorkItem</code> parent <code>WorkItem</code>.
+     */
     public void setParentWorkItem(WorkItem parentWorkItem) {
         this.parentWorkItem = parentWorkItem;
         if (isAttached()) {
@@ -163,52 +307,53 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         }
     }
 
+    /**
+     * Sets this <code>WorkItem</code> expected timestamp.
+     *
+     * <p>Please consider the consequences when changing this property when
+     * this <code>Project</code> is already a member of a closed
+     * <code>BusinessObjectCollection</code>.</p>
+     *
+     * @param expectedTimestamp The <code>WorkItem</code> expected timestamp.
+     */
     public void setExpectedTimestamp(Date expectedTimestamp) {
         this.expectedTimestamp = expectedTimestamp;
         if (isAttached()) {
             attachedBOC.setUpdated(this);
         }
     }
+
+    /**
+     * Sets this <code>WorkItem</code> note collection.
+     *
+     * @param noteCollection The <code>WorkItem</code> colleciton of  <code>Note</code>.
+     */
     public void setNoteCollection(NoteCollection noteCollection) {
         this.noteCollection = noteCollection;
-        if (isAttached()) {
-            attachedBOC.setUpdated(this);
-        }
-    }
-
-    public void setWitId(int witId) {
-        if (!isAttached()) {
-            this.witId = witId;
-        }
     }
 
     @Override
     public String toString() {
-        String returnText = new String(    this.witId +separator);
-        if (this.parentWorkItem != null) {
-            returnText += this.parentWorkItem.getSubject() +separator; }
-        if (this.project != null) {
-            returnText += this.project.getName() +separator; }
+        String returnText = String.format("%d | %s | %s | %s | %s | %s | %s | %s | %s | %s", 
+                id,
+                (parentWorkItem != null) ? parentWorkItem.getSubject() : "pwi:null",
+                (project != null) ? project.getName() : "proj:null",
+                subject,
+                (status != null) ? status.name() : "s:null",
+                (assignedUser != null) ? assignedUser.getLogin() : "u:null",
+                (priority != null) ? priority.name() : "prij:null",
+                description,
+                lastModifiedTimestamp,
+                expectedTimestamp
+                );
         
-            returnText += this.subject +separator;
-            
-        if (this.status != null) {
-            returnText += this.status.name() +separator; }
-        if (this.assignedUser != null) {
-            returnText += this.assignedUser.getLogin() +separator; }
-        if (this.priority != null) {
-            returnText += this.priority.name() +separator; }
-    
-            returnText +=     this.description +separator+
-                            this.lastModifiedTimestamp +separator+
-                            this.expectedTimestamp;
         return returnText;
     }
     
     @Override
     public int compareTo(WorkItem wi) {
-        Integer j1 = this.witId;
-        Integer j2 = wi.witId;
+        Integer j1 = this.id;
+        Integer j2 = wi.id;
      
         return j1.compareTo(j2);
     }
@@ -225,7 +370,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + this.witId;
+        hash = 37 * hash + this.id;
         return hash;
     }
 
@@ -237,12 +382,12 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
 
     @Override
     public boolean hasUniqeIdentifier() {
-        return (this.witId > 0);
+        return (this.id > 0);
     }
 
     @Override
     public void setUniqeIdentifier(int value) {
-        this.witId = value;
+        this.id = value;
     }
 
     @Override

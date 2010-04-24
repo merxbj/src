@@ -176,7 +176,7 @@ public class LoginDialog extends JDialog implements ActionListener {
                     LoggingFacade.handleException(siex);
                 }
             }
-        });
+        }, JStatusBar.getInstance());
 
         ipt.run();
     }

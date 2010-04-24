@@ -35,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import notwa.common.ColorManager;
 import notwa.wom.Note;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
@@ -126,11 +125,11 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         boxesPanel.add(cbPriorities);
         priority.setBounds(60, 29, 120, 22);
 
-        JLabel lState = new JLabel("State");
-        boxesPanel.add(lState);
-        lState.setBounds(5, 59, 45, 15);
-        JComboBox cbStates = this.loadWorkItemStates();
-        boxesPanel.add(cbStates);
+        JLabel lStatus = new JLabel("Status");
+        boxesPanel.add(lStatus);
+        lStatus.setBounds(5, 59, 45, 15);
+        JComboBox cbStatuses = this.loadWorkItemStatuses();
+        boxesPanel.add(cbStatuses);
         status.setBounds(60, 55, 120, 22);
 
         JLabel lParent = new JLabel("Parent WIT ID");
@@ -154,10 +153,10 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         return boxesPanel;
     }
     
-    private JComboBox loadWorkItemStates() {
+    private JComboBox loadWorkItemStatuses() {
         status = new JComboBox();
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            status.addItem(WorkItemStatus.values()[s].name());
+            status.addItem(WorkItemStatus.values()[s].toString());
         }
         
         return status;
@@ -201,12 +200,12 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void setStatus(WorkItemStatus wis) {
-        this.status.setSelectedItem(wis.name());
+        this.status.setSelectedItem(wis);
     }
     
     public void setLastNote(Note note) {
         try {
-            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getNoteText()));
+            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getText()));
         } catch (Exception e) {
             this.latestNote.setText("There are no notes yet");
         }

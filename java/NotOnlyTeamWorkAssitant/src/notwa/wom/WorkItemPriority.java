@@ -19,25 +19,101 @@
  */
 package notwa.wom;
 
-import java.awt.Color;
 import java.util.TreeMap;
 
-import notwa.common.ColorManager;
-
+/**
+ * Enumeration representing the priority of the <code>WorkItem</code>.
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
 public enum WorkItemPriority {
-    CRITICAL(4), IMPORTANT(3), NORMAL(2), NICE_TO_HAVE(1), UNNECESSARY(0);
+    
+    /**
+     * Describing the highest possible priority of the <code>WorkItem</code>.
+     * This means that the product isn't usable, testable or simple doesn't works.
+     */
+    CRITICAL(4) {
+        @Override
+        public String toString() {
+            return "Critical";
+        }
+    },
+
+    /**
+     * Desribing the high priority of the <code>WorkItem</code>.
+     * This means that the product isn't usable without very complicated workarounds.
+     */
+    HIGH(3) {
+        @Override
+        public String toString() {
+            return "High";
+        }
+    }, 
+    
+    /**
+     * Desribing the usual priority of the <code>WorkItem</code>.
+     * This means that the product is fairly usable with some simple workarounds.
+     */
+    MEDIUM(2) {
+        @Override
+        public String toString() {
+            return "Medium";
+        }
+    }, 
+    
+    /**
+     * Desribing the low priority of the <code>WorkItem</code>.
+     * This means that the product is perfectly usable but there could be improvement
+     * that would be appreciated by the user.
+     */
+    LOW(1) {
+        @Override
+        public String toString() {
+            return "Low";
+        }
+    },
+
+    /**
+     * Desribing the lowest priority of the <code>WorkItem</code>.
+     * This means that the product is perfectly usable but there could be improvement
+     * that would not be probably even noticed by the user. Usualy some code cleaning,
+     * simple color changing or GUI refactoring shall be tracked under such priority.
+     */
+    NICE_TO_HAVE(0) {
+        @Override
+        public String toString() {
+            return "Nice To Have";
+        }
+    };
     
     private int value;
     
+    /**
+     * "Overriden" enum constructor allowing simple association of the enum numerical
+     * representation with its object representation.
+     *
+     * @param value The value of the enumeration.
+     */
     WorkItemPriority(int value) {
         this.value = value;
     }
     
+    /**
+     * Gets the assigned value of this enumeration.
+     * 
+     * @return The numerical value.
+     */
     public int getValue() {
         return this.value;
     }
     
     private static TreeMap<Integer, WorkItemPriority> map;
+
+    /**
+     * Static constructor of this enumeration initializing the numerical representation
+     * to the object representation mapping.
+     */
     static {
         map = new TreeMap<Integer, WorkItemPriority>();
         for (WorkItemPriority wip : WorkItemPriority.values()) {
@@ -45,11 +121,13 @@ public enum WorkItemPriority {
         }
     }
     
+    /**
+     * Gets the object enum representation of the given numberical representation.
+     *
+     * @param value The numberical representation.
+     * @return The object enum representation.
+     */
     public static WorkItemPriority lookup(int value) {
         return map.get(new Integer(value));
-    }
-    
-    public Color getColor() {
-        return ColorManager.getPriorityColor(this);
     }
 }

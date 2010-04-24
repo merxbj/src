@@ -45,6 +45,8 @@ public class ProjectCollection extends BusinessObjectCollection<Project> {
     /**
      * The constructor setting the current <code>Context</code> according to the 
      * given value and <code>ResultSet</code> to <code>null</code>.
+     *
+     * @param context The current <code>Context</code>.
      */
     public ProjectCollection(Context context) {
         super(context, null);
@@ -53,9 +55,12 @@ public class ProjectCollection extends BusinessObjectCollection<Project> {
     /**
      * The constructor setting the current <code>Context</code> and <code>ResultSet</code> 
      * to according to the given values.
+     *
+     * @param context The current <code>Context</code>.
+     * @param resultSet The originating <code>ResultSet</code>.
      */
-    public ProjectCollection(Context currentContext, ResultSet resultSet) {
-        super(currentContext, resultSet);
+    public ProjectCollection(Context context, ResultSet resultSet) {
+        super(context, resultSet);
     }
 
     @Override
@@ -75,6 +80,6 @@ public class ProjectCollection extends BusinessObjectCollection<Project> {
 
     @Override
     protected void acquireUniqeIdentifier(Project p) {
-        p.setProjectId(nextProjectId++);
+        p.setUniqeIdentifier(nextProjectId++);
     }
 }

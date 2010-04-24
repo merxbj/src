@@ -200,7 +200,7 @@ public class MainWindow extends JFrame {
             public void perform() {
                 mll.refreshDataOnActiveTab();
             }
-        });
+        }, JStatusBar.getInstance());
 
         ipt.run();
     }
