@@ -38,78 +38,63 @@ import notwa.wom.Context;
  * @version %I% %G%
  */
 public class MainWindow extends JFrame {
-    private String version = new String("v0.5.0-r1"); //config?
-    private MainLayoutLoader mll = new MainLayoutLoader();
 
+    private MainLayoutLoader mll;
+    private MainMenu menu;
+    private JStatusBar statusBar;
     /**
      * Constructor only calls method to initialize MainWindow
      */
     public MainWindow() {
-        
-        /*
-         * temp this will be removed when loading from config is completly done
-         */
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            // TODO DELETE
-            e.printStackTrace();
-        }
-        /*
-         * end.
-         */
+        trySetLookAndFeel();
         init();
         startup();
     }
 
     /**
      * Initialize MainWindow
-     * 
-     * 
      */
     private void init() {
+
+        /*
+         * Set this window properties
+         */
         this.setLayout(new BorderLayout());
-        this.setTitle("NOTWA - NOT Only Team Work Assistent " + version.toString());
+        this.setTitle("NOTWA - NOT Only Team Work Assistent ");
         this.setSize(1000,500);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         /*
          * Load MainMenu and register for event notification
          */
-        MainMenu mm = MainMenu.getInstance();
-        this.setJMenuBar(mm);
-        mm.onFireGuiEvent(new EventHandler<GuiEvent>() {
+        menu = new MainMenu();
+        menu.onFireGuiEvent(new EventHandler<GuiEvent>() {
             @Override
             public void handleEvent(GuiEvent e) {
                 handleGuiEvent(e);
             }
         });
+        this.setJMenuBar(menu);
         
         /*
-         * create main JPanel and Load tabs 
+         * Create main JPanel and Load tabs
          */
-        this.add(mll.init(), BorderLayout.CENTER);
+        this.mll = new MainLayoutLoader();
+        this.mll.init();
+        this.add(mll, BorderLayout.CENTER);
         
         /*
-         * create JStatusBar object
+         * create JStatusBar
          */
-        this.add(JStatusBar.getInstance(), BorderLayout.PAGE_END);
-        
+        this.statusBar = new JStatusBar();
+        this.add(statusBar, BorderLayout.PAGE_END);
+
         this.setVisible(true);
     }
     
     /**
-     * Gets the tab controller.
-     *
-     * @return the tab controller
-     */
-    public MainLayoutLoader getTabController() {
-        return mll;
-    }
-    
-    /**
-     * Processes that have to be done only at startup of application
+     * Processes that have to be taken only during the startup of the application
      */
     private void startup() {
         mll.hideDetail(); // hide detail on startup - is unneeded
@@ -128,12 +113,12 @@ public class MainWindow extends JFrame {
 
     private ConnectionInfo getActiveConnectionInfo() {
         TabContent tc = mll.getActiveTab();
-        return (tc == null) ? null : tc.getCurrentConnectionInfo();
+        return (tc == null) ? null : tc.getConnectionInfo();
     }
 
     private Context getActivetContext() {
         TabContent tc = mll.getActiveTab();
-        return (tc == null) ? null : tc.getCurrentContext();
+        return (tc == null) ? null : tc.getContext();
     }
 
     public void handleGuiEvent(GuiEvent e) {
@@ -156,8 +141,6 @@ public class MainWindow extends JFrame {
             case GuiEventParams.MENU_EVENT_ASSIGNMENT_MANAGER:
                 invokeAssignmentManager(e.getParams());
                 break;
-            case GuiEventParams.ACTION_EVENT_HIDE_DETAIL:
-                invokeHideDetail(e.getParams());
             default:
                 LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
@@ -177,7 +160,6 @@ public class MainWindow extends JFrame {
 
     private void invokeConfigure(GuiEventParams params) {
         SettingsDialog sd = new SettingsDialog();
-        sd.initSettingsDialog();
     }
 
     private void invokeExit(GuiEventParams params) {
@@ -186,12 +168,10 @@ public class MainWindow extends JFrame {
 
     private void invokeFiltering(GuiEventParams params) {
         FilteringDialog fd = new FilteringDialog();
-        fd.initFilteringDialog();
     }
 
     private void invokeUserManagement(GuiEventParams params) {
         UserManagement um = new UserManagement(getActiveConnectionInfo(), getActivetContext());
-        um.init();
     }
 
     private void invokeSyncAndRefresh(GuiEventParams params) {
@@ -200,21 +180,24 @@ public class MainWindow extends JFrame {
             public void perform() {
                 mll.refreshDataOnActiveTab();
             }
-        }, JStatusBar.getInstance());
+        }, statusBar);
 
         ipt.run();
     }
 
     private void invokeAssignmentManager(GuiEventParams params) {
         AssignmentManager um = new AssignmentManager(getActiveConnectionInfo(), getActivetContext());
-        um.initManagerDialog();
-    }
-
-    private void invokeHideDetail(GuiEventParams params) {
-        getTabController().hideDetail();
     }
 
     private void invokeSuccessfulLogin(SecurityEventParams params) {
-        getTabController().createWitView(params.getConnectionInfo(), params.getCredentials());
+        mll.createWitView(params.getConnectionInfo(), params.getCredentials());
+    }
+
+    private void trySetLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            LoggingFacade.handleException(ex);
+        }
     }
 }

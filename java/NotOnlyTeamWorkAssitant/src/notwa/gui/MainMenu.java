@@ -41,7 +41,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
 public class MainMenu extends JMenuBar implements ActionListener {
-    private static MainMenu instance;
     private JMenu menu;
     private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering,mItemUserManagement,mItemAssignmentManager;
     private JCheckBoxMenuItem cbWorkOffline;
@@ -49,14 +48,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private TableRowSorter<TblModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     
-    public static MainMenu getInstance() {
-        if (instance == null) {
-            instance = new MainMenu();
-        }
-        return instance;
-    }
-    
-    private MainMenu() {
+    public MainMenu() {
         init();
     }
     

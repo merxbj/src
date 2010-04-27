@@ -62,7 +62,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         this.securityHandler = securityHandler;
     }
 
-    public Component init() {
+    public void init() {
         this.setLayout(new GridLayout(1,0));
         WorkItemDetailLayout widl = WorkItemDetailLayout.getInstance();
         if (widl != null) {

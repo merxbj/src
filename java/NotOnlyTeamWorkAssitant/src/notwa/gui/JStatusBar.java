@@ -33,14 +33,7 @@ public class JStatusBar extends JPanel implements IndeterminablePrgoressExpressi
     JLabel statusBarText = new JLabel();
     private final String idleMessage = "Welcome to Not Only Team Work Assistant!";
     
-    public static JStatusBar getInstance() {
-        if (singleton == null) {
-            singleton = new JStatusBar();
-        }
-        return singleton;
-    }
-    
-    private JStatusBar() {
+    public JStatusBar() {
         setStatusBarText(idleMessage);
         setProgressBarValue(0);
         

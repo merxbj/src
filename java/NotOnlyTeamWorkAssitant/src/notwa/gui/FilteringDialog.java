@@ -24,10 +24,10 @@ import javax.swing.JDialog;
 public class FilteringDialog extends JDialog {
 
     public FilteringDialog() {
-        
+        init();
     }
     
-    public void initFilteringDialog() {
+    public void init() {
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Configure Sorting / Filtering");
         this.setSize(500,200);
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);

@@ -29,6 +29,7 @@ public class UserManagement extends JDialog implements ActionListener {
     public UserManagement(ConnectionInfo ci, Context context) {
         this.context = context;
         this.ci = ci;
+        init();
     }
     public void init() {
         this.setLayout(new BorderLayout());

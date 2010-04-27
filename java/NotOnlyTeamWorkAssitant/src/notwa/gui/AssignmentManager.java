@@ -63,9 +63,10 @@ public class AssignmentManager extends JDialog implements ActionListener {
     public AssignmentManager(ConnectionInfo ci, Context context) {
         this.context = context;
         this.ci = ci;
+        init();
     }
     
-    public void initManagerDialog() {
+    public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Assignment Manager");
         this.setSize(500,300);

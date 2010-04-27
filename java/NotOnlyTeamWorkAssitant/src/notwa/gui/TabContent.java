@@ -120,11 +120,11 @@ public class TabContent extends JComponent implements ActionListener {
         return jp; 
     }
     
-    public ConnectionInfo getCurrentConnectionInfo() {
+    public ConnectionInfo getConnectionInfo() {
         return ci;
     }
 
-    public Context getCurrentContext() {
+    public Context getContext() {
         return currentContext;
     }
 
@@ -151,7 +151,7 @@ public class TabContent extends JComponent implements ActionListener {
         if(ae.getSource() == userDefinedFiltersBox) {
             if(userDefinedFiltersBox.getSelectedItem().equals("Configure ...")) {
                 FilteringDialog fd = new FilteringDialog();
-                fd.initFilteringDialog();
+                fd.init();
             }
         }
     }

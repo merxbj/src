@@ -27,9 +27,10 @@ import javax.swing.JLabel;
 public class SettingsDialog extends JDialog {
 
     public SettingsDialog() {
+        init();
     }
     
-    public void initSettingsDialog() {
+    public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Settings");
         this.setSize(750,300);
