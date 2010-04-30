@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -49,18 +50,11 @@ public class UserEditor extends JDialog implements ActionListener{
     private JPasswordField password,secondPassword;
     private String originalUserPassword;
     private User user;
+    private boolean newUser;
     
-    public UserEditor(User user) {
+    public UserEditor(User user, boolean newUser) {
         this.user = user;
-        
-        if (user != null) {
-            this.login.setText(user.getLogin());
-            this.password.setText("");
-            this.secondPassword.setText("");
-            this.firstName.setText(user.getFirstName());
-            this.lastName.setText(user.getLastName());
-            this.originalUserPassword = user.getPassword();
-        }
+        this.newUser = newUser;
     }
     
     public void init() {
@@ -72,8 +66,21 @@ public class UserEditor extends JDialog implements ActionListener{
         
         this.add(this.initMainComponents(),BorderLayout.CENTER);
         this.add(this.initButtons(), BorderLayout.PAGE_END);
-        
+
+        this.fillUserProperties();
         this.setVisible(true);
+    }
+    
+    private void fillUserProperties() {
+        if (this.user != null && !newUser) {
+            this.login.setEnabled(false);
+            this.login.setText(this.user.getLogin());
+            this.password.setText("|_PASSWORD_PROTECTED_|");
+            this.secondPassword.setText("|_PASSWORLD_PROTECTED_|");
+            this.firstName.setText(this.user.getFirstName());
+            this.lastName.setText(this.user.getLastName());
+            this.originalUserPassword = this.user.getPassword();
+        }
     }
     
     private JPanel initMainComponents() {
@@ -136,7 +143,20 @@ public class UserEditor extends JDialog implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            this.setVisible(false);
+            if (!this.login.getText().isEmpty() &&
+                 new String(this.password.getPassword()).equals(new String(this.secondPassword.getPassword())) &&
+                 this.password.getPassword().length != 0) {
+                user.setLogin(this.login.getText());
+                user.setFirstName(this.firstName.getText());
+                user.setLastName(this.lastName.getText());
+                if (!this.password.getPassword().equals("|_PASSWORD_PROTECTED_|")) {
+                    user.setPassword(new String(this.password.getPassword()));
+                }
+                
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "There was a problem while saving, check it again");
+            }
         }
         
         if (ae.getSource() == stornoButton) {
