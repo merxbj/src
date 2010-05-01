@@ -22,8 +22,6 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
-import java.util.logging.Logger;
  
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,8 +33,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import com.mysql.jdbc.EscapeTokenizer;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
@@ -228,14 +224,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
             wi.setStatus((WorkItemStatus)((JComboBoxItemCreator)states.getSelectedItem()).getAttachedObject());
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
-
-            try {
-                wic.add(wi);
-            } catch (ContextException ex) {
-                JOptionPane.showMessageDialog(this, "There was an error while creating new WorkItem, read log");
-                LoggingFacade.handleException(ex);
-            }
-            
+            wic.add(wi);
             WorkItemDal wid = new WorkItemDal(ci, context);
             wid.update(wic);
             

@@ -17,15 +17,10 @@ import javax.swing.ListSelectionModel;
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
 import notwa.exception.ContextException;
-import notwa.exception.LoggingException;
-import notwa.logger.LogDispatcher;
-import notwa.logger.Logger;
-import notwa.logger.LoggingExceptionHandler;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
-import notwa.wom.WorkItem;
 
 public class UserManagement extends JDialog implements ActionListener {
     private JButton closeButton, addButton, editButton, delButton;
@@ -106,11 +101,7 @@ public class UserManagement extends JDialog implements ActionListener {
             user.registerWithContext(context);
             UserEditor ue = new UserEditor(user, true);
             ue.init();
-            try {
-                uc.add(user);
-            } catch (ContextException ex) {
-                LoggingFacade.handleException(ex);
-            }
+            uc.add(user);
             ud.update(uc);
             table.revalidate();
         }
