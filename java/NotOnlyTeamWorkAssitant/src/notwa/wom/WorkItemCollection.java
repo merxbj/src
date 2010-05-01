@@ -67,7 +67,8 @@ public class WorkItemCollection extends BusinessObjectCollection<WorkItem> {
     public WorkItem getByPrimaryKey(Object primaryKey) throws DeveloperException {
         int workItemIndex;
         try {
-            workItemIndex = Collections.binarySearch(collection, new WorkItem((Integer) primaryKey));
+            Collections.sort(this);
+            workItemIndex = Collections.binarySearch(this, new WorkItem((Integer) primaryKey));
             if (workItemIndex >= 0) {
                 return super.get(workItemIndex);
             } else {

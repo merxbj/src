@@ -67,7 +67,8 @@ public class UserCollection extends BusinessObjectCollection<User> {
     public User getByPrimaryKey(Object primaryKey) throws DeveloperException {
         int userIndex;
         try {
-            userIndex = Collections.binarySearch(collection, new User((Integer) primaryKey));
+            Collections.sort(this);
+            userIndex = Collections.binarySearch(this, new User((Integer) primaryKey));
             if (userIndex >= 0) {
                 return super.get(userIndex);
             } else {

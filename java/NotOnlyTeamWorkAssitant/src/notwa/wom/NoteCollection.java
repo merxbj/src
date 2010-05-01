@@ -68,8 +68,9 @@ public class NoteCollection extends BusinessObjectCollection<Note> {
     public Note getByPrimaryKey(Object primaryKey) throws DeveloperException {
         int noteIndex;
         try {
+            Collections.sort(this);
             NotePrimaryKey npk = (NotePrimaryKey) primaryKey;
-            noteIndex = Collections.binarySearch(collection, new Note(npk));
+            noteIndex = Collections.binarySearch(this, new Note(npk));
             if (noteIndex >= 0) {
                 return super.get(noteIndex);
             } else {
