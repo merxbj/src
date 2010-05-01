@@ -62,7 +62,9 @@ public class IndeterminateProgressThread {
         this.worker = new WorkerThread(action, new Action() {
             @Override
             public void perform() {
-                progress.endIndetermination();
+                if (progress != null) {
+                    progress.endIndetermination();
+                }
             }
         });
     }
@@ -71,7 +73,9 @@ public class IndeterminateProgressThread {
      * Begins the execution of the action.
      */
     public void run() {
-        progress.beginIndetermination();
+        if (progress != null) {
+            progress.beginIndetermination();
+        }
         worker.start();
     }
 

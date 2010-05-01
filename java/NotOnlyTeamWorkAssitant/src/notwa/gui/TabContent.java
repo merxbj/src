@@ -148,7 +148,7 @@ public class TabContent extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == addButton) {
-            WorkItemEditor wie = new WorkItemEditor(getCurrentConnectionInfo(), getCurrentContext(), getWorkItemCollection());
+            WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection());
             wie.initAddDialog();
         }
         

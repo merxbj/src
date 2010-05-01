@@ -20,7 +20,6 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -34,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import notwa.common.EventHandler;
 
 import notwa.wom.Note;
 import notwa.wom.User;
@@ -52,19 +52,14 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox status = new JComboBox();
     private JComboBox priority = new JComboBox();
     private JComboBox assignedUsers = new JComboBox();
+    private EventHandler<GuiEvent> guiHandler;
 
     public WorkItemDetail() {
-
+        init();
     }
     
-    public static WorkItemDetail getInstance() {
-        if (instance == null) {
-            instance = new WorkItemDetail();
-        }
-        return instance;
-    }
-    
-    public Component initComponents() {
+    @Override
+    public void init() {
 
         this.setLayout(new BorderLayout(5,5));
         JPanel descriptionPanel = new JPanel(new BorderLayout());
@@ -102,8 +97,6 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         bottomPanel.add(buttonsPanel, BorderLayout.LINE_END);
         
         this.add(bottomPanel, BorderLayout.PAGE_END);
-        
-        return this;
     }
     
     private JPanel initBoxes() {

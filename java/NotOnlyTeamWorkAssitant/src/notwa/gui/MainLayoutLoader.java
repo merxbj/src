@@ -22,7 +22,6 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,6 +35,7 @@ import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
+import notwa.logger.LoggingFacade;
 import notwa.security.Credentials;
 import notwa.security.SecurityEvent;
 import notwa.sql.Parameter;
@@ -50,8 +50,10 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     private JButton plusButton;
     private EventHandler<GuiEvent> guiHandler;
     private EventHandler<SecurityEvent> securityHandler;
+    private WorkItemDetailLayout widl;
     
     public MainLayoutLoader () {
+        init();
     }
 
     public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
@@ -63,39 +65,45 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     public void init() {
-        this.setLayout(new GridLayout(1,0));
-        WorkItemDetailLayout widl = WorkItemDetailLayout.getInstance();
-        if (widl != null) {
-            widl.initDetailLayout();
-            widl.onFireGuiEvent(guiHandler);
-        }
-        sp = new JSplitPane( JSplitPane.VERTICAL_SPLIT, loadTabs(), widl);
-        sp.setResizeWeight(0.9);
-        sp.setContinuousLayout(true);
-        this.add(sp);
-        return this;
-    }
-    
-    public Component loadTabs() {
-        this.setLayout(new BorderLayout());
+
+        /**
+         * Instantiate all GUI components
+         */
+        widl = new WorkItemDetailLayout();
+        sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabPanel, widl);
         tabPanel = new JTabbedPane();
-
-        //create empty tab, where we will attach a new button
-        tabPanel.addTab(null, new JLabel(   "Welcome to NOT Only Team Work Assistent -" +
-        		                            "To beggin working, click on \"+\" button to login into Database"));
-        tabPanel.addChangeListener(this);
-        tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, this.initPlusButton());
-
-        return tabPanel;        
-    }
-    
-    private JButton initPlusButton() {
         plusButton = new JButton("+");
+
+        /**
+         * Setup the plus button
+         */
         plusButton.setBorder(null);
         plusButton.setPreferredSize(new Dimension(30,20));
         plusButton.addActionListener(this);
-        
-        return plusButton;
+
+        /**
+         * Setup the tab panel
+         */
+        tabPanel.addTab(null, new JLabel(   "Welcome to NOT Only Team Work Assistent - To beggin working, click on \"+\" button to login into Database"));
+        tabPanel.addChangeListener(this);
+        tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
+
+        /**
+         * Setup the work item detail layout
+         */
+        widl.onFireGuiEvent(guiHandler);
+
+        /**
+         * Setup the split pane
+         */
+        sp.setResizeWeight(0.9);
+        sp.setContinuousLayout(true);
+
+        /**
+         * Setup this component
+         */
+        this.setLayout(new BorderLayout());
+        this.add(sp);
     }
 
     public void createWitView(ConnectionInfo ci, Credentials credentials) {
@@ -129,11 +137,12 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     @Override
     public void stateChanged(ChangeEvent ce) {
         try {
-            MainMenu.getInstance().setSorter(getActiveTab().getWorkItemTable().getSorter());
+            GuiEventParams gep = new GuiEventParams(GuiEventParams.TABLE_ROW_SORTER_CHANGED, getActiveTab().getWorkItemTable().getSorter());
+            guiHandler.handleEvent(new GuiEvent(gep));
             getActiveTab().refresh();
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setAllToNull();
-            WorkItemNoteHistoryTable.getInstance().setAllToNull();
+        } catch (Exception ex) {
+            LoggingFacade.handleException(ex);
+            widl.setDataToNull();
         }
     }
 

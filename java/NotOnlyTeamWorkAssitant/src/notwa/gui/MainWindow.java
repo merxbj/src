@@ -23,6 +23,7 @@ import notwa.common.EventHandler;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
@@ -52,44 +53,55 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Initialize MainWindow
+     * Performs the initialization
      */
     private void init() {
 
-        /*
-         * Set this window properties
+        /**
+         * Instantiate all GUI components
          */
-        this.setLayout(new BorderLayout());
-        this.setTitle("NOTWA - NOT Only Team Work Assistent ");
-        this.setSize(1000,500);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.statusBar = new JStatusBar();
+        this.menu = new MainMenu();
+        this.mll = new MainLayoutLoader();
 
-        /*
-         * Load MainMenu and register for event notification
+        /**
+         * Setup the menu
          */
-        menu = new MainMenu();
         menu.onFireGuiEvent(new EventHandler<GuiEvent>() {
             @Override
             public void handleEvent(GuiEvent e) {
                 handleGuiEvent(e);
             }
         });
-        this.setJMenuBar(menu);
-        
-        /*
-         * Create main JPanel and Load tabs
-         */
-        this.mll = new MainLayoutLoader();
-        this.mll.init();
-        this.add(mll, BorderLayout.CENTER);
-        
-        /*
-         * create JStatusBar
-         */
-        this.statusBar = new JStatusBar();
-        this.add(statusBar, BorderLayout.PAGE_END);
 
+        /**
+         * Setup the main layout loader
+         */
+        mll.onFireGuiEvent(new EventHandler<GuiEvent>() {
+            @Override
+            public void handleEvent(GuiEvent e) {
+                handleGuiEvent(e);
+            }
+        });
+
+        mll.onFireSecurityEvent(new EventHandler<SecurityEvent>() {
+            @Override
+            public void handleEvent(SecurityEvent e) {
+                handleSecurityEvent(e);
+            }
+        });
+        
+        /*
+         * Setup this component
+         */
+        this.setLayout(new BorderLayout());
+        this.setTitle("NOTWA - NOT Only Team Work Assistent ");
+        this.setSize(1000,500);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.add(statusBar, BorderLayout.PAGE_END);
+        this.add(mll, BorderLayout.CENTER);
+        this.setJMenuBar(menu);
         this.setVisible(true);
     }
     
@@ -141,6 +153,8 @@ public class MainWindow extends JFrame {
             case GuiEventParams.MENU_EVENT_ASSIGNMENT_MANAGER:
                 invokeAssignmentManager(e.getParams());
                 break;
+            case GuiEventParams.TABLE_ROW_SORTER_CHANGED:
+                invokeTableRowSorterChanged(e.getParams());
             default:
                 LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
@@ -191,6 +205,10 @@ public class MainWindow extends JFrame {
 
     private void invokeSuccessfulLogin(SecurityEventParams params) {
         mll.createWitView(params.getConnectionInfo(), params.getCredentials());
+    }
+
+    private void invokeTableRowSorterChanged(GuiEventParams params) {
+        menu.setSorter((TableRowSorter<TblModel>) params.getParams());
     }
 
     private void trySetLookAndFeel() {

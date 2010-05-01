@@ -36,13 +36,32 @@ public class EventParams {
     protected int eventId;
 
     /**
-     * The sole constructor of the base implementation accepts only the <code>Event</code>
+     * The generic parameter used for general purposes in case that there is no
+     * need for extra specification (very suitable for just-in-case event with
+     * single params)
+     */
+    protected Object params;
+
+    /**
+     * The params-less constructor of the base implementation accepts only the <code>Event</code>
      * identifier.
      * 
-     * @param eventId The actual event identifier.
+     * @params eventId The actual event identifier.
      */
     public EventParams(int eventId) {
         this.eventId = eventId;
+    }
+
+    /**
+     * The constructor accepting the <code>Event</code> identifier and the specified
+     * params.
+     * 
+     * @param eventId The actual event identifier.
+     * @param params The actual parameters.
+     */
+    public EventParams(int eventId, Object params) {
+        this.eventId = eventId;
+        this.params = params;
     }
 
     /**
@@ -53,5 +72,13 @@ public class EventParams {
      */
     public int getEventId() {
         return eventId;
+    }
+
+    /**
+     * Gets the actual <code>Event</code> generic parameters.
+     * @return The <code>Event</code> parameters.
+     */
+    public Object getParams() {
+        return params;
     }
 }

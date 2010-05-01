@@ -20,7 +20,6 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,7 +29,6 @@ import javax.swing.JTabbedPane;
 import notwa.common.EventHandler;
 
 public class WorkItemDetailLayout extends JComponent implements ActionListener {
-    private static WorkItemDetailLayout instance;
     JTabbedPane detailTabs = new JTabbedPane();
     JButton hideDetail = new JButton("Hide detail");
     private WorkItemDetail wid;
@@ -38,27 +36,21 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     private EventHandler<GuiEvent> guiHandler;
 
     public WorkItemDetailLayout() {
+        init();
     }
     
-    public static WorkItemDetailLayout getInstance() {
-        if (instance == null) {
-            instance = new WorkItemDetailLayout();
-        }
-        return instance;
-    }
-    
-    public Component initDetailLayout() {
+    public void init() {
         this.setLayout(new BorderLayout());
     
         this.add(hideDetail, BorderLayout.PAGE_START);
         hideDetail.addActionListener(this);
         
-        detailTabs.addTab("Detail", WorkItemDetail.getInstance().initComponents());
+        wid = new WorkItemDetail();
+
+        detailTabs.addTab("Detail", wid);
         detailTabs.addTab("Notes history", WorkItemNoteHistoryTable.getInstance().initNoteHistoryTable());
 
         this.add(detailTabs, BorderLayout.CENTER);
-            
-        return this;
     }
 
     public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
@@ -76,5 +68,10 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.ACTION_EVENT_HIDE_DETAIL)));
+    }
+
+    public void setDataToNull() {
+        wid.setAllToNull();
+        winht.setAllToNull();
     }
 }

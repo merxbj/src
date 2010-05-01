@@ -41,10 +41,15 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
 public class MainMenu extends JMenuBar implements ActionListener {
+    private static final JTextField searchField = new JTextField("Type here ...");
+    private JMenuItem mItemSyncAndRefresh;
+    private JMenuItem mItemExit;
+    private JMenuItem mItemConfigure;
+    private JMenuItem mItemFiltering;
+    private JMenuItem mItemUserManagement;
+    private JMenuItem mItemAssignmentManager;
     private JMenu menu;
-    private JMenuItem mItemSyncAndRefresh,mItemExit,mItemConfigure,mItemFiltering,mItemUserManagement,mItemAssignmentManager;
     private JCheckBoxMenuItem cbWorkOffline;
-    private final JTextField searchField = new JTextField("Type here ...");
     private TableRowSorter<TblModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     
@@ -52,7 +57,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         init();
     }
     
-    public MainMenu init() {
+    public void init() {
         menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         this.add(menu);
@@ -114,8 +119,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.add(Box.createHorizontalGlue());
         this.add(new JLabel("| Search "));
         this.add(this.addSearchField());
-        
-        return this;
     }
 
     public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {

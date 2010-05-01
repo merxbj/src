@@ -26,7 +26,7 @@ package notwa.common;
  * <p><code>Event</code> comes along with its {@link EventParams} that are specific
  * to the Event implementation.
  *
- * @param <T> Represents the <code>EventParams</code> that this <code>Event</code>
+ * @params <T> Represents the <code>EventParams</code> that this <code>Event</code>
  *          will carry together.
  *
  * @author Jaroslav Merxbauer
@@ -34,12 +34,13 @@ package notwa.common;
  */
 public class Event<T extends EventParams> {
     private T params;
+    private boolean handled;
 
     /**
      * The sole constructor accepting <code>EventParams</code> as the only and
      * required parameter.
      * 
-     * @param params The actual event parameter.
+     * @params params The actual event parameter.
      */
     public Event(T params) {
         this.params = params;
@@ -63,5 +64,27 @@ public class Event<T extends EventParams> {
      */
     public int getEventId() {
         return (params != null) ? params.eventId : -1;
+    }
+
+    /**
+     * Indicates whether this <code>Event</code> has been already handled which 
+     * usually means that the event propagation should be stopped.
+     *
+     * @return  <code>true</code> if this <code>Event</code> has been already
+     *          handled, <code>false</code> otherwise.
+     */
+    public boolean isHandled() {
+        return handled;
+    }
+
+    /**
+     * Sets whether this <code>Event</code> has been already handled which
+     * usually means that the event propagation should be stopped.
+     *
+     * @return  <code>true</code> if this <code>Event</code> has been already
+     *          handled, <code>false</code> otherwise.
+     */
+    public void setHandled(boolean handled) {
+        this.handled = handled;
     }
 }
