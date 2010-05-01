@@ -152,6 +152,7 @@ public class UserDal extends DataAccessLayer<User, UserCollection> {
         rs.updateString("first_name", u.getFirstName());
         rs.updateString("last_name", u.getLastName());
         rs.updateString("password", u.getPassword());
+        rs.updateString("login", u.getLogin());
     }
 
     /**

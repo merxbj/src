@@ -67,7 +67,8 @@ public class ProjectCollection extends BusinessObjectCollection<Project> {
     public Project getByPrimaryKey(Object primaryKey) throws DeveloperException {
         int projectIndex;
         try {
-            projectIndex = Collections.binarySearch(collection, new Project((Integer) primaryKey));
+            Collections.sort(this);
+            projectIndex = Collections.binarySearch(this, new Project((Integer) primaryKey));
             if (projectIndex >= 0) {
                 return super.get(projectIndex);
             } else {

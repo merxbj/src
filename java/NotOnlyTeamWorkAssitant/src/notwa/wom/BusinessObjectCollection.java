@@ -21,9 +21,9 @@ package notwa.wom;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import notwa.exception.ContextException;
 import notwa.exception.DeveloperException;
+import notwa.logger.LoggingFacade;
 
 /**
  * Abstract class providing a general behavior connected with maintaining a
@@ -36,12 +36,7 @@ import notwa.exception.DeveloperException;
  * @param <T>   The concrete implemntation of <code>BusinessObject</code> to be hold
  *              by this collection.
  */
-public abstract class BusinessObjectCollection<T extends BusinessObject> implements Iterable<T> {
-
-    /**
-     * The inner collection holding all the <code>BusinessObjects</code>.
-     */
-    protected ArrayList<T> collection;
+public abstract class BusinessObjectCollection<T extends BusinessObject> extends ArrayList<T> {
 
     /**
      * The current <code>Context</code> we are living within. This <code>Context</code>
@@ -81,12 +76,6 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     public BusinessObjectCollection(Context currentContext, ResultSet resultSet) {
         this.currentContext = currentContext;
         this.resultSet = resultSet;
-        this.collection = new ArrayList<T>();
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return collection.iterator();
     }
 
     /**
@@ -105,17 +94,17 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      *
      * @param bo <code>BusinessObject</code> to be added to this <code>BusinessObjectCollection</code>
      * @return <code>true</code> if the addition success, <code>false</code> otherwise
-     * @throws ContextException If either the <code>BusinessObject</code> or <code>BusinessObjectCollection</code>
-     *                          are not <code>Context</code> aware, or they live in different <code>Context</code>s.
      */
-    public boolean add(T bo) throws ContextException {
+    @Override
+    public boolean add(T bo) {
         /*
          * Make sure that we are context aware and both BusinessObject and
          * BusinessObjectCollection lives in the same context!
          */
         if ((bo.getCurrentContext() == null) || (this.getCurrentContext() == null) ||
                 !bo.getCurrentContext().equals(this.getCurrentContext())) {
-            throw new ContextException("BusinessObject lives in another context than BusinessObjectCollection!");
+            LoggingFacade.getLogger().logError("BusinessObject lives in another context than BusinessObjectCollection!");
+            return false;
         }
 
         /*
@@ -129,18 +118,17 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
          * Make sure that the same BusinessObject isn't already present in the
          * collection.
          */
-        if (collection.contains(bo)) {
+        if (super.contains(bo)) {
             return false;
         }
 
         /*
          * Try to add the BusinesObject to the BusinessObjectCollection.
          */
-        if (!collection.add(bo)) {
+        if (!super.add(bo)) {
             return false;
         }
 
-        
         /*
          * Attach BusinessObject with this BusinessObjectCollection togeather
          */
@@ -194,7 +182,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
         /*
          * Make sure that the  BusinessObject is present in the collection.
          */
-        if (!collection.contains(bo)) {
+        if (!super.contains(bo)) {
             return false;
         }
 
@@ -210,7 +198,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
             bo.setDeleted(true);
             setUpdateRequired(true);
         } else {
-            collection.remove(bo);
+            super.remove(bo);
             bo.detach();
         }
 
@@ -221,16 +209,6 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
     }
     
     /**
-     * Gets the number of the elements contained in the 
-     * <code>BusinessObjectCollection</code>.
-     *
-     * @return The actual number of elements.
-     */
-    public int size() {
-        return collection.size();
-    }
-    
-    /**
      * Gets the element contained in the <code>BusinessObjectCollection</code> on
      * the given index.
      *
@@ -238,8 +216,9 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      * @return  The <code>BusinessObject</code> present on the position represented
      *          by the given index.
      */
+    @Override
     public T get(int index) {
-        return (T) collection.get(index);
+        return (T) super.get(index);
     }
 
     /**
@@ -252,10 +231,10 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      * </ol>
      */
     public void shakeAway() {
-        for (BusinessObject bo : collection) {
+        for (BusinessObject bo : this) {
             bo.detach();
         }
-        collection.clear();
+        super.clear();
         currentContext.clear();
     }
 
@@ -283,14 +262,14 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      */
     public void commit() {
         ArrayList<BusinessObject> garbage = new ArrayList<BusinessObject>();
-        for (BusinessObject bo : collection) {
+        for (BusinessObject bo : this) {
             if (bo.isDeleted()) {
                 garbage.add(bo);
             } else {
                 bo.commit();
             }
         }
-        collection.removeAll(garbage);
+        super.removeAll(garbage);
         setUpdateRequired(false);
     }
 
@@ -298,7 +277,7 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> impleme
      * Rollbacks all changes made to this <code>BusinessObjectCollection</code>.
      */
     public void rollback() {
-        for (BusinessObject bo : collection) {
+        for (BusinessObject bo : this) {
             bo.rollback();
         }
         setUpdateRequired(false);
