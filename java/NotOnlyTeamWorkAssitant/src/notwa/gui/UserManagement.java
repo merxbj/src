@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,16 +16,26 @@ import javax.swing.ListSelectionModel;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
+import notwa.exception.ContextException;
+import notwa.exception.LoggingException;
+import notwa.logger.LogDispatcher;
+import notwa.logger.Logger;
+import notwa.logger.LoggingExceptionHandler;
+import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
+import notwa.wom.User;
 import notwa.wom.UserCollection;
+import notwa.wom.WorkItem;
 
 public class UserManagement extends JDialog implements ActionListener {
-    private JButton okButton, stornoButton, addButton, editButton;
+    private JButton closeButton, addButton, editButton, delButton;
     private Context context;
     private ConnectionInfo ci;
     private JTable table;
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private String[] tableHeaders = new String[]{"Login", "Name", "Last name"};
+    private UserCollection uc;
+    private UserDal ud;
     
     public UserManagement(ConnectionInfo ci, Context context) {
         this.context = context;
@@ -47,8 +58,8 @@ public class UserManagement extends JDialog implements ActionListener {
     public Component initManagementDialog() {
         JPanel managementPanel = new JPanel(new GridLayout(1,0));
         
-        UserDal ud = new UserDal(ci, context);
-        UserCollection uc = new UserCollection(context);
+        ud = new UserDal(ci, context);
+        uc = new UserCollection(context);
         ud.fill(uc);
         
         TblModel tblModel = new TblModel(uc, tableHeaders);
@@ -68,38 +79,57 @@ public class UserManagement extends JDialog implements ActionListener {
         
         addButton = new JButton("Add");
         editButton = new JButton("Edit");
-        okButton = new JButton("Ok");
-        stornoButton = new JButton("Storno");
+        delButton = new JButton("Delete");
+        closeButton = new JButton("Close");
         
         addButton.addActionListener(this);
         editButton.addActionListener(this);
-        okButton.addActionListener(this);
-        stornoButton.addActionListener(this);
+        delButton.addActionListener(this);
+        closeButton.addActionListener(this);
         
         buttonsPanel.add(addButton);
         buttonsPanel.add(editButton);
-        buttonsPanel.add(okButton);
-        buttonsPanel.add(stornoButton);
+        buttonsPanel.add(delButton);
+        buttonsPanel.add(closeButton);
         
         return buttonsPanel;
     }
+    
+    private User getSelectedUser() {
+        Object element = this.table.getValueAt(table.getSelectedRow(), 0);
+        return (User)((JListItemCreator)element).getAttachedObject();
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == addButton) {
-            UserEditor ue = new UserEditor(null);
+            User user = new User();
+            user.registerWithContext(context);
+            UserEditor ue = new UserEditor(user, true);
             ue.init();
+            try {
+                uc.add(user);
+            } catch (ContextException ex) {
+                LoggingFacade.handleException(ex);
+            }
+            ud.update(uc);
+            table.revalidate();
         }
 
         if (ae.getSource() == editButton) {
-            UserEditor ue = new UserEditor(null);
+            UserEditor ue = new UserEditor(this.getSelectedUser(), false);
             ue.init();
+            ud.update(uc);
+            table.revalidate();
         }
         
-        if (ae.getSource() == okButton) {
-            this.setVisible(false);
+        if (ae.getSource() == delButton) {
+            if (JOptionPane.showConfirmDialog(this, "Are you sure?") == 0) {
+                //TODO del operation
+            }
         }
         
-        if (ae.getSource() == stornoButton) {
+        if (ae.getSource() == closeButton) {
             this.setVisible(false);
         }
     }

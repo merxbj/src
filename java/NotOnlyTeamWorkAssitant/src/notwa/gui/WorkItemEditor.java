@@ -22,6 +22,8 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.logging.Logger;
  
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,25 +31,45 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.mysql.jdbc.EscapeTokenizer;
+
+import notwa.common.ConnectionInfo;
+import notwa.dal.ProjectDal;
+import notwa.dal.UserDal;
+import notwa.dal.WorkItemDal;
+import notwa.exception.ContextException;
+import notwa.logger.LoggingFacade;
+import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
+import notwa.wom.User;
+import notwa.wom.UserCollection;
+import notwa.wom.WorkItem;
+import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
  
 public class WorkItemEditor extends JDialog implements ActionListener {
-    private JComboBox existingProjects,priorities,states;
+    private JComboBox existingProjects,users,priorities,states;
     private JTextField newProjectName = new JTextField();
     private JTextField subject = new JTextField();
     private JTextField eParentId = new JTextField();
     private JTextField eExpectingDate = new JTextField();
     private JTextArea eDescription;
     private JButton okButton, stornoButton, chooseColorButton;
+    private ConnectionInfo ci;
+    private Context context;
+    private WorkItemCollection wic;
     
-    public WorkItemEditor() {
+    public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic) {
+        this.ci = ci;
+        this.context = context;
+        this.wic = wic;
     }
     
     public void initAddDialog() {
@@ -75,6 +97,11 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         chooseColorButton.addActionListener(this);
         jp.add(chooseColorButton);
 
+        JLabel lUser = new JLabel("User");
+        lUser.setBounds(120, 212, 56, 15);
+        jp.add(lUser);
+        jp.add(loadUsers());
+        
         JLabel lSubject = new JLabel("Subject");
         lSubject.setBounds(63, 96, 78, 15);
         jp.add(lSubject);
@@ -136,11 +163,27 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         return jp;
     }
     
+    private JComboBox loadUsers() {
+        users = new JComboBox();
+        users.setBounds(350, 5, 138, 22);
+
+        UserDal ud = new UserDal(ci, context);
+        UserCollection uc = new UserCollection(context);
+        ud.fill(uc);
+        for (User user : uc) {
+            users.addItem(new JComboBoxItemCreator(user, user.getLogin()));
+        }
+        
+        return users;
+    }
+    
     private JComboBox loadExistingProjects() {
         existingProjects = new JComboBox();
         existingProjects.setBounds(227, 5, 138, 22);
 
-        ProjectCollection pc = new ProjectCollection();
+        ProjectDal pd = new ProjectDal(ci, context);
+        ProjectCollection pc = new ProjectCollection(context);
+        pd.fill(pc);
         for (Project p : pc) {
             existingProjects.addItem(new JComboBoxItemCreator(p, p.getName()));
         }
@@ -152,7 +195,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         states = new JComboBox();
         states.setBounds(227, 236, 138, 22);
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            states.addItem(new JComboBoxItemCreator(WorkItemStatus.values()[s].getValue(),
+            states.addItem(new JComboBoxItemCreator(WorkItemStatus.values()[s],
                                                     WorkItemStatus.values()[s].toString()));
         }
         
@@ -163,7 +206,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         priorities = new JComboBox();
         priorities.setBounds(227, 208, 138, 22);
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priorities.addItem(new JComboBoxItemCreator(WorkItemPriority.values()[p].getValue(),
+            priorities.addItem(new JComboBoxItemCreator(WorkItemPriority.values()[p],
                                                         WorkItemPriority.values()[p].toString()));
         }
 
@@ -173,6 +216,29 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
+            //TODO - not working and DANGEROUS!
+            WorkItem wi = new WorkItem();
+            wi.setAssignedUser((User)((JComboBoxItemCreator)users.getSelectedItem()).getAttachedObject());
+            wi.setDescription(eDescription.getText());
+            //wi.setExpectedTimestamp(eExpectingDate.getText()));
+            //wi.setLastModifiedTimestamp();
+            //wi.setParentWorkItem(); // TODO
+            wi.setPriority((WorkItemPriority)((JComboBoxItemCreator)priorities.getSelectedItem()).getAttachedObject());
+            wi.setProject((Project)((JComboBoxItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
+            wi.setStatus((WorkItemStatus)((JComboBoxItemCreator)states.getSelectedItem()).getAttachedObject());
+            wi.setSubject(subject.getText());
+            wi.registerWithContext(context);
+
+            try {
+                wic.add(wi);
+            } catch (ContextException ex) {
+                JOptionPane.showMessageDialog(this, "There was an error while creating new WorkItem, read log");
+                LoggingFacade.handleException(ex);
+            }
+            
+            WorkItemDal wid = new WorkItemDal(ci, context);
+            wid.update(wic);
+            
             this.setVisible(false);
         }
         if (ae.getSource() == stornoButton) {

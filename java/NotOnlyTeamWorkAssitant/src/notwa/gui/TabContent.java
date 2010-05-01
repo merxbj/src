@@ -131,6 +131,10 @@ public class TabContent extends JComponent implements ActionListener {
     public WorkItemTable getWorkItemTable() {
         return wiTable;
     }
+    
+    public WorkItemCollection getWorkItemCollection() {
+        return wic;
+    }
 
     public void dataRefresh() {
         dal.refresh(wic, ps);
@@ -144,7 +148,7 @@ public class TabContent extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if(ae.getSource() == addButton) {
-            WorkItemEditor wie = new WorkItemEditor();
+            WorkItemEditor wie = new WorkItemEditor(getCurrentConnectionInfo(), getCurrentContext(), getWorkItemCollection());
             wie.initAddDialog();
         }
         
