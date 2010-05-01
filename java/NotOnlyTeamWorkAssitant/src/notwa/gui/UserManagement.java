@@ -16,8 +16,6 @@ import javax.swing.ListSelectionModel;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
-import notwa.exception.ContextException;
-import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
@@ -91,7 +89,7 @@ public class UserManagement extends JDialog implements ActionListener {
     
     private User getSelectedUser() {
         Object element = this.table.getValueAt(table.getSelectedRow(), 0);
-        return (User)((JListItemCreator)element).getAttachedObject();
+        return (User)((JAnyItemCreator)element).getAttachedObject();
     }
     
     @Override

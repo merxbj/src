@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -40,8 +39,6 @@ import notwa.logger.LoggingFacade;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
-import notwa.dal.UserToProjectAssignmentDal;
-import notwa.exception.ContextException;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
@@ -127,7 +124,7 @@ public class AssignmentManager extends JDialog implements ActionListener {
         pDal.fill(pc);
         
         for (Project project : pc) {
-            projects.addItem(new JComboBoxItemCreator(project, project.getName()));
+            projects.addItem(new JAnyItemCreator(project, project.getName()));
         }
         
         return projects;
@@ -146,7 +143,7 @@ public class AssignmentManager extends JDialog implements ActionListener {
         
         for (User user : uc) {
             if (!assignedUsers.contains(user.getLogin()))
-                usersModel.addElement(new JListItemCreator(user, user.getLogin()));
+                usersModel.addElement(new JAnyItemCreator(user, user.getLogin()));
         }
     }
     
@@ -160,10 +157,10 @@ public class AssignmentManager extends JDialog implements ActionListener {
         }
         catch (Exception e) { }
         
-        UserCollection usersInProject = ((Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject()).getAssignedUsers();
+        UserCollection usersInProject = ((Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject()).getAssignedUsers();
         
         for (User user : usersInProject) {
-            projectUsersModel.addElement(new JListItemCreator(user, user.getLogin()));
+            projectUsersModel.addElement(new JAnyItemCreator(user, user.getLogin()));
             assignedUsers.add(user.getLogin());
         }
     }
@@ -218,11 +215,11 @@ public class AssignmentManager extends JDialog implements ActionListener {
         }
         
         if (ae.getSource() == addButton) {
-            currentlySelectedProject = (Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject();
+            currentlySelectedProject = (Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject();
             if (users.getSelectedValues().length != 0) {
                 for (int i=0; i<users.getSelectedValues().length+1; i++) {
                     try {
-                        User user = (User)((JListItemCreator)users.getSelectedValues()[i]).getAttachedObject();
+                        User user = (User)((JAnyItemCreator)users.getSelectedValues()[i]).getAttachedObject();
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
@@ -234,11 +231,11 @@ public class AssignmentManager extends JDialog implements ActionListener {
         }
         
         if (ae.getSource() == removeButton) {
-            currentlySelectedProject = (Project)((JComboBoxItemCreator)projects.getSelectedItem()).getAttachedObject();
+            currentlySelectedProject = (Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject();
             if (currentlyAssignedUsers.getSelectedValues().length != 0) {
                 for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
                     try {
-                        User user = (User)((JListItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
+                        User user = (User)((JAnyItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
                         currentlySelectedProject.removeAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);

@@ -94,7 +94,7 @@ public class TblModel extends AbstractTableModel {
         }
         else if (tableHeader[columnIndex].equals("Login")) {
             User user = (User)getRecord(rowIndex);
-            return new JListItemCreator(user, user.getLogin());
+            return new JAnyItemCreator(user, user.getLogin());
         }
         else if (tableHeader[columnIndex].equals("Name")) {
             return ((User)getRecord(rowIndex)).getFirstName();

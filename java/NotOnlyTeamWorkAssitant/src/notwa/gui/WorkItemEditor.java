@@ -22,6 +22,10 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
  
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -38,7 +42,6 @@ import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
-import notwa.exception.ContextException;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.Project;
@@ -61,6 +64,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private ConnectionInfo ci;
     private Context context;
     private WorkItemCollection wic;
+    private boolean close = true;
     
     public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic) {
         this.ci = ci;
@@ -132,7 +136,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         JLabel lExpectingDate = new JLabel("Expecting date");
         lExpectingDate.setBounds(63, 267, 101, 15);
         jp.add(lExpectingDate);
-        eExpectingDate = new JTextField("04.04.2010 00:00");
+        eExpectingDate = new JTextField("00.00.0000 00:00");
         eExpectingDate.setBounds(227, 264, 138, 22);
         jp.add(eExpectingDate);
         
@@ -167,7 +171,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         UserCollection uc = new UserCollection(context);
         ud.fill(uc);
         for (User user : uc) {
-            users.addItem(new JComboBoxItemCreator(user, user.getLogin()));
+            users.addItem(new JAnyItemCreator(user, user.getLogin()));
         }
         
         return users;
@@ -181,7 +185,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         ProjectCollection pc = new ProjectCollection(context);
         pd.fill(pc);
         for (Project p : pc) {
-            existingProjects.addItem(new JComboBoxItemCreator(p, p.getName()));
+            existingProjects.addItem(new JAnyItemCreator(p, p.getName()));
         }
         
         return existingProjects;
@@ -191,7 +195,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         states = new JComboBox();
         states.setBounds(227, 236, 138, 22);
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            states.addItem(new JComboBoxItemCreator(WorkItemStatus.values()[s],
+            states.addItem(new JAnyItemCreator(WorkItemStatus.values()[s],
                                                     WorkItemStatus.values()[s].toString()));
         }
         
@@ -202,7 +206,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         priorities = new JComboBox();
         priorities.setBounds(227, 208, 138, 22);
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priorities.addItem(new JComboBoxItemCreator(WorkItemPriority.values()[p],
+            priorities.addItem(new JAnyItemCreator(WorkItemPriority.values()[p],
                                                         WorkItemPriority.values()[p].toString()));
         }
 
@@ -212,27 +216,59 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            //TODO - not working and DANGEROUS!
             WorkItem wi = new WorkItem();
-            wi.setAssignedUser((User)((JComboBoxItemCreator)users.getSelectedItem()).getAttachedObject());
+            wi.setAssignedUser((User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject());
             wi.setDescription(eDescription.getText());
-            //wi.setExpectedTimestamp(eExpectingDate.getText()));
-            //wi.setLastModifiedTimestamp();
-            //wi.setParentWorkItem(); // TODO
-            wi.setPriority((WorkItemPriority)((JComboBoxItemCreator)priorities.getSelectedItem()).getAttachedObject());
-            wi.setProject((Project)((JComboBoxItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
-            wi.setStatus((WorkItemStatus)((JComboBoxItemCreator)states.getSelectedItem()).getAttachedObject());
+            if (!eExpectingDate.getText().equals("00.00.0000 00:00")) {
+                try {
+                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+                    wi.setExpectedTimestamp((Date)df.parse((eExpectingDate.getText())));
+                    close = true;
+                }
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Incorrect date format");
+                    LoggingFacade.handleException(e);
+                    close = false;
+                }
+            }
+            wi.setLastModifiedTimestamp(Calendar.getInstance().getTime());
+            if (Integer.parseInt(eParentId.getText()) != 0) {
+                try {
+                    WorkItem pwi = wic.getByPrimaryKey(Integer.parseInt(eParentId.getText()));
+                    if (pwi != null) {
+                        wi.setParentWorkItem(pwi);
+                        close = true;
+                    }
+                    else {
+                        throw new Exception("WorkItem does not exist");
+                    }
+                }
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Check if Work item exists");
+                    LoggingFacade.handleException(e);
+                    close = false;
+                }
+            }
+            wi.setPriority((WorkItemPriority)((JAnyItemCreator)priorities.getSelectedItem()).getAttachedObject());
+            wi.setProject((Project)((JAnyItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
+            wi.setStatus((WorkItemStatus)((JAnyItemCreator)states.getSelectedItem()).getAttachedObject());
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
+
             wic.add(wi);
+            
             WorkItemDal wid = new WorkItemDal(ci, context);
             wid.update(wic);
             
-            this.setVisible(false);
+            if (close) {
+                this.setVisible(false);
+            }
         }
+
         if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
+        
         if(ae.getSource() == chooseColorButton) { //TODO all color choosing will be used this way
             JColorChooser colorChooser = new JColorChooser();
             JDialog jd = JColorChooser.createDialog( chooseColorButton,

@@ -130,7 +130,7 @@ public class LoginDialog extends JDialog implements ActionListener {
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
-            jcb.addItem(new JComboBoxItemCreator(connInfo,connInfo.getLabel()));
+            jcb.addItem(new JAnyItemCreator(connInfo,connInfo.getLabel()));
         }
         
         return jcb;
@@ -163,7 +163,7 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private void performSignIn() {
-        ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
+        ConnectionInfo ci = (ConnectionInfo)((JAnyItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
         Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
 
         IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<SignInParams>(new SignInParams(ci, credentials)) {
