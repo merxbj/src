@@ -221,6 +221,7 @@ public class AssignmentManager extends JDialog implements ActionListener {
                 for (int i=0; i<users.getSelectedValues().length+1; i++) {
                     try {
                         User user = (User)((JAnyItemCreator)users.getSelectedValues()[i]).getAttachedObject();
+                        user.setInserted(true);
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
@@ -237,7 +238,7 @@ public class AssignmentManager extends JDialog implements ActionListener {
                 for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
                     try {
                         User user = (User)((JAnyItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
-                        currentlySelectedProject.removeAssignedUser(user);
+                        user.setDeleted(true);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
                     }

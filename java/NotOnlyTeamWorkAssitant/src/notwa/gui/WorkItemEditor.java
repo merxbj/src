@@ -44,7 +44,9 @@ import javax.swing.event.DocumentListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
+import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
+import notwa.dal.UserToProjectAssignmentDal;
 import notwa.dal.WorkItemDal;
 import notwa.exception.ContextException;
 import notwa.logger.LoggingFacade;
@@ -277,21 +279,27 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                 Project project = new Project();
                 project.registerWithContext(context);
                 project.setProjectName(newProjectName.getText());
-                UserCollection newUC = new UserCollection(context);
-                newUC.add((User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject());
                 try {
-                    project.setAssignedUsers(newUC);
+                    User user = (User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject();
+                    user.setInserted(true);
+                    
+                    project.addAssignedUser(user);
                 } catch (ContextException ex) {
                     JOptionPane.showMessageDialog(this, "New project creation has failed, check log for further information");
                     LoggingFacade.handleException(ex);
                     close = false;
                 }
                 
-                ProjectCollection pc = new ProjectCollection(context); // resultset is null
-                pc.add(project);
+                ProjectCollection pc = new ProjectCollection(context);
                 
                 ProjectDal pd = new ProjectDal(ci, context);
+                pd.fill(pc);
+                pc.add(project);
                 pd.update(pc);
+                
+                ProjectToUserAssignmentDal ptuad = new ProjectToUserAssignmentDal(ci, context);
+                ptuad.update(project.getAssignedUsers());
+                wi.setProject(project);
             }
             wi.setStatus((WorkItemStatus)((JAnyItemCreator)states.getSelectedItem()).getAttachedObject());
             wi.setSubject(subject.getText());
