@@ -37,11 +37,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
+import notwa.exception.ContextException;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.Project;
@@ -90,6 +95,21 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         jp.add(lCreateProject);
         newProjectName.setBounds(227, 36, 138, 22);
         jp.add(newProjectName);
+        newProjectName.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        SwitchComboBox();
+                    }
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        SwitchComboBox();
+                    }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        SwitchComboBox();
+                    }
+                });
         
         chooseColorButton = new JButton("Browse");
         chooseColorButton.setBounds(377, 36, 103, 22);
@@ -250,7 +270,29 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                 }
             }
             wi.setPriority((WorkItemPriority)((JAnyItemCreator)priorities.getSelectedItem()).getAttachedObject());
-            wi.setProject((Project)((JAnyItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
+            if (existingProjects.isEnabled()) {
+                wi.setProject((Project)((JAnyItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
+            }
+            else {
+                Project project = new Project();
+                project.registerWithContext(context);
+                project.setProjectName(newProjectName.getText());
+                UserCollection newUC = new UserCollection(context);
+                newUC.add((User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject());
+                try {
+                    project.setAssignedUsers(newUC);
+                } catch (ContextException ex) {
+                    JOptionPane.showMessageDialog(this, "New project creation has failed, check log for further information");
+                    LoggingFacade.handleException(ex);
+                    close = false;
+                }
+                
+                ProjectCollection pc = new ProjectCollection(context); // resultset is null
+                pc.add(project);
+                
+                ProjectDal pd = new ProjectDal(ci, context);
+                pd.update(pc);
+            }
             wi.setStatus((WorkItemStatus)((JAnyItemCreator)states.getSelectedItem()).getAttachedObject());
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
@@ -279,5 +321,15 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                                         null);
             jd.setVisible(true); // not done yet 
         }
+    }
+    
+    private void SwitchComboBox() {
+        if (newProjectName.getText().isEmpty()) {
+            existingProjects.setEnabled(true);
+        }
+        else {
+            existingProjects.setEnabled(false);
+        }
+        
     }
 }
