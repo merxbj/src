@@ -36,13 +36,11 @@ import javax.swing.JTextField;
 
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
-import notwa.common.EventHandler;
 import notwa.logger.LoggingFacade;
 import notwa.exception.SignInException;
+import notwa.gui.components.NotwaProgressBar;
 import notwa.security.Credentials;
 import notwa.security.Security;
-import notwa.security.SecurityEvent;
-import notwa.security.SecurityEventParams;
 import notwa.threading.Action;
 import notwa.threading.IndeterminateProgressThread;
 
@@ -52,7 +50,8 @@ public class LoginDialog extends JDialog implements ActionListener {
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
-    private EventHandler<SecurityEvent> securityHandler;
+    private NotwaProgressBar progressBar = new NotwaProgressBar();
+    private SignInParams signInParams = new SignInParams(null, null);
     
     public LoginDialog() {
         init();
@@ -67,14 +66,10 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.setResizable(false);
                 
         this.add(this.initComponents(), BorderLayout.CENTER);
-
-        this.add(this.initButtons(), BorderLayout.PAGE_END);
+        this.add(this.initButtons(), BorderLayout.SOUTH);
+        this.add(progressBar, BorderLayout.NORTH);
         
         this.setVisible(true);
-    }
-
-    public void onFireSecurityEvent(EventHandler<SecurityEvent> securityHandler) {
-        this.securityHandler = securityHandler;
     }
     
     private JPanel initComponents() {
@@ -154,7 +149,6 @@ public class LoginDialog extends JDialog implements ActionListener {
             }
             else {
                 this.performSignIn();
-                this.setVisible(false);
             }
         }
         if (ae.getSource() == stornoButton) {
@@ -163,20 +157,20 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private void performSignIn() {
-        ConnectionInfo ci = (ConnectionInfo)((JComboBoxItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
-        Credentials credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
+        signInParams.connectionInfo = (ConnectionInfo)((JComboBoxItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
+        signInParams.credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
 
-        IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<SignInParams>(new SignInParams(ci, credentials)) {
+        IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<LoginDialog>(this) {
             @Override
             public void perform() {
                 try {
-                    Security.getInstance().signIn(params.ci, params.c);
-                    securityHandler.handleEvent(new SecurityEvent(new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN, params.c, params.ci)));
+                    Security.getInstance().signIn(signInParams.connectionInfo, signInParams.credentials);
+                    params.setVisible(false);
                 } catch (SignInException siex) {
                     LoggingFacade.handleException(siex);
                 }
             }
-        }, null);
+        }, progressBar);
 
         ipt.run();
     }
@@ -192,13 +186,17 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.errorField.updateUI();
     }
 
-    private class SignInParams {
-        public final ConnectionInfo ci;
-        public final Credentials c;
+    public SignInParams getSignInParams() {
+        return signInParams;
+    }
+
+    public class SignInParams {
+        public ConnectionInfo connectionInfo;
+        public Credentials credentials;
 
         public SignInParams(ConnectionInfo ci, Credentials c) {
-            this.ci = ci;
-            this.c = c;
+            this.connectionInfo = ci;
+            this.credentials = c;
         }
     }
 }

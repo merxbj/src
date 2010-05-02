@@ -24,12 +24,11 @@ import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import notwa.gui.components.NotwaProgressBar;
 import notwa.threading.IndeterminablePrgoressExpressioner;
 
 public class JStatusBar extends JPanel implements IndeterminablePrgoressExpressioner {
-    private static JStatusBar singleton;
-    JProgressBar mainProgressBar = new JProgressBar();
+    NotwaProgressBar mainProgressBar = new NotwaProgressBar();
     JLabel statusBarText = new JLabel();
     private final String idleMessage = "Welcome to Not Only Team Work Assistant!";
     
@@ -63,12 +62,12 @@ public class JStatusBar extends JPanel implements IndeterminablePrgoressExpressi
     public void beginIndetermination() {
         statusBarText.setText("Synchronizing with repository ...");
         mainProgressBar.setValue(mainProgressBar.getMinimum());
-        mainProgressBar.setIndeterminate(true);
+        mainProgressBar.beginIndetermination();
     }
 
     @Override
     public void endIndetermination() {
-        mainProgressBar.setIndeterminate(false);
+        mainProgressBar.endIndetermination();
         statusBarText.setText(idleMessage);
     }
 }

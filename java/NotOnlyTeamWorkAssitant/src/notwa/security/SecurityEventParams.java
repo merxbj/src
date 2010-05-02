@@ -34,13 +34,23 @@ public class SecurityEventParams extends EventParams {
     /**
      * Event informing its handler about the successful state of the login process.
      */
-    public static final int SECURITY_EVENT_SUCCESSFUL_LOGIN = 1;
+    public static final int SECURITY_EVENT_REQUEST_LOGIN = 1;
+    public static final int SECURITY_EVENT_SUCCESSFUL_LOGIN = 2;
     
     private Credentials credentials;
     private ConnectionInfo connectionInfo;
 
     /**
-     * The sole constructor providing the actual event identification as well as the
+     * The simple constructor providing only the actual event identification.
+     *
+     * @param eventId The event identifier.
+     */
+    public SecurityEventParams(int eventId) {
+        super(eventId);
+    }
+
+    /**
+     * The constructor providing the actual event identification as well as the
      * credentials and connection info to be carried together with the event.
      * <p>The credentials and connection info are usually those parameters which
      * compiles the security handling that has been done before this event has

@@ -30,14 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import notwa.common.ConnectionInfo;
-import notwa.dal.UserDal;
-import notwa.exception.ContextException;
-import notwa.wom.Context;
-import notwa.wom.ContextManager;
 import notwa.wom.User;
-import notwa.wom.UserCollection;
 
 /**
  * User editor is used to create new or edit existing user.
@@ -149,7 +142,7 @@ public class UserEditor extends JDialog implements ActionListener{
                 user.setLogin(this.login.getText());
                 user.setFirstName(this.firstName.getText());
                 user.setLastName(this.lastName.getText());
-                if (!this.password.getPassword().equals("|_PASSWORD_PROTECTED_|")) {
+                if (!this.password.getPassword().toString().equals("|_PASSWORD_PROTECTED_|")) {
                     user.setPassword(new String(this.password.getPassword()));
                 }
                 

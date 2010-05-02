@@ -79,6 +79,14 @@ public class IndeterminateProgressThread {
         worker.start();
     }
 
+    public void join() {
+        try {
+            worker.join();
+        } catch (InterruptedException iex) {
+            
+        }
+    }
+
     /**
      * The bacground thread implementation.
      */

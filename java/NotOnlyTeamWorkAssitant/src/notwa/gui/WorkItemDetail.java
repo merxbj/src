@@ -33,26 +33,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import notwa.common.EventHandler;
 
 import notwa.wom.Note;
+import notwa.wom.NoteCollection;
+import notwa.wom.Project;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
+import notwa.wom.WorkItem;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 public class WorkItemDetail extends WorkItemDetailLayout implements ActionListener {
-    private static WorkItemDetail instance;
-    private JButton save = new JButton("Save");
-    private JTextArea description = new JTextArea();
-    private JTextArea latestNote = new JTextArea();
-    private JTextField parent = new JTextField();
-    private JTextField deadline = new JTextField();
-    private JTextField lastModified = new JTextField();
-    private JComboBox status = new JComboBox();
-    private JComboBox priority = new JComboBox();
-    private JComboBox assignedUsers = new JComboBox();
-    private EventHandler<GuiEvent> guiHandler;
+    private JButton save;
+    private JTextArea description;
+    private JTextArea latestNote;
+    private JTextField parent;
+    private JTextField deadline;
+    private JTextField lastModified;
+    private JComboBox status;
+    private JComboBox priority;
+    private JComboBox assignedUsers;
 
     public WorkItemDetail() {
         init();
@@ -60,6 +60,16 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     
     @Override
     public void init() {
+
+        this.save = new JButton("Save");
+        this.description = new JTextArea();
+        this.latestNote = new JTextArea();
+        this.parent = new JTextField();
+        this.deadline = new JTextField();
+        this.lastModified = new JTextField();
+        this.status = new JComboBox();
+        this.priority = new JComboBox();
+        this.assignedUsers = new JComboBox();
 
         this.setLayout(new BorderLayout(5,5));
         JPanel descriptionPanel = new JPanel(new BorderLayout());
@@ -172,19 +182,17 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.parent.setText(((Integer)id).toString());
     }
     
-    public void setDeadline(String deadline) {
+    public void setDeadline(Date deadline) {
         try {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date = (Date)formatter.parse(deadline);
-            this.deadline.setText(formatter.format(date));
+            this.deadline.setText(formatter.format(deadline));
         } catch (Exception e) { }
     }
     
-    public void setLastModified(String lastModified) {
+    public void setLastModified(Date lastModified) {
         try {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date = (Date)formatter.parse(lastModified);
-            this.lastModified.setText(formatter.format(date));
+            this.lastModified.setText(formatter.format(deadline));
         } catch (Exception e) { }
     }
     
@@ -221,11 +229,30 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
 
     public void setAllToNull() {
         this.setAssignedUsers(null);
-        this.setDeadline("");
+        this.setDeadline(null);
         this.setDescription("");
         this.setLastNote(null);
-        this.setLastModified("");
+        this.setLastModified(null);
         this.setParent(0);
         this.setPriority(null);
+    }
+
+    public void loadFromWorkItem(WorkItem wi) {
+        setAllToNull();
+
+        NoteCollection nc = wi.getNoteCollection();
+        Project p = wi.getProject();
+        User u = wi.getAssignedUser();
+        WorkItem pwi = wi.getParent();
+
+        setDescription(wi.getDescription());
+        setParent((pwi != null) ? (pwi.getId()) : 0);
+        setDeadline(wi.getExpectedTimestamp());
+        setLastModified(wi.getLastModifiedTimestamp());
+        setAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
+        selectUser((u != null) ? (u.getLogin()) : null);
+        setPriority(wi.getPriority());
+        setStatus(wi.getStatus());
+        setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
     }
 }

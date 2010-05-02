@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
+import notwa.exception.SignInException;
 import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
@@ -114,13 +115,8 @@ public class MainWindow extends JFrame {
         /*
          * Show login dialog
          */
-        LoginDialog ld = new LoginDialog();
-        ld.onFireSecurityEvent(new EventHandler<SecurityEvent>() {
-            @Override
-            public void handleEvent(SecurityEvent e) {
-                handleSecurityEvent(e);
-            }
-        });
+        invokeLogin(null);
+        
     }
 
     private ConnectionInfo getActiveConnectionInfo() {
@@ -155,6 +151,7 @@ public class MainWindow extends JFrame {
                 break;
             case GuiEventParams.TABLE_ROW_SORTER_CHANGED:
                 invokeTableRowSorterChanged(e.getParams());
+                break;
             default:
                 LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
@@ -163,8 +160,8 @@ public class MainWindow extends JFrame {
 
     public void handleSecurityEvent(SecurityEvent e) {
         switch (e.getEventId()) {
-            case SecurityEventParams.SECURITY_EVENT_SUCCESSFUL_LOGIN:
-                invokeSuccessfulLogin(e.getParams());
+            case SecurityEventParams.SECURITY_EVENT_REQUEST_LOGIN:
+                invokeLogin(e.getParams());
                 break;
             default:
                 LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
@@ -203,10 +200,6 @@ public class MainWindow extends JFrame {
         AssignmentManager um = new AssignmentManager(getActiveConnectionInfo(), getActivetContext());
     }
 
-    private void invokeSuccessfulLogin(SecurityEventParams params) {
-        mll.createWitView(params.getConnectionInfo(), params.getCredentials());
-    }
-
     private void invokeTableRowSorterChanged(GuiEventParams params) {
         menu.setSorter((TableRowSorter<TblModel>) params.getParams());
     }
@@ -216,6 +209,22 @@ public class MainWindow extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             LoggingFacade.handleException(ex);
+        }
+    }
+
+    private void invokeLogin(SecurityEventParams params) {
+        LoginDialog ld = new LoginDialog();
+        LoginDialog.SignInParams sip = ld.getSignInParams();
+        if ((sip.credentials != null) && (sip.credentials.isValid())) {
+            IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<LoginDialog.SignInParams>(sip) {
+
+                @Override
+                public void perform() {
+                    mll.createWitView(params.connectionInfo, params.credentials);
+                }
+            }, statusBar);
+
+            ipt.run();
         }
     }
 }

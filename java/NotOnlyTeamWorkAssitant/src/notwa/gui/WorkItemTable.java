@@ -28,23 +28,27 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
+import notwa.common.EventHandler;
 
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
-import notwa.wom.WorkItemPriority;
-import notwa.wom.WorkItemStatus;
 
 public class WorkItemTable extends JComponent implements ListSelectionListener {
 
-    private String[] tableHeaders = {"Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
+    private static final String[] tableHeaders = {"Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private JTable witTable;
     private TblModel witTableModel;
     private TableRowSorter<TblModel> sorter;
+    private EventHandler<GuiEvent> guiHandler;
 
     public WorkItemTable(WorkItemCollection wic) {
+        init(wic);
+    }
+
+    private void init(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
-        
+
         witTableModel = new TblModel(wic, tableHeaders);
         witTable = new JTable();
         witTable.setModel(witTableModel);
@@ -52,7 +56,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
 
         sorter = new TableRowSorter<TblModel>(witTableModel);
         witTable.setRowSorter(sorter);
-        
+
         witTable.getSelectionModel().addListSelectionListener(this);
 
         this.resizeAndColorizeTable();
@@ -61,10 +65,14 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
          * Hide last column containing whole WorkItem for WorkItemDetail
          */
         witTable.getColumnModel().removeColumn(witTable.getColumnModel().getColumn(6));
-        
+
         JScrollPane jsp = new JScrollPane(witTable);
-        
+
         this.add(jsp, BorderLayout.CENTER);
+    }
+
+    public void onFireSelectedRowChanged(EventHandler<GuiEvent> handler) {
+        this.guiHandler = handler;
     }
     
     private void resizeAndColorizeTable() {
@@ -97,58 +105,12 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     }
 
     public void refreshDetail() {
-        try {
-            WorkItemDetail.getInstance().setDescription(this.getSelected().getDescription());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setDescription("");
-        }
-        try {
-            WorkItemDetail.getInstance().setParent(this.getSelected().getParent().getId());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setParent(0);
-        }
-        try {
-            WorkItemDetail.getInstance().setDeadline(this.getSelected().getExpectedTimestamp().toString());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setDeadline("unspecified");
-        }
-        try {
-            WorkItemDetail.getInstance().setLastModified(this.getSelected().getLastModifiedTimestamp().toString());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setLastModified("unspecified");
-        }
-        try {
-            WorkItemDetail.getInstance().setAssignedUsers(this.getSelected().getProject().getAssignedUsers());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setAssignedUsers(null);
-        }
-        try {
-            WorkItemDetail.getInstance().selectUser(this.getSelected().getAssignedUser().getLogin());
-        } catch (Exception e) {}
-        try {
-            WorkItemDetail.getInstance().setPriority(this.getSelected().getPriority());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setPriority(WorkItemPriority.NICE_TO_HAVE);
-        }
-        try {
-            WorkItemDetail.getInstance().setStatus(this.getSelected().getStatus());
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setStatus(WorkItemStatus.WATCH);
-        }
-        try {
-            WorkItemDetail.getInstance().setLastNote(this.getSelected().getNoteCollection().get(0));
-        } catch (Exception e) {
-            WorkItemDetail.getInstance().setLastNote(null);
-        }
-        try {
-            WorkItemNoteHistoryTable.getInstance().setNoteCollection(this.getSelected().getNoteCollection());
-        } catch (Exception e) {
-            WorkItemNoteHistoryTable.getInstance().setNoteCollection(null);
-        }
+        
     }
     
     @Override
     public void valueChanged(ListSelectionEvent lse) {
-        this.refreshDetail();
+        GuiEventParams gep = new GuiEventParams(GuiEventParams.SELECTED_ROW_CHANGED, this.getSelected());
+        guiHandler.handleEvent(new GuiEvent(gep));
     }
 }

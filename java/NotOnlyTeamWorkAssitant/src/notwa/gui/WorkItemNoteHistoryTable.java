@@ -20,31 +20,28 @@
 package notwa.gui;
 
 import java.awt.GridLayout;
-
 import javax.swing.JComponent;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import notwa.wom.NoteCollection;
+import notwa.wom.WorkItem;
 
-public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
-    private static WorkItemNoteHistoryTable instance;
+public class WorkItemNoteHistoryTable extends JComponent {
+    private static final String[] tableHeaders = {"Note author", "Text"};
     private TblModel nhTableModel;
     private JTable nhTable;
-    private String[] tableHeaders = {"Note author", "Text"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     
     private NoteCollection noteCollection;
-    
-    public static WorkItemNoteHistoryTable getInstance() {
-        if (instance == null) {
-            instance = new WorkItemNoteHistoryTable();
-        }
-        return instance;
+
+    public WorkItemNoteHistoryTable() {
+        init();
     }
 
-    public JComponent initNoteHistoryTable() {
+    public void init() {
         this.setLayout(new GridLayout(1,0));
 
         nhTableModel = new TblModel(noteCollection, tableHeaders);
@@ -54,14 +51,12 @@ public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
         this.resizeAndColorizeTable();
 
         this.add(new JScrollPane(nhTable));
-        
-        return this;
     }
     
     private void resizeAndColorizeTable() {
-                nhTable.getColumnModel().getColumn(0).setMaxWidth(100);
-                nhTable.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
-                nhTable.getColumnModel().getColumn(1).setCellRenderer(tableCellRenderer);
+        nhTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        nhTable.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
+        nhTable.getColumnModel().getColumn(1).setCellRenderer(tableCellRenderer);
     }
     
     public void setNoteCollection(NoteCollection nc) {
@@ -73,5 +68,9 @@ public class WorkItemNoteHistoryTable extends WorkItemDetailLayout{
 
     public void setAllToNull() {
         this.setNoteCollection(null);
+    }
+
+    public void loadFromWorkItem(WorkItem wi) {
+        setNoteCollection(wi.getNoteCollection());
     }
 }

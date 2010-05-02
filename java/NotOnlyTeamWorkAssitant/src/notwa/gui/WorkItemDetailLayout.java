@@ -27,10 +27,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 import notwa.common.EventHandler;
+import notwa.wom.WorkItem;
 
 public class WorkItemDetailLayout extends JComponent implements ActionListener {
-    JTabbedPane detailTabs = new JTabbedPane();
-    JButton hideDetail = new JButton("Hide detail");
+    private JTabbedPane detailTabs;
+    private JButton hideDetail;
     private WorkItemDetail wid;
     private WorkItemNoteHistoryTable winht;
     private EventHandler<GuiEvent> guiHandler;
@@ -40,29 +41,36 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     }
     
     public void init() {
-        this.setLayout(new BorderLayout());
-    
-        this.add(hideDetail, BorderLayout.PAGE_START);
-        hideDetail.addActionListener(this);
-        
+
+        /**
+         * Instantiate all GUI components
+         */
+        detailTabs = new JTabbedPane();
+        hideDetail = new JButton("Hide detail");
         wid = new WorkItemDetail();
+        winht = new WorkItemNoteHistoryTable();
 
+        /**
+         * Setup the hide detail button
+         */
+        hideDetail.addActionListener(this);
+
+        /**
+         * Setup the tabs
+         */
         detailTabs.addTab("Detail", wid);
-        detailTabs.addTab("Notes history", WorkItemNoteHistoryTable.getInstance().initNoteHistoryTable());
+        detailTabs.addTab("Notes history", winht);
 
+        /**
+         * Setup this component
+         */
+        this.setLayout(new BorderLayout());
+        this.add(hideDetail, BorderLayout.PAGE_START);
         this.add(detailTabs, BorderLayout.CENTER);
     }
 
     public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
         this.guiHandler = guiHandler;
-    }
-
-    public WorkItemDetail getWorkItemDetail() {
-        return this.wid;
-    }
-    
-    public WorkItemNoteHistoryTable getWorkItemNoteHistoryTable() {
-        return this.winht;
     }
     
     @Override
@@ -73,5 +81,10 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     public void setDataToNull() {
         wid.setAllToNull();
         winht.setAllToNull();
+    }
+
+    public void onSelectedWorkItemChanged(WorkItem wi) {
+        wid.loadFromWorkItem(wi);
+        winht.loadFromWorkItem(wi);
     }
 }

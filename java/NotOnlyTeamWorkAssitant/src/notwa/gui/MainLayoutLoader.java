@@ -38,10 +38,12 @@ import notwa.common.EventHandler;
 import notwa.logger.LoggingFacade;
 import notwa.security.Credentials;
 import notwa.security.SecurityEvent;
+import notwa.security.SecurityEventParams;
 import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
 import notwa.sql.Sql;
+import notwa.wom.WorkItem;
 
 //TODO: must be loaded from config - lastly used tabs(databases) etc.
 public class MainLayoutLoader extends JComponent implements ActionListener, ChangeListener {
@@ -70,9 +72,9 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
          * Instantiate all GUI components
          */
         widl = new WorkItemDetailLayout();
-        sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabPanel, widl);
         tabPanel = new JTabbedPane();
         plusButton = new JButton("+");
+        sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabPanel, widl);
 
         /**
          * Setup the plus button
@@ -84,14 +86,20 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         /**
          * Setup the tab panel
          */
-        tabPanel.addTab(null, new JLabel(   "Welcome to NOT Only Team Work Assistent - To beggin working, click on \"+\" button to login into Database"));
+        tabPanel.addTab(null, new JLabel("Welcome to NOT Only Team Work Assistent - To beggin working, click on \"+\" button to login into Database"));
         tabPanel.addChangeListener(this);
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
 
         /**
          * Setup the work item detail layout
          */
-        widl.onFireGuiEvent(guiHandler);
+        widl.onFireGuiEvent(new EventHandler<GuiEvent>() {
+
+            @Override
+            public void handleEvent(GuiEvent e) {
+                handleGuiEvent(e);
+            }
+        });
 
         /**
          * Setup the split pane
@@ -108,6 +116,14 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
 
     public void createWitView(ConnectionInfo ci, Credentials credentials) {
         TabContent tc = new TabContent(ci, new ParameterSet( new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Relation.EQUALTY)));
+        tc.onFireGuiEvent(new EventHandler<GuiEvent>() {
+
+            @Override
+            public void handleEvent(GuiEvent e) {
+                handleGuiEvent(e);
+            }
+        });
+
         tabPanel.insertTab(ci.getLabel(), null, tc, null, tabPanel.getTabCount() - 1);
         tabPanel.setSelectedIndex(tabPanel.getTabCount() - 2);
     }
@@ -120,8 +136,8 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == plusButton) {
-            LoginDialog ld = new LoginDialog();
-            ld.onFireSecurityEvent(securityHandler);
+            SecurityEventParams sep = new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_REQUEST_LOGIN);
+            securityHandler.handleEvent(new SecurityEvent(sep));
         }
     }
 
@@ -146,7 +162,28 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         }
     }
 
+    private void handleGuiEvent(GuiEvent ge) {
+        switch (ge.getEventId()) {
+            case GuiEventParams.SELECTED_ROW_CHANGED:
+                invokeSelectedRowChanged(ge.getParams());
+                ge.setHandled(true);
+                break;
+            case GuiEventParams.ACTION_EVENT_HIDE_DETAIL:
+                hideDetail();
+                ge.setHandled(true);
+                break;
+        }
+
+        if (!ge.isHandled()) {
+            this.guiHandler.handleEvent(ge);
+        }
+    }
+
     public synchronized void refreshDataOnActiveTab() {
         getActiveTab().dataRefresh();
+    }
+
+    private void invokeSelectedRowChanged(GuiEventParams params) {
+        widl.onSelectedWorkItemChanged((WorkItem) params.getParams());
     }
 }

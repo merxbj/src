@@ -29,6 +29,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import notwa.common.ConnectionInfo;
+import notwa.common.EventHandler;
 import notwa.dal.WorkItemDal;
 import notwa.sql.ParameterSet;
 import notwa.wom.Context;
@@ -44,6 +45,7 @@ public class TabContent extends JComponent implements ActionListener {
     private ParameterSet ps;
     private WorkItemTable wiTable;
     private JComboBox userDefinedFiltersBox, defaultSortBox;
+    private EventHandler<GuiEvent> guiHandler;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
@@ -67,10 +69,24 @@ public class TabContent extends JComponent implements ActionListener {
         
         JPanel topPanel = new JPanel(new BorderLayout());
         wiTable = new WorkItemTable(wic);
+        wiTable.onFireSelectedRowChanged(new EventHandler<GuiEvent>() {
+
+            @Override
+            public void handleEvent(GuiEvent e) {
+                if (guiHandler != null) {
+                    guiHandler.handleEvent(e);
+                }
+            }
+        });
+
         topPanel.add(this.initButtons(), BorderLayout.PAGE_START);
         topPanel.add(wiTable, BorderLayout.CENTER);
         
         this.add(topPanel, BorderLayout.CENTER);
+    }
+
+    public void onFireGuiEvent(EventHandler<GuiEvent> handler) {
+        this.guiHandler = handler;
     }
     
     private void fillDefaultSortingItems(JComboBox jcb) { // TODO

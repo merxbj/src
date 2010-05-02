@@ -16,19 +16,17 @@ import javax.swing.ListSelectionModel;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
-import notwa.exception.ContextException;
-import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
 public class UserManagement extends JDialog implements ActionListener {
+    private static final String[] tableHeaders = new String[]{"Login", "Name", "Last name"};
     private JButton closeButton, addButton, editButton, delButton;
     private Context context;
     private ConnectionInfo ci;
     private JTable table;
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
-    private String[] tableHeaders = new String[]{"Login", "Name", "Last name"};
     private UserCollection uc;
     private UserDal ud;
     

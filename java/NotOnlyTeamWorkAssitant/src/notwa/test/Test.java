@@ -12,6 +12,7 @@ public class Test {
 //        CloningTest ct = new CloningTest();
 //        WorkItemDalTest widt = new WorkItemDalTest();
         /*ConfigTest ct = new ConfigTest();*/
+        //new BusinessObjectsTest();
     }
 
 }
