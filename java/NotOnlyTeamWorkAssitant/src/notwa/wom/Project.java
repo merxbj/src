@@ -143,6 +143,12 @@ public class Project extends BusinessObject implements Comparable<Project>, Clon
      */
     public boolean addAssignedUser(User assignedUser) throws ContextException {
         return this.assignedUsers.add(new AssignedUser(assignedUser, this));
+        //TODO
+            /*Exception occurred during event dispatching:
+            java.lang.NullPointerException
+            at notwa.wom.Project.addAssignedUser(Project.java:145)
+            at notwa.gui.WorkItemEditor.actionPerformed(WorkItemEditor.java:300)
+             */
     }
 
     /**
