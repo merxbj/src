@@ -166,17 +166,16 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> extends
      * @param bo    <code>BusinessObject</code> to be mark for removal from this
      *              <code>BusinessObjectCollection</code>
      * @return <code>true</code> if the mark success, <code>false</code> otherwise
-     * @throws ContextException If either the <code>BusinessObject</code> or <code>BusinessObjectCollection</code>
-     *                          are not <code>Context</code> aware, or they live in different <code>Context</code>s.
      */
-    public boolean remove(T bo) throws ContextException {
+    public boolean remove(T bo) {
         /*
          * Make sure that we are context aware and both BusinessObject and
          * BusinessObjectCollection lives in the same context!
          */
         if ((bo.getCurrentContext() == null) || (this.getCurrentContext() == null) ||
                 !bo.getCurrentContext().equals(this.getCurrentContext())) {
-            throw new ContextException("BusinessObject lives in another context than BusinessObjectCollection!");
+            LoggingFacade.getLogger().logError("BusinessObject lives in another context than BusinessObjectCollection!");
+            return false;
         }
 
         /*

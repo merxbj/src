@@ -22,7 +22,6 @@ package notwa.wom;
 
 import java.lang.reflect.Field;
 import notwa.logger.LoggingFacade;
-import notwa.exception.ContextException;
 
 /**
  * Abstract class representing a single <code>BusinessObject</code> and providing
@@ -130,12 +129,8 @@ public abstract class BusinessObject {
      * and therefore it is removed from it.</p>
      */
     public void detach() {
-        try {
-            this.attachedBOC.remove(this);
-            this.attachedBOC = null;
-        } catch (ContextException cex) {
-            LoggingFacade.handleException(cex);
-        }
+        this.attachedBOC.remove(this);
+        this.attachedBOC = null;
     }
 
     /**
