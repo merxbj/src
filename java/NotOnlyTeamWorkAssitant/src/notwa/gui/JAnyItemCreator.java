@@ -19,11 +19,11 @@
  */
 package notwa.gui;
 
-public class JListItemCreator {
+public class JAnyItemCreator {
     Object object;
     String value;
 
-    public JListItemCreator(Object object, String value) {
+    public JAnyItemCreator(Object object, String value) {
         this.object = object;
         this.value = value;
     }

@@ -44,7 +44,7 @@ public class TabContent extends JComponent implements ActionListener {
     private WorkItemCollection wic;
     private ParameterSet ps;
     private WorkItemTable wiTable;
-    private JComboBox userDefinedFiltersBox, defaultSortBox;
+    private JComboBox userDefinedFiltersBox;
     private EventHandler<GuiEvent> guiHandler;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
@@ -89,17 +89,11 @@ public class TabContent extends JComponent implements ActionListener {
         this.guiHandler = handler;
     }
     
-    private void fillDefaultSortingItems(JComboBox jcb) { // TODO
-        jcb.addItem("Product");
-        jcb.addItem("Status");
-        jcb.addItem("Priority");
-    }
-    
     private void fillUserDefinedFilterItems(JComboBox jcb) { // TODO
         jcb.addItem("Product = notwa");
         jcb.addItem("Status = IN_PROGRESS");
         jcb.addItem("Priority = critical");
-        jcb.addItem("Configure ..."); //TODO same ref as mainMenu>Configure sort/filter
+        jcb.addItem("Configure ...");
     }
     
     private JPanel initButtons() {
@@ -114,23 +108,19 @@ public class TabContent extends JComponent implements ActionListener {
         leftButtonsPanel.add(addButton);
         
         buttonsPanel.add(leftButtonsPanel, BorderLayout.LINE_START);
-        buttonsPanel.add(this.initFilteringComboBoxes(), BorderLayout.LINE_END);
+        buttonsPanel.add(this.initFilteringComboBox(), BorderLayout.LINE_END);
         
         return buttonsPanel;
     }
     
-    private JPanel initFilteringComboBoxes() {
+    private JPanel initFilteringComboBox() {
         JPanel jp = new JPanel();
         
-        defaultSortBox = new JComboBox();
-        defaultSortBox.addActionListener(this);
         userDefinedFiltersBox = new JComboBox();
         userDefinedFiltersBox.addActionListener(this);
         
-        fillDefaultSortingItems(defaultSortBox);
         fillUserDefinedFilterItems(userDefinedFiltersBox);
         
-        jp.add(defaultSortBox);
         jp.add(userDefinedFiltersBox);
         
         return jp; 

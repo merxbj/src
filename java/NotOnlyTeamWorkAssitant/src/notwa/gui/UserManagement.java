@@ -29,6 +29,7 @@ public class UserManagement extends JDialog implements ActionListener {
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private UserCollection uc;
     private UserDal ud;
+    private TblModel tblModel;
     
     public UserManagement(ConnectionInfo ci, Context context) {
         this.context = context;
@@ -55,7 +56,7 @@ public class UserManagement extends JDialog implements ActionListener {
         uc = new UserCollection(context);
         ud.fill(uc);
         
-        TblModel tblModel = new TblModel(uc, tableHeaders);
+        tblModel = new TblModel(uc, tableHeaders);
         table = new JTable(tblModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
@@ -90,7 +91,7 @@ public class UserManagement extends JDialog implements ActionListener {
     
     private User getSelectedUser() {
         Object element = this.table.getValueAt(table.getSelectedRow(), 0);
-        return (User)((JListItemCreator)element).getAttachedObject();
+        return (User)((JAnyItemCreator)element).getAttachedObject();
     }
     
     @Override
@@ -102,7 +103,7 @@ public class UserManagement extends JDialog implements ActionListener {
             ue.init();
             uc.add(user);
             ud.update(uc);
-            table.revalidate();
+            tblModel.fireTableDataChanged();
         }
 
         if (ae.getSource() == editButton) {
