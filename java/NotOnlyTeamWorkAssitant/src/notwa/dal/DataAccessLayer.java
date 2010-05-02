@@ -19,6 +19,7 @@
  */
 package notwa.dal;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
@@ -311,7 +312,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      */
     protected Integer getLastUniqeIdentifier(TObject bo) throws DalException {
         try {
-            return getConnection().executeScalar(getHighestUniqeIdentifierSql(bo));
+            return ((BigDecimal)getConnection().executeScalar(getHighestUniqeIdentifierSql(bo))).intValue();
         } catch (Exception ex) {
             throw new DalException(String.format("Unexpected error occured while getting a last uniqe identifier for %s!", bo.toString()), ex);
         }
