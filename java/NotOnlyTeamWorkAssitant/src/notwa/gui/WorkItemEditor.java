@@ -123,6 +123,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         lUser.setBounds(120, 212, 56, 15);
         jp.add(lUser);
         jp.add(loadUsers());
+        //TODO select currently logged user
         
         JLabel lSubject = new JLabel("Subject");
         lSubject.setBounds(63, 96, 78, 15);

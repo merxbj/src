@@ -21,6 +21,7 @@ package notwa.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,10 +31,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import notwa.dal.NoteDal;
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.wom.Project;
@@ -44,7 +48,7 @@ import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 public class WorkItemDetail extends WorkItemDetailLayout implements ActionListener {
-    private JButton save;
+    private JButton save,addNote;
     private JTextArea description;
     private JTextArea latestNote;
     private JTextField parent;
@@ -53,6 +57,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox status;
     private JComboBox priority;
     private JComboBox assignedUsers;
+    private WorkItem currentWorkItem;
+    private WorkItemNoteHistoryTable winht;
 
     public WorkItemDetail() {
         init();
@@ -62,6 +68,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     public void init() {
 
         this.save = new JButton("Save");
+        this.addNote = new JButton("Add note");
         this.description = new JTextArea();
         this.latestNote = new JTextArea();
         this.parent = new JTextField();
@@ -99,6 +106,10 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             
         JPanel buttonsPanel = new JPanel();
         
+        save.addActionListener(this);
+        addNote.addActionListener(this);
+        
+        buttonsPanel.add(addNote);
         buttonsPanel.add(save);
         
         JPanel bottomPanel = new JPanel(new BorderLayout(5,5));
@@ -228,6 +239,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
 
     public void setAllToNull() {
+        this.currentWorkItem = null;
         this.setAssignedUsers(null);
         this.setDeadline(null);
         this.setDescription("");
@@ -239,6 +251,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
 
     public void loadFromWorkItem(WorkItem wi) {
         setAllToNull();
+        
+        this.currentWorkItem = wi;
 
         NoteCollection nc = wi.getNoteCollection();
         Project p = wi.getProject();
@@ -254,5 +268,41 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         setPriority(wi.getPriority());
         setStatus(wi.getStatus());
         setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
+    }
+    
+    public void setWorkItemNoteHistoryTable(WorkItemNoteHistoryTable winht) {
+        this.winht = winht;
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == addNote) {
+            final JTextArea textArea = new JTextArea();
+            JScrollPane scrollPane = new JScrollPane(textArea);     
+            scrollPane.setPreferredSize(new Dimension(350, 150));
+            
+            JTextField tf = new JTextField();
+            tf.setPreferredSize(new Dimension(500,200));
+            
+            Object[] msg = {"Enter new message", tf};
+            int result = JOptionPane.showConfirmDialog(this, msg, "NOTWA - Add new note", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if(result == JOptionPane.OK_OPTION) {
+                if(!tf.getText().equals("")) {
+                    NoteCollection nc = currentWorkItem.getNoteCollection();
+                    Note note = new Note(currentWorkItem.getId());
+                    note.registerWithContext(currentWorkItem.getCurrentContext());
+                    note.setAuthor(currentWorkItem.getAssignedUser()); // TODO currentlyLoggedUser
+                    note.setNoteText(tf.getText());
+                    note.setInserted(true);
+                    nc.add(note);
+                    
+                    NoteDal nd = new NoteDal(ci, currentWorkItem.getCurrentContext());
+                    nd.update(nc);
+                    
+                    this.loadFromWorkItem(currentWorkItem);
+                    winht.loadFromWorkItem(currentWorkItem);
+                }
+            }
+        }
     }
 }

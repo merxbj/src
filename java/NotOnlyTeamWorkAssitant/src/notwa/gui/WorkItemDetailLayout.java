@@ -26,15 +26,20 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
+
+import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
+import notwa.wom.Context;
 import notwa.wom.WorkItem;
 
 public class WorkItemDetailLayout extends JComponent implements ActionListener {
     private JTabbedPane detailTabs;
     private JButton hideDetail;
-    private WorkItemDetail wid;
-    private WorkItemNoteHistoryTable winht;
+    protected WorkItemDetail wid;
+    protected WorkItemNoteHistoryTable winht;
     private EventHandler<GuiEvent> guiHandler;
+    protected Context context;
+    protected ConnectionInfo ci;
 
     public WorkItemDetailLayout() {
         init();
@@ -83,8 +88,11 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         winht.setAllToNull();
     }
 
-    public void onSelectedWorkItemChanged(WorkItem wi) {
+    public void onSelectedWorkItemChanged(WorkItem wi, ConnectionInfo connectionInfo, Context context) {
+        this.context = context;
+        this.ci = connectionInfo;
         wid.loadFromWorkItem(wi);
         winht.loadFromWorkItem(wi);
+        wid.setWorkItemNoteHistoryTable(winht);
     }
 }

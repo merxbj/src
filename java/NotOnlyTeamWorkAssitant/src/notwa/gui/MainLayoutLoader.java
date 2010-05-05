@@ -184,6 +184,6 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     private void invokeSelectedRowChanged(GuiEventParams params) {
-        widl.onSelectedWorkItemChanged((WorkItem) params.getParams());
+        widl.onSelectedWorkItemChanged((WorkItem) params.getParams(), getActiveTab().getConnectionInfo(), getActiveTab().getContext());
     }
 }
