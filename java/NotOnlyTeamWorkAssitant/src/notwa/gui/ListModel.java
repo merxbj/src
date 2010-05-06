@@ -1,7 +1,6 @@
 package notwa.gui;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 import javax.swing.DefaultListModel;
 

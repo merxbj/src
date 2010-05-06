@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
-import notwa.exception.SignInException;
+import notwa.gui.tablemodels.WorkItemlModel;
 import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
@@ -201,7 +201,7 @@ public class MainWindow extends JFrame {
     }
 
     private void invokeTableRowSorterChanged(GuiEventParams params) {
-        menu.setSorter((TableRowSorter<TblModel>) params.getParams());
+        menu.setSorter((TableRowSorter<WorkItemlModel>) params.getParams());
     }
 
     private void trySetLookAndFeel() {

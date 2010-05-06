@@ -29,18 +29,20 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import notwa.common.EventHandler;
+import notwa.gui.tablemodels.ColumnSettings;
+import notwa.gui.tablemodels.WorkItemlModel;
 
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 
 public class WorkItemTable extends JComponent implements ListSelectionListener {
 
-    private static final String[] tableHeaders = {"Product", "WIT ID", "Subject", "Priority", "Assigned", "Status", "WI"};
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private JTable witTable;
-    private TblModel witTableModel;
-    private TableRowSorter<TblModel> sorter;
+    private WorkItemlModel witTableModel;
+    private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
+    private WorkItemCollection wic;
 
     public WorkItemTable(WorkItemCollection wic) {
         init(wic);
@@ -48,23 +50,19 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
 
     private void init(WorkItemCollection wic) {
         this.setLayout(new BorderLayout());
+        this.wic = wic;
 
-        witTableModel = new TblModel(wic, tableHeaders);
+        witTableModel = new WorkItemlModel(wic);
         witTable = new JTable();
         witTable.setModel(witTableModel);
         witTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        sorter = new TableRowSorter<TblModel>(witTableModel);
+        sorter = new TableRowSorter<WorkItemlModel>(witTableModel);
         witTable.setRowSorter(sorter);
 
         witTable.getSelectionModel().addListSelectionListener(this);
 
         this.resizeAndColorizeTable();
-
-        /*
-         * Hide last column containing whole WorkItem for WorkItemDetail
-         */
-        witTable.getColumnModel().removeColumn(witTable.getColumnModel().getColumn(6));
 
         JScrollPane jsp = new JScrollPane(witTable);
 
@@ -76,22 +74,28 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     }
     
     private void resizeAndColorizeTable() {
-        for (int c = 0; c < tableHeaders.length-1; c++) {
-            if(!tableHeaders[c].equals("Subject")) { // we want to see as much as possible of subject
+        
+        for (int c = 0; c < witTableModel.getColumnCount() ; c++) {
+
+            ColumnSettings cs = witTableModel.getColumnSettings(c);
+            if (cs.getColumnAlias() != WorkItemlModel.WorkItemTableColumn.COLUMN_WORK_ITEM_SUBJECT_ALIAS) {
+                /**
+                 * We want to see as much as possible of subject so shorten all else
+                 */
                 witTable.getColumnModel().getColumn(c).setMinWidth(100);
                 witTable.getColumnModel().getColumn(c).setMaxWidth(100);
             }
-                witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
+
+            witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
         }
     }
     
     public WorkItem getSelected() {
-        return (WorkItem) this.witTable.getModel()
-                                       .getValueAt(witTable.convertRowIndexToModel(
-                                                    witTable.getSelectedRow()), 6);
+        int selectedIndex = witTable.convertRowIndexToModel(witTable.getSelectedRow());
+        return wic.get(selectedIndex);
     }
     
-    public TableRowSorter<TblModel> getSorter() {
+    public TableRowSorter<WorkItemlModel> getSorter() {
         return this.sorter;
     }
     

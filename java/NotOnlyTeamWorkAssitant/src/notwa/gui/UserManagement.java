@@ -1,5 +1,6 @@
 package notwa.gui;
 
+import notwa.gui.tablemodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -21,7 +22,7 @@ import notwa.wom.User;
 import notwa.wom.UserCollection;
 
 public class UserManagement extends JDialog implements ActionListener {
-    private static final String[] tableHeaders = new String[]{"Login", "Name", "Last name"};
+
     private JButton closeButton, addButton, editButton, delButton;
     private Context context;
     private ConnectionInfo ci;
@@ -29,7 +30,7 @@ public class UserManagement extends JDialog implements ActionListener {
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     private UserCollection uc;
     private UserDal ud;
-    private TblModel tblModel;
+    private UserManagementModel tblModel;
     
     public UserManagement(ConnectionInfo ci, Context context) {
         this.context = context;
@@ -56,7 +57,7 @@ public class UserManagement extends JDialog implements ActionListener {
         uc = new UserCollection(context);
         ud.fill(uc);
         
-        tblModel = new TblModel(uc, tableHeaders);
+        tblModel = new UserManagementModel(uc);
         table = new JTable(tblModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
