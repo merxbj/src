@@ -296,6 +296,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
                     note.setInserted(true);
                     nc.add(note);
                     
+                    //TODO <MERXBJ> exception about unique ID of Note ... BUT id is over 1m ...
                     NoteDal nd = new NoteDal(ci, currentWorkItem.getCurrentContext());
                     nd.update(nc);
                     
