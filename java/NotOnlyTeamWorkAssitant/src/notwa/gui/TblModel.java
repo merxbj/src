@@ -60,50 +60,54 @@ public class TblModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        Object record = getRecord(rowIndex);
+        
         if (tableHeader[columnIndex].equals("Product")) {
-            return ((WorkItem)getRecord(rowIndex)).getProject().getName();
+            return ((WorkItem)record).getProject().getName();
         }
         else if (tableHeader[columnIndex].equals("WIT ID")) {
-            return ((WorkItem)getRecord(rowIndex)).getId();
+            return ((WorkItem)record).getId();
         }
         else if (tableHeader[columnIndex].equals("Subject")) {
-            return ((WorkItem)getRecord(rowIndex)).getSubject();
+            return ((WorkItem)record).getSubject();
         }
         else if (tableHeader[columnIndex].equals("Priority")) {
+            WorkItem wi = (WorkItem)record;
             try {
-                return ((WorkItem)getRecord(rowIndex)).getPriority().toString();
+                return new JAnyItemCreator(wi.getPriority(), wi.getPriority().toString());
             } catch (Exception e) {
-                return WorkItemPriority.NICE_TO_HAVE.toString();
+                return new JAnyItemCreator(WorkItemPriority.NICE_TO_HAVE, WorkItemPriority.NICE_TO_HAVE.toString());
             }
         }
         else if (tableHeader[columnIndex].equals("Assigned")) {
-            return ((WorkItem)getRecord(rowIndex)).getAssignedUser().getLogin();
+            return ((WorkItem)record).getAssignedUser().getLogin();
         }
         else if (tableHeader[columnIndex].equals("Status")) {
+            WorkItem wi = (WorkItem)record;
             try {
-                return ((WorkItem)getRecord(rowIndex)).getStatus().toString();
+                return new JAnyItemCreator(wi.getStatus(), wi.getStatus().toString());
             } catch (Exception e) {
-                return WorkItemStatus.RESOLVE.toString();
+                return new JAnyItemCreator(WorkItemStatus.RESOLVE, WorkItemStatus.RESOLVE.toString());
             }
         }
         else if (tableHeader[columnIndex].equals("Note author")) {
-            return ((Note)getRecord(rowIndex)).getAuthor().getLogin();
+            return ((Note)record).getAuthor().getLogin();
         }
         else if (tableHeader[columnIndex].equals("Text")) {
-            return ((Note)getRecord(rowIndex)).getText();
+            return ((Note)record).getText();
         }
         else if (tableHeader[columnIndex].equals("Login")) {
-            User user = (User)getRecord(rowIndex);
+            User user = (User)record;
             return new JAnyItemCreator(user, user.getLogin());
         }
         else if (tableHeader[columnIndex].equals("Name")) {
-            return ((User)getRecord(rowIndex)).getFirstName();
+            return ((User)record).getFirstName();
         }
         else if (tableHeader[columnIndex].equals("Last name")) {
-            return ((User)getRecord(rowIndex)).getLastName();
+            return ((User)record).getLastName();
         }
         else {
-            return getRecord(rowIndex);
+            return record;
         }
     }
 

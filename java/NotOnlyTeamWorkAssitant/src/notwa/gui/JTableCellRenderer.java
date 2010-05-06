@@ -29,8 +29,6 @@ import notwa.common.ColorManager;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
-//TODO: rewrite it to our use
-
 public class JTableCellRenderer implements TableCellRenderer
 {
     public static final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
@@ -56,10 +54,12 @@ public class JTableCellRenderer implements TableCellRenderer
              * Colorize Priority and status cells with colors loaded from ColorManager class
              */
             try {
-                renderer.setBackground(ColorManager.getPriorityColor(WorkItemPriority.valueOf((String)value)));
+                WorkItemPriority wip = (WorkItemPriority)((JAnyItemCreator)value).getAttachedObject();
+                renderer.setBackground(ColorManager.getPriorityColor(wip));
             } catch (Exception e) { }
             try {
-                renderer.setBackground(ColorManager.getStatusColor(WorkItemStatus.valueOf((String)value)));
+                WorkItemStatus wis = (WorkItemStatus)((JAnyItemCreator)value).getAttachedObject();
+                renderer.setBackground(ColorManager.getStatusColor(wis));
             } catch (Exception e) { }
         }
         

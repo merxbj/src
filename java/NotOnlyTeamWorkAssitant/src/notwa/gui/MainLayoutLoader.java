@@ -41,7 +41,6 @@ import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
 import notwa.wom.WorkItem;
 
-//TODO: must be loaded from config - lastly used tabs(databases) etc.
 public class MainLayoutLoader extends JComponent implements ActionListener, ChangeListener {
     static JSplitPane sp;
     private JTabbedPane tabPanel;

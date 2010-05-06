@@ -54,7 +54,6 @@ public class TabContent extends JComponent implements ActionListener {
     private Credentials currentUser;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
-    //TODO: both must have parameter to know what information we want to show
     public TabContent(ConnectionInfo ci, Credentials user) {
         init(ci, user, getDefaultParameters(user));
     }

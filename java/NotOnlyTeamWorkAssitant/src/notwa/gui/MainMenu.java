@@ -98,7 +98,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
         /*
          * Build tools menu bar.
          */
-//TODO
         menu = new JMenu("Tools");
         menu.setMnemonic(KeyEvent.VK_T);
         

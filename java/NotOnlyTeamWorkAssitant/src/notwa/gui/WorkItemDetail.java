@@ -281,18 +281,18 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             JScrollPane scrollPane = new JScrollPane(textArea);     
             scrollPane.setPreferredSize(new Dimension(350, 150));
             
-            JTextField tf = new JTextField();
-            tf.setPreferredSize(new Dimension(500,200));
+            JTextArea ta = new JTextArea();
+            ta.setPreferredSize(new Dimension(500,200));
             
-            Object[] msg = {"Enter new message", tf};
+            Object[] msg = {"Enter new message", ta};
             int result = JOptionPane.showConfirmDialog(this, msg, "NOTWA - Add new note", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if(result == JOptionPane.OK_OPTION) {
-                if(!tf.getText().equals("")) {
+                if(!ta.getText().equals("")) {
                     NoteCollection nc = currentWorkItem.getNoteCollection();
                     Note note = new Note(currentWorkItem.getId());
                     note.registerWithContext(currentWorkItem.getCurrentContext());
                     note.setAuthor(currentWorkItem.getAssignedUser()); // TODO currentlyLoggedUser
-                    note.setNoteText(tf.getText());
+                    note.setNoteText(ta.getText());
                     note.setInserted(true);
                     nc.add(note);
                     

@@ -157,7 +157,7 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     
     @Override
     public String toString() {
-        String returnText = String.format("%d | %s | %s | %s",
+        String returnText = String.format("%s | %s | %s | %s",
                 id,
                 (getWorkItem() != null) ? getWorkItem().getSubject() : "wi:null",
                 text,

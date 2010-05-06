@@ -45,7 +45,6 @@ import notwa.wom.ProjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
-//TODO on project change ask if changes may to be saved or not
 public class AssignmentManager extends JDialog implements ActionListener {
     private JButton okButton, stornoButton, addButton, removeButton;
     private JComboBox projects;
