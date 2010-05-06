@@ -86,8 +86,8 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     }
     
     public WorkItem getSelected() {
-        return (WorkItem) this.witTable .getModel()
-                                        .getValueAt(witTable.convertRowIndexToModel(
+        return (WorkItem) this.witTable.getModel()
+                                       .getValueAt(witTable.convertRowIndexToModel(
                                                     witTable.getSelectedRow()), 6);
     }
     
