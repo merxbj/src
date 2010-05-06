@@ -22,7 +22,6 @@ package notwa.logger;
 import notwa.exception.LoggingException;
 import java.io.FileWriter;
 import java.io.File;
-import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -128,10 +127,8 @@ public class FileLogger extends Logger implements Observer {
 
         FileWriter fw = null;
         try {
-            String formattedMesage = String.format(message, args);
             fw = new FileWriter(fileName, true /* append */);
-            Date dt = new Date();
-            fw.append(String.format("%28s | %5s | %s\n", dt.toString(), level.toString(), formattedMesage));
+            fw.append(formatMessage(level, message, args));
         } catch (Exception ex) {
             // Exception caught during writing to log occurred
             reportLoggingException(ex);

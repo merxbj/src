@@ -20,6 +20,8 @@
 
 package notwa.logger;
 
+import java.util.Date;
+
 /**
  * The base class for all loggers. It mandates implementation of methods performing
  * the core logging implementation.
@@ -123,6 +125,20 @@ public abstract class Logger {
      * @param args The arguments to be formated into the given message.
      */
     public abstract void error(String message, Object... args);
+
+    /**
+     * Formats the log message according to the given parameters to make the
+     * different logging mechanisms to log uniformly.
+     * 
+     * @param level The log level under which the message logging has been demanded.
+     * @param message The format string of the message to be logged.
+     * @param args The args to be formmated into the given message.
+     */
+    protected String formatMessage(LogLevel level, String message, Object... args) {
+        String formattedMesage = String.format(message, args);
+        Date dt = new Date();
+        return String.format("%28s | %5s | %s\n", dt.toString(), level.toString(), formattedMesage);
+    }
 
     /**
      * Describes the actual value of the message logged.

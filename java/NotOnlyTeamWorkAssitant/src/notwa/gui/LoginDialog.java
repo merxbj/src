@@ -45,7 +45,7 @@ import notwa.threading.Action;
 import notwa.threading.IndeterminateProgressThread;
 
 public class LoginDialog extends JDialog implements ActionListener {
-    private JButton okButton, stornoButton;
+    private JButton okButton, stornoButton, mrneoButton, eterButton;
     private JComboBox jcb;
     private JTextField login;
     private JPasswordField password;
@@ -107,12 +107,18 @@ public class LoginDialog extends JDialog implements ActionListener {
         
         okButton = new JButton("Ok");
         stornoButton = new JButton("Storno");
+        mrneoButton = new JButton("mrneo");
+        eterButton = new JButton("eter");
         
         okButton.addActionListener(this);
         stornoButton.addActionListener(this);
+        mrneoButton.addActionListener(this);
+        eterButton.addActionListener(this);
         
         jp.add(okButton);
         jp.add(stornoButton);
+        jp.add(mrneoButton);
+        jp.add(eterButton);
         
         return jp;
     }
@@ -134,26 +140,28 @@ public class LoginDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            /*
-             * TODO del
-             */
-            login.setText("mrneo");
-            password.setText("aaaa");
-            /*
-             * 
-             */
-            if (    this.jcb.getSelectedItem().equals("") ||
-                    this.login.getText().isEmpty() ||
-                    this.password.getPassword().length == 0) {
+            if (!validateInput()) {
                 initErrorField("You must fill all fields");
-            }
-            else {
+            } else {
                 this.performSignIn();
             }
-        }
-        if (ae.getSource() == stornoButton) {
+        } else if (ae.getSource() == mrneoButton) {
+            login.setText("mrneo");
+            password.setText("aaaa");
+            performSignIn();
+        } else if (ae.getSource() == eterButton) {
+            login.setText("eter");
+            password.setText("bbbb");
+            performSignIn();
+        } else if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
+    }
+
+    private boolean validateInput() {
+        return (this.jcb.getSelectedItem().equals("") ||
+                this.login.getText().isEmpty() ||
+                this.password.getPassword().length == 0);
     }
 
     private void performSignIn() {

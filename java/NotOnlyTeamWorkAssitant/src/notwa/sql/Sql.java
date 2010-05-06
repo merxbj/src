@@ -59,6 +59,11 @@ public abstract class Sql {
          * Abstraction for the less or equals relation
          */
         public static final String LESS_OR_EQUALS       = "<=";
+
+        /**
+         * Abstraction for the not equals relation
+         */
+        public static final String NOT_EQUALS           = "!=";
     }
 
     /**

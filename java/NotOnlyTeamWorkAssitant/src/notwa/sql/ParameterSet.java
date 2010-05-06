@@ -19,7 +19,7 @@
  */
 package notwa.sql;
 
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 
 /**
  * The simple wrapper around the TreeSet enforcing a strong typed initialization
@@ -28,7 +28,7 @@ import java.util.TreeSet;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ParameterSet extends TreeSet<Parameter> {
+public class ParameterSet extends LinkedHashSet<Parameter> {
 
     /**
      * The simplest constructor initializing an empty set.

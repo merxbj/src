@@ -31,10 +31,15 @@ import javax.swing.JPanel;
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
 import notwa.dal.WorkItemDal;
+import notwa.security.Credentials;
+import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
+import notwa.sql.Parameters;
+import notwa.sql.Sql;
 import notwa.wom.Context;
 import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
+import notwa.wom.WorkItemStatus;
 
 public class TabContent extends JComponent implements ActionListener {
     JButton addButton,showHideButton,showDepButton;
@@ -46,19 +51,21 @@ public class TabContent extends JComponent implements ActionListener {
     private WorkItemTable wiTable;
     private JComboBox userDefinedFiltersBox;
     private EventHandler<GuiEvent> guiHandler;
+    private Credentials currentUser;
 
     //TODO: create new context menu on every TAB - 1. menu item - Close connection
     //TODO: both must have parameter to know what information we want to show
-    public TabContent(ConnectionInfo ci) {
-        init(ci, new ParameterSet());
+    public TabContent(ConnectionInfo ci, Credentials user) {
+        init(ci, user, getDefaultParameters(user));
     }
 
-    public TabContent(ConnectionInfo ci, ParameterSet ps) {
-        init(ci, ps);
+    public TabContent(ConnectionInfo ci, Credentials user, ParameterSet ps) {
+        init(ci, user, ps);
     }
     
-    public void init(ConnectionInfo ci, ParameterSet ps) {
+    public void init(ConnectionInfo ci, Credentials user, ParameterSet ps) {
         currentContext = ContextManager.getInstance().newContext();
+        currentUser = user;
         dal = new WorkItemDal(ci, currentContext);
         wic = new WorkItemCollection(currentContext);
         this.ps = ps;
@@ -164,5 +171,11 @@ public class TabContent extends JComponent implements ActionListener {
                 fd.init();
             }
         }
+    }
+
+    private ParameterSet getDefaultParameters(Credentials user) {
+        return new ParameterSet( new Parameter[] { 
+            new Parameter(Parameters.WorkItem.ASSIGNED_USER, user.getUserId(), Sql.Relation.EQUALTY),
+            new Parameter(Parameters.WorkItem.STATUS, WorkItemStatus.CLOSED.getValue(), Sql.Relation.NOT_EQUALS)});
     }
 }

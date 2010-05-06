@@ -51,7 +51,22 @@ public class LoggingFacade {
      */
     protected LoggingFacade() {
         ld = new LogDispatcher();
-        ld.registerLogger(new FileLogger("./log/notwa.log"));
+    }
+
+    /**
+     * Turns on the logging into the file represented as a path.
+     * 
+     * @param fileName The file to be logged into.
+     */
+    public void enableFileLogging(String fileName) {
+        ld.registerLogger(new FileLogger(fileName));
+    }
+
+    /**
+     * Turns on the logging into the debug window.
+     */
+    public void enableWindowLogging() {
+        ld.registerLogger(new WindowLogger());
     }
 
     /**

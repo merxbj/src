@@ -39,10 +39,6 @@ import notwa.logger.LoggingFacade;
 import notwa.security.Credentials;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
-import notwa.sql.Parameter;
-import notwa.sql.ParameterSet;
-import notwa.sql.Parameters;
-import notwa.sql.Sql;
 import notwa.wom.WorkItem;
 
 //TODO: must be loaded from config - lastly used tabs(databases) etc.
@@ -115,7 +111,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     public void createWitView(ConnectionInfo ci, Credentials credentials) {
-        TabContent tc = new TabContent(ci, new ParameterSet( new Parameter(Parameters.WorkItem.ASSIGNED_USER, credentials.getUserId(), Sql.Relation.EQUALTY)));
+        TabContent tc = new TabContent(ci, credentials);
         tc.onFireGuiEvent(new EventHandler<GuiEvent>() {
 
             @Override

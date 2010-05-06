@@ -72,7 +72,7 @@ public class WorkItemDal extends DataAccessLayer<WorkItem, WorkItemCollection> {
         vanillaSql.append("FROM Work_Item ");
         vanillaSql.append("/** STATEMENT=WHERE;RELATION=AND;");
         vanillaSql.append("        {column=work_item_id;parameter=WorkItemId;}");
-        vanillaSql.append("        {column=state_id;parameter=WorkItemStatusId;}");
+        vanillaSql.append("        {column=status_id;parameter=WorkItemStatusId;}");
         vanillaSql.append("        {column=working_priority;parameter=WorkItemPriorityId;}");
         vanillaSql.append("        {column=assigned_user_id;parameter=WorkItemAssignedUserId;}");
         vanillaSql.append("        {column=expected_timestamp;parameter=WorkItemDeadline;}");
