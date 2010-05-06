@@ -25,13 +25,13 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import notwa.gui.tablemodels.NoteHistoryModel;
 
 import notwa.wom.NoteCollection;
 import notwa.wom.WorkItem;
 
 public class WorkItemNoteHistoryTable extends JComponent {
-    private static final String[] tableHeaders = {"Note author", "Text"};
-    private TblModel nhTableModel;
+    private NoteHistoryModel nhTableModel;
     private JTable nhTable;
     private JTableCellRenderer tableCellRenderer = new JTableCellRenderer();
     
@@ -44,7 +44,7 @@ public class WorkItemNoteHistoryTable extends JComponent {
     public void init() {
         this.setLayout(new GridLayout(1,0));
 
-        nhTableModel = new TblModel(noteCollection, tableHeaders);
+        nhTableModel = new NoteHistoryModel(noteCollection);
         nhTable = new JTable(nhTableModel);
         nhTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -61,7 +61,7 @@ public class WorkItemNoteHistoryTable extends JComponent {
     
     public void setNoteCollection(NoteCollection nc) {
         try {
-            nhTable.setModel(new TblModel(nc, tableHeaders));
+            nhTable.setModel(new NoteHistoryModel(nc));
             this.resizeAndColorizeTable();
         } catch (Exception e) {} 
     }

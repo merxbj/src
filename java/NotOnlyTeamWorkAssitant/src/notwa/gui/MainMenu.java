@@ -39,6 +39,7 @@ import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
+import notwa.gui.tablemodels.WorkItemlModel;
 
 public class MainMenu extends JMenuBar implements ActionListener {
     private static final JTextField searchField = new JTextField("Type here ...");
@@ -50,7 +51,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenuItem mItemAssignmentManager;
     private JMenu menu;
     private JCheckBoxMenuItem cbWorkOffline;
-    private TableRowSorter<TblModel> sorter;
+    private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     
     public MainMenu() {
@@ -159,7 +160,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     }
     
     private void createFilter() {
-        RowFilter<TblModel, Object> rf = null;
+        RowFilter<WorkItemlModel, Object> rf = null;
         try {
             rf = RowFilter.regexFilter(searchField.getText(),0,1,2,3,4,5);
         } catch (java.util.regex.PatternSyntaxException e) {
@@ -168,7 +169,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.sorter.setRowFilter(rf);
     }
     
-    public void setSorter(TableRowSorter<TblModel> sorter) {
+    public void setSorter(TableRowSorter<WorkItemlModel> sorter) {
         this.sorter = sorter;
     }
     
