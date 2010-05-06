@@ -35,7 +35,6 @@ import javax.swing.event.ChangeListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
-import notwa.logger.LoggingFacade;
 import notwa.security.Credentials;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;
@@ -147,13 +146,23 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
      */
     @Override
     public void stateChanged(ChangeEvent ce) {
-        try {
+        TabContent activeTab = getActiveTab();
+        if (activeTab != null) {
             GuiEventParams gep = new GuiEventParams(GuiEventParams.TABLE_ROW_SORTER_CHANGED, getActiveTab().getWorkItemTable().getSorter());
-            guiHandler.handleEvent(new GuiEvent(gep));
-            getActiveTab().refresh();
-        } catch (Exception ex) {
-            LoggingFacade.handleException(ex);
+            if (fireGuiEvent(new GuiEvent(gep))) {
+                getActiveTab().refresh();
+            }
+        } else {
             widl.setDataToNull();
+        }
+    }
+
+    private boolean fireGuiEvent(GuiEvent ge) {
+        if (guiHandler != null) {
+            guiHandler.handleEvent(ge);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -170,7 +179,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         }
 
         if (!ge.isHandled()) {
-            this.guiHandler.handleEvent(ge);
+            fireGuiEvent(ge);
         }
     }
 
