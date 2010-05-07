@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import notwa.common.ColorManager;
+import notwa.gui.components.JAnyItemCreator;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 

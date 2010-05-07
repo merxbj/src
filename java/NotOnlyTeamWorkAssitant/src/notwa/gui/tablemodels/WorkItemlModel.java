@@ -21,6 +21,8 @@ package notwa.gui.tablemodels;
 
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;
+
+import notwa.gui.components.JAnyItemCreator;
 import notwa.logger.LoggingFacade;
 
 import notwa.wom.WorkItem;
@@ -80,11 +82,11 @@ public class WorkItemlModel extends AbstractTableModel {
                 case COLUMN_WORK_ITEM_SUBJECT_ALIAS:
                     return row.getSubject();
                 case COLUMN_WORK_ITEM_PRIORITY_ALIAS:
-                    return (row.getPriority() != null) ? row.getPriority().toString() : null;
+                    return (row.getPriority() != null) ? new JAnyItemCreator(row.getPriority(), row.getPriority().toString()) : null;
                 case COLUMN_ASSIGNED_USER_LOGIN_ALIAS:
                     return (row.getAssignedUser() != null) ? row.getAssignedUser().getLogin() : null;
                 case COLUMN_WORK_ITEM_STATUS_ALIAS:
-                    return (row.getStatus() != null) ? row.getStatus().toString() : null;
+                    return (row.getStatus() != null) ? new JAnyItemCreator(row.getStatus(),row.getStatus().toString()) : null;
                 default:
                     return null;
             }

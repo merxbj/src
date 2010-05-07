@@ -49,6 +49,7 @@ import notwa.dal.UserDal;
 import notwa.dal.UserToProjectAssignmentDal;
 import notwa.dal.WorkItemDal;
 import notwa.exception.ContextException;
+import notwa.gui.components.JAnyItemCreator;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.Project;

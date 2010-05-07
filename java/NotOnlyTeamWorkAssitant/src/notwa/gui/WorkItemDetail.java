@@ -37,7 +37,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import notwa.common.ConnectionInfo;
 import notwa.dal.NoteDal;
+import notwa.wom.Context;
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.wom.Project;
@@ -59,6 +61,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox assignedUsers;
     private WorkItem currentWorkItem;
     private WorkItemNoteHistoryTable winht;
+    private ConnectionInfo ci;
+    private Context context;
 
     public WorkItemDetail() {
         init();
@@ -249,9 +253,11 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.setPriority(null);
     }
 
-    public void loadFromWorkItem(WorkItem wi) {
+    public void loadFromWorkItem(WorkItem wi, ConnectionInfo ci, Context context) {
         setAllToNull();
         
+        this.ci = ci;
+        this.context = context;
         this.currentWorkItem = wi;
 
         NoteCollection nc = wi.getNoteCollection();
@@ -290,17 +296,16 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
                 if(!ta.getText().equals("")) {
                     NoteCollection nc = currentWorkItem.getNoteCollection();
                     Note note = new Note(currentWorkItem.getId());
-                    note.registerWithContext(currentWorkItem.getCurrentContext());
+                    note.registerWithContext(context);
                     note.setAuthor(currentWorkItem.getAssignedUser()); // TODO currentlyLoggedUser
                     note.setNoteText(ta.getText());
                     note.setInserted(true);
                     nc.add(note);
                     
-                    //TODO <MERXBJ> exception about unique ID of Note ... BUT id is over 1m ...
-                    NoteDal nd = new NoteDal(ci, currentWorkItem.getCurrentContext());
+                    NoteDal nd = new NoteDal(ci, context);
                     nd.update(nc);
                     
-                    this.loadFromWorkItem(currentWorkItem);
+                    this.loadFromWorkItem(currentWorkItem, ci, context);
                     winht.loadFromWorkItem(currentWorkItem);
                 }
             }

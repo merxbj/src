@@ -39,6 +39,7 @@ import notwa.logger.LoggingFacade;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
+import notwa.gui.components.JAnyItemCreator;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;

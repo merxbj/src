@@ -21,6 +21,8 @@ package notwa.gui.tablemodels;
 
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;
+
+import notwa.gui.components.JAnyItemCreator;
 import notwa.logger.LoggingFacade;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
@@ -71,7 +73,7 @@ public class UserManagementModel extends AbstractTableModel {
 
             switch (cs.getColumnAlias()) {
                 case COLUMN_USER_LOGIN_ALIAS:
-                    return row.getLogin();
+                    return new JAnyItemCreator(row, row.getLogin());
                 case COLUMN_USER_FIRST_NAME_ALIAS:
                     return row.getFirstName();
                 case COLUMN_USER_LAST_NAME_ALIAS:

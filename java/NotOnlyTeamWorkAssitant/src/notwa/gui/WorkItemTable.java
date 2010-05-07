@@ -77,7 +77,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         
         for (int c = 0; c < witTableModel.getColumnCount() ; c++) {
 
-            ColumnSettings cs = witTableModel.getColumnSettings(c);
+            ColumnSettings<?> cs = witTableModel.getColumnSettings(c);
             if (cs.getColumnAlias() != WorkItemlModel.WorkItemTableColumn.COLUMN_WORK_ITEM_SUBJECT_ALIAS) {
                 /**
                  * We want to see as much as possible of subject so shorten all else

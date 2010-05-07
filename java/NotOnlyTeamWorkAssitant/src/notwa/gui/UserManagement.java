@@ -1,5 +1,6 @@
 package notwa.gui;
 
+import notwa.gui.components.JAnyItemCreator;
 import notwa.gui.tablemodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;

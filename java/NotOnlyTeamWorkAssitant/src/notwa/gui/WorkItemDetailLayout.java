@@ -38,8 +38,6 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
     protected WorkItemDetail wid;
     protected WorkItemNoteHistoryTable winht;
     private EventHandler<GuiEvent> guiHandler;
-    protected Context context;
-    protected ConnectionInfo ci;
 
     public WorkItemDetailLayout() {
         init();
@@ -88,10 +86,8 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         winht.setAllToNull();
     }
 
-    public void onSelectedWorkItemChanged(WorkItem wi, ConnectionInfo connectionInfo, Context context) {
-        this.context = context;
-        this.ci = connectionInfo;
-        wid.loadFromWorkItem(wi);
+    public void onSelectedWorkItemChanged(WorkItem wi, ConnectionInfo ci, Context context) {
+        wid.loadFromWorkItem(wi, ci, context);
         winht.loadFromWorkItem(wi);
         wid.setWorkItemNoteHistoryTable(winht);
     }
