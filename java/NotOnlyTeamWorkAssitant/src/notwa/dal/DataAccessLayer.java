@@ -313,6 +313,9 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
     protected Integer getLastUniqeIdentifier(TObject bo) throws DalException {
         try {
             // TODO: Change this!
+            // TODO: SOLVE <merxbj><CRITICAL>
+            //       If there is something to show everything is fine, but if there should be ID 1 
+            //       because nothing exists it returns null exception which is wrong
             return ((BigDecimal)getConnection().executeScalar(getHighestUniqeIdentifierSql(bo))).intValue();
         } catch (Exception ex) {
             throw new DalException(String.format("Unexpected error occured while getting a last uniqe identifier for %s!", bo.toString()), ex);

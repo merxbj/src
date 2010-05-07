@@ -139,7 +139,7 @@ public class NoteDal extends DataAccessLayer<Note, NoteCollection> {
 
     @Override
     protected String getHighestUniqeIdentifierSql(Note n) {
-        String sql = String.format("SELECT note_id FROM Work_Items_Note WHERE work_item_id = %d ORDER BY note_id DESC", n.getId().getWorkItemId());
+        String sql = String.format("SELECT note_id FROM work_item_note WHERE work_item_id = %d ORDER BY note_id DESC", n.getId().getWorkItemId());
         return sql;
     }
 }
