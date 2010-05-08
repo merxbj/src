@@ -245,6 +245,10 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
      *                          same <code>Context</code> as its collection.
      */
     public boolean addAssignedProject(Project assignedProject) throws ContextException {
+        if (assignedProjects == null) {
+            return false;
+        }
+
         return this.assignedProjects.add(new AssignedProject(assignedProject, this));
     }
 
@@ -257,6 +261,10 @@ public class User extends BusinessObject implements Comparable<User>, Cloneable 
      *                          same <code>Context</code> as its collection.
      */
     public boolean removeAssignedProject(Project assignedProject) throws ContextException {
+        if (assignedProjects == null) {
+            return false;
+        }
+        
         return this.assignedProjects.remove(assignedProject);
     }
     

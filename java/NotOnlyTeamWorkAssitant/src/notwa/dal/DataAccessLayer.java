@@ -100,16 +100,6 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
         }
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        DatabaseConnection con = connections.get(ci);
-        if (con != null) {
-            connections.remove(ci);
-            con.close();
-        }
-    }
-
     /**
      * Retrieves the sole <code>DatabaseConnection</code> assigned to the
      * <code>ConnectionInfo</code> which was used to construct this instance of
