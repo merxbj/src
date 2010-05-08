@@ -19,7 +19,6 @@
  */
 package notwa.dal;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
@@ -98,6 +97,16 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
         }
         if ((ci != null) && !connections.containsKey(ci)) {
             connections.put(ci, new DatabaseConnection(ci));
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        DatabaseConnection con = connections.get(ci);
+        if (con != null) {
+            connections.remove(ci);
+            con.close();
         }
     }
 

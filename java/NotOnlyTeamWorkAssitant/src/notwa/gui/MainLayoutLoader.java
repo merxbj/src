@@ -22,7 +22,6 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -94,16 +93,18 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
 
         tabPanel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent me) {
-                int index = tabPanel.getUI().tabForCoordinate(tabPanel, me.getX(), me.getY());
-                /*
-                 * Check if mouse was pressed only on Tab, mouse event was Popup trigger and if its not last tab which is not closeable
-                 * TabCount is counted from 1
-                 * SelectedIndex is counter from 0 
-                 */
+            private boolean handled = false;
 
-                if (index != -1 && me.isPopupTrigger() && tabPanel.getTabCount() != tabPanel.getSelectedIndex()+1)
-                    initPopupMenu().show(me.getComponent(), me.getX(), me.getY());
+            @Override
+            public void mousePressed(MouseEvent me) {
+                handled = invokeContextMenu(me);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (!handled) {
+                    invokeContextMenu(me);
+                }
             }
         });
         
@@ -152,7 +153,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     private JPopupMenu initPopupMenu() {
         JPopupMenu jpm = new JPopupMenu();
         
-        closeConnection = new JMenuItem("Close connection");
+        closeConnection = new JMenuItem("Close tab");
         closeConnection.addActionListener(this);
         
         jpm.add(closeConnection);
@@ -169,7 +170,6 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         
         if (ae.getSource() == closeConnection) {
             tabPanel.remove(tabPanel.getSelectedIndex());
-            //TODO close connection
         }
     }
 
@@ -227,5 +227,22 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
 
     private void invokeSelectedRowChanged(GuiEventParams params) {
         widl.onSelectedWorkItemChanged((WorkItem) params.getParams(), getActiveTab());
+    }
+
+    private boolean invokeContextMenu(MouseEvent me) {
+        int index = tabPanel.getUI().tabForCoordinate(tabPanel, me.getX(), me.getY());
+
+        /**
+         * Check if
+         *  Mouse was pressed only on Tab and
+         *  Mouse event was Popup trigger and
+         *  If its not last tab which is not closeable (the + button)
+         */
+        if ((index != -1) && me.isPopupTrigger() && (tabPanel.getTabCount() != tabPanel.getSelectedIndex() + 1)) {
+            initPopupMenu().show(me.getComponent(), me.getX(), me.getY());
+            return true;
+        }
+
+        return false;
     }
 }
