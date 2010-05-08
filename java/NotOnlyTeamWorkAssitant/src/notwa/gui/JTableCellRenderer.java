@@ -54,14 +54,13 @@ public class JTableCellRenderer implements TableCellRenderer
             /*
              * Colorize Priority and status cells with colors loaded from ColorManager class
              */
-            try {
-                WorkItemPriority wip = (WorkItemPriority)((JAnyItemCreator)value).getAttachedObject();
+            if ((value != null) && (value instanceof WorkItemPriority)) {
+                WorkItemPriority wip = (WorkItemPriority) value;
                 renderer.setBackground(ColorManager.getPriorityColor(wip));
-            } catch (Exception e) { }
-            try {
-                WorkItemStatus wis = (WorkItemStatus)((JAnyItemCreator)value).getAttachedObject();
+            } else if ((value != null) && (value instanceof WorkItemStatus)) {
+                WorkItemStatus wis = (WorkItemStatus) value;
                 renderer.setBackground(ColorManager.getStatusColor(wis));
-            } catch (Exception e) { }
+            }
         }
         
         return renderer;

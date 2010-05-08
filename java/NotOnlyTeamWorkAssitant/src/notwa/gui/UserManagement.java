@@ -1,6 +1,5 @@
 package notwa.gui;
 
-import notwa.gui.components.JAnyItemCreator;
 import notwa.gui.tablemodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -92,8 +91,8 @@ public class UserManagement extends JDialog implements ActionListener {
     }
     
     private User getSelectedUser() {
-        Object element = this.table.getValueAt(table.getSelectedRow(), 0);
-        return (User)((JAnyItemCreator)element).getAttachedObject();
+        int selectedIndex = table.convertRowIndexToModel(table.getSelectedRow());
+        return uc.get(selectedIndex);
     }
     
     @Override
