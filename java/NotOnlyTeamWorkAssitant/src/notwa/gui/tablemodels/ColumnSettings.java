@@ -25,9 +25,9 @@ package notwa.gui.tablemodels;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ColumnSettings<T extends Enum> implements Comparable<ColumnSettings> {
+public class ColumnSettings<T extends Enum<?>> implements Comparable<ColumnSettings<?>> {
     private int columnIndex;
-    private Class columnClass;
+    private Class<?> columnClass;
     private String columnHeader;
     private T columnAlias;
 
@@ -35,7 +35,7 @@ public class ColumnSettings<T extends Enum> implements Comparable<ColumnSettings
         this.columnIndex = columnIndex;
     }
 
-    public ColumnSettings(int columnIndex, Class columnClass, String columnHeader, T columnAlias) {
+    public ColumnSettings(int columnIndex, Class<?> columnClass, String columnHeader, T columnAlias) {
         this.columnIndex = columnIndex;
         this.columnClass = columnClass;
         this.columnHeader = columnHeader;
@@ -43,7 +43,7 @@ public class ColumnSettings<T extends Enum> implements Comparable<ColumnSettings
     }
 
     @Override
-    public int compareTo(ColumnSettings o) {
+    public int compareTo(ColumnSettings<?> o) {
         return ((Integer)o.columnIndex).compareTo(columnIndex);
     }
 
@@ -55,7 +55,7 @@ public class ColumnSettings<T extends Enum> implements Comparable<ColumnSettings
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ColumnSettings other = (ColumnSettings) obj;
+        final ColumnSettings<?> other = (ColumnSettings<?>) obj;
         if (this.columnIndex != other.columnIndex) {
             return false;
         }
@@ -77,11 +77,11 @@ public class ColumnSettings<T extends Enum> implements Comparable<ColumnSettings
         this.columnAlias = columnAlias;
     }
 
-    public Class getColumnClass() {
+    public Class<?> getColumnClass() {
         return columnClass;
     }
 
-    public void setColumnClass(Class columnClass) {
+    public void setColumnClass(Class<?> columnClass) {
         this.columnClass = columnClass;
     }
 

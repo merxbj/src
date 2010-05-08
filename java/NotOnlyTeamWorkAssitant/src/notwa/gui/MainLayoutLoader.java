@@ -24,10 +24,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -47,6 +51,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     private EventHandler<GuiEvent> guiHandler;
     private EventHandler<SecurityEvent> securityHandler;
     private WorkItemDetailLayout widl;
+    private JMenuItem closeConnection;
     
     public MainLayoutLoader () {
         init();
@@ -84,6 +89,13 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         tabPanel.addChangeListener(this);
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
 
+        tabPanel.addMouseListener(new MouseAdapter() { // TODO <mrneo>
+            public void mousePressed(MouseEvent me) {
+                if (me.isPopupTrigger())
+                    initPopupMenu().show(me.getComponent(), me.getX(), me.getY());
+            }
+        });
+        
         /**
          * Setup the work item detail layout
          */
@@ -123,8 +135,18 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
     
     public void hideDetail() {
-        //TODO after fullscreen, is detail visible anyway ?!
         sp.setDividerLocation(50000);
+    }
+    
+    private JPopupMenu initPopupMenu() {
+        JPopupMenu jpm = new JPopupMenu();
+        
+        closeConnection = new JMenuItem("Close connection");
+        closeConnection.addActionListener(this);
+        
+        jpm.add(closeConnection);
+        
+        return jpm;
     }
     
     @Override
@@ -132,6 +154,10 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         if (ae.getSource() == plusButton) {
             SecurityEventParams sep = new SecurityEventParams(SecurityEventParams.SECURITY_EVENT_REQUEST_LOGIN);
             securityHandler.handleEvent(new SecurityEvent(sep));
+        }
+        
+        if (ae.getSource() == closeConnection) {
+            //TODO close connection
         }
     }
 
@@ -188,6 +214,6 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     }
 
     private void invokeSelectedRowChanged(GuiEventParams params) {
-        widl.onSelectedWorkItemChanged((WorkItem) params.getParams(), getActiveTab().getConnectionInfo(), getActiveTab().getContext());
+        widl.onSelectedWorkItemChanged((WorkItem) params.getParams(), getActiveTab());
     }
 }

@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -37,9 +38,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import notwa.common.ConnectionInfo;
 import notwa.dal.NoteDal;
-import notwa.wom.Context;
+import notwa.dal.WorkItemDal;
+import notwa.gui.components.JAnyItemCreator;
+import notwa.logger.LoggingFacade;
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
 import notwa.wom.Project;
@@ -61,8 +63,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox assignedUsers;
     private WorkItem currentWorkItem;
     private WorkItemNoteHistoryTable winht;
-    private ConnectionInfo ci;
-    private Context context;
+    private TabContent tc;
 
     public WorkItemDetail() {
         init();
@@ -81,7 +82,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.status = new JComboBox();
         this.priority = new JComboBox();
         this.assignedUsers = new JComboBox();
-
+        
         this.setLayout(new BorderLayout(5,5));
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         
@@ -174,7 +175,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox loadWorkItemStatuses() {
         status = new JComboBox();
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            status.addItem(WorkItemStatus.values()[s]);
+            status.addItem(new JAnyItemCreator(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
         }
         
         return status;
@@ -183,10 +184,21 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JComboBox loadWorkItemPriorties() {
         priority = new JComboBox();
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priority.addItem(WorkItemPriority.values()[p]);
+            priority.addItem(new JAnyItemCreator(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
         }
 
         return priority;
+    }
+        
+    private void setAssignedUsers(UserCollection uc) {
+        try {
+            assignedUsers.removeAllItems();
+            for (User user : uc) {
+                assignedUsers.addItem(new JAnyItemCreator(user, user.getLogin()));
+            }
+        } catch (Exception e) {
+            this.assignedUsers.addItem("unspecified");
+        }
     }
     
     public void setDescription(String description) {
@@ -198,48 +210,41 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void setDeadline(Date deadline) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             this.deadline.setText(formatter.format(deadline));
-        } catch (Exception e) { }
+        } catch (Exception e) { 
+            this.deadline.setText("0000-00-00 00:00");
+        }
     }
     
     public void setLastModified(Date lastModified) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            this.lastModified.setText(formatter.format(deadline));
-        } catch (Exception e) { }
+            this.lastModified.setText(formatter.format(lastModified));
+        } catch (Exception e) {
+            this.lastModified.setText("0000-00-00 00:00");
+        }
     }
     
     public void setPriority(WorkItemPriority wip) {
-        this.priority.setSelectedItem(wip);
+        this.priority.setSelectedIndex(wip.ordinal());
     }
     
     public void setStatus(WorkItemStatus wis) {
-        this.status.setSelectedItem(wis);
+        this.status.setSelectedIndex(wis.ordinal());
     }
     
     public void setLastNote(Note note) {
         try {
-            this.latestNote.setText(String.format("%s : %s",note.getAuthor().getLogin(), note.getText()));
+            this.latestNote.setText(String.format("%s : %s", note.getAuthor().getLogin(), note.getText()));
         } catch (Exception e) {
             this.latestNote.setText("There are no notes yet");
         }
     }
     
-    public void setAssignedUsers(UserCollection uc) {
-        try {
-            assignedUsers.removeAllItems();
-            for (User user : uc) {
-                assignedUsers.addItem(user.getLogin());
-            }
-        } catch (Exception e) {
-            this.assignedUsers.addItem("unspecified");
-        }
-    }
-    
-    public void selectUser(String user) {
-        this.assignedUsers.setSelectedItem(user);
+    public void selectUser(User user) {
+        this.assignedUsers.setSelectedItem(user); //TODO 
     }
 
     public void setAllToNull() {
@@ -250,14 +255,13 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.setLastNote(null);
         this.setLastModified(null);
         this.setParent(0);
-        this.setPriority(null);
+        this.setDeadline(null);
     }
 
-    public void loadFromWorkItem(WorkItem wi, ConnectionInfo ci, Context context) {
+    public void loadFromWorkItem(WorkItem wi, TabContent tc) {
         setAllToNull();
         
-        this.ci = ci;
-        this.context = context;
+        this.tc = tc;
         this.currentWorkItem = wi;
 
         NoteCollection nc = wi.getNoteCollection();
@@ -270,7 +274,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         setDeadline(wi.getExpectedTimestamp());
         setLastModified(wi.getLastModifiedTimestamp());
         setAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
-        selectUser((u != null) ? (u.getLogin()) : null);
+        selectUser((u != null) ? (u) : null);
         setPriority(wi.getPriority());
         setStatus(wi.getStatus());
         setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
@@ -282,6 +286,56 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     
     @Override
     public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == save) {
+            if (JOptionPane.showConfirmDialog(this, "Are you sure?") == 0) {
+                boolean save = true;
+                
+                if (!deadline.getText().equals("0000-00-00 00:00") && !(deadline.getText() != null)) {
+                    try {
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        currentWorkItem.setExpectedTimestamp((Date)df.parse((deadline.getText())));
+                    }
+                    catch (Exception e) {
+                        save = false;
+                        JOptionPane.showMessageDialog(this, "Incorrect date format");
+                        LoggingFacade.handleException(e);
+                    }
+                }
+                
+                if (Integer.parseInt(parent.getText()) != 0) {
+                    try {
+                        WorkItem pwi = tc.getWorkItemCollection().getByPrimaryKey(Integer.parseInt(parent.getText()));
+                        if (pwi != null) {
+                            currentWorkItem.setParentWorkItem(pwi);
+                        }
+                        else {
+                            throw new Exception("WorkItem does not exist");
+                        }
+                    }
+                    catch (Exception e) {
+                        save = false;
+                        JOptionPane.showMessageDialog(this, "Check if Work item exists");
+                        LoggingFacade.handleException(e);
+                    }
+                }
+                else {
+                    currentWorkItem.setParentWorkItem(null);
+                }
+                
+                if (save) {                
+                    currentWorkItem.setDescription(this.description.getText());
+                    currentWorkItem.setAssignedUser((User)((JAnyItemCreator)assignedUsers.getSelectedItem()).getAttachedObject());
+                    currentWorkItem.setStatus((WorkItemStatus)((JAnyItemCreator)status.getSelectedItem()).getAttachedObject());
+                    currentWorkItem.setPriority((WorkItemPriority)((JAnyItemCreator)priority.getSelectedItem()).getAttachedObject());
+                    currentWorkItem.setLastModifiedTimestamp(Calendar.getInstance().getTime());
+
+                    WorkItemDal wid = new WorkItemDal(tc.getConnectionInfo(), tc.getContext());
+                    wid.update(tc.getWorkItemCollection());
+                    tc.dataRefresh();
+                }
+            }
+        }
+        
         if (ae.getSource() == addNote) {
             final JTextArea textArea = new JTextArea();
             JScrollPane scrollPane = new JScrollPane(textArea);     
@@ -296,16 +350,16 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
                 if(!ta.getText().equals("")) {
                     NoteCollection nc = currentWorkItem.getNoteCollection();
                     Note note = new Note(currentWorkItem.getId());
-                    note.registerWithContext(context);
+                    note.registerWithContext(tc.getContext());
                     note.setAuthor(currentWorkItem.getAssignedUser()); // TODO currentlyLoggedUser
                     note.setNoteText(ta.getText());
                     note.setInserted(true);
                     nc.add(note);
                     
-                    NoteDal nd = new NoteDal(ci, context);
+                    NoteDal nd = new NoteDal(tc.getConnectionInfo(), tc.getContext());
                     nd.update(nc);
                     
-                    this.loadFromWorkItem(currentWorkItem, ci, context);
+                    this.loadFromWorkItem(currentWorkItem, tc);
                     winht.loadFromWorkItem(currentWorkItem);
                 }
             }

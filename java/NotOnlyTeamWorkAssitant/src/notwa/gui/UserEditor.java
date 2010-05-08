@@ -41,7 +41,6 @@ public class UserEditor extends JDialog implements ActionListener{
     private JButton okButton, stornoButton;
     private JTextField login,firstName,lastName;
     private JPasswordField password,secondPassword;
-    private String originalUserPassword;
     private User user;
     private boolean newUser;
     
@@ -72,7 +71,6 @@ public class UserEditor extends JDialog implements ActionListener{
             this.secondPassword.setText("|_PASSWORLD_PROTECTED_|");
             this.firstName.setText(this.user.getFirstName());
             this.lastName.setText(this.user.getLastName());
-            this.originalUserPassword = this.user.getPassword();
         }
     }
     

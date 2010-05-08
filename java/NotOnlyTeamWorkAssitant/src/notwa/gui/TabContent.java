@@ -159,12 +159,12 @@ public class TabContent extends JComponent implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == addButton) {
+        if (ae.getSource() == addButton) {
             WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection());
             wie.initAddDialog();
         }
         
-        if(ae.getSource() == userDefinedFiltersBox) {
+        if (ae.getSource() == userDefinedFiltersBox) {
             if(userDefinedFiltersBox.getSelectedItem().equals("Configure ...")) {
                 FilteringDialog fd = new FilteringDialog();
                 fd.init();

@@ -37,8 +37,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -46,7 +44,6 @@ import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
-import notwa.dal.UserToProjectAssignmentDal;
 import notwa.dal.WorkItemDal;
 import notwa.exception.ContextException;
 import notwa.gui.components.JAnyItemCreator;
@@ -245,7 +242,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
             wi.setDescription(eDescription.getText());
             if (!eExpectingDate.getText().equals("00.00.0000 00:00")) {
                 try {
-                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                     wi.setExpectedTimestamp((Date)df.parse((eExpectingDate.getText())));
                     close = true;
                 }

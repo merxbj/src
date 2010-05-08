@@ -27,9 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTabbedPane;
 
-import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
-import notwa.wom.Context;
 import notwa.wom.WorkItem;
 
 public class WorkItemDetailLayout extends JComponent implements ActionListener {
@@ -86,8 +84,8 @@ public class WorkItemDetailLayout extends JComponent implements ActionListener {
         winht.setAllToNull();
     }
 
-    public void onSelectedWorkItemChanged(WorkItem wi, ConnectionInfo ci, Context context) {
-        wid.loadFromWorkItem(wi, ci, context);
+    public void onSelectedWorkItemChanged(WorkItem wi, TabContent tc) {
+        wid.loadFromWorkItem(wi, tc);
         winht.loadFromWorkItem(wi);
         wid.setWorkItemNoteHistoryTable(winht);
     }
