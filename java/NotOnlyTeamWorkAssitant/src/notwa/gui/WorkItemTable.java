@@ -91,8 +91,13 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     }
     
     public WorkItem getSelected() {
-        int selectedIndex = witTable.convertRowIndexToModel(witTable.getSelectedRow());
-        return wic.get(selectedIndex);
+        if (witTable.getSelectedRow() != -1) {
+            int selectedIndex = witTable.convertRowIndexToModel(witTable.getSelectedRow());
+            return wic.get(selectedIndex);
+        }
+        else {
+            return null;
+        }
     }
     
     public TableRowSorter<WorkItemlModel> getSorter() {

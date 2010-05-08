@@ -71,6 +71,7 @@ public class WorkItemNoteHistoryTable extends JComponent {
     }
 
     public void loadFromWorkItem(WorkItem wi) {
-        setNoteCollection(wi.getNoteCollection());
+        if (wi != null)
+            setNoteCollection(wi.getNoteCollection());
     }
 }

@@ -140,6 +140,9 @@ public class MainWindow extends JFrame {
             case GuiEventParams.MENU_EVENT_FILTERING:
                 invokeFiltering(e.getParams());
                 break;
+            case GuiEventParams.MENU_EVENT_PROJECT_MANAGEMENT:
+                invokeProjectManagement(e.getParams());
+                break;
             case GuiEventParams.MENU_EVENT_USER_MANAGEMENT:
                 invokeUserManagement(e.getParams());
                 break;
@@ -181,6 +184,10 @@ public class MainWindow extends JFrame {
         FilteringDialog fd = new FilteringDialog();
     }
 
+    private void invokeProjectManagement(GuiEventParams params) {
+        ProjectManagement pm = new ProjectManagement(getActiveConnectionInfo(), getActivetContext());
+    }
+    
     private void invokeUserManagement(GuiEventParams params) {
         UserManagement um = new UserManagement(getActiveConnectionInfo(), getActivetContext());
     }

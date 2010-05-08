@@ -129,7 +129,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         JPanel boxesPanel = new JPanel();
         boxesPanel.setLayout(null);
         boxesPanel.setPreferredSize(new java.awt.Dimension(401, 80));
-        boxesPanel.setMinimumSize(new Dimension(0,70));
+        boxesPanel.setMinimumSize(new Dimension(0,80));
 
         JLabel lUser = new JLabel("User");
         boxesPanel.add(lUser);
@@ -256,6 +256,9 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.setLastModified(null);
         this.setParent(0);
         this.setDeadline(null);
+        
+        save.setEnabled(false);
+        addNote.setEnabled(false);
     }
 
     public void loadFromWorkItem(WorkItem wi, TabContent tc) {
@@ -264,20 +267,25 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.tc = tc;
         this.currentWorkItem = wi;
 
-        NoteCollection nc = wi.getNoteCollection();
-        Project p = wi.getProject();
-        User u = wi.getAssignedUser();
-        WorkItem pwi = wi.getParent();
+        if (wi != null) {
+            NoteCollection nc = wi.getNoteCollection();
+            Project p = wi.getProject();
+            User u = wi.getAssignedUser();
+            WorkItem pwi = wi.getParent();
+    
+            setDescription(wi.getDescription());
+            setParent((pwi != null) ? (pwi.getId()) : 0);
+            setDeadline(wi.getExpectedTimestamp());
+            setLastModified(wi.getLastModifiedTimestamp());
+            setAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
+            selectUser((u != null) ? (u) : null);
+            setPriority(wi.getPriority());
+            setStatus(wi.getStatus());
+            setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
 
-        setDescription(wi.getDescription());
-        setParent((pwi != null) ? (pwi.getId()) : 0);
-        setDeadline(wi.getExpectedTimestamp());
-        setLastModified(wi.getLastModifiedTimestamp());
-        setAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
-        selectUser((u != null) ? (u) : null);
-        setPriority(wi.getPriority());
-        setStatus(wi.getStatus());
-        setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
+            save.setEnabled(true);
+            addNote.setEnabled(true);
+        }
     }
     
     public void setWorkItemNoteHistoryTable(WorkItemNoteHistoryTable winht) {

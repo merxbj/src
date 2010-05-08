@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import notwa.gui.components.JTextFieldLimit;
 import notwa.wom.User;
 
 /**
@@ -80,38 +81,43 @@ public class UserEditor extends JDialog implements ActionListener{
 
         JLabel lLogin = new JLabel("Login");
         componentsPanel.add(lLogin);
-        lLogin.setBounds(30, 18, 35, 15);
+        lLogin.setBounds(65, 33, 35, 15);
         login = new JTextField();
         componentsPanel.add(login);
-        login.setBounds(174, 15, 112, 22);
+        login.setBounds(211, 30, 112, 22);
+        login.setDocument(new JTextFieldLimit(20));
 
         JLabel lPassword = new JLabel("Password");
         componentsPanel.add(lPassword);
-        lPassword.setBounds(30, 46, 60, 15);
+        lPassword.setBounds(65, 61, 60, 15);
         password = new JPasswordField();
         componentsPanel.add(password);
-        password.setBounds(174, 43, 112, 22);
+        password.setBounds(211, 58, 157, 22);
+        password.setDocument(new JTextFieldLimit(30));
 
         JLabel lPasswordVerification = new JLabel("Password verification");
         componentsPanel.add(lPasswordVerification);
-        lPasswordVerification.setBounds(30, 73, 130, 15);
+        lPasswordVerification.setBounds(65, 89, 144, 15);
         secondPassword = new JPasswordField();
         componentsPanel.add(secondPassword);
-        secondPassword.setBounds(174, 70, 112, 22);
-
+        secondPassword.setBounds(211, 86, 157, 22);
+        secondPassword.setDocument(new JTextFieldLimit(30));
+        
         JLabel lFirstName = new JLabel("First name");
         componentsPanel.add(lFirstName);
-        lFirstName.setBounds(30, 100, 70, 15);
+        lFirstName.setBounds(65, 117, 70, 15);
         firstName = new JTextField();
         componentsPanel.add(firstName);
-        firstName.setBounds(174, 97, 112, 22);
+        firstName.setBounds(211, 114, 157, 22);
+        firstName.setDocument(new JTextFieldLimit(30));
 
         JLabel lLastName = new JLabel("Last name");
         componentsPanel.add(lLastName);
-        lLastName.setBounds(30, 127, 65, 15);
+        lLastName.setBounds(65, 145, 65, 15);
         lastName = new JTextField();
         componentsPanel.add(lastName);
-        lastName.setBounds(174, 124, 112, 22);
+        lastName.setBounds(211, 142, 157, 22);
+        lastName.setDocument(new JTextFieldLimit(30));
 
         return componentsPanel;
     }
@@ -143,14 +149,16 @@ public class UserEditor extends JDialog implements ActionListener{
                 if (!this.password.getPassword().toString().equals("|_PASSWORD_PROTECTED_|")) {
                     user.setPassword(new String(this.password.getPassword()));
                 }
+                user.setInserted(true);
                 
                 this.setVisible(false);
             } else {
-                JOptionPane.showMessageDialog(this, "There was a problem while saving, check it again");
+                JOptionPane.showMessageDialog(this, "Recheck your login and password!");
             }
         }
         
         if (ae.getSource() == stornoButton) {
+            user.setInserted(false);
             this.setVisible(false);
         }
     }

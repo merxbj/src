@@ -59,13 +59,12 @@ import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
  
 public class WorkItemEditor extends JDialog implements ActionListener {
-    private JComboBox existingProjects,users,priorities,states;
-    private JTextField newProjectName = new JTextField();
+    private JComboBox projects,users,priorities,states;
     private JTextField subject = new JTextField();
     private JTextField eParentId = new JTextField();
     private JTextField eExpectingDate = new JTextField();
     private JTextArea eDescription;
-    private JButton okButton, stornoButton, chooseColorButton;
+    private JButton okButton, stornoButton;
     private ConnectionInfo ci;
     private Context context;
     private WorkItemCollection wic;
@@ -85,40 +84,13 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         JPanel jp = new JPanel();
         jp.setLayout(null);
 
-        JLabel lExistingProject = new JLabel("Attach to existing project");
+        JLabel lExistingProject = new JLabel("Project");
         lExistingProject.setBounds(63, 5, 152, 22);
         jp.add(lExistingProject);
         jp.add(loadExistingProjects());
-        
-        JLabel lCreateProject = new JLabel("Create new Project");
-        lCreateProject.setBounds(63, 39, 124, 15);
-        jp.add(lCreateProject);
-        newProjectName.setBounds(227, 36, 138, 22);
-        jp.add(newProjectName);
-        newProjectName.getDocument().addDocumentListener(
-                new DocumentListener() {
-                    @Override
-                    public void changedUpdate(DocumentEvent e) {
-                        SwitchComboBox();
-                    }
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        SwitchComboBox();
-                    }
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        SwitchComboBox();
-                    }
-                });
-        
-        chooseColorButton = new JButton("Browse");
-        chooseColorButton.setBounds(377, 36, 103, 22);
-        chooseColorButton.setText("choose color");
-        chooseColorButton.addActionListener(this);
-        jp.add(chooseColorButton);
 
         JLabel lUser = new JLabel("User");
-        lUser.setBounds(120, 212, 56, 15);
+        lUser.setBounds(63, 39, 124, 15);
         jp.add(lUser);
         jp.add(loadUsers());
         //TODO select currently logged user
@@ -186,7 +158,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     
     private JComboBox loadUsers() {
         users = new JComboBox();
-        users.setBounds(350, 5, 138, 22);
+        users.setBounds(227, 36, 138, 22);
 
         UserDal ud = new UserDal(ci, context);
         UserCollection uc = new UserCollection(context);
@@ -199,17 +171,17 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     }
     
     private JComboBox loadExistingProjects() {
-        existingProjects = new JComboBox();
-        existingProjects.setBounds(227, 5, 138, 22);
+        projects = new JComboBox();
+        projects.setBounds(227, 5, 138, 22);
 
         ProjectDal pd = new ProjectDal(ci, context);
         ProjectCollection pc = new ProjectCollection(context);
         pd.fill(pc);
         for (Project p : pc) {
-            existingProjects.addItem(new JAnyItemCreator(p, p.getName()));
+            projects.addItem(new JAnyItemCreator(p, p.getName()));
         }
         
-        return existingProjects;
+        return projects;
     }
     
     private JComboBox loadWorkItemStates() {
@@ -271,35 +243,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                 }
             }
             wi.setPriority((WorkItemPriority)((JAnyItemCreator)priorities.getSelectedItem()).getAttachedObject());
-            if (existingProjects.isEnabled()) {
-                wi.setProject((Project)((JAnyItemCreator)existingProjects.getSelectedItem()).getAttachedObject());
-            }
-            else {
-                Project project = new Project();
-                project.registerWithContext(context);
-                project.setProjectName(newProjectName.getText());
-                try {
-                    User user = (User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject();
-                    user.setInserted(true);
-                    
-                    project.addAssignedUser(user);
-                } catch (ContextException ex) {
-                    JOptionPane.showMessageDialog(this, "New project creation has failed, check log for further information");
-                    LoggingFacade.handleException(ex);
-                    close = false;
-                }
-                
-                ProjectCollection pc = new ProjectCollection(context);
-                
-                ProjectDal pd = new ProjectDal(ci, context);
-                pd.fill(pc);
-                pc.add(project);
-                pd.update(pc);
-                
-                ProjectToUserAssignmentDal ptuad = new ProjectToUserAssignmentDal(ci, context);
-                ptuad.update(project.getAssignedUsers());
-                wi.setProject(project);
-            }
+            wi.setProject((Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject());
             wi.setStatus((WorkItemStatus)((JAnyItemCreator)states.getSelectedItem()).getAttachedObject());
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
@@ -317,26 +261,5 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
-        
-        if(ae.getSource() == chooseColorButton) { //TODO all color choosing will be used this way
-            JColorChooser colorChooser = new JColorChooser();
-            JDialog jd = JColorChooser.createDialog( chooseColorButton,
-                                        "Project color chooser",
-                                        true,
-                                        colorChooser,
-                                        this,
-                                        null);
-            jd.setVisible(true); // not done yet 
-        }
-    }
-    
-    private void SwitchComboBox() {
-        if (newProjectName.getText().isEmpty()) {
-            existingProjects.setEnabled(true);
-        }
-        else {
-            existingProjects.setEnabled(false);
-        }
-        
     }
 }

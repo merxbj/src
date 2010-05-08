@@ -48,6 +48,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenuItem mItemConfigure;
     private JMenuItem mItemFiltering;
     private JMenuItem mItemUserManagement;
+    private JMenuItem mItemProjectManagement;
     private JMenuItem mItemAssignmentManager;
     private JMenu menu;
     private JCheckBoxMenuItem cbWorkOffline;
@@ -101,6 +102,9 @@ public class MainMenu extends JMenuBar implements ActionListener {
          */
         menu = new JMenu("Tools");
         menu.setMnemonic(KeyEvent.VK_T);
+
+        mItemProjectManagement = new JMenuItem("Project management");
+        mItemProjectManagement.addActionListener(this);
         
         mItemUserManagement = new JMenuItem("User management");
         mItemUserManagement.addActionListener(this);
@@ -108,6 +112,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         mItemAssignmentManager = new JMenuItem("Assignment manager");
         mItemAssignmentManager.addActionListener(this);
         
+        menu.add(mItemProjectManagement);
         menu.add(mItemUserManagement);
         menu.add(mItemAssignmentManager);
         
@@ -175,11 +180,12 @@ public class MainMenu extends JMenuBar implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        //TODO: add remaining actions
         if (ae.getSource() == mItemConfigure) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_CONFIGURE)));
         } else if (ae.getSource() == mItemFiltering) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_FILTERING)));
+        } else if (ae.getSource() == mItemProjectManagement) {
+            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_PROJECT_MANAGEMENT)));
         } else if (ae.getSource() == mItemUserManagement) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_USER_MANAGEMENT)));
         } else if (ae.getSource() == mItemAssignmentManager) {
