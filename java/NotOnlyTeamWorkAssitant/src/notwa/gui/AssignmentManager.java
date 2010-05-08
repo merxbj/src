@@ -33,6 +33,8 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
@@ -46,7 +48,7 @@ import notwa.wom.ProjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
-public class AssignmentManager extends JDialog implements ActionListener {
+public class AssignmentManager extends JDialog implements ActionListener,ListSelectionListener {
     private JButton okButton, stornoButton, addButton, removeButton;
     private JComboBox projects;
     private JList users, currentlyAssignedUsers;
@@ -87,11 +89,12 @@ public class AssignmentManager extends JDialog implements ActionListener {
 
         JLabel lAllRegisteredUsers = new JLabel("All registered users");
         componentsPanel.add(lAllRegisteredUsers);
-        lAllRegisteredUsers.setBounds(75, 56, 135, 15);
+        lAllRegisteredUsers.setBounds(60, 56, 135, 15);
 
         users = new JList(usersModel);
+        users.addListSelectionListener(this);
         JScrollPane allUsersPanel = new JScrollPane(users);
-        allUsersPanel.setBounds(70, 77, 112, 131);
+        allUsersPanel.setBounds(62, 77, 115, 130);
         componentsPanel.add(allUsersPanel);
         
         addButton = new JButton("Add >");
@@ -99,16 +102,19 @@ public class AssignmentManager extends JDialog implements ActionListener {
         removeButton = new JButton("< Remove");
         removeButton.addActionListener(this);
         componentsPanel.add(addButton);
-        addButton.setBounds(194, 99, 75, 20);
+        addButton.setBounds(192, 99, 112, 20);
         componentsPanel.add(removeButton);
-        removeButton.setBounds(194, 124, 75, 20);
+        removeButton.setBounds(192, 124, 112, 20);
+        addButton.setEnabled(false);
+        removeButton.setEnabled(false);
 
         JLabel lAssignedUsers = new JLabel("Already assigned users");
         componentsPanel.add(lAssignedUsers);
-        lAssignedUsers.setBounds(279, 52, 152, 22);
+        lAssignedUsers.setBounds(305, 52, 152, 22);
         currentlyAssignedUsers = new JList(projectUsersModel);
+        currentlyAssignedUsers.addListSelectionListener(this);
         JScrollPane assignedUsersPanel = new JScrollPane(currentlyAssignedUsers);
-        assignedUsersPanel.setBounds(288, 74, 114, 129);
+        assignedUsersPanel.setBounds(320, 77, 115, 130);
         componentsPanel.add(assignedUsersPanel);
         
         return componentsPanel;
@@ -206,13 +212,11 @@ public class AssignmentManager extends JDialog implements ActionListener {
             this.save();
             
             this.getAllProjectUsers();
-            try {
-                currentlyAssignedUsers.updateUI();
-            } catch (Exception e) { }
+            try { currentlyAssignedUsers.updateUI(); } catch (Exception e) { }
             this.getAllUsers();
-            try {
-                users.updateUI();
-            } catch (Exception e) { }
+            try { users.updateUI(); } catch (Exception e) { }
+            try { addButton.setEnabled(false); } catch (Exception e) { }
+            try { removeButton.setEnabled(false); } catch (Exception e) { }
         }
         
         if (ae.getSource() == addButton) {
@@ -245,6 +249,29 @@ public class AssignmentManager extends JDialog implements ActionListener {
                     usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
                     projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent lse) {
+        if (lse.getSource() == users) {
+            if (users.getSelectedValues().length > 0) {
+                currentlyAssignedUsers.clearSelection();
+                addButton.setEnabled(true);
+            }
+            else {
+                addButton.setEnabled(false);
+            }
+        }
+        
+        if (lse.getSource() == currentlyAssignedUsers) {
+            if (currentlyAssignedUsers.getSelectedValues().length > 0) {
+                users.clearSelection();
+                removeButton.setEnabled(true);                
+            }
+            else {
+                removeButton.setEnabled(false);
             }
         }
     }

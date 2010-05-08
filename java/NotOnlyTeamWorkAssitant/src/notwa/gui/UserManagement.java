@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
@@ -22,7 +24,7 @@ import notwa.wom.Context;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
-public class UserManagement extends JDialog implements ActionListener {
+public class UserManagement extends JDialog implements ActionListener, ListSelectionListener {
 
     private JButton closeButton, addButton, editButton, delButton;
     private Context context;
@@ -38,6 +40,7 @@ public class UserManagement extends JDialog implements ActionListener {
         this.ci = ci;
         init();
     }
+
     public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - User Management");
@@ -64,7 +67,7 @@ public class UserManagement extends JDialog implements ActionListener {
         table.getColumnModel().getColumn(0).setCellRenderer(tableCellRenderer);
         table.getColumnModel().getColumn(1).setCellRenderer(tableCellRenderer);
         table.getColumnModel().getColumn(2).setCellRenderer(tableCellRenderer);
-        
+        table.getSelectionModel().addListSelectionListener(this);
         managementPanel.add(table);
                 
         return new JScrollPane(managementPanel);
@@ -103,9 +106,11 @@ public class UserManagement extends JDialog implements ActionListener {
             user.registerWithContext(context);
             UserEditor ue = new UserEditor(user, true);
             ue.init();
-            uc.add(user);
-            ud.update(uc);
-            tblModel.fireTableDataChanged();
+            if (user.isInserted()) {
+                uc.add(user);
+                ud.update(uc);
+                tblModel.fireTableDataChanged();
+            }
         }
 
         if (ae.getSource() == editButton) {
@@ -124,5 +129,13 @@ public class UserManagement extends JDialog implements ActionListener {
         if (ae.getSource() == closeButton) {
             this.setVisible(false);
         }
+    }
+    
+    @Override
+    public void valueChanged(ListSelectionEvent lse) {
+        if (table.getSelectedRow() != -1)
+            editButton.setEnabled(true);
+        else
+            editButton.setEnabled(false);
     }
 }
