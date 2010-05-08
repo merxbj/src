@@ -22,6 +22,7 @@ package notwa.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -72,6 +73,9 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
          */
         widl = new WorkItemDetailLayout();
         tabPanel = new JTabbedPane();
+
+        tabPanel.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
         plusButton = new JButton("+");
         sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabPanel, widl);
 
@@ -89,9 +93,16 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         tabPanel.addChangeListener(this);
         tabPanel.setTabComponentAt(tabPanel.getTabCount() - 1, plusButton);
 
-        tabPanel.addMouseListener(new MouseAdapter() { // TODO <mrneo>
+        tabPanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
-                if (me.isPopupTrigger())
+                int index = tabPanel.getUI().tabForCoordinate(tabPanel, me.getX(), me.getY());
+                /*
+                 * Check if mouse was pressed only on Tab, mouse event was Popup trigger and if its not last tab which is not closeable
+                 * TabCount is counted from 1
+                 * SelectedIndex is counter from 0 
+                 */
+
+                if (index != -1 && me.isPopupTrigger() && tabPanel.getTabCount() != tabPanel.getSelectedIndex()+1)
                     initPopupMenu().show(me.getComponent(), me.getX(), me.getY());
             }
         });
@@ -157,6 +168,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         }
         
         if (ae.getSource() == closeConnection) {
+            tabPanel.remove(tabPanel.getSelectedIndex());
             //TODO close connection
         }
     }
