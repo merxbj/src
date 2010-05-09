@@ -78,6 +78,10 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         this.setVisible(true);
     }
     
+    public void setSelection(Project project) {
+        projects.setSelectedItem(project.getName()); // TODO
+    }
+    
     private JPanel initMainComponents() {
         JPanel componentsPanel = new JPanel();
         componentsPanel.setLayout(null);
