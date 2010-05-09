@@ -23,7 +23,6 @@ import notwa.gui.tablemodels.ProjectManagementModel;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
-import notwa.wom.User;
 
 public class ProjectManagement extends JDialog implements ActionListener, ListSelectionListener {
     private ConnectionInfo ci;
@@ -102,7 +101,9 @@ public class ProjectManagement extends JDialog implements ActionListener, ListSe
         if (ae.getSource() == addButton) {
             String msg = (String)JOptionPane.showInputDialog(this, "New project name", "NOTWA - New project creation", JOptionPane.QUESTION_MESSAGE);
             
-            if (!msg.isEmpty()) {
+            if (msg == null) {
+                return;
+            } else if (!msg.isEmpty()) {
                 Project project = new Project();
                 project.registerWithContext(context);
                 project.setProjectName(msg);
@@ -112,8 +113,7 @@ public class ProjectManagement extends JDialog implements ActionListener, ListSe
                 pd.update(pc);
                 
                 tblModel.fireTableDataChanged();
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(this, "You must enter the name!", "NOTWA - Error", JOptionPane.ERROR_MESSAGE);
             }
         }
