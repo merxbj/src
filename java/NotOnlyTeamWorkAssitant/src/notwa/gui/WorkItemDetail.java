@@ -244,7 +244,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void selectUser(User user) {
-        this.assignedUsers.setSelectedItem(user); //TODO 
+        this.assignedUsers.setSelectedItem(user.getLogin()); //TODO 
     }
 
     public void setAllToNull() {

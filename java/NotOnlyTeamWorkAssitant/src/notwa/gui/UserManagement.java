@@ -67,9 +67,9 @@ public class UserManagement extends JDialog implements ActionListener, ListSelec
         table.getColumnModel().getColumn(1).setCellRenderer(tableCellRenderer);
         table.getColumnModel().getColumn(2).setCellRenderer(tableCellRenderer);
         table.getSelectionModel().addListSelectionListener(this);
-        managementPanel.add(table);
+        managementPanel.add(new JScrollPane(table));
                 
-        return new JScrollPane(managementPanel);
+        return managementPanel;
     }
     
     private JPanel initButtons() {
