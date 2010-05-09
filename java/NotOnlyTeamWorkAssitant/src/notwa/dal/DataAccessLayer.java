@@ -312,7 +312,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
     protected Integer getLastUniqeIdentifier(TObject bo) throws DalException {
         try {
             Integer potentialPrimaryKey = getConnection().executeScalar(getHighestUniqeIdentifierSql(bo));
-            return (potentialPrimaryKey == null) ? 1 : potentialPrimaryKey;
+            return (potentialPrimaryKey == null) ? 0 : potentialPrimaryKey;
         } catch (Exception ex) {
             throw new DalException(String.format("Unexpected error occured while getting a last uniqe identifier for %s!", bo.toString()), ex);
         }

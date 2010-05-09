@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -41,16 +40,17 @@ import notwa.logger.LoggingFacade;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
-import notwa.gui.components.JAnyItemCreator;
+import notwa.gui.components.ComboBoxItem;
+import notwa.gui.components.KeyValueComboBox;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
 
-public class AssignmentManager extends JDialog implements ActionListener,ListSelectionListener {
+public class AssignmentManager extends JDialog implements ActionListener, ListSelectionListener {
     private JButton okButton, stornoButton, addButton, removeButton;
-    private JComboBox projects;
+    private KeyValueComboBox<Project> projects;
     private JList users, currentlyAssignedUsers;
     private Context context;
     private ConnectionInfo ci;
@@ -120,8 +120,8 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         return componentsPanel;
     }
     
-    private JComboBox getAllProjects() {
-        projects = new JComboBox();
+    private KeyValueComboBox<Project> getAllProjects() {
+        projects = new KeyValueComboBox<Project>();
         projects.setBounds(210, 14, 144, 18);
         projects.addActionListener(this);
         
@@ -131,7 +131,7 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         pDal.fill(pc);
         
         for (Project project : pc) {
-            projects.addItem(new JAnyItemCreator(project, project.getName()));
+            projects.addItem(new ComboBoxItem<Project>(project, project.getName()));
         }
         
         return projects;
@@ -149,8 +149,9 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         uDal.fill(uc);
         
         for (User user : uc) {
-            if (!assignedUsers.contains(user.getLogin()))
-                usersModel.addElement(new JAnyItemCreator(user, user.getLogin()));
+            if (!assignedUsers.contains(user.getLogin())) {
+                usersModel.addElement(new ComboBoxItem<User>(user, user.getLogin()));
+            }
         }
     }
     
@@ -164,10 +165,10 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         }
         catch (Exception e) { }
         
-        UserCollection usersInProject = ((Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject()).getAssignedUsers();
+        UserCollection usersInProject = (((ComboBoxItem<Project>)projects.getSelectedItem()).getKey()).getAssignedUsers();
         
         for (User user : usersInProject) {
-            projectUsersModel.addElement(new JAnyItemCreator(user, user.getLogin()));
+            projectUsersModel.addElement(new ComboBoxItem<User>(user, user.getLogin()));
             assignedUsers.add(user.getLogin());
         }
     }
@@ -220,12 +221,12 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         }
         
         if (ae.getSource() == addButton) {
-            currentlySelectedProject = (Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject();
+            currentlySelectedProject = ((ComboBoxItem<Project>)projects.getSelectedItem()).getKey();
             if (users.getSelectedValues().length != 0) {
                 for (int i=0; i<users.getSelectedValues().length+1; i++) {
                     try {
-                        User user = (User)((JAnyItemCreator)users.getSelectedValues()[i]).getAttachedObject();
-                        user.setInserted(true);
+                        User user = ((ComboBoxItem<User>)users.getSelectedValues()[i]).getKey();
+                        user.setInserted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
@@ -237,12 +238,12 @@ public class AssignmentManager extends JDialog implements ActionListener,ListSel
         }
         
         if (ae.getSource() == removeButton) {
-            currentlySelectedProject = (Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject();
+            currentlySelectedProject = ((ComboBoxItem<Project>)projects.getSelectedItem()).getKey();
             if (currentlyAssignedUsers.getSelectedValues().length != 0) {
                 for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
                     try {
-                        User user = (User)((JAnyItemCreator)currentlyAssignedUsers.getSelectedValues()[i]).getAttachedObject();
-                        user.setDeleted(true);
+                        User user = (User)((ComboBoxItem<User>)currentlyAssignedUsers.getSelectedValues()[i]).getKey();
+                        user.setDeleted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
                     }

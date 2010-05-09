@@ -29,24 +29,19 @@ import java.util.Date;
  
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
-import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
-import notwa.exception.ContextException;
-import notwa.gui.components.JAnyItemCreator;
+import notwa.gui.components.ComboBoxItem;
+import notwa.gui.components.KeyValueComboBox;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.Project;
@@ -59,7 +54,10 @@ import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
  
 public class WorkItemEditor extends JDialog implements ActionListener {
-    private JComboBox projects,users,priorities,states;
+    private KeyValueComboBox<Project> projects;
+    private KeyValueComboBox<User> users;
+    private KeyValueComboBox<WorkItemPriority> priorities;
+    private KeyValueComboBox<WorkItemStatus> statuses;
     private JTextField subject = new JTextField();
     private JTextField eParentId = new JTextField();
     private JTextField eExpectingDate = new JTextField();
@@ -109,7 +107,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         JLabel lState = new JLabel("State");
         lState.setBounds(63, 240, 50, 15);
         jp.add(lState);
-        jp.add(loadWorkItemStates());
+        jp.add(loadWorkItemStatuses());
         
         JLabel lDescription = new JLabel("Description");
         lDescription.setBounds(63, 123, 84, 15);
@@ -156,51 +154,49 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         return jp;
     }
     
-    private JComboBox loadUsers() {
-        users = new JComboBox();
+    private KeyValueComboBox<User> loadUsers() {
+        users = new KeyValueComboBox<User>();
         users.setBounds(227, 36, 138, 22);
 
         UserDal ud = new UserDal(ci, context);
         UserCollection uc = new UserCollection(context);
         ud.fill(uc);
         for (User user : uc) {
-            users.addItem(new JAnyItemCreator(user, user.getLogin()));
+            users.addItem(new ComboBoxItem<User>(user, user.getLogin()));
         }
         
         return users;
     }
     
-    private JComboBox loadExistingProjects() {
-        projects = new JComboBox();
+    private KeyValueComboBox<Project> loadExistingProjects() {
+        projects = new KeyValueComboBox<Project>();
         projects.setBounds(227, 5, 138, 22);
 
         ProjectDal pd = new ProjectDal(ci, context);
         ProjectCollection pc = new ProjectCollection(context);
         pd.fill(pc);
         for (Project p : pc) {
-            projects.addItem(new JAnyItemCreator(p, p.getName()));
+            projects.addItem(new ComboBoxItem<Project>(p, p.getName()));
         }
         
         return projects;
     }
     
-    private JComboBox loadWorkItemStates() {
-        states = new JComboBox();
-        states.setBounds(227, 236, 138, 22);
+    private  KeyValueComboBox<WorkItemStatus> loadWorkItemStatuses() {
+        statuses = new KeyValueComboBox<WorkItemStatus>();
+        statuses.setBounds(227, 236, 138, 22);
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            states.addItem(new JAnyItemCreator(WorkItemStatus.values()[s],
-                                                    WorkItemStatus.values()[s].toString()));
+            statuses.addItem(new ComboBoxItem<WorkItemStatus>(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
         }
         
-        return states;
+        return statuses;
     }
     
-    private JComboBox loadWorkItemPriorties() {
-        priorities = new JComboBox();
+    private KeyValueComboBox<WorkItemPriority> loadWorkItemPriorties() {
+        priorities = new KeyValueComboBox<WorkItemPriority>();
         priorities.setBounds(227, 208, 138, 22);
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priorities.addItem(new JAnyItemCreator(WorkItemPriority.values()[p],
-                                                        WorkItemPriority.values()[p].toString()));
+            priorities.addItem(new ComboBoxItem<WorkItemPriority>(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
         }
 
         return priorities;
@@ -210,7 +206,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
             WorkItem wi = new WorkItem();
-            wi.setAssignedUser((User)((JAnyItemCreator)users.getSelectedItem()).getAttachedObject());
+            wi.setAssignedUser(users.getSelectedKey());
             wi.setDescription(eDescription.getText());
             if (!eExpectingDate.getText().equals("00.00.0000 00:00")) {
                 try {
@@ -242,9 +238,9 @@ public class WorkItemEditor extends JDialog implements ActionListener {
                     close = false;
                 }
             }
-            wi.setPriority((WorkItemPriority)((JAnyItemCreator)priorities.getSelectedItem()).getAttachedObject());
-            wi.setProject((Project)((JAnyItemCreator)projects.getSelectedItem()).getAttachedObject());
-            wi.setStatus((WorkItemStatus)((JAnyItemCreator)states.getSelectedItem()).getAttachedObject());
+            wi.setPriority(priorities.getSelectedKey());
+            wi.setProject(projects.getSelectedKey());
+            wi.setStatus(statuses.getSelectedKey());
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
 

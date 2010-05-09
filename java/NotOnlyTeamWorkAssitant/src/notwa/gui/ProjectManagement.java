@@ -14,7 +14,6 @@ import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.exception.ContextException;
-import notwa.gui.components.JAnyItemCreator;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
 import notwa.wom.Project;

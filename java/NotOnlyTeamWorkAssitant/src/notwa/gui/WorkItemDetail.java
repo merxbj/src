@@ -30,7 +30,6 @@ import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -40,7 +39,8 @@ import javax.swing.JTextField;
 
 import notwa.dal.NoteDal;
 import notwa.dal.WorkItemDal;
-import notwa.gui.components.JAnyItemCreator;
+import notwa.gui.components.ComboBoxItem;
+import notwa.gui.components.KeyValueComboBox;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Note;
 import notwa.wom.NoteCollection;
@@ -58,9 +58,9 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JTextField parent;
     private JTextField deadline;
     private JTextField lastModified;
-    private JComboBox status;
-    private JComboBox priority;
-    private JComboBox assignedUsers;
+    private KeyValueComboBox<WorkItemStatus> statuses;
+    private KeyValueComboBox<WorkItemPriority> priorities;
+    private KeyValueComboBox<User> assignedUsers;
     private WorkItem currentWorkItem;
     private WorkItemNoteHistoryTable winht;
     private TabContent tc;
@@ -79,9 +79,9 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.parent = new JTextField();
         this.deadline = new JTextField();
         this.lastModified = new JTextField();
-        this.status = new JComboBox();
-        this.priority = new JComboBox();
-        this.assignedUsers = new JComboBox();
+        this.statuses = new KeyValueComboBox<WorkItemStatus>();
+        this.priorities = new KeyValueComboBox<WorkItemPriority>();
+        this.assignedUsers = new KeyValueComboBox<User>();
         
         this.setLayout(new BorderLayout(5,5));
         JPanel descriptionPanel = new JPanel(new BorderLayout());
@@ -140,16 +140,16 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         JLabel lPriority = new JLabel("Priority");
         boxesPanel.add(lPriority);
         lPriority.setBounds(5, 33, 45, 15);
-        JComboBox cbPriorities = this.loadWorkItemPriorties();
-        boxesPanel.add(cbPriorities);
-        priority.setBounds(60, 29, 120, 22);
+        this.loadWorkItemPriorties();
+        boxesPanel.add(priorities);
+        priorities.setBounds(60, 29, 120, 22);
 
         JLabel lStatus = new JLabel("Status");
         boxesPanel.add(lStatus);
         lStatus.setBounds(5, 59, 45, 15);
-        JComboBox cbStatuses = this.loadWorkItemStatuses();
-        boxesPanel.add(cbStatuses);
-        status.setBounds(60, 55, 120, 22);
+        this.loadWorkItemStatuses();
+        boxesPanel.add(statuses);
+        statuses.setBounds(60, 55, 120, 22);
 
         JLabel lParent = new JLabel("Parent WIT ID");
         boxesPanel.add(lParent);
@@ -172,32 +172,28 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         return boxesPanel;
     }
     
-    private JComboBox loadWorkItemStatuses() {
-        status = new JComboBox();
+    private void loadWorkItemStatuses() {
+        statuses.removeAllItems();
         for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            status.addItem(new JAnyItemCreator(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
+            statuses.addItem(new ComboBoxItem<WorkItemStatus>(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
         }
-        
-        return status;
     }
     
-    private JComboBox loadWorkItemPriorties() {
-        priority = new JComboBox();
+    private void loadWorkItemPriorties() {
+        priorities.removeAllItems();
         for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priority.addItem(new JAnyItemCreator(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
+            priorities.addItem(new ComboBoxItem<WorkItemPriority>(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
         }
-
-        return priority;
     }
         
-    private void setAssignedUsers(UserCollection uc) {
-        try {
+    private void loadAssignedUsers(UserCollection uc) {
+        if (uc != null) {
             assignedUsers.removeAllItems();
             for (User user : uc) {
-                assignedUsers.addItem(new JAnyItemCreator(user, user.getLogin()));
+                assignedUsers.addItem(new ComboBoxItem<User>(user, user.getLogin()));
             }
-        } catch (Exception e) {
-            this.assignedUsers.addItem("unspecified");
+        } else {
+            this.assignedUsers.addItem(new ComboBoxItem<User>(new User(0), "Unknown"));
         }
     }
     
@@ -228,11 +224,11 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void setPriority(WorkItemPriority wip) {
-        this.priority.setSelectedIndex(wip.ordinal());
+        this.priorities.setSelectedKey(wip);
     }
     
     public void setStatus(WorkItemStatus wis) {
-        this.status.setSelectedIndex(wis.ordinal());
+        this.statuses.setSelectedKey(wis);
     }
     
     public void setLastNote(Note note) {
@@ -244,12 +240,12 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void selectUser(User user) {
-        this.assignedUsers.setSelectedItem(user); //TODO 
+        this.assignedUsers.setSelectedKey(user);
     }
 
     public void setAllToNull() {
         this.currentWorkItem = null;
-        this.setAssignedUsers(null);
+        this.loadAssignedUsers(null);
         this.setDeadline(null);
         this.setDescription("");
         this.setLastNote(null);
@@ -277,7 +273,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             setParent((pwi != null) ? (pwi.getId()) : 0);
             setDeadline(wi.getExpectedTimestamp());
             setLastModified(wi.getLastModifiedTimestamp());
-            setAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
+            loadAssignedUsers((p != null) ? (p.getAssignedUsers()) : null);
             selectUser((u != null) ? (u) : null);
             setPriority(wi.getPriority());
             setStatus(wi.getStatus());
@@ -332,13 +328,13 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
                 
                 if (save) {                
                     currentWorkItem.setDescription(this.description.getText());
-                    currentWorkItem.setAssignedUser((User)((JAnyItemCreator)assignedUsers.getSelectedItem()).getAttachedObject());
-                    currentWorkItem.setStatus((WorkItemStatus)((JAnyItemCreator)status.getSelectedItem()).getAttachedObject());
-                    currentWorkItem.setPriority((WorkItemPriority)((JAnyItemCreator)priority.getSelectedItem()).getAttachedObject());
+                    currentWorkItem.setAssignedUser(assignedUsers.getSelectedKey());
+                    currentWorkItem.setStatus(statuses.getSelectedKey());
+                    currentWorkItem.setPriority(priorities.getSelectedKey());
                     currentWorkItem.setLastModifiedTimestamp(Calendar.getInstance().getTime());
 
-                    WorkItemDal wid = new WorkItemDal(tc.getConnectionInfo(), tc.getContext());
-                    wid.update(tc.getWorkItemCollection());
+                    WorkItemDal dal = new WorkItemDal(tc.getConnectionInfo(), tc.getContext());
+                    dal.update(tc.getWorkItemCollection());
                     tc.dataRefresh();
                 }
             }

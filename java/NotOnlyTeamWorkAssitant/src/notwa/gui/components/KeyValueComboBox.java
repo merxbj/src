@@ -1,5 +1,5 @@
 /*
- * JComboBoxItemCreator
+ * KeyValueComboBox
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,27 +17,40 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package notwa.gui.components;
 
-public class JAnyItemCreator {
-    Object object;
-    String value;
+import javax.swing.JComboBox;
 
-    public JAnyItemCreator(Object object, String value) {
-        this.object = object;
-        this.value = value;
+/**
+ *
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
+ */
+public class KeyValueComboBox<TKey> extends JComboBox {
+
+    public void addItem(ComboBoxItem<TKey> item) {
+        super.addItem(item);
     }
 
-    public String getValue() {
-        return value;
+    public void removeItem(ComboBoxItem<TKey> item) {
+        super.removeItem(item);
     }
-    
-    public Object getAttachedObject() {
-        return object;
+
+    public void setSelectedItem(ComboBoxItem<TKey> item) {
+        super.setSelectedItem(item);
+    }
+
+    public void setSelectedKey(TKey key) {
+        setSelectedItem(new ComboBoxItem<TKey>(key));
+    }
+
+    public TKey getSelectedKey() {
+        return getSelectedItem() != null ? getSelectedItem().getKey() : null;
     }
 
     @Override
-    public String toString() {
-        return value;
+    public ComboBoxItem<TKey> getSelectedItem() {
+        return (ComboBoxItem<TKey>) super.getSelectedItem();
     }
 }

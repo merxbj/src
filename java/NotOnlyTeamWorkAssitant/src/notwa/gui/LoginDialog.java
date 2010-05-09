@@ -27,7 +27,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +37,8 @@ import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
 import notwa.exception.SignInException;
-import notwa.gui.components.JAnyItemCreator;
+import notwa.gui.components.ComboBoxItem;
+import notwa.gui.components.KeyValueComboBox;
 import notwa.gui.components.NotwaProgressBar;
 import notwa.security.Credentials;
 import notwa.security.Security;
@@ -47,7 +47,7 @@ import notwa.threading.IndeterminateProgressThread;
 
 public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton, mrneoButton, eterButton;
-    private JComboBox jcb;
+    private KeyValueComboBox<ConnectionInfo> jcb;
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
@@ -124,15 +124,15 @@ public class LoginDialog extends JDialog implements ActionListener {
         return jp;
     }
 
-    private JComboBox initComboBox() {
-        jcb = new JComboBox();
+    private KeyValueComboBox<ConnectionInfo> initComboBox() {
+        jcb = new KeyValueComboBox<ConnectionInfo>();
         jcb.setEditable(false);
         jcb.setBounds(243, 15, 150, 22);
 
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
-            jcb.addItem(new JAnyItemCreator(connInfo,connInfo.getLabel()));
+            jcb.addItem(new ComboBoxItem<ConnectionInfo>(connInfo,connInfo.getLabel()));
         }
         
         return jcb;
@@ -160,13 +160,13 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private boolean validateInput() {
-        return (this.jcb.getSelectedItem().equals("") ||
+        return (this.jcb.getSelectedItem() == null ||
                 this.login.getText().isEmpty() ||
                 this.password.getPassword().length == 0);
     }
 
     private void performSignIn() {
-        signInParams.connectionInfo = (ConnectionInfo)((JAnyItemCreator) this.jcb.getSelectedItem()).getAttachedObject();
+        signInParams.connectionInfo = this.jcb.getSelectedKey();
         signInParams.credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
 
         IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<LoginDialog>(this) {
