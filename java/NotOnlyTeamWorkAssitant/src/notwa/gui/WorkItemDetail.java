@@ -187,8 +187,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
         
     private void loadAssignedUsers(UserCollection uc) {
+        assignedUsers.removeAllItems();
         if (uc != null) {
-            assignedUsers.removeAllItems();
             for (User user : uc) {
                 assignedUsers.addItem(new ComboBoxItem<User>(user, user.getLogin()));
             }
