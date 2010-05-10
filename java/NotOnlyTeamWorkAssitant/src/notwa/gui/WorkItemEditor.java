@@ -40,7 +40,6 @@ import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
-import notwa.gui.components.ComboBoxItem;
 import notwa.gui.components.KeyValueComboBox;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Context;
@@ -162,7 +161,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         UserCollection uc = new UserCollection(context);
         ud.fill(uc);
         for (User user : uc) {
-            users.addItem(new ComboBoxItem<User>(user, user.getLogin()));
+            users.addItem(user, user.getLogin());
         }
         
         return users;
@@ -176,7 +175,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         ProjectCollection pc = new ProjectCollection(context);
         pd.fill(pc);
         for (Project p : pc) {
-            projects.addItem(new ComboBoxItem<Project>(p, p.getName()));
+            projects.addItem(p, p.getName());
         }
         
         return projects;
@@ -185,8 +184,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private  KeyValueComboBox<WorkItemStatus> loadWorkItemStatuses() {
         statuses = new KeyValueComboBox<WorkItemStatus>();
         statuses.setBounds(227, 236, 138, 22);
-        for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            statuses.addItem(new ComboBoxItem<WorkItemStatus>(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
+        for (WorkItemStatus wis : WorkItemStatus.values()) {
+            statuses.addItem(wis, wis.toString());
         }
         
         return statuses;
@@ -195,8 +194,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private KeyValueComboBox<WorkItemPriority> loadWorkItemPriorties() {
         priorities = new KeyValueComboBox<WorkItemPriority>();
         priorities.setBounds(227, 208, 138, 22);
-        for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priorities.addItem(new ComboBoxItem<WorkItemPriority>(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
+        for (WorkItemPriority wip : WorkItemPriority.values()) {
+            priorities.addItem(wip, wip.toString());
         }
 
         return priorities;

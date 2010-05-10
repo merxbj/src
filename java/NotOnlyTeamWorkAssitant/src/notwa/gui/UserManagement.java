@@ -1,6 +1,6 @@
 package notwa.gui;
 
-import notwa.gui.tablemodels.UserManagementModel;
+import notwa.gui.datamodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;

@@ -18,7 +18,7 @@
  *
  */
 
-package notwa.gui.tablemodels;
+package notwa.gui.datamodels;
 
 /**
  *

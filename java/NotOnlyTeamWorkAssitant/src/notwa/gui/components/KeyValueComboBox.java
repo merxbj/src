@@ -29,28 +29,24 @@ import javax.swing.JComboBox;
  */
 public class KeyValueComboBox<TKey> extends JComboBox {
 
-    public void addItem(ComboBoxItem<TKey> item) {
-        super.addItem(item);
+    public void addItem(TKey key, String value) {
+        super.addItem(new KeyValueItem<TKey> (key, value));
     }
 
-    public void removeItem(ComboBoxItem<TKey> item) {
-        super.removeItem(item);
-    }
-
-    public void setSelectedItem(ComboBoxItem<TKey> item) {
-        super.setSelectedItem(item);
+    public void removeByKey(TKey key) {
+        super.removeItem(new KeyValueItem<TKey>(key));
     }
 
     public void setSelectedKey(TKey key) {
-        setSelectedItem(new ComboBoxItem<TKey>(key));
+        super.setSelectedItem(new KeyValueItem<TKey>(key));
+    }
+
+    @Override
+    public KeyValueItem<TKey> getSelectedItem() {
+        return (KeyValueItem<TKey>) super.getSelectedItem();
     }
 
     public TKey getSelectedKey() {
         return getSelectedItem() != null ? getSelectedItem().getKey() : null;
-    }
-
-    @Override
-    public ComboBoxItem<TKey> getSelectedItem() {
-        return (ComboBoxItem<TKey>) super.getSelectedItem();
     }
 }

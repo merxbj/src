@@ -17,33 +17,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package notwa.gui.tablemodels;
+package notwa.gui.datamodels;
 
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;
 
 import notwa.logger.LoggingFacade;
-import notwa.wom.User;
-import notwa.wom.UserCollection;
+import notwa.wom.Project;
+import notwa.wom.ProjectCollection;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class UserManagementModel extends AbstractTableModel {
+public class ProjectManagementModel extends AbstractTableModel {
 
-    private UserCollection data;
-    private Hashtable<Integer, ColumnSettings<UserManagementTableColumn>> columns;
+    private ProjectCollection data;
+    private Hashtable<Integer, ColumnSettings<ProjectManagementTableColumn>> columns;
 
-    public UserManagementModel(UserCollection data) {
+    public ProjectManagementModel(ProjectCollection data) {
         this.data = data;
         configureColumns();
     }
 
     @Override
     public String getColumnName(int c) {
-        ColumnSettings<UserManagementTableColumn> cs = columns.get(c);
+        ColumnSettings<ProjectManagementTableColumn> cs = columns.get(c);
         return (cs != null) ? cs.getColumnHeader() : "Hey! I need name!";
     }
 
@@ -67,16 +67,12 @@ public class UserManagementModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
 
         try {
-            User row = data.get(rowIndex);
-            ColumnSettings<UserManagementTableColumn> cs = columns.get(columnIndex);
+            Project row = data.get(rowIndex);
+            ColumnSettings<ProjectManagementTableColumn> cs = columns.get(columnIndex);
 
             switch (cs.getColumnAlias()) {
-                case COLUMN_USER_LOGIN_ALIAS:
-                    return row.getLogin();
-                case COLUMN_USER_FIRST_NAME_ALIAS:
-                    return row.getFirstName();
-                case COLUMN_USER_LAST_NAME_ALIAS:
-                    return row.getLastName();
+                case COLUMN_PROJECT_NAME_ALIAS:
+                    return row.getName();
                 default:
                     return null;
             }
@@ -93,11 +89,11 @@ public class UserManagementModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        ColumnSettings<UserManagementTableColumn> cs = columns.get(columnIndex);
+        ColumnSettings<ProjectManagementTableColumn> cs = columns.get(columnIndex);
         return (cs != null) ? cs.getClass() : Object.class;
     }
 
-    public ColumnSettings<UserManagementTableColumn> getColumnSettings(int columnIndex) {
+    public ColumnSettings<ProjectManagementTableColumn> getColumnSettings(int columnIndex) {
         if (columnIndex < columns.size()) {
             return columns.get(columnIndex);
         } else {
@@ -106,15 +102,11 @@ public class UserManagementModel extends AbstractTableModel {
     }
 
     private void configureColumns() {
-        columns = new Hashtable<Integer, ColumnSettings<UserManagementTableColumn>>(3);
-        columns.put(0, new ColumnSettings<UserManagementTableColumn>(0, String.class, "Login",      UserManagementTableColumn.COLUMN_USER_LOGIN_ALIAS));
-        columns.put(1, new ColumnSettings<UserManagementTableColumn>(1, String.class, "First Name", UserManagementTableColumn.COLUMN_USER_FIRST_NAME_ALIAS));
-        columns.put(2, new ColumnSettings<UserManagementTableColumn>(2, String.class, "Last Name",  UserManagementTableColumn.COLUMN_USER_LAST_NAME_ALIAS));
+        columns = new Hashtable<Integer, ColumnSettings<ProjectManagementTableColumn>>(1);
+        columns.put(0, new ColumnSettings<ProjectManagementTableColumn>(0, String.class, "Project name", ProjectManagementTableColumn.COLUMN_PROJECT_NAME_ALIAS));
     }
 
-    public enum UserManagementTableColumn {
-        COLUMN_USER_LOGIN_ALIAS,
-        COLUMN_USER_FIRST_NAME_ALIAS,
-        COLUMN_USER_LAST_NAME_ALIAS;
+    public enum ProjectManagementTableColumn {
+        COLUMN_PROJECT_NAME_ALIAS,
     }
 }

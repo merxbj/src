@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package notwa.gui.tablemodels;
+package notwa.gui.datamodels;
 
 import java.util.Hashtable;
 import javax.swing.table.AbstractTableModel;

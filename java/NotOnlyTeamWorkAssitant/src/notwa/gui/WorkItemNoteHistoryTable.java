@@ -25,7 +25,7 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import notwa.gui.tablemodels.NoteHistoryModel;
+import notwa.gui.datamodels.NoteHistoryModel;
 
 import notwa.wom.NoteCollection;
 import notwa.wom.WorkItem;

@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
-import notwa.gui.tablemodels.WorkItemlModel;
+import notwa.gui.datamodels.WorkItemlModel;
 import notwa.logger.LoggingFacade;
 import notwa.security.SecurityEvent;
 import notwa.security.SecurityEventParams;

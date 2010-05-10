@@ -39,7 +39,6 @@ import javax.swing.JTextField;
 
 import notwa.dal.NoteDal;
 import notwa.dal.WorkItemDal;
-import notwa.gui.components.ComboBoxItem;
 import notwa.gui.components.KeyValueComboBox;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Note;
@@ -174,15 +173,15 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     
     private void loadWorkItemStatuses() {
         statuses.removeAllItems();
-        for (int s = 0; s < WorkItemStatus.values().length; s++) {
-            statuses.addItem(new ComboBoxItem<WorkItemStatus>(WorkItemStatus.values()[s], WorkItemStatus.values()[s].toString()));
+        for (WorkItemStatus wis : WorkItemStatus.values()) {
+            statuses.addItem(wis, wis.toString());
         }
     }
     
     private void loadWorkItemPriorties() {
         priorities.removeAllItems();
-        for (int p = 0; p < WorkItemPriority.values().length; p++) {
-            priorities.addItem(new ComboBoxItem<WorkItemPriority>(WorkItemPriority.values()[p], WorkItemPriority.values()[p].toString()));
+        for (WorkItemPriority wip : WorkItemPriority.values()) {
+            priorities.addItem(wip, wip.toString());
         }
     }
         
@@ -190,10 +189,10 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         assignedUsers.removeAllItems();
         if (uc != null) {
             for (User user : uc) {
-                assignedUsers.addItem(new ComboBoxItem<User>(user, user.getLogin()));
+                assignedUsers.addItem(user, user.getLogin());
             }
         } else {
-            this.assignedUsers.addItem(new ComboBoxItem<User>(new User(0), "Unknown"));
+            this.assignedUsers.addItem(new User(0), "Unknown");
         }
     }
     

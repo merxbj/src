@@ -1,5 +1,5 @@
 /*
- * ComboBoxItem
+ * KeyValueItem
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,16 +25,16 @@ package notwa.gui.components;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ComboBoxItem<T> {
+public class KeyValueItem<T> {
     private T key;
     private String value;
 
-    public ComboBoxItem(T key) {
+    public KeyValueItem(T key) {
         this.key = key;
         this.value = key.toString();
     }
 
-    public ComboBoxItem(T key, String value) {
+    public KeyValueItem(T key, String value) {
         this.key = key;
         this.value = value;
     }
@@ -52,7 +52,7 @@ public class ComboBoxItem<T> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ComboBoxItem<T> other = (ComboBoxItem<T>) obj;
+        final KeyValueItem<T> other = (KeyValueItem<T>) obj;
         if (this.key != other.key && (this.key == null || !this.key.equals(other.key))) {
             return false;
         }

@@ -39,7 +39,7 @@ import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
-import notwa.gui.tablemodels.WorkItemlModel;
+import notwa.gui.datamodels.WorkItemlModel;
 
 public class MainMenu extends JMenuBar implements ActionListener {
     private static final JTextField searchField = new JTextField("Type here ...");

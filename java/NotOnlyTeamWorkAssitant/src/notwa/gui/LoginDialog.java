@@ -37,7 +37,6 @@ import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
 import notwa.exception.SignInException;
-import notwa.gui.components.ComboBoxItem;
 import notwa.gui.components.KeyValueComboBox;
 import notwa.gui.components.NotwaProgressBar;
 import notwa.security.Credentials;
@@ -132,7 +131,7 @@ public class LoginDialog extends JDialog implements ActionListener {
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
-            jcb.addItem(new ComboBoxItem<ConnectionInfo>(connInfo,connInfo.getLabel()));
+            jcb.addItem(connInfo,connInfo.getLabel());
         }
         
         return jcb;

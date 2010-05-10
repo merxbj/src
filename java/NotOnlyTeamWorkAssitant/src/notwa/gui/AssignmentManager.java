@@ -1,5 +1,5 @@
 /*
- * UserManager
+ * AssignmentManager
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -19,16 +19,15 @@
  */
 package notwa.gui;
 
+import notwa.gui.datamodels.KeyValueListModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,8 +39,8 @@ import notwa.logger.LoggingFacade;
 import notwa.dal.ProjectDal;
 import notwa.dal.ProjectToUserAssignmentDal;
 import notwa.dal.UserDal;
-import notwa.gui.components.ComboBoxItem;
 import notwa.gui.components.KeyValueComboBox;
+import notwa.gui.components.KeyValueList;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
@@ -51,12 +50,13 @@ import notwa.wom.UserCollection;
 public class AssignmentManager extends JDialog implements ActionListener, ListSelectionListener {
     private JButton okButton, stornoButton, addButton, removeButton;
     private KeyValueComboBox<Project> projects;
-    private JList users, currentlyAssignedUsers;
+    private KeyValueList<User> users;
+    private KeyValueList<User> currentlyAssignedUsers;
     private Context context;
     private ConnectionInfo ci;
-    private ListModel projectUsersModel = new ListModel();
-    private ListModel usersModel = new ListModel();
-    private ArrayList<String> assignedUsers = new ArrayList<String>(); //used only for checking if user is already assigned to project
+    private KeyValueListModel<User> projectUsersModel = new KeyValueListModel<User>();
+    private KeyValueListModel<User> usersModel = new KeyValueListModel<User>();
+    private ArrayList<User> assignedUsers = new ArrayList<User>(); //used only for checking if user is already assigned to project
     private Project currentlySelectedProject;
     
     public AssignmentManager(ConnectionInfo ci, Context context) {
@@ -95,7 +95,7 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         componentsPanel.add(lAllRegisteredUsers);
         lAllRegisteredUsers.setBounds(60, 56, 135, 15);
 
-        users = new JList(usersModel);
+        users = new KeyValueList<User>(usersModel);
         users.addListSelectionListener(this);
         JScrollPane allUsersPanel = new JScrollPane(users);
         allUsersPanel.setBounds(62, 77, 115, 130);
@@ -115,7 +115,7 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         JLabel lAssignedUsers = new JLabel("Already assigned users");
         componentsPanel.add(lAssignedUsers);
         lAssignedUsers.setBounds(305, 52, 152, 22);
-        currentlyAssignedUsers = new JList(projectUsersModel);
+        currentlyAssignedUsers = new KeyValueList<User>(projectUsersModel);
         currentlyAssignedUsers.addListSelectionListener(this);
         JScrollPane assignedUsersPanel = new JScrollPane(currentlyAssignedUsers);
         assignedUsersPanel.setBounds(320, 77, 115, 130);
@@ -135,7 +135,7 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         pDal.fill(pc);
         
         for (Project project : pc) {
-            projects.addItem(new ComboBoxItem<Project>(project, project.getName()));
+            projects.addItem(project, project.getName());
         }
         
         return projects;
@@ -153,8 +153,8 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         uDal.fill(uc);
         
         for (User user : uc) {
-            if (!assignedUsers.contains(user.getLogin())) {
-                usersModel.addElement(new ComboBoxItem<User>(user, user.getLogin()));
+            if (!assignedUsers.contains(user)) {
+                usersModel.addElement(user, user.getLogin());
             }
         }
     }
@@ -169,11 +169,11 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         }
         catch (Exception e) { }
         
-        UserCollection usersInProject = (((ComboBoxItem<Project>)projects.getSelectedItem()).getKey()).getAssignedUsers();
+        UserCollection usersInProject = (projects.getSelectedKey()).getAssignedUsers();
         
         for (User user : usersInProject) {
-            projectUsersModel.addElement(new ComboBoxItem<User>(user, user.getLogin()));
-            assignedUsers.add(user.getLogin());
+            projectUsersModel.addElement(user, user.getLogin());
+            assignedUsers.add(user);
         }
     }
     
@@ -193,8 +193,8 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
     }
 
     private void save() {
-        if (    !assignedUsers.containsAll(Arrays.asList(projectUsersModel.toArray())) ||
-                !Arrays.asList(projectUsersModel.toArray()).containsAll(assignedUsers)) { // check if something has changed
+        if (    !assignedUsers.containsAll(projectUsersModel.toCollection()) ||
+                !projectUsersModel.toCollection().containsAll(assignedUsers)) { // check if something has changed
             if (JOptionPane.showConfirmDialog(this, "Do you really want to save changes?") == 0) {
                 ProjectToUserAssignmentDal ptuad = new ProjectToUserAssignmentDal(ci, context);
                 ptuad.update(currentlySelectedProject.getAssignedUsers());
@@ -225,34 +225,32 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
         }
         
         if (ae.getSource() == addButton) {
-            currentlySelectedProject = ((ComboBoxItem<Project>)projects.getSelectedItem()).getKey();
+            currentlySelectedProject = projects.getSelectedKey();
             if (users.getSelectedValues().length != 0) {
-                for (int i=0; i<users.getSelectedValues().length+1; i++) {
+                for (User user : users.getSelectedKeys()) {
                     try {
-                        User user = ((ComboBoxItem<User>)users.getSelectedValues()[i]).getKey();
                         user.setInserted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
                     }
-                    projectUsersModel.addElement(users.getSelectedValues()[i]);
-                    usersModel.removeElement(users.getSelectedValues()[i]);
+                    projectUsersModel.addElement(user, user.getLogin());
+                    usersModel.removeKey(user);
                 }
             }
         }
         
         if (ae.getSource() == removeButton) {
-            currentlySelectedProject = ((ComboBoxItem<Project>)projects.getSelectedItem()).getKey();
+            currentlySelectedProject = projects.getSelectedKey();
             if (currentlyAssignedUsers.getSelectedValues().length != 0) {
-                for (int i=0; i<currentlyAssignedUsers.getSelectedValues().length+1; i++) {
+                for (User user : currentlyAssignedUsers.getSelectedKeys()) {
                     try {
-                        User user = (User)((ComboBoxItem<User>)currentlyAssignedUsers.getSelectedValues()[i]).getKey();
                         user.setDeleted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
                     }
-                    usersModel.addElement(currentlyAssignedUsers.getSelectedValues()[i]);
-                    projectUsersModel.removeElement(currentlyAssignedUsers.getSelectedValues()[i]);
+                    usersModel.addElement(user, user.getLogin());
+                    projectUsersModel.removeKey(user);
                 }
             }
         }
