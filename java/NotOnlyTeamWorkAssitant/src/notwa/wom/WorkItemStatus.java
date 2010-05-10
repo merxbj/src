@@ -93,6 +93,28 @@ public enum WorkItemStatus {
         public String toString() {
             return "Verified";
         }
+    },
+
+    /**
+     * The sollution for the <code>WorkItem</code> has been found and coded
+     * and the reviewer is suposed to make a code review to verify that
+     * the actual coder didn't make any potential pitfalls.
+     */
+    CODE_REVIEW(6) {
+        @Override
+        public String toString() {
+            return "Code Review";
+        }
+    },
+
+    /**
+     * The <code>WorkItem</code> solution has been reviewed and approved.
+     */
+    CODE_REVIEW_APPROVED(7) {
+        @Override
+        public String toString() {
+            return "Code Review - Approved";
+        }
     };
     
     private int value;
