@@ -95,3 +95,16 @@ table caption
     padding-bottom: 5px;
     font-weight: bold;
 }
+
+h7
+{
+    font-size: 15px;
+    text-align: right;
+}
+
+h2
+{
+    font-size: 20px;
+    text-align: left;
+    margin-top: -20px;
+}
