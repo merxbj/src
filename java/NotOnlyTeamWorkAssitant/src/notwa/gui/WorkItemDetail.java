@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -89,8 +88,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         JLabel lDescription = new JLabel("Description");
         pDescription.add(lDescription);
         descriptionPanel.add(pDescription, BorderLayout.LINE_START);
-        description.setBorder(BorderFactory.createEtchedBorder());
-        descriptionPanel.add(description, BorderLayout.CENTER);
+        description.setLineWrap(true);
+        descriptionPanel.add(new JScrollPane(description), BorderLayout.CENTER);
 
         JPanel topPanel = new JPanel(new BorderLayout(5,5));
 
@@ -105,8 +104,8 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         JLabel lLatestNote = new JLabel("Latest note");
         pLatestNote.add(lLatestNote);
         notePanel.add(pLatestNote, BorderLayout.LINE_START);
-        latestNote.setBorder(BorderFactory.createEtchedBorder());
-        notePanel.add(latestNote, BorderLayout.CENTER);
+        latestNote.setLineWrap(true);
+        notePanel.add(new JScrollPane(latestNote), BorderLayout.CENTER);
             
         JPanel buttonsPanel = new JPanel();
         
@@ -116,10 +115,11 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         buttonsPanel.add(addNote);
         buttonsPanel.add(save);
         
-        JPanel bottomPanel = new JPanel(new BorderLayout(5,5));
+        JPanel bottomPanel = new JPanel(new BorderLayout());
 
         bottomPanel.add(notePanel, BorderLayout.CENTER);
         bottomPanel.add(buttonsPanel, BorderLayout.LINE_END);
+        bottomPanel.setPreferredSize(new Dimension(0,35));
         
         this.add(bottomPanel, BorderLayout.PAGE_END);
     }
@@ -127,7 +127,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JPanel initBoxes() {
         JPanel boxesPanel = new JPanel();
         boxesPanel.setLayout(null);
-        boxesPanel.setPreferredSize(new java.awt.Dimension(401, 80));
+        boxesPanel.setPreferredSize(new Dimension(401, 80));
         boxesPanel.setMinimumSize(new Dimension(0,80));
 
         JLabel lUser = new JLabel("User");

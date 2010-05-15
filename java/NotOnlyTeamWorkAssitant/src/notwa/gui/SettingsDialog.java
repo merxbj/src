@@ -20,11 +20,26 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
-public class SettingsDialog extends JDialog {
+import notwa.common.ApplicationSettings;
+import notwa.logger.LoggingFacade;
+
+public class SettingsDialog extends JDialog implements ActionListener {
+
+    private JButton okButton;
+    private JButton stornoButton;
+    private JComboBox cbSkin;
+    private LookAndFeelInfo[] installedLAF = UIManager.getInstalledLookAndFeels();
 
     public SettingsDialog() {
         init();
@@ -37,8 +52,71 @@ public class SettingsDialog extends JDialog {
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setLocationRelativeTo(null);
         
-        this.add(new JLabel("window for settings"));
+        this.add(initComponenets(), BorderLayout.CENTER);
+        this.add(initButtons(), BorderLayout.PAGE_END);
         
         this.setVisible(true);
+    }
+    
+    private JPanel initComponenets() {
+        JPanel jp = new JPanel();
+        
+        JLabel lSkin = new JLabel("Skin");
+        cbSkin = getInstalledSkins();
+        this.selectCurrentSkin();
+        jp.add(lSkin);
+        jp.add(cbSkin);
+        
+        return jp;
+    }
+
+    private JPanel initButtons() {
+        JPanel jp = new JPanel();
+        
+        okButton = new JButton("Ok");
+        okButton.addActionListener(this);
+        
+        stornoButton = new JButton("Storno");
+        stornoButton.addActionListener(this);
+        
+        jp.add(okButton);
+        jp.add(stornoButton);
+        
+        return jp;
+    }
+
+    private JComboBox getInstalledSkins() {
+        JComboBox cbInstalledSkins = new JComboBox();
+        
+        for (int i=0; i<installedLAF.length; i++) {
+            cbInstalledSkins.addItem(installedLAF[i].getName());
+        }
+        
+        return cbInstalledSkins;
+    }
+    
+    private void selectCurrentSkin() {
+        cbSkin.setSelectedItem(UIManager.getLookAndFeel().getName());
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == okButton) {
+            //TODO: Config save
+            ApplicationSettings as = new ApplicationSettings();
+            as.setSkin(installedLAF[cbSkin.getSelectedIndex()].getClassName());
+            System.out.println(installedLAF[cbSkin.getSelectedIndex()].getClassName());
+            try {
+                UIManager.setLookAndFeel(as.getSkin());
+            }
+            catch (Exception e) {
+                LoggingFacade.handleException(e);
+            }
+            this.setVisible(false);
+        }
+        
+        if (ae.getSource() == stornoButton) {
+            this.setVisible(false);
+        }
     }
 }

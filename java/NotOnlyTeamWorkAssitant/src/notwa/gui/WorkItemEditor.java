@@ -33,6 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -112,9 +113,10 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         lDescription.setBounds(63, 123, 84, 15);
         jp.add(lDescription);
         eDescription = new JTextArea();
-        eDescription.setBorder(BorderFactory.createEtchedBorder());
-        eDescription.setBounds(227, 120, 458, 76);
-        jp.add(eDescription);
+        eDescription.setLineWrap(true);
+        JScrollPane jsDescription = new JScrollPane(eDescription);
+        jsDescription.setBounds(227, 120, 458, 76);
+        jp.add(jsDescription);
         
         JLabel lParent = new JLabel("Parent WIT ID");
         lParent.setBounds(63, 68, 91, 15);

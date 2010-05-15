@@ -49,6 +49,7 @@ public class Config {
     private static Config instance;
     private Set<ConnectionInfo> connections;
     private File configFile;
+    private ApplicationSettings as;
     private final String CONFIG_FILE_NAME = "./notwa.config";
     
     /**
@@ -88,6 +89,9 @@ public class Config {
 
     }
 
+    public ApplicationSettings getApplicationSettings() {
+        return as;
+    }
     /**
      * Parse the XML configuration document utilizing the DOM {@link Document}.
      * 
@@ -98,8 +102,18 @@ public class Config {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document dom = db.parse(configFile);
             parseConnecionInformations(dom.getElementsByTagName("Database"));
+            parseSettingsInformations(dom.getElementsByTagName("Skin"));
         } else {
             throw new Exception("Config file does not exists!");
+        }
+    }
+
+    private void parseSettingsInformations(NodeList nodes) throws Exception {
+        XPath xp = XPathFactory.newInstance().newXPath();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node n = nodes.item(i);
+            as = new ApplicationSettings();
+            as.setSkin(xp.evaluate("./@name", n));
         }
     }
 

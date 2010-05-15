@@ -29,6 +29,7 @@ import java.util.Collection;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -46,7 +47,7 @@ import notwa.threading.IndeterminateProgressThread;
 
 public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton, mrneoButton, eterButton;
-    private KeyValueComboBox<ConnectionInfo> jcb;
+    private KeyValueComboBox<ConnectionInfo> connectionsBox;
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
@@ -124,23 +125,23 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private KeyValueComboBox<ConnectionInfo> initComboBox() {
-        jcb = new KeyValueComboBox<ConnectionInfo>();
-        jcb.setEditable(false);
-        jcb.setBounds(243, 15, 150, 22);
+        connectionsBox = new KeyValueComboBox<ConnectionInfo>();
+        connectionsBox.setEditable(false);
+        connectionsBox.setBounds(243, 15, 150, 22);
 
         Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
         for (ConnectionInfo connInfo : cci)
         {
-            jcb.addItem(connInfo,connInfo.getLabel());
+            connectionsBox.addItem(connInfo,connInfo.getLabel());
         }
         
-        return jcb;
+        return connectionsBox;
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            if (!validateInput()) {
+            if (validateInput()) {
                 initErrorField("You must fill all fields");
             } else {
                 this.performSignIn();
@@ -159,14 +160,15 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     private boolean validateInput() {
-        return (this.jcb.getSelectedItem() == null ||
+        return (this.connectionsBox.getSelectedItem() == null ||
                 this.login.getText().isEmpty() ||
                 this.password.getPassword().length == 0);
     }
 
     private void performSignIn() {
-        signInParams.connectionInfo = this.jcb.getSelectedKey();
+        signInParams.connectionInfo = this.connectionsBox.getSelectedKey();
         signInParams.credentials = new Credentials(this.login.getText(), new String(this.password.getPassword()));
+        final JDialog loginDialog = this;
 
         IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action<LoginDialog>(this) {
             @Override
@@ -175,6 +177,7 @@ public class LoginDialog extends JDialog implements ActionListener {
                     Security.getInstance().signIn(signInParams.connectionInfo, signInParams.credentials);
                     params.setVisible(false);
                 } catch (SignInException siex) {
+                    JOptionPane.showMessageDialog(loginDialog, "Bad user name or password!");
                     LoggingFacade.handleException(siex);
                 }
             }

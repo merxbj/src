@@ -20,6 +20,8 @@
 package notwa.gui.datamodels;
 
 import java.util.Hashtable;
+
+import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Note;
@@ -55,7 +57,7 @@ public class NoteHistoryModel extends AbstractTableModel {
     public int getRowCount() {
         return (data == null) ? 0 : data.size();
     }
-
+    
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         // nothing is editable
@@ -64,7 +66,6 @@ public class NoteHistoryModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-
         try {
             Note row = data.get(rowIndex);
             ColumnSettings<NoteHistoryTableColumn> cs = columns.get(columnIndex);

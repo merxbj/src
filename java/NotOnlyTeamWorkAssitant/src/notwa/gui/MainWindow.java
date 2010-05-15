@@ -19,9 +19,12 @@
  */
 package notwa.gui;
 
+import notwa.common.ApplicationSettings;
+import notwa.common.Config;
 import notwa.common.EventHandler;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
@@ -174,6 +177,7 @@ public class MainWindow extends JFrame {
 
     private void invokeConfigure(GuiEventParams params) {
         SettingsDialog sd = new SettingsDialog();
+        SwingUtilities.updateComponentTreeUI(this);
     }
 
     private void invokeExit(GuiEventParams params) {
@@ -213,9 +217,17 @@ public class MainWindow extends JFrame {
 
     private void trySetLookAndFeel() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            ApplicationSettings as = Config.getInstance().getApplicationSettings();
+            if (as.getSkin() != null || !as.getSkin().isEmpty()) {
+                UIManager.setLookAndFeel(as.getSkin());
+            }
         } catch (Exception ex) {
-            LoggingFacade.handleException(ex);
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+            }
+            catch (Exception exc) {
+                LoggingFacade.handleException(exc);
+            }
         }
     }
 
