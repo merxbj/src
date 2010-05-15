@@ -44,6 +44,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
     private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     private WorkItemCollection wic;
+    public int selectedRowIndex;
 
     public WorkItemTable(WorkItemCollection wic) {
         init(wic);
@@ -118,8 +119,19 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
         
     }
     
+    /**
+     * Selects lastly selected row if there is one else select first row in table
+     * @throws Exception
+     */
+    public void selectRow() throws Exception {
+        witTable.setRowSelectionInterval(selectedRowIndex, selectedRowIndex);
+    }
+    
     @Override
     public void valueChanged(ListSelectionEvent lse) {
+        if (witTable.getSelectedRow() > 0) {
+            selectedRowIndex = witTable.getSelectedRow();
+        }
         GuiEventParams gep = new GuiEventParams(GuiEventParams.SELECTED_ROW_CHANGED, this.getSelected());
         guiHandler.handleEvent(new GuiEvent(gep));
     }

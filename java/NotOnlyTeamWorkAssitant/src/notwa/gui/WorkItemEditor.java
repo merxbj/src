@@ -44,6 +44,7 @@ import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
 import notwa.gui.components.KeyValueComboBox;
 import notwa.logger.LoggingFacade;
+import notwa.security.Credentials;
 import notwa.wom.Context;
 import notwa.wom.Project;
 import notwa.wom.ProjectCollection;
@@ -69,12 +70,14 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private WorkItemCollection wic;
     private boolean close = true;
     private EventHandler<GuiEvent> guiHandler;
+    private Credentials currentUser;
     
-    public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic, EventHandler<GuiEvent> guiHandler) {
+    public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic, EventHandler<GuiEvent> guiHandler, Credentials currentUser) {
         this.ci = ci;
         this.context = context;
         this.wic = wic;
         this.guiHandler = guiHandler;
+        this.currentUser = currentUser;
     }
     
     public void initAddDialog() {
@@ -94,7 +97,6 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         lUser.setBounds(63, 39, 124, 15);
         jp.add(lUser);
         jp.add(loadUsers());
-        //TODO select currently logged user
         
         JLabel lSubject = new JLabel("Subject");
         lSubject.setBounds(63, 96, 78, 15);
@@ -168,6 +170,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         for (User user : uc) {
             users.addItem(user, user.getLogin());
         }
+        
+        users.setSelectedKey(new User(currentUser.getUserId()));
         
         return users;
     }

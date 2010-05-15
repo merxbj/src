@@ -139,7 +139,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
             }
         });
 
-        tabPanel.insertTab(ci.getLabel(), null, tc, null, tabPanel.getTabCount() - 1);
+        tabPanel.insertTab(new String(ci.getLabel() + " - " + credentials.getLogin() ), null, tc, null, tabPanel.getTabCount() - 1);
         tabPanel.setSelectedIndex(tabPanel.getTabCount() - 2);
     }
     
@@ -196,6 +196,9 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
             widl.setDataToNull();
         }
 
+        /*
+         * Ensure that tools and similar MenuItems will be available only on tabs with connection
+         */
         if (tabPanel.getTabCount()-1 == tabPanel.getSelectedIndex()) {
             gep = new GuiEventParams(GuiEventParams.DISABLE_MENU_ITEMS);
             this.hideDetail();
@@ -205,6 +208,13 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
             this.showDetail();
         }
         fireGuiEvent(new GuiEvent(gep));
+        
+        /*
+         * Try to select lastly selected row, if tab is new automaticaly set first
+         */
+        try {
+            activeTab.getWorkItemTable().selectRow(); 
+        } catch (Exception e) {}
     }
 
     private boolean fireGuiEvent(GuiEvent ge) {
@@ -235,6 +245,12 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
 
     public synchronized void refreshDataOnActiveTab() {
         getActiveTab().dataRefresh();
+        /*
+         * Try to select lastly selected row, if tab is new automaticaly set first
+         */
+        try {
+            getActiveTab().getWorkItemTable().selectRow(); 
+        } catch (Exception e) {}
     }
 
     private void invokeSelectedRowChanged(GuiEventParams params) {

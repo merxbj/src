@@ -229,7 +229,7 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
             if (users.getSelectedValues().length != 0) {
                 for (User user : users.getSelectedKeys()) {
                     try {
-                        user.setInserted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
+                        user.setInserted(true);
                         currentlySelectedProject.addAssignedUser(user);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
@@ -245,7 +245,7 @@ public class AssignmentManager extends JDialog implements ActionListener, ListSe
             if (currentlyAssignedUsers.getSelectedValues().length != 0) {
                 for (User user : currentlyAssignedUsers.getSelectedKeys()) {
                     try {
-                        user.setDeleted(true); // TODO: <MERXBJ> Is this necessary? Probably I should fix the wom
+                        user.setDeleted(true);
                     } catch (Exception e) {
                         LoggingFacade.handleException(e);
                     }
