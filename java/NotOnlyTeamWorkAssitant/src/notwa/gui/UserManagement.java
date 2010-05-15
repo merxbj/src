@@ -116,7 +116,7 @@ public class UserManagement extends JDialog implements ActionListener, ListSelec
             UserEditor ue = new UserEditor(this.getSelectedUser(), false);
             ue.init();
             ud.update(uc);
-            table.revalidate();
+            tblModel.fireTableDataChanged();
         }
         
         if (ae.getSource() == delButton) {

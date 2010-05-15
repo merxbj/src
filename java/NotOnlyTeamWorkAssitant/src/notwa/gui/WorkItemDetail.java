@@ -354,7 +354,9 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
                     NoteCollection nc = currentWorkItem.getNoteCollection();
                     Note note = new Note(currentWorkItem.getId());
                     note.registerWithContext(tc.getContext());
-                    note.setAuthor(currentWorkItem.getAssignedUser()); // TODO currentlyLoggedUser
+                    User user = new User(tc.getCurrentCredentinals().getUserId());
+                    user.setLogin(tc.getCurrentCredentinals().getLogin());
+                    note.setAuthor(user);
                     note.setNoteText(ta.getText());
                     note.setInserted(true);
                     nc.add(note);

@@ -69,7 +69,7 @@ public class UserEditor extends JDialog implements ActionListener{
             this.login.setEnabled(false);
             this.login.setText(this.user.getLogin());
             this.password.setText("|_PASSWORD_PROTECTED_|");
-            this.secondPassword.setText("|_PASSWORLD_PROTECTED_|");
+            this.secondPassword.setText("|_PASSWORD_PROTECTED_|");
             this.firstName.setText(this.user.getFirstName());
             this.lastName.setText(this.user.getLastName());
         }
@@ -149,8 +149,8 @@ public class UserEditor extends JDialog implements ActionListener{
                 if (!this.password.getPassword().toString().equals("|_PASSWORD_PROTECTED_|")) {
                     user.setPassword(new String(this.password.getPassword()));
                 }
-                user.setInserted(true);
                 
+                user.setInserted(newUser);
                 this.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this, "Recheck your login and password!");

@@ -39,6 +39,8 @@ public class GuiEventParams extends EventParams {
     public static final int TABLE_ROW_SORTER_CHANGED        = 8;
     public static final int SELECTED_ROW_CHANGED            = 9;
     public static final int MENU_EVENT_PROJECT_MANAGEMENT   = 10;
+    public static final int DISABLE_MENU_ITEMS         = 11;
+    public static final int ENABLE_MENU_ITEMS          = 12;
 
     public GuiEventParams(int eventId) {
         super(eventId);

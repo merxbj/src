@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import notwa.common.ConnectionInfo;
@@ -41,7 +40,7 @@ import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemStatus;
 
-public class TabContent extends JComponent implements ActionListener {
+public class TabContent extends JPanel implements ActionListener {
     JButton addButton,showHideButton,showDepButton;
     private ConnectionInfo ci;
     private WorkItemDal dal;
@@ -53,7 +52,6 @@ public class TabContent extends JComponent implements ActionListener {
     private EventHandler<GuiEvent> guiHandler;
     private Credentials currentUser;
 
-    //TODO: create new context menu on every TAB - 1. menu item - Close connection
     public TabContent(ConnectionInfo ci, Credentials user) {
         init(ci, user, getDefaultParameters(user));
     }
@@ -63,14 +61,15 @@ public class TabContent extends JComponent implements ActionListener {
     }
     
     public void init(ConnectionInfo ci, Credentials user, ParameterSet ps) {
+        this.ps = ps;
+        this.ci = ci;
+        
         currentContext = ContextManager.getInstance().newContext();
         currentUser = user;
         dal = new WorkItemDal(ci, currentContext);
         wic = new WorkItemCollection(currentContext);
-        this.ps = ps;
         dal.fill(wic, ps);
 
-        this.ci = ci;
         this.setLayout(new BorderLayout());
         
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -157,10 +156,14 @@ public class TabContent extends JComponent implements ActionListener {
         wiTable.refresh();
     }
     
+    public Credentials getCurrentCredentinals() {
+        return currentUser;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == addButton) {
-            WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection());
+            WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection(), guiHandler, currentUser);
             wie.initAddDialog();
         }
         
