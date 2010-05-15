@@ -133,6 +133,7 @@ public abstract class Logger {
      * @param level The log level under which the message logging has been demanded.
      * @param message The format string of the message to be logged.
      * @param args The args to be formmated into the given message.
+     * @return The formatted message.
      */
     protected String formatMessage(LogLevel level, String message, Object... args) {
         String formattedMesage = String.format(message, args);

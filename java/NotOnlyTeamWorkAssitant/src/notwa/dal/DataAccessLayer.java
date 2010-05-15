@@ -274,7 +274,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
     /**
      * Refresh all the data contained in given <code>BusinessObjectCollection</code>.
      * At first, it completely clears the given </code>BusinessObjectCollection</code>
-     * by calling the {@link BusinessObjectCollection#shakeAway()}. Then it simply
+     * by calling the {@link BusinessObjectCollection#shakeAllAway()}. Then it simply
      * refills the <code>BusinessObjectCollection</code> from the database.
      * 
      * @param boc The <code>BusinessObjectCollection</code to be refreshed.
@@ -286,7 +286,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
     /**
      * Refresh all the data contained in given <code>BusinessObjectCollection</code>.
      * At first, it completely clears the given </code>BusinessObjectCollection</code>
-     * by calling the {@link BusinessObjectCollection#shakeAway()}. Then it simply
+     * by calling the {@link BusinessObjectCollection#shakeAllAway()}. Then it simply
      * refills the <code>BusinessObjectCollection</code> from the database taking
      * in account the given <coded>ParameterSet</code>.
      *
@@ -295,7 +295,7 @@ public abstract class DataAccessLayer<TObject extends BusinessObject, TCollectio
      *              will be refreshed.
      */
     public void refresh(TCollection boc, ParameterSet ps) {
-        boc.shakeAway();
+        boc.shakeAllAway();
         fill(boc, ps);
     }
 

@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import notwa.exception.ContextException;
 import notwa.exception.DeveloperException;
-import notwa.logger.LoggingFacade;
 
 /**
  * Abstract class providing a general behavior connected with maintaining a
@@ -103,8 +102,8 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> extends
          */
         if ((bo.getCurrentContext() == null) || (this.getCurrentContext() == null) ||
                 !bo.getCurrentContext().equals(this.getCurrentContext())) {
-            LoggingFacade.getLogger().logError("BusinessObject lives in another context than BusinessObjectCollection!");
-            return false;
+                throw new RuntimeException("Context awareness violated!",
+                        new ContextException("BusinessObject lives in another context than BusinessObjectCollection!"));
         }
 
         /*
@@ -174,8 +173,8 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> extends
          */
         if ((bo.getCurrentContext() == null) || (this.getCurrentContext() == null) ||
                 !bo.getCurrentContext().equals(this.getCurrentContext())) {
-            LoggingFacade.getLogger().logError("BusinessObject lives in another context than BusinessObjectCollection!");
-            return false;
+            throw new RuntimeException("Context awareness violated!",
+                        new ContextException("BusinessObject lives in another context than BusinessObjectCollection!"));
         }
 
         /*
@@ -229,12 +228,12 @@ public abstract class BusinessObjectCollection<T extends BusinessObject> extends
      * <li>Clear the current context</li>
      * </ol>
      */
-    public void shakeAway() {
+    public void shakeAllAway() {
         for (BusinessObject bo : this) {
             bo.detach();
         }
         super.clear();
-        currentContext.clear();
+        currentContext.clearWorkItems();
     }
 
     /**

@@ -92,10 +92,42 @@ public class Context {
      * Clears the context by clearing all of its <code>Hashtables</code> holding
      * references to <code>BusinessObject</code>s managed within this <code>Context</code>.
      */
-    public void clear() {
+    public void clearAll() {
         noteMap.clear();
         projectMap.clear();
         workItemMap.clear();
+        userMap.clear();
+    }
+
+    /**
+     * Clears the context by clearing <code>Hashtable</code> holding
+     * references to <code>Note</code>s managed within this <code>Context</code>.
+     */
+    public void clearNotes() {
+        noteMap.clear();
+    }
+
+    /**
+     * Clears the context by clearing <code>Hashtable</code> holding
+     * references to <code>Project</code>s managed within this <code>Context</code>.
+     */
+    public void clearProjects() {
+        projectMap.clear();
+    }
+
+    /**
+     * Clears the context by clearing <code>Hashtable</code> holding
+     * references to <code>WorkItem</code>s managed within this <code>Context</code>.
+     */
+    public void clearWorkItems() {
+        workItemMap.clear();
+    }
+
+    /**
+     * Clears the context by clearing <code>Hashtable</code> holding
+     * references to <code>User</code>s managed within this <code>Context</code>.
+     */
+    public void clearUsers() {
         userMap.clear();
     }
 

@@ -46,7 +46,7 @@ public class EventParams {
      * The params-less constructor of the base implementation accepts only the <code>Event</code>
      * identifier.
      * 
-     * @params eventId The actual event identifier.
+     * @param eventId The actual event identifier.
      */
     public EventParams(int eventId) {
         this.eventId = eventId;

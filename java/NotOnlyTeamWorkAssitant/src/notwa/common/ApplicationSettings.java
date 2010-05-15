@@ -20,13 +20,33 @@
 
 package notwa.common;
 
+/**
+ * Class encapsulating all the application settings keeped by the config file.
+ * These settings could be obtained by the {@link Config#getApplicationSettings()} and
+ * changes to it will be promoted as soon as
+ * {@link Config#setApplicationsSettings(notwa.common.ApplicationSettings)} are called.
+ *
+ *
+ * @author  Tomas Studnicka
+ * @version %I% %G%
+ */
 public class ApplicationSettings {
     private String skin;
     
+    /**
+     * Sets the configured Look & Feel skin class name.
+     * 
+     * @param skin
+     */
     public void setSkin(String skin) {
         this.skin = skin;
     }
     
+    /**
+     * Gets the configured Look & Feel skin class name.
+     * 
+     * @return skin
+     */
     public String getSkin() {
         return skin;
     }

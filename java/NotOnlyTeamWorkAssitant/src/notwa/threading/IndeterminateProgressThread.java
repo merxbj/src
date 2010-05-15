@@ -79,6 +79,9 @@ public class IndeterminateProgressThread {
         worker.start();
     }
 
+    /**
+     * @see Thread#join()
+     */
     public void join() {
         try {
             worker.join();

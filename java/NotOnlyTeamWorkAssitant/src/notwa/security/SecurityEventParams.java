@@ -32,9 +32,13 @@ import notwa.common.EventParams;
 public class SecurityEventParams extends EventParams {
     
     /**
-     * Event informing its handler about the successful state of the login process.
+     * Event requesting the system to open the login window.
      */
     public static final int SECURITY_EVENT_REQUEST_LOGIN = 1;
+
+    /**
+     * Event informing its handler about the successful state of the login process.
+     */
     public static final int SECURITY_EVENT_SUCCESSFUL_LOGIN = 2;
     
     private Credentials credentials;

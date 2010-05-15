@@ -32,6 +32,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import notwa.common.ApplicationSettings;
+import notwa.common.Config;
 import notwa.logger.LoggingFacade;
 
 public class SettingsDialog extends JDialog implements ActionListener {
@@ -88,7 +89,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
     private JComboBox getInstalledSkins() {
         JComboBox cbInstalledSkins = new JComboBox();
         
-        for (int i=0; i<installedLAF.length; i++) {
+        for (int i = 0; i < installedLAF.length; i++) {
             cbInstalledSkins.addItem(installedLAF[i].getName());
         }
         
@@ -96,7 +97,17 @@ public class SettingsDialog extends JDialog implements ActionListener {
     }
     
     private void selectCurrentSkin() {
-        cbSkin.setSelectedItem(UIManager.getLookAndFeel().getName());
+        ApplicationSettings as = Config.getInstance().getApplicationSettings();
+        String configuredSkin = as.getSkin();
+
+        if ((configuredSkin == null) || configuredSkin.equals("")) {
+            configuredSkin = UIManager.getLookAndFeel().getName();
+            as.setSkin(configuredSkin);
+            Config.getInstance().setApplicationsSettings(as);
+            Config.getInstance().save();
+        }
+
+        cbSkin.setSelectedItem(configuredSkin);
     }
     
     @Override
@@ -112,6 +123,9 @@ public class SettingsDialog extends JDialog implements ActionListener {
             catch (Exception e) {
                 LoggingFacade.handleException(e);
             }
+
+            Config.getInstance().setApplicationsSettings(as);
+            Config.getInstance().save();
             this.setVisible(false);
         }
         

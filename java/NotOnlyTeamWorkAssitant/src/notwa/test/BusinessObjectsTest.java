@@ -28,6 +28,9 @@ import notwa.wom.*;
  */
 public class BusinessObjectsTest {
 
+    /**
+     * 
+     */
     public BusinessObjectsTest() {
         Context ctx = ContextManager.getInstance().newContext();
         WorkItem wi1 = new WorkItem(10);

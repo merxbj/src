@@ -20,8 +20,6 @@
 package notwa.gui;
 
 import java.awt.BorderLayout;
-import java.awt.dnd.Autoscroll;
-
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;

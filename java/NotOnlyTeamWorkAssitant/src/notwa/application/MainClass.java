@@ -24,16 +24,24 @@ import notwa.gui.MainWindow;
 import notwa.logger.LoggingFacade;
 
 /**
+ * The Class representin the entry point to the application. It parses the input
+ * command line arguments, set up and run the application as user desired.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class MainClass {
 
+    /**
+     * The entry point to the application.
+     * 
+     * @param args The command line arguments.
+     */
     public static void main(String[] args) {
         CommandLine cl = CommandLine.parse(args);
 
         if (!cl.isValid()) {
+            System.out.println("Invalid arguments provided.");
             return; // TODO: Some kind of help text should be displayed here
         }
 
@@ -42,6 +50,12 @@ public class MainClass {
         new MainWindow();
     }
 
+    /**
+     * Configures the logging according to the given <code>CommandLine</code>.
+     *
+     * @param cl    The <code>CommandLine</code> containng the information to 
+     *              configure the logging.
+     */
     private static void configureLogging(CommandLine cl) {
         LoggingFacade lf = LoggingFacade.getInstance();
 

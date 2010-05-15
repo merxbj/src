@@ -25,6 +25,8 @@ import java.util.Observer;
 import notwa.gui.DebugWindow;
 
 /**
+ * <code>Logger</code> implementation handling the logging to the GUI window intented
+ * for such purposes.
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
@@ -33,15 +35,28 @@ public class WindowLogger extends Logger implements Observer {
 
     private DebugWindow dw;
 
+    /**
+     * The simple constructor just initializing this class.
+     */
+    public WindowLogger() {
+        super();
+        init();
+    }
+
+    /**
+     * The constructor initializing this class and providing the handler for
+     * logging exceptions.
+     * 
+     * @param leh
+     */
     public WindowLogger(LoggingExceptionHandler leh) {
         super(leh);
         init();
     }
 
-    public WindowLogger() {
-        init();
-    }
-
+    /**
+     * Initializes the debugging output window.
+     */
     private void init() {
         this.dw = new DebugWindow();
         dw.setVisible(true);

@@ -22,11 +22,18 @@ package notwa.common;
 
 import notwa.logger.LoggingFacade;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.*;
 import org.w3c.dom.*;
 
@@ -47,19 +54,22 @@ import org.w3c.dom.*;
 public class Config {
 
     private static Config instance;
-    private Set<ConnectionInfo> connections;
-    private File configFile;
-    private ApplicationSettings as;
+    private List<Node> rawConnections;
+    private Document dom;
+    private List<Node> rawApplicationsSettings;
     private final String CONFIG_FILE_NAME = "./notwa.config";
+    private final XPath xpath = XPathFactory.newInstance().newXPath();
     
     /**
      * Hidden constructor to prevent instationing the class from outside world.
      */
     protected Config() {
-        this.configFile = new File(CONFIG_FILE_NAME);
-        this.connections = new TreeSet<ConnectionInfo>();
+        File configFile = new File(CONFIG_FILE_NAME);
+        this.rawConnections = new ArrayList<Node>();
+        this.rawApplicationsSettings = new ArrayList<Node>();
+
         try {
-            this.parse();
+            this.parse(configFile);
         } catch (Exception ex) {
             LoggingFacade.handleException(ex);
         }
@@ -78,65 +88,179 @@ public class Config {
     }
 
     /**
-     * Gets all connection information parsed from the configuration file
+     * Gets all connection information parsed from the configuration file.
      * Every conneection information is wrapped into the <code>ConnectionInfo</code>
      * instance and all these instances are kept inside single <code>Collection</code>.
      *
      * @return <code>Collection</code> of all <code>ConnectionInfo</code>.
      */
     public Collection<ConnectionInfo> getConnecionStrings() {
+        Set<ConnectionInfo> connections = new TreeSet<ConnectionInfo>();
+        for (Node con : rawConnections) {
+            connections.add(parseConnectionInfo(con));
+        }
+
         return connections;
-
     }
 
+    /**
+     * Gets the <code>ApplicationSettings</code> parsed from the configuration file.
+     *
+     * <note>If you change them and want you to save them to the physical file
+     * during next {@link #save()} call, use
+     * {@link #setApplicationsSettings(notwa.common.ApplicationSettings) </note>
+     * to update them.
+     *
+     * @return The parsed <code>ApplicationSettings</code>.
+     */
     public ApplicationSettings getApplicationSettings() {
-        return as;
+        return parseApplicationSettings();
     }
+
+    /**
+     * Updates the <code>ApplicationSettings</code> maintained by the config
+     * file.
+     * <note>The changes will be promoted into the physical file as soon as you
+     * call {@link #save()}.</note>
+     *
+     * @param as The <code>ApplicationSettings</code> you want to update.
+     */
+    public void setApplicationsSettings(ApplicationSettings as) {
+        for (Node appSetting : rawApplicationsSettings) {
+            if (appSetting.getNodeName().equals("Skin")) {
+                setSkin(appSetting, as.getSkin());
+            }
+        }
+    }
+
     /**
      * Parse the XML configuration document utilizing the DOM {@link Document}.
-     * 
+     *
+     * @param configFile The file claimed to be the configuration XML file.
      * @throws Exception If the config file does not exist.
      */
-    public void parse() throws Exception {
+    public void parse(File configFile) throws Exception {
         if (configFile.exists()) {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document dom = db.parse(configFile);
-            parseConnecionInformations(dom.getElementsByTagName("Database"));
-            parseSettingsInformations(dom.getElementsByTagName("Skin"));
+            this.dom = db.parse(configFile);
+            this.rawConnections = getChildNodesByPath(dom.getDocumentElement(), "./AvailableDatabases/Database");
+            this.rawApplicationsSettings = getChildNodesByPath(dom.getDocumentElement(), "./ApplicationSettings/*");
         } else {
             throw new Exception("Config file does not exists!");
         }
     }
 
-    private void parseSettingsInformations(NodeList nodes) throws Exception {
-        XPath xp = XPathFactory.newInstance().newXPath();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
-            as = new ApplicationSettings();
-            as.setSkin(xp.evaluate("./@name", n));
+    /**
+     * Saves the current state of <code>Config</code> to the physical file.
+     */
+    public void save() {
+        try {
+            Source source = new DOMSource(dom);
+            Transformer xformer = TransformerFactory.newInstance().newTransformer();
+            xformer.transform(source, new StreamResult(new File(CONFIG_FILE_NAME)));
+        } catch (Exception ex) {
+            LoggingFacade.handleException(ex);
         }
     }
 
     /**
-     * Parses out all connection informations from the provided <code>NodeList</code>
-     * utilizing the {@link XPath} and adding them into the <code>Collection</code>
-     * implemented as <code>Set</code>.
-     *
-     * @param odes XML nodes containing the actual connection information
-     * @throws Exception If an error occures during the XPath evaluation
+     * Iterates through all settings found under ApplicationSettings element and
+     * attempts to parse them, if they are known.
+     * 
+     * @return Parsed <code>ApplicationSettings</code> instance.
      */
-    private void parseConnecionInformations(NodeList nodes) throws Exception {
-        XPath xp = XPathFactory.newInstance().newXPath();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
-            ConnectionInfo ci = new ConnectionInfo();
-            ci.setDbname(xp.evaluate("./@dbname", n));
-            ci.setHost(xp.evaluate("./@host", n));
-            ci.setUser(xp.evaluate("./@user", n));
-            ci.setPort(xp.evaluate("./@port", n));
-            ci.setPassword(xp.evaluate("./@password", n));
-            ci.setLabel(xp.evaluate("./@label", n));
-            connections.add(ci);
+    private ApplicationSettings parseApplicationSettings() {
+        ApplicationSettings as = new ApplicationSettings();
+        for (Node appSetting : rawApplicationsSettings) {
+            if (appSetting.getNodeName().equals("Skin")) {
+                as.setSkin(parseSkin(appSetting));
+            } else {
+                LoggingFacade.getLogger().logDebug("Unknown application setting %s", appSetting.getNodeName());
+            }
         }
+        
+        return as;
+    }
+
+    /**
+     * Attempts to parse the application setting node claimed to contain the
+     * L&F skin class name.
+     *
+     * @param rawSkin The node to contain the L&F skin class name.
+     * @return The L&F skin class name.
+     */
+    private String parseSkin(Node rawSkin) {
+        String skinClassName = "";
+
+        try {
+            skinClassName = xpath.evaluate("./@name", rawSkin);
+        } catch (XPathExpressionException xpeex) {
+            LoggingFacade.handleException(xpeex);
+        }
+
+        return skinClassName;
+    }
+
+    /**
+     * Parses out all connection information from the provided <code>Node</code>
+     * utilizing the {@link XPath}.
+     *
+     * @param rawCon The node containing all the connection information.
+     * @return The instance of <code>ConnectionInfo</code>
+     */
+    private ConnectionInfo parseConnectionInfo(Node rawCon) {
+        ConnectionInfo ci = new ConnectionInfo();
+
+        try {
+            ci.setDbname(xpath.evaluate("./@dbname", rawCon));
+            ci.setHost(xpath.evaluate("./@host", rawCon));
+            ci.setUser(xpath.evaluate("./@user", rawCon));
+            ci.setPort(xpath.evaluate("./@port", rawCon));
+            ci.setPassword(xpath.evaluate("./@password", rawCon));
+            ci.setLabel(xpath.evaluate("./@label", rawCon));
+        } catch (XPathExpressionException xpeex) {
+            LoggingFacade.handleException(xpeex);
+            return null;
+        }
+
+        return ci;
+    }
+
+    /**
+     * Sets the proper attribute of the node containing the Look & Feel skin
+     * class name.
+     * 
+     * @param appSetting The node to be properly updated.
+     * @param skin The L&F class name to be stored.
+     */
+    private void setSkin(Node appSetting, String skin) {
+        Node skinNameNode = appSetting.getAttributes().getNamedItem("name");
+
+        if (skinNameNode != null) {
+            skinNameNode.setTextContent(skin);
+        } else {
+            LoggingFacade.getLogger().logDebug("Unable to update the application skin!");
+        }
+    }
+
+    /**
+     * Finds all the child elements of given parent matching the xpath provided.
+     *
+     * @param parent The Node where to start.
+     * @param path The path to be evaluated.
+     * @return The <code>List</code> of all the child nodes matching the given xpath.
+     */
+    private List<Node> getChildNodesByPath(Node parent, String path) {
+        List<Node> childs = new ArrayList<Node>();
+        try {
+            NodeList rawChilds = (NodeList) xpath.evaluate(path, parent, XPathConstants.NODESET);
+            for (int i = 0; i < rawChilds.getLength(); i++) {
+                childs.add(rawChilds.item(i));
+            }
+        } catch (XPathExpressionException xpeex) {
+            LoggingFacade.handleException(xpeex);
+        }
+
+        return childs;
     }
 }
