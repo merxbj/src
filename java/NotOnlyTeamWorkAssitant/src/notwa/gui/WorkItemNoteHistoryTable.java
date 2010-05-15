@@ -49,14 +49,7 @@ public class WorkItemNoteHistoryTable extends JComponent {
         this.setLayout(new GridLayout(1,0));
 
         nhTableModel = new NoteHistoryModel(noteCollection);
-        nhTable = new JTable(nhTableModel) {
-            @Override
-            public int getRowHeight(int row)
-            {
-                JTextArea rowTextArea = (JTextArea)this.getCellRenderer(row, 1);
-                return rowTextArea.getLineCount()*16;
-            }
-        };
+        nhTable = new JTable(nhTableModel);
         nhTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         this.resizeAndColorizeTable();
@@ -85,15 +78,27 @@ public class WorkItemNoteHistoryTable extends JComponent {
         if (wi != null)
             setNoteCollection(wi.getNoteCollection());
     }
-    
+
     public class JTextAreaRenderer extends JTextArea implements TableCellRenderer {
+
         public JTextAreaRenderer() {
-            setLineWrap(true);
+            super();
+            setLineWrap(false);
+            setWrapStyleWord(false);
+            setOpaque(true);
         }
-        
-        public Component getTableCellRendererComponent(JTable jTable, Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((String)obj);
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setFont(table.getFont());
+            setValue(value);
+            int rowHeight = (int)getPreferredSize().getHeight();
+            if (table.getRowHeight(row) != rowHeight) table.setRowHeight(row, rowHeight);
+            
             return this;
+        }
+
+        protected void setValue(Object value) {
+            setText((value == null) ? "" : value.toString());
         }
     }
 }

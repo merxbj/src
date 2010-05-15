@@ -38,6 +38,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import notwa.common.ConnectionInfo;
+import notwa.common.EventHandler;
 import notwa.dal.ProjectDal;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
@@ -67,11 +68,13 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private Context context;
     private WorkItemCollection wic;
     private boolean close = true;
+    private EventHandler<GuiEvent> guiHandler;
     
-    public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic) {
+    public WorkItemEditor(ConnectionInfo ci, Context context, WorkItemCollection wic, EventHandler<GuiEvent> guiHandler) {
         this.ci = ci;
         this.context = context;
         this.wic = wic;
+        this.guiHandler = guiHandler;
     }
     
     public void initAddDialog() {
@@ -252,6 +255,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
             
             if (close) {
                 this.setVisible(false);
+                GuiEventParams gep = new GuiEventParams(GuiEventParams.MENU_EVENT_SYNC_AND_REFRESH);
+                guiHandler.handleEvent(new GuiEvent(gep));
             }
         }
 

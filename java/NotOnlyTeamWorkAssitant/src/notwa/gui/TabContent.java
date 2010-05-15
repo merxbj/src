@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import notwa.common.ConnectionInfo;
@@ -41,7 +40,7 @@ import notwa.wom.ContextManager;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemStatus;
 
-public class TabContent extends JComponent implements ActionListener {
+public class TabContent extends JPanel implements ActionListener {
     JButton addButton,showHideButton,showDepButton;
     private ConnectionInfo ci;
     private WorkItemDal dal;
@@ -160,7 +159,7 @@ public class TabContent extends JComponent implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == addButton) {
-            WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection());
+            WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection(), guiHandler);
             wie.initAddDialog();
         }
         

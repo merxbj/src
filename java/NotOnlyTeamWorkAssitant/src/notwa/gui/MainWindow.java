@@ -113,13 +113,15 @@ public class MainWindow extends JFrame {
      * Processes that have to be taken only during the startup of the application
      */
     private void startup() {
-        mll.hideDetail(); // hide detail on startup - is unneeded
-        
         /*
          * Show login dialog
          */
         invokeLogin(null);
         
+        /*
+         * Disable menu items that cannot be used until user is not logged
+         */
+        setMenuEnabled(false);
     }
 
     private ConnectionInfo getActiveConnectionInfo() {
@@ -158,6 +160,12 @@ public class MainWindow extends JFrame {
             case GuiEventParams.TABLE_ROW_SORTER_CHANGED:
                 invokeTableRowSorterChanged(e.getParams());
                 break;
+            case GuiEventParams.DISABLE_MENU_ITEMS:
+                setMenuEnabled(false);
+                break;
+            case GuiEventParams.ENABLE_MENU_ITEMS:
+                setMenuEnabled(true);
+                break;
             default:
                 LoggingFacade.getLogger().logError("Unexpected event: %s", e.toString());
                 break;
@@ -175,6 +183,10 @@ public class MainWindow extends JFrame {
         }
     }
 
+    private void setMenuEnabled(boolean enabled) {
+        this.menu.setMenuEnabled(enabled);
+    }
+    
     private void invokeConfigure(GuiEventParams params) {
         SettingsDialog sd = new SettingsDialog();
         SwingUtilities.updateComponentTreeUI(this);
@@ -196,6 +208,7 @@ public class MainWindow extends JFrame {
         UserManagement um = new UserManagement(getActiveConnectionInfo(), getActivetContext());
     }
 
+    @SuppressWarnings("unchecked")
     private void invokeSyncAndRefresh(GuiEventParams params) {
         IndeterminateProgressThread ipt = new IndeterminateProgressThread(new Action() {
             @Override
@@ -211,6 +224,7 @@ public class MainWindow extends JFrame {
         AssignmentManager um = new AssignmentManager(getActiveConnectionInfo(), getActivetContext());
     }
 
+    @SuppressWarnings("unchecked")
     private void invokeTableRowSorterChanged(GuiEventParams params) {
         menu.setSorter((TableRowSorter<WorkItemlModel>) params.getParams());
     }

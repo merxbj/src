@@ -54,6 +54,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JCheckBoxMenuItem cbWorkOffline;
     private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
+    private JMenu toolsMenu;
     
     public MainMenu() {
         init();
@@ -73,6 +74,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
 
         cbWorkOffline = new JCheckBoxMenuItem("Work offline");
         cbWorkOffline.setMnemonic(KeyEvent.VK_O);
+        cbWorkOffline.setEnabled(false);
         menu.add(cbWorkOffline);
 
         menu.addSeparator();
@@ -100,8 +102,8 @@ public class MainMenu extends JMenuBar implements ActionListener {
         /*
          * Build tools menu bar.
          */
-        menu = new JMenu("Tools");
-        menu.setMnemonic(KeyEvent.VK_T);
+        toolsMenu = new JMenu("Tools");
+        toolsMenu.setMnemonic(KeyEvent.VK_T);
 
         mItemProjectManagement = new JMenuItem("Project management");
         mItemProjectManagement.addActionListener(this);
@@ -112,11 +114,11 @@ public class MainMenu extends JMenuBar implements ActionListener {
         mItemAssignmentManager = new JMenuItem("Assignment manager");
         mItemAssignmentManager.addActionListener(this);
         
-        menu.add(mItemProjectManagement);
-        menu.add(mItemUserManagement);
-        menu.add(mItemAssignmentManager);
+        toolsMenu.add(mItemProjectManagement);
+        toolsMenu.add(mItemUserManagement);
+        toolsMenu.add(mItemAssignmentManager);
         
-        this.add(menu);
+        this.add(toolsMenu);
         
         /*
          * Add search panel to MainMenu
@@ -126,6 +128,13 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.add(this.addSearchField());
     }
 
+    public void setMenuEnabled(boolean enabled) {
+        mItemSyncAndRefresh.setEnabled(enabled);
+        mItemProjectManagement.setEnabled(enabled);
+        mItemUserManagement.setEnabled(enabled);
+        mItemAssignmentManager.setEnabled(enabled);
+    }
+    
     public void onFireGuiEvent(EventHandler<GuiEvent> guiHandler) {
         this.guiHandler = guiHandler;
     }

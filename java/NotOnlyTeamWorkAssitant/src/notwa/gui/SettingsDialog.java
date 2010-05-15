@@ -105,7 +105,6 @@ public class SettingsDialog extends JDialog implements ActionListener {
             //TODO: Config save
             ApplicationSettings as = new ApplicationSettings();
             as.setSkin(installedLAF[cbSkin.getSelectedIndex()].getClassName());
-            System.out.println(installedLAF[cbSkin.getSelectedIndex()].getClassName());
             try {
                 UIManager.setLookAndFeel(as.getSkin());
             }

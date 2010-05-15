@@ -73,8 +73,6 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         widl = new WorkItemDetailLayout();
         tabPanel = new JTabbedPane();
 
-        tabPanel.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-
         plusButton = new JButton("+");
         sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabPanel, widl);
 
@@ -122,8 +120,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         /**
          * Setup the split pane
          */
-        sp.setResizeWeight(0.9);
-        sp.setContinuousLayout(true);
+        this.hideDetail();
 
         /**
          * Setup this component
@@ -148,6 +145,10 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     
     public void hideDetail() {
         sp.setDividerLocation(50000);
+    }
+    
+    public void showDetail() {
+        sp.setDividerLocation(0.55);
     }
     
     private JPopupMenu initPopupMenu() {
@@ -185,14 +186,25 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
     @Override
     public void stateChanged(ChangeEvent ce) {
         TabContent activeTab = getActiveTab();
+        GuiEventParams gep;
         if (activeTab != null) {
-            GuiEventParams gep = new GuiEventParams(GuiEventParams.TABLE_ROW_SORTER_CHANGED, getActiveTab().getWorkItemTable().getSorter());
+            gep = new GuiEventParams(GuiEventParams.TABLE_ROW_SORTER_CHANGED, getActiveTab().getWorkItemTable().getSorter());
             if (fireGuiEvent(new GuiEvent(gep))) {
                 getActiveTab().refresh();
             }
         } else {
             widl.setDataToNull();
         }
+
+        if (tabPanel.getTabCount()-1 == tabPanel.getSelectedIndex()) {
+            gep = new GuiEventParams(GuiEventParams.DISABLE_MENU_ITEMS);
+            this.hideDetail();
+        }
+        else {
+            gep = new GuiEventParams(GuiEventParams.ENABLE_MENU_ITEMS);
+            this.showDetail();
+        }
+        fireGuiEvent(new GuiEvent(gep));
     }
 
     private boolean fireGuiEvent(GuiEvent ge) {
