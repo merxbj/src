@@ -115,6 +115,16 @@ public enum WorkItemStatus {
         public String toString() {
             return "Code Review - Approved";
         }
+    },
+
+    /**
+     * The <code>WorkItem</code> solution has been reviewed and approved.
+     */
+    PLEASE_VERIFY(8) {
+        @Override
+        public String toString() {
+            return "Please Verify";
+        }
     };
     
     private int value;

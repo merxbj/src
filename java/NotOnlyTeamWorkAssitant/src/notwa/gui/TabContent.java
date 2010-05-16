@@ -178,6 +178,7 @@ public class TabContent extends JPanel implements ActionListener {
     private ParameterSet getDefaultParameters(Credentials user) {
         return new ParameterSet( new Parameter[] { 
             new Parameter(Parameters.WorkItem.ASSIGNED_USER, user.getUserId(), Sql.Relation.EQUALTY),
-            new Parameter(Parameters.WorkItem.STATUS, WorkItemStatus.CLOSED.getValue(), Sql.Relation.NOT_EQUALS)});
+            new Parameter(Parameters.WorkItem.STATUS, WorkItemStatus.CLOSED.getValue(), Sql.Relation.NOT_EQUALS),
+            new Parameter(Parameters.WorkItem.STATUS, WorkItemStatus.VERIFIED.getValue(), Sql.Relation.NOT_EQUALS)});
     }
 }
