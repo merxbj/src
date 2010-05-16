@@ -209,12 +209,7 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
         }
         fireGuiEvent(new GuiEvent(gep));
         
-        /*
-         * Try to select lastly selected row, if tab is new automaticaly set first
-         */
-        try {
-            activeTab.getWorkItemTable().selectRow(); 
-        } catch (Exception e) {}
+        tryToSelectLastRow();
     }
 
     private boolean fireGuiEvent(GuiEvent ge) {
@@ -245,14 +240,18 @@ public class MainLayoutLoader extends JComponent implements ActionListener, Chan
 
     public synchronized void refreshDataOnActiveTab() {
         getActiveTab().dataRefresh();
+        tryToSelectLastRow();
+    }
+
+    private void tryToSelectLastRow() {
         /*
          * Try to select lastly selected row, if tab is new automaticaly set first
          */
         try {
             getActiveTab().getWorkItemTable().selectRow(); 
-        } catch (Exception e) {}
+        } catch (Exception e) {}        
     }
-
+    
     private void invokeSelectedRowChanged(GuiEventParams params) {
         widl.onSelectedWorkItemChanged((WorkItem) params.getParams(), getActiveTab());
     }

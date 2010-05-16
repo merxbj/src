@@ -345,9 +345,10 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             scrollPane.setPreferredSize(new Dimension(350, 150));
             
             JTextArea ta = new JTextArea();
+            ta.setLineWrap(true);
             ta.setPreferredSize(new Dimension(500,200));
             
-            Object[] msg = {"Enter new message", ta};
+            Object[] msg = {"Enter new message", new JScrollPane(ta)};
             int result = JOptionPane.showConfirmDialog(this, msg, "NOTWA - Add new note", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if(result == JOptionPane.OK_OPTION) {
                 if(!ta.getText().equals("")) {
