@@ -23,9 +23,12 @@ import notwa.common.ApplicationSettings;
 import notwa.common.Config;
 import notwa.common.EventHandler;
 import java.awt.BorderLayout;
+import java.awt.Font;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.TableRowSorter;
 import notwa.common.ConnectionInfo;
 import notwa.gui.datamodels.WorkItemlModel;
@@ -113,6 +116,11 @@ public class MainWindow extends JFrame {
      * Processes that have to be taken only during the startup of the application
      */
     private void startup() {
+        /*
+         * This solves the problem with TextArea font in windows
+         */
+        UIManager.put("TextArea.font",new FontUIResource("monospaced",Font.PLAIN,12));
+
         /*
          * Show login dialog
          */
