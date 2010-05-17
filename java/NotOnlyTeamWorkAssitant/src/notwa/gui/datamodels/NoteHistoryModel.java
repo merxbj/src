@@ -21,7 +21,6 @@ package notwa.gui.datamodels;
 
 import java.util.Hashtable;
 
-import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 import notwa.logger.LoggingFacade;
 import notwa.wom.Note;

@@ -355,7 +355,7 @@ public class WorkItem extends BusinessObject implements Comparable<WorkItem>, Cl
         Integer j1 = this.id;
         Integer j2 = wi.id;
      
-        return j2.compareTo(j1);
+        return j1.compareTo(j2);
     }
     
     @Override

@@ -167,8 +167,8 @@ public class Note extends BusinessObject implements Comparable<Note>, Cloneable 
     }
     
     @Override
-    public int compareTo(Note note) {
-        return this.id.compareTo(note.id);
+    public int compareTo(Note other) {
+        return this.id.compareTo(other.id);
     }
     
     @Override

@@ -97,15 +97,15 @@ public class NotePrimaryKey implements Comparable<NotePrimaryKey>, Cloneable {
      * assigned <code>WorkItem</code> and then descendingly by the note id
      * which ensures the first is the latest note.
      *
-     * @param npk <code>NotePrimaryKey</code> to be compared with.
+     * @param other <code>NotePrimaryKey</code> to be compared with.
      * @return Usual comparable output based on the rules explained above.
      */
     @Override
-    public int compareTo(NotePrimaryKey npk) {
+    public int compareTo(NotePrimaryKey other) {
         Integer id1 = this.noteId;
-        Integer id2 = npk.noteId;
+        Integer id2 = other.noteId;
         Integer wi1 = this.workItemId;
-        Integer wi2 = npk.workItemId;
+        Integer wi2 = other.workItemId;
 
         int compare = wi1.compareTo(wi2);
         if (compare == 0) {

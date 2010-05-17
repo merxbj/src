@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -264,6 +265,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
 
         if (wi != null) {
             NoteCollection nc = wi.getNoteCollection();
+            Collections.sort(nc);
             Project p = wi.getProject();
             User u = wi.getAssignedUser();
             WorkItem pwi = wi.getParent();
@@ -276,7 +278,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             selectUser((u != null) ? (u) : null);
             setPriority(wi.getPriority());
             setStatus(wi.getStatus());
-            setLastNote((nc != null && nc.size() > 0) ? (wi.getNoteCollection().get(0)) : null);
+            setLastNote((nc != null && nc.size() > 0) ? (nc.get(0)) : null);
 
             save.setEnabled(true);
             addNote.setEnabled(true);
