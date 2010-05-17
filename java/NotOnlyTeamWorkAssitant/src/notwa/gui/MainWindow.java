@@ -119,7 +119,7 @@ public class MainWindow extends JFrame {
         /*
          * This solves the problem with TextArea font in windows
          */
-        UIManager.put("TextArea.font",new FontUIResource("monospaced",Font.PLAIN,12));
+        UIManager.put("TextArea.font",new FontUIResource("monospaced",Font.PLAIN,12)); 
 
         /*
          * Show login dialog

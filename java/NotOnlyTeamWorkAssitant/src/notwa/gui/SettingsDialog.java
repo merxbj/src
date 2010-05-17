@@ -113,7 +113,6 @@ public class SettingsDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == okButton) {
-            //TODO: Config save
             ApplicationSettings as = new ApplicationSettings();
             as.setSkin(installedLAF[cbSkin.getSelectedIndex()].getClassName());
             try {
