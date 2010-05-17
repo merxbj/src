@@ -1,0 +1,110 @@
+*
+{
+    font-family:Arial;
+    color:darkblue;
+}
+
+*.number
+{
+    text-align: right;
+}
+
+a:link 
+{
+    color:blue;
+    font-weight:bold;
+    text-decoration: none;
+}
+
+a:visited 
+{
+    color: #000099;
+    text-decoration: none;
+}
+
+a:hover 
+{
+    text-decoration: none; 
+    color: #ff9900;
+    font-weight:bold;
+}
+
+a:active 
+{
+    color: red;
+    text-decoration: none;
+}
+
+
+td,tr
+{
+    border-color:blue;
+    border-collapse:collapse;
+    border-style:dashed;
+    border-width: 1px;
+    padding: 1px 3px 1px 3px;
+    text-align: left;
+}
+
+th,table
+{
+    border-color:darkblue;
+    border-collapse:collapse;
+    border-style:solid;
+    border-width: 2px;
+    padding: 1px 3px 1px 3px;
+}
+
+tr.dayTotal
+{
+    border-color:darkblue;
+    border-collapse:collapse;
+    border-style:solid;
+    border-width: 2px;
+    font-weight: bold;
+}
+
+td.taskTotal
+{
+    font-weight: bold;
+    border-color:darkblue;
+    border-collapse:collapse;
+    border-style:solid;
+    border-width: 2px;
+}
+
+td.taskTitle
+{
+    border-right-width: 2px;
+    border-right-style: solid;
+    border-right-color: darkblue;
+}
+
+td.grandTotal
+{
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: darkblue;
+    font-weight: bold;
+}
+
+table caption
+{
+    font-size: 15px;
+    text-align: left;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+h7
+{
+    font-size: 15px;
+    text-align: right;
+}
+
+h2
+{
+    font-size: 20px;
+    text-align: left;
+    margin-top: -20px;
+}
