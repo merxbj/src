@@ -14,52 +14,54 @@
         </StageDefinitions>
     </Header>
 
-    <Day date="05/14/2010">
+    <Detail>
+        <Day date="05/14/2010">
 
-        <Travel direction="chomutovToPrague">
-            <Stages>
-                <Stage id="1" time="00:02:00" />
-                <Stage id="2" time="00:15:20" />
-                <Stage id="3" time="00:11:11" />
-                <Stage id="4" time="00:17:26" />
-                <Stage id="5" time="00:09:30" />
-                <Stage id="6" time="00:16:00" />
-                <Stage id="7" time="00:09:30" />
-            </Stages>
-        </Travel>
+            <Travel direction="chomutovToPrague">
+                <Stages>
+                    <Stage id="1" time="00:02:00" />
+                    <Stage id="2" time="00:15:20" />
+                    <Stage id="3" time="00:11:11" />
+                    <Stage id="4" time="00:17:26" />
+                    <Stage id="5" time="00:09:30" />
+                    <Stage id="6" time="00:16:00" />
+                    <Stage id="7" time="00:09:30" />
+                </Stages>
+            </Travel>
 
-        <Travel direction="pragueToChomutov">
-            <Stages />
-        </Travel>
+            <Travel direction="pragueToChomutov">
+                <Stages />
+            </Travel>
 
-    </Day>
-    
-    <Day date="05/17/2010">
+        </Day>
+        
+        <Day date="05/17/2010">
 
-        <Travel direction="chomutovToPrague">
-            <Stages>
-                <Stage id="1" time="00:03:31" />
-                <Stage id="2" time="00:12:00" />
-                <Stage id="3" time="00:11:25" />
-                <Stage id="4" time="00:19:03" />
-                <Stage id="5" time="00:05:16" />
-                <Stage id="6" time="00:15:45" />
-                <Stage id="7" time="00:09:02" />
-            </Stages>
-        </Travel>
+            <Travel direction="chomutovToPrague">
+                <Stages>
+                    <Stage id="1" time="00:03:31" />
+                    <Stage id="2" time="00:12:00" />
+                    <Stage id="3" time="00:11:25" />
+                    <Stage id="4" time="00:19:03" />
+                    <Stage id="5" time="00:05:16" />
+                    <Stage id="6" time="00:15:45" />
+                    <Stage id="7" time="00:09:02" />
+                </Stages>
+            </Travel>
 
-        <Travel direction="pragueToChomutov">
-            <Stages>
-                <Stage id="1" time="00:01:46" />
-                <Stage id="2" time="00:12:00" />
-                <Stage id="3" time="00:11:25" />
-                <Stage id="4" time="00:10:40" />
-                <Stage id="5" time="00:18:15" />
-                <Stage id="6" time="00:04:22" />
-                <Stage id="7" time="00:09:36" />
-            </Stages>
-        </Travel>
+            <Travel direction="pragueToChomutov">
+                <Stages>
+                    <Stage id="1" time="00:01:46" />
+                    <Stage id="2" time="00:12:00" />
+                    <Stage id="3" time="00:11:25" />
+                    <Stage id="4" time="00:10:40" />
+                    <Stage id="5" time="00:18:15" />
+                    <Stage id="6" time="00:04:22" />
+                    <Stage id="7" time="00:09:36" />
+                </Stages>
+            </Travel>
 
-    </Day>
+        </Day>
+    </Detail>
     
 </TimeSheet>

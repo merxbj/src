@@ -30,12 +30,14 @@
                         <li class="menuItem"><a href="./aboutRoad.html">O cestě</a></li>
                         <li class="menuItem"><a href="./aboutDriver.html">O řidiči</a></li>
                         <li class="menuItemSelected"><a href="./data.xml">Statistika</a></li>
+                        <li class="menuItem"><a href="./dataInput.html">Sběr dat</a></li>
+                        <li class="menuItem"><a href="./galery.html">Fotogalerie</a></li>
                         <li class="menuItem"><a href="./siteMap.html">Mapa stránek</a></li>
                     </ul>
                 </div>
 
                 <div class="body">
-                    <xsl:apply-templates />
+                    <xsl:apply-templates select="TimeSheet" />
                 </div>
 
             </body>
@@ -44,7 +46,7 @@
 
     </xsl:template>
     
-    <xsl:template match="StageDefinitions">
+    <xsl:template match="TimeSheet">
     
         <table summary="Tabulka prezentujicí časové údaje o jednitlivých úsecéch cesty"> 
             <caption>Časy rychlostních zkoušek</caption> 
@@ -56,10 +58,52 @@
             <col />
             <col />
             <col />
-            <thead></thead>
-            <tbody></tbody> 
+            <xsl:apply-templates select="Header" />
+            <xsl:apply-templates select="Detail" />
         </table>
     
+    </xsl:template>
+    
+    <xsl:template name="Header">
+
+        <thead>
+            <xsl:apply-templates select="StageDefinitions" />
+        </thead>
+
+    </xsl:template>
+    
+    <xsl:template name="StageDefinitions">
+
+        <tr>
+            <xsl:apply-templates select="StageDefinition" />
+        </tr>
+
+    </xsl:template>
+    
+    <xsl:template match="StageDefinition">
+
+        <th><xsl:value-of select="./@description" /></th>
+
+    </xsl:template>
+    
+    <xsl:template name="Detail">
+
+        <tbody>
+            <xsl:apply-templates select="Stages"/>
+        </tbody>
+
+    </xsl:template>
+    
+    <xsl:template match="Stages">
+
+        <tr><xsl:apply-templates /></tr>
+
+    </xsl:template>
+    
+    <xsl:template match="Stage">
+
+        <td class="number"><xsl:value-of select="./@time" /></td>
+
     </xsl:template>
     
 </xsl:stylesheet>
