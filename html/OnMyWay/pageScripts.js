@@ -244,7 +244,9 @@ function onDataInputBodyLoad() {
     
     if (document.forms["inputForm"].note != null) {
         document.forms["inputForm"].note.value = "Zde napište poznámku ...";
+        document.forms["inputForm"].note.disabled = true;
     }
+
 }
 
 /*
@@ -295,4 +297,33 @@ function getStyleSkin() {
 
 function onBodyLoad() {
     changeSkin(getStyleSkin());
+}
+
+function onIncludeNoteClick() {
+    var includeNote = document.forms["inputForm"].includeNote;
+    var note = document.forms["inputForm"].note;
+    
+    if ((includeNote == null) || (note == null)) {
+        return;
+    }
+    
+    note.disabled = !includeNote.checked;
+}
+
+function onRegisteredClick() {
+    
+    var password = document.forms["inputForm"].password;
+    var login = document.forms["inputForm"].login;
+    var secretCode = document.forms["inputForm"].secretCode;
+    
+    if ((password == null) || (login == null) || (secretCode == null)) {
+        return;
+    }
+    
+    var registered = isRegistered();
+        
+    login.disabled = !registered;
+    password.disabled = !registered;
+    secretCode.disabled = registered;
+    
 }

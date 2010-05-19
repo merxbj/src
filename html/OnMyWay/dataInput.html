@@ -127,7 +127,7 @@
                                 <label for="includeNote">Připojit poznámku?</label>
                             </td>
                             <td>
-                                <input tabindex="11" accesskey="z" type="checkbox" name="includeNote" id="includeNote" />
+                                <input tabindex="11" accesskey="z" type="checkbox" name="includeNote" id="includeNote" onClick="onIncludeNoteClick()" />
                             </td>
                         </tr>
                         <tr>
@@ -153,7 +153,7 @@
                                 <label for="registered">Registrovaný uživatel?</label>
                             </td>
                             <td>
-                                <input tabindex="13" accesskey="r" type="radio" name="registered" id="registered" checked="checked" value="registered"/>
+                                <input tabindex="13" accesskey="r" type="radio" name="registered" id="registered" checked="checked" value="registered" onClick="onRegisteredClick()"/>
                             </td>
                         </tr>
                         <tr>
@@ -175,7 +175,7 @@
                                 <label for="registered">Host?</label>
                             </td>
                             <td>
-                                <input tabindex="16" accesskey="h" type="radio" name="registered" id="unregistered" value="unregistered"/>
+                                <input tabindex="16" accesskey="h" type="radio" name="registered" id="unregistered" value="unregistered" onClick="onRegisteredClick()"/>
                             </td>
                         </tr>
                         <tr>
