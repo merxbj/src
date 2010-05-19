@@ -1,4 +1,4 @@
-﻿/*
+/*
     Validates the user input to the form. It validates all the fields separately
     and keeps going even thought validation errors already occured and builds an
     error message.
@@ -285,10 +285,11 @@ function setStyleSkin(value) {
 function getStyleSkin() {
     var cookie = document.cookie;
     if ((cookie != null) && (cookie != "")) {
-        var split = cookie.split("=");
-        for (var i = 0; i < split.length; i++) {
-            if (split[i] == "skin") {
-                return split[i+1];
+        var splits = cookie.split(";");
+        for (var i = 0; i < splits.length; i++) {
+            if (splits[i].indexOf("skin=") != -1) {
+                var skinCookie = splits[i].split("=");
+                return skinCookie[1];
             }
         }
     }
