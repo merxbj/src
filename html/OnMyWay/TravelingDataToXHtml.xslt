@@ -2,21 +2,18 @@
 <xsl:output method="html" encoding="utf-8"/>
 
     <xsl:template match="/">
-        
-        <!-- Make sure that the xhtml page contains all the neccessarry headers! -->
-        <xsl:text disable-output-escaping="yes"><![CDATA[
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-            <?xml version="1.0" encoding="UTF-8"?>]]>
-        </xsl:text>
-        
+
         <html xmlns="http://www.w3.org/1999/xhtml">
             
             <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
                 <title>On My Way</title>
-                <link rel="stylesheet" href="style.css" />
+                <link rel="stylesheet" href="style_blue.css" title="blue" />
+                <link rel="stylesheet" href="style_green.css" title="green" />
+                <script type="text/javascript" src="./pageScripts.js"></script>
             </head>
             
-            <body>
+            <body onload="onBodyLoad()">
             
                 <div class="header">
                     <h1>On My Way</h1>
@@ -37,7 +34,16 @@
                 </div>
 
                 <div class="body">
+                    <h3>Sebraná statistická data</h3>
                     <xsl:apply-templates select="TimeSheet" />
+                </div>
+                
+                <div class="underline">
+                    <h5>
+                        <a href="nuttin" onclick="return onChangeSkin('blue');" id="blueStyleChanger" >Blue skin!</a>
+                        <a href="nuttin" onclick="return onChangeSkin('green');" id="greenStyleChanger">Green skin!</a>
+                        <a href="nuttin" onclick="return onChangeSkin('nothing');" id="noStyleChanger">No skin!</a>
+                    </h5>
                 </div>
 
             </body>
