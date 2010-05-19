@@ -4,11 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>On My Way</title>
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="style_blue.css" title="blue" />
+        <link rel="stylesheet" href="style_green.css" title="green" />
+        <script type="text/javascript" src="./pageScripts.js"></script>
     </head>
     
-    <body>
+    <body onload="onBodyLoad()">
         <div class="header">
             <h1>On My Way</h1>
             <h2>Malý, cestovně-statistický, deníček jednoho řidiče ...</h2>
@@ -53,7 +56,11 @@
         </div>
         
         <div class="underline">
-            <h5><a href="http://eduweb.fel.cvut.cz/courses/Y36WMM/classification/semestralka" target="_blank">Který musí splňovat následující body!</a></h5>
+            <h5>
+                <a href="nuttin" onclick="return onChangeSkin('blue');" id="blueStyleChanger" >Blue skin!</a>
+                <a href="nuttin" onclick="return onChangeSkin('green');" id="greenStyleChanger">Green skin!</a>
+                <a href="nuttin" onclick="return onChangeSkin('nothing');" id="noStyleChanger">No skin!</a>
+            </h5>
         </div>
     </body>
 

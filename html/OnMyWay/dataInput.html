@@ -4,11 +4,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>On My Way</title>
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="style_blue.css" title="blue" />
+        <link rel="stylesheet" href="style_green.css" title="green" />
+        <script type="text/javascript" src="./pageScripts.js"></script>
     </head>
     
-    <body>
+    <body onload="onDataInputBodyLoad()">
         <div class="header">
             <h1>On My Way</h1>
             <h2>Malý, cestovně-statistický, deníček jednoho řidiče ...</h2>
@@ -28,7 +31,178 @@
         </div>
 
         <div class="body">
-            <h3>Něco z potřebné fotodokumentace:</h3>
+            <h3>Prostor pro zadávání sebraných statistických dat:</h3>
+            <form action="" method="get" onsubmit="return validateInput()" id="inputForm">
+            
+                <fieldset id="commonJourneyData">
+                
+                    <legend>Data o jízdě</legend>
+                    
+                    <label for="date">Datum odjezdu</label>
+                    <input tabindex="1" accesskey="d" type="text" name="date" id="date" />
+                    
+                    <label for="time">Čas odjezdu</label>
+                    <input tabindex="2" accesskey="c" type="text" name="time" id="time" />
+                    
+                    <label for="direction">Směr jízdy</label>
+                    <select name="direction" tabindex="3" id="direction">
+                        <option value="cvToPrg">Chomutov - &gt; Praha</option>
+                        <option value="prgToCv">Praha - &gt; Chomutov</option>
+                    </select>
+                    
+                </fieldset>
+                
+                <fieldset id="stagesData">
+                
+                    <legend>Časy jednotlivých úseků jízdy v sekundách</legend>
+                    <table class="formHelper">
+                        <tr>
+                            <td>
+                                <label for="stage1">Chomutov</label>
+                            </td>
+                            <td>
+                                <input tabindex="4" accesskey="v" type="text" name="stage[]" id="stage1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage2">Postoloprty</label>
+                            </td>
+                            <td>
+                                <input tabindex="5" accesskey="p" type="text" name="stage[]" id="stage2" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage3">Louny</label>
+                            </td>
+                            <td>
+                                <input tabindex="6" accesskey="l" type="text" name="stage[]" id="stage3" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage4">Slaný</label>
+                            </td>
+                            <td>
+                                <input tabindex="7" accesskey="a" type="text" name="stage[]" id="stage4" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage5">R7</label>
+                    
+                            </td>
+                            <td>
+                                <input tabindex="8" accesskey="r" type="text" name="stage[]" id="stage5" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage6">Evropská</label>
+                            </td>
+                            <td>
+                                <input tabindex="9" accesskey="e" type="text" name="stage[]" id="stage6" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="stage7">Dejvice</label>
+                            </td>
+                            <td>
+                                <input tabindex="10" accesskey="d" type="text" name="stage[]" id="stage7" />
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </fieldset>
+                
+                <fieldset id="optionalData">
+                
+                    <legend>Volitelná data</legend>
+                    
+                    <table class="formHelper">
+                        <tr>
+                            <td>
+                                <label for="includeNote">Připojit poznámku?</label>
+                            </td>
+                            <td>
+                                <input tabindex="11" accesskey="z" type="checkbox" name="includeNote" id="includeNote" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="note">Poznámka</label>
+                            </td>
+                            <td>
+                                <textarea id="note" tabindex="12" accesskey="m" cols="80" rows="10" name="note" onclick="onTextAreaClick()" onblur="onTextAreaBlur()" >
+                                </textarea>
+                            </td>
+                        </tr>
+                    </table>
+
+                </fieldset>
+                
+                <fieldset id="control">
+                
+                    <legend>Potvrzení a odeslání</legend>
+                    
+                    <table class="formHelper">
+                        <tr>
+                            <td>
+                                <label for="registered">Registrovaný uživatel?</label>
+                            </td>
+                            <td>
+                                <input tabindex="13" accesskey="r" type="radio" name="registered" id="registered" checked="checked" value="registered"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="login">Login</label>
+                            </td>
+                            <td>
+                                <input tabindex="14" accesskey="l" type="text" name="login" id="login" />
+                            </td>
+                            <td>
+                                <label for="password">Password</label>
+                            </td>
+                            <td>
+                                <input tabindex="15" accesskey="w" type="password" name="password" id="password" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="registered">Host?</label>
+                            </td>
+                            <td>
+                                <input tabindex="16" accesskey="h" type="radio" name="registered" id="unregistered" value="unregistered"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="code">Tajný kód</label>
+                            </td>
+                            <td>
+                                <input tabindex="17" accesskey="w" type="password" name="secretCode" id="secretCode" />
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="rightAligned">
+                        <input type="submit" name="Submission" value="Odeslat" />
+                        <input type="reset" name="Reset" value="Vyčistit" />
+                    </div>
+                
+                </fieldset>
+                
+            </form>
+        </div>
+        
+        <div class="underline">
+            <h5>
+                <a href="nuttin" onclick="return onChangeSkin('blue');" id="blueStyleChanger" >Blue skin!</a>
+                <a href="nuttin" onclick="return onChangeSkin('green');" id="greenStyleChanger">Green skin!</a>
+                <a href="nuttin" onclick="return onChangeSkin('nothing');" id="noStyleChanger">No skin!</a>
+            </h5>
         </div>
         
     </body>
