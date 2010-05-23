@@ -1,11 +1,13 @@
 package notwa.gui;
 
+import notwa.gui.components.KeyValueComboBox;
 import notwa.gui.datamodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,9 +21,18 @@ import javax.swing.event.ListSelectionListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
+import notwa.dal.WorkItemDal;
+import notwa.security.Credentials;
+import notwa.sql.Parameter;
+import notwa.sql.ParameterSet;
+import notwa.sql.Parameters;
+import notwa.sql.Sql;
 import notwa.wom.Context;
 import notwa.wom.User;
 import notwa.wom.UserCollection;
+import notwa.wom.WorkItem;
+import notwa.wom.WorkItemCollection;
+import notwa.wom.WorkItemStatus;
 
 public class UserManagement extends JDialog implements ActionListener, ListSelectionListener {
 
@@ -90,6 +101,9 @@ public class UserManagement extends JDialog implements ActionListener, ListSelec
         buttonsPanel.add(delButton);
         buttonsPanel.add(closeButton);
         
+        editButton.setEnabled(false);
+        delButton.setEnabled(false);
+        
         return buttonsPanel;
     }
     
@@ -121,7 +135,34 @@ public class UserManagement extends JDialog implements ActionListener, ListSelec
         
         if (ae.getSource() == delButton) {
             if (JOptionPane.showConfirmDialog(this, "Are you sure?") == 0) {
-                //TODO del operation
+                KeyValueComboBox<User> cb = new KeyValueComboBox<User>();
+                cb.addItem(null, ""); // add an empty user
+                for (User user : uc) {
+                    if (!user.equals(this.getSelectedUser()))
+                        cb.addItem(user, user.getLogin());
+                }
+
+                Object[] msg = {"Select which user will take user's work items:", cb};
+                int result = JOptionPane.showConfirmDialog(this, msg, "NOTWA - Question", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(result == JOptionPane.OK_OPTION) {
+                    WorkItemCollection wic = new WorkItemCollection();
+                    wic.setCurrentContext(context);
+                    WorkItemDal wid = new WorkItemDal(ci, context);
+                    wid.fill(wic, getDefaultParameters(this.getSelectedUser()));
+
+                    for (WorkItem wi : wic) {
+                        wi.setAssignedUser(cb.getSelectedKey());
+                    }
+                    
+                    wid.update(wic);
+
+                    /*
+                     * Delete selected user
+                     */
+                    this.getSelectedUser().setDeleted(true);
+                    ud.update(uc);
+                    tblModel.fireTableDataChanged();
+                }
             }
         }
         
@@ -130,11 +171,20 @@ public class UserManagement extends JDialog implements ActionListener, ListSelec
         }
     }
     
+    private ParameterSet getDefaultParameters(User user) {
+        return new ParameterSet( new Parameter[] { 
+            new Parameter(Parameters.WorkItem.ASSIGNED_USER, user.getId(), Sql.Relation.EQUALTY) });
+    }
+    
     @Override
     public void valueChanged(ListSelectionEvent lse) {
-        if (table.getSelectedRow() != -1)
+        if (table.getSelectedRow() != -1) {
             editButton.setEnabled(true);
-        else
+            delButton.setEnabled(true);
+        }
+        else {
             editButton.setEnabled(false);
+            delButton.setEnabled(false);
+        }
     }
 }

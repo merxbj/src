@@ -19,19 +19,24 @@
  */
 package notwa.gui;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.util.Calendar;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import notwa.common.ColorManager;
+import notwa.wom.WorkItem;
+import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
 
 public class JTableCellRenderer implements TableCellRenderer
 {
     public static final DefaultTableCellRenderer DEFAULT_RENDERER = new DefaultTableCellRenderer();
+    private WorkItemCollection wic;
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value,
@@ -49,7 +54,7 @@ public class JTableCellRenderer implements TableCellRenderer
             } else {
                 renderer.setBackground(ColorManager.getTableOddRowColor());
             }
-            
+
             /*
              * Colorize Priority and status cells with colors loaded from ColorManager class
              */
@@ -63,5 +68,9 @@ public class JTableCellRenderer implements TableCellRenderer
         }
         
         return renderer;
+    }
+    
+    public void setWorkItemCollection(WorkItemCollection wic) {
+        this.wic = wic;
     }
 }

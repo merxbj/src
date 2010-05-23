@@ -295,10 +295,10 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             if (JOptionPane.showConfirmDialog(this, "Are you sure?") == 0) {
                 boolean save = true;
                 
-                if (!deadline.getText().equals("0000-00-00 00:00") && !(deadline.getText() != null)) {
+                if (!deadline.getText().equals("0000-00-00 00:00") && (deadline.getText() != null)) {
                     try {
                         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        currentWorkItem.setExpectedTimestamp((Date)df.parse((deadline.getText())));
+                        currentWorkItem.setExpectedTimestamp(df.parse(deadline.getText()));
                     }
                     catch (Exception e) {
                         save = false;

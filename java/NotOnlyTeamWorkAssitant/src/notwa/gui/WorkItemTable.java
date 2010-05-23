@@ -87,6 +87,7 @@ public class WorkItemTable extends JComponent implements ListSelectionListener {
             }
 
             witTable.getColumnModel().getColumn(c).setCellRenderer(tableCellRenderer);
+            tableCellRenderer.setWorkItemCollection(wic);
         }
     }
     
