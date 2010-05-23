@@ -19,16 +19,13 @@
  */
 package notwa.gui;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.util.Calendar;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import notwa.common.ColorManager;
-import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;

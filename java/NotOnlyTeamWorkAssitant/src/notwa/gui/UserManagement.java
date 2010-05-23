@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,7 +21,6 @@ import javax.swing.event.ListSelectionListener;
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
-import notwa.security.Credentials;
 import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;
@@ -32,7 +30,6 @@ import notwa.wom.User;
 import notwa.wom.UserCollection;
 import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
-import notwa.wom.WorkItemStatus;
 
 public class UserManagement extends JDialog implements ActionListener, ListSelectionListener {
 
