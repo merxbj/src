@@ -46,7 +46,7 @@ import notwa.threading.Action;
 import notwa.threading.IndeterminateProgressThread;
 
 public class LoginDialog extends JDialog implements ActionListener {
-    private JButton okButton, stornoButton, mrneoButton, eterButton;
+    private JButton okButton, stornoButton;
     private KeyValueComboBox<ConnectionInfo> connectionsBox;
     private JTextField login;
     private JPasswordField password;
@@ -108,18 +108,12 @@ public class LoginDialog extends JDialog implements ActionListener {
         
         okButton = new JButton("Ok");
         stornoButton = new JButton("Storno");
-        mrneoButton = new JButton("mrneo");
-        eterButton = new JButton("eter");
         
         okButton.addActionListener(this);
         stornoButton.addActionListener(this);
-        mrneoButton.addActionListener(this);
-        eterButton.addActionListener(this);
         
         jp.add(okButton);
         jp.add(stornoButton);
-        jp.add(mrneoButton);
-        jp.add(eterButton);
         
         return jp;
     }
@@ -146,14 +140,6 @@ public class LoginDialog extends JDialog implements ActionListener {
             } else {
                 this.performSignIn();
             }
-        } else if (ae.getSource() == mrneoButton) {
-            login.setText("mrneo");
-            password.setText("aaaa");
-            performSignIn();
-        } else if (ae.getSource() == eterButton) {
-            login.setText("eter");
-            password.setText("bbbb");
-            performSignIn();
         } else if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
@@ -174,8 +160,12 @@ public class LoginDialog extends JDialog implements ActionListener {
             @Override
             public void perform() {
                 try {
+                    params.stornoButton.setEnabled(false);
+                    params.okButton.setEnabled(false);
                     Security.getInstance().signIn(signInParams.connectionInfo, signInParams.credentials);
                     params.setVisible(false);
+                    params.stornoButton.setEnabled(true);
+                    params.okButton.setEnabled(true);
                 } catch (SignInException siex) {
                     JOptionPane.showMessageDialog(loginDialog, "Bad user name or password!");
                     LoggingFacade.handleException(siex);

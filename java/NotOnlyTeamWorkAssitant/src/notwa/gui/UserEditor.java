@@ -36,7 +36,7 @@ import notwa.wom.User;
 /**
  * User editor is used to create new or edit existing user.
  * 
- * @author mrneo
+ * @author Tomas Studnicka
  */
 public class UserEditor extends JDialog implements ActionListener{
     private JButton okButton, stornoButton;

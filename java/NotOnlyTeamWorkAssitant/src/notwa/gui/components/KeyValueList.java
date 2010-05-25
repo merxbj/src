@@ -12,7 +12,8 @@ import notwa.gui.datamodels.KeyValueListModel;
 
 /**
  *
- * @author jmerxbauer
+ * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
 public class KeyValueList<TKey> extends JList {
 

@@ -48,7 +48,6 @@ public class TabContent extends JPanel implements ActionListener {
     private WorkItemCollection wic;
     private ParameterSet ps;
     private WorkItemTable wiTable;
-    private JComboBox userDefinedFiltersBox;
     private EventHandler<GuiEvent> guiHandler;
     private Credentials currentUser;
 
@@ -113,22 +112,8 @@ public class TabContent extends JPanel implements ActionListener {
         leftButtonsPanel.add(addButton);
         
         buttonsPanel.add(leftButtonsPanel, BorderLayout.LINE_START);
-        buttonsPanel.add(this.initFilteringComboBox(), BorderLayout.LINE_END);
         
         return buttonsPanel;
-    }
-    
-    private JPanel initFilteringComboBox() {
-        JPanel jp = new JPanel();
-        
-        userDefinedFiltersBox = new JComboBox();
-        userDefinedFiltersBox.addActionListener(this);
-        
-        fillUserDefinedFilterItems(userDefinedFiltersBox);
-        
-        jp.add(userDefinedFiltersBox);
-        
-        return jp; 
     }
     
     public ConnectionInfo getConnectionInfo() {
@@ -165,13 +150,6 @@ public class TabContent extends JPanel implements ActionListener {
         if (ae.getSource() == addButton) {
             WorkItemEditor wie = new WorkItemEditor(getConnectionInfo(), getContext(), getWorkItemCollection(), guiHandler, currentUser);
             wie.initAddDialog();
-        }
-        
-        if (ae.getSource() == userDefinedFiltersBox) {
-            if(userDefinedFiltersBox.getSelectedItem().equals("Configure ...")) {
-                FilteringDialog fd = new FilteringDialog();
-                fd.init();
-            }
         }
     }
 

@@ -42,7 +42,7 @@ import notwa.wom.Context;
 /**
  * Class <code>MainWindow</code>
  *  
- * @author mrneo
+ * @author Tomas Studnicka
  * @version %I% %G%
  */
 public class MainWindow extends JFrame {

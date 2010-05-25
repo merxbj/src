@@ -28,7 +28,7 @@ import notwa.wom.WorkItemStatus;
  * Centralized color management, all style coloring should be here for better
  * styling of application
  * 
- * @author mrneo
+ * @author Tomas Studnicka
  * @version %I% %G%
  */
 public class ColorManager {

@@ -28,7 +28,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Box;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -46,12 +45,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenuItem mItemSyncAndRefresh;
     private JMenuItem mItemExit;
     private JMenuItem mItemConfigure;
-    private JMenuItem mItemFiltering;
     private JMenuItem mItemUserManagement;
     private JMenuItem mItemProjectManagement;
     private JMenuItem mItemAssignmentManager;
     private JMenu menu;
-    private JCheckBoxMenuItem cbWorkOffline;
     private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     private JMenu toolsMenu;
@@ -72,13 +69,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
 
         menu.addSeparator();
 
-        cbWorkOffline = new JCheckBoxMenuItem("Work offline");
-        cbWorkOffline.setMnemonic(KeyEvent.VK_O);
-        cbWorkOffline.setEnabled(false);
-        menu.add(cbWorkOffline);
-
-        menu.addSeparator();
-
         mItemExit = new JMenuItem("Exit", KeyEvent.VK_X);
         mItemExit.addActionListener(this);
         menu.add(mItemExit);
@@ -92,11 +82,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         mItemConfigure = new JMenuItem("Application settings", KeyEvent.VK_A);
         mItemConfigure.addActionListener(this);
         
-        mItemFiltering = new JMenuItem("Configure Sorting / Filtering");
-        mItemFiltering.addActionListener(this);
-        
         menu.add(mItemConfigure);
-        menu.add(mItemFiltering);
         
         this.add(menu);
         /*
@@ -191,8 +177,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == mItemConfigure) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_CONFIGURE)));
-        } else if (ae.getSource() == mItemFiltering) {
-            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_FILTERING)));
         } else if (ae.getSource() == mItemProjectManagement) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_PROJECT_MANAGEMENT)));
         } else if (ae.getSource() == mItemUserManagement) {
