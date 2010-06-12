@@ -23,18 +23,22 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.DateFormatter;
+import javax.swing.text.MaskFormatter;
 
 import notwa.common.ConnectionInfo;
 import notwa.common.EventHandler;
@@ -61,7 +65,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
     private KeyValueComboBox<WorkItemStatus> statuses;
     private JTextField subject = new JTextField();
     private JTextField eParentId = new JTextField();
-    private JTextField eExpectingDate = new JTextField();
+    private JFormattedTextField eExpectingDate = new JFormattedTextField();
     private JTextArea eDescription;
     private JButton okButton, stornoButton;
     private ConnectionInfo ci;
@@ -132,9 +136,8 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         JLabel lExpectingDate = new JLabel("Expecting date");
         lExpectingDate.setBounds(63, 267, 101, 15);
         jp.add(lExpectingDate);
-        eExpectingDate = new JTextField("00.00.0000 00:00");
-        eExpectingDate.setBounds(227, 264, 138, 22);
-        jp.add(eExpectingDate);
+
+        jp.add(initeExpectingDate());
         
         this.add(jp, BorderLayout.CENTER);
         this.add(this.initButtons(), BorderLayout.PAGE_END);
@@ -142,6 +145,20 @@ public class WorkItemEditor extends JDialog implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setVisible(true);
+    }
+    
+    private JFormattedTextField initeExpectingDate() {
+        MaskFormatter mf = null;
+        try {
+            mf = new MaskFormatter("##.##.#### ##:##");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        JFormattedTextField eExpectingDate = new JFormattedTextField(mf);
+        eExpectingDate.setBounds(227, 264, 138, 22);
+        eExpectingDate.setValue("00.00.0000 00:00");
+        
+        return eExpectingDate;
     }
     
     private JPanel initButtons() {
@@ -251,12 +268,12 @@ public class WorkItemEditor extends JDialog implements ActionListener {
             wi.setSubject(subject.getText());
             wi.registerWithContext(context);
 
-            wic.add(wi);
-            
-            WorkItemDal wid = new WorkItemDal(ci, context);
-            wid.update(wic);
-            
             if (close) {
+                wic.add(wi);
+                
+                WorkItemDal wid = new WorkItemDal(ci, context);
+                wid.update(wic);
+                
                 this.setVisible(false);
                 GuiEventParams gep = new GuiEventParams(GuiEventParams.MENU_EVENT_SYNC_AND_REFRESH);
                 guiHandler.handleEvent(new GuiEvent(gep));
