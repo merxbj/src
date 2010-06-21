@@ -24,18 +24,21 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import notwa.dal.NoteDal;
 import notwa.dal.WorkItemDal;
@@ -55,7 +58,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     private JTextArea description;
     private JTextArea latestNote;
     private JTextField parent;
-    private JTextField deadline;
+    private JFormattedTextField deadline;
     private JTextField lastModified;
     private KeyValueComboBox<WorkItemStatus> statuses;
     private KeyValueComboBox<WorkItemPriority> priorities;
@@ -76,7 +79,14 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         this.description = new JTextArea();
         this.latestNote = new JTextArea();
         this.parent = new JTextField();
-        this.deadline = new JTextField();
+        //this.deadline = new JFormattedTextField();
+        MaskFormatter mf = null;
+        try {
+            mf = new MaskFormatter("##.##.#### ##:##");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        this.deadline = new JFormattedTextField(mf);
         this.lastModified = new JTextField();
         this.statuses = new KeyValueComboBox<WorkItemStatus>();
         this.priorities = new KeyValueComboBox<WorkItemPriority>();
@@ -168,6 +178,7 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
         lLastUpdate.setBounds(185, 59, 86, 15);
         boxesPanel.add(lastModified);
         lastModified.setBounds(271, 54, 125, 22);
+        lastModified.setEditable(false);
         
         return boxesPanel;
     }
@@ -206,20 +217,20 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
     }
     
     public void setDeadline(Date deadline) {
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         try {
             this.deadline.setText(formatter.format(deadline));
         } catch (Exception e) { 
-            this.deadline.setText("0000-00-00 00:00");
+            this.deadline.setText("00.00.0000 00:00");
         }
     }
     
     public void setLastModified(Date lastModified) {
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         try {
             this.lastModified.setText(formatter.format(lastModified));
         } catch (Exception e) {
-            this.lastModified.setText("0000-00-00 00:00");
+            this.lastModified.setText("00.00.0000 00:00");
         }
     }
     
@@ -295,9 +306,9 @@ public class WorkItemDetail extends WorkItemDetailLayout implements ActionListen
             if (JOptionPane.showConfirmDialog(this, "Are you sure?") == 0) {
                 boolean save = true;
                 
-                if (!deadline.getText().equals("0000-00-00 00:00") && (deadline.getText() != null)) {
+                if (!deadline.getText().equals("00.00.0000 00:00") && (deadline.getText() != null)) {
                     try {
-                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                         currentWorkItem.setExpectedTimestamp(df.parse(deadline.getText()));
                     }
                     catch (Exception e) {

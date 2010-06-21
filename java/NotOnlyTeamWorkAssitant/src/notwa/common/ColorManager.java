@@ -32,10 +32,11 @@ import notwa.wom.WorkItemStatus;
  * @version %I% %G%
  */
 public class ColorManager {
-    private static Color lightRed = new Color(255,200,200);
-    private static Color lighterRed = new Color(255,220,220);
+    private static Color lightRed = new Color(255,190,190);
+    private static Color lighterRed = new Color(255,210,210);
+    private static Color littleRed = new Color(255,235,235);
     private static Color white = new Color(255,255,255);
-    private static Color lightGreen = new Color(220,255,170);
+    private static Color lightGreen = new Color(210,255,160);
     private static Color lightGray = new Color(230,230,230);
     private static Color lightBlue = new Color(170, 220, 255);
     
@@ -60,6 +61,7 @@ public class ColorManager {
             default:
                 return white;
         }
+        
     }
     
     /**
@@ -70,16 +72,24 @@ public class ColorManager {
      */
     public static Color getStatusColor(WorkItemStatus wis) {
         switch(wis) {
+            case EVALUATE:
+                return lighterRed;
             case RESOLVE:
                 return lightRed;
             case WATCH:
-                return lighterRed;
+                return littleRed;
             case REEVALUATE:
-                return lightGreen;
+                return lighterRed;
             case CLOSED:
                 return white;
             case VERIFIED:
+                return lightGreen;
+            case CODE_REVIEW:
                 return lightGray;
+            case CODE_REVIEW_APPROVED:
+                return lightGreen;
+            case PLEASE_VERIFY:
+                return littleRed;
             default:
                 return white;
         }
@@ -107,5 +117,21 @@ public class ColorManager {
      */
     public static Color getTableSelectedRowColor() {
         return lightBlue;
+    }
+    
+    /**
+     * Gets the color for WIT's that has date today or after.
+     * @return The <code>Color</code>
+     */    
+    public static Color getExpectingDateWarningColor() {
+        return lightRed;
+    }
+    
+    /**
+     * Gets the color for WIT's that has 7 days to completion.
+     * @return The <code>Color</code>
+     */
+    public static Color getExpectingDateAttentionColor() {
+        return lighterRed;
     }
 }

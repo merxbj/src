@@ -19,13 +19,18 @@
  */
 package notwa.gui;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
 import notwa.common.ColorManager;
+import notwa.wom.WorkItem;
 import notwa.wom.WorkItemCollection;
 import notwa.wom.WorkItemPriority;
 import notwa.wom.WorkItemStatus;
@@ -61,6 +66,27 @@ public class JTableCellRenderer implements TableCellRenderer
             } else if ((value != null) && (value instanceof WorkItemStatus)) {
                 WorkItemStatus wis = (WorkItemStatus) value;
                 renderer.setBackground(ColorManager.getStatusColor(wis));
+            }
+            
+            /*
+             * Colorize row if WIT has Expecting date 7 days before completion or lower
+             */
+
+            if (!((value instanceof WorkItemPriority) || (value instanceof WorkItemStatus))) {
+                Date expectingDate = wic.get(table.convertRowIndexToModel(row)).getExpectedTimestamp();
+                try {
+                    Date now = Calendar.getInstance().getTime();
+                    Calendar weekBefore = new GregorianCalendar();
+                    weekBefore.setTime(expectingDate);
+                    weekBefore.add(Calendar.DAY_OF_YEAR, -7);
+                    if (now.after(expectingDate)) {
+                        renderer.setBackground(ColorManager.getExpectingDateWarningColor());
+                    }
+                    else if (now.after(weekBefore.getTime()) && now.before(expectingDate)) {
+                        renderer.setBackground(ColorManager.getExpectingDateAttentionColor());
+                    }
+                }
+                catch(Exception e) { };
             }
         }
         
