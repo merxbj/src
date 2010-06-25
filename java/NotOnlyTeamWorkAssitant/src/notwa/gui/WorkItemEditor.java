@@ -232,7 +232,7 @@ public class WorkItemEditor extends JDialog implements ActionListener {
             WorkItem wi = new WorkItem();
             wi.setAssignedUser(users.getSelectedKey());
             wi.setDescription(eDescription.getText());
-            if (!eExpectingDate.getText().equals("00.00.0000 00:00")) {
+            if (!eExpectingDate.getText().equals("") && !eExpectingDate.getText().equals("00.00.0000 00:00")) {
                 try {
                     DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                     wi.setExpectedTimestamp((Date)df.parse((eExpectingDate.getText())));

@@ -73,8 +73,8 @@ public class JTableCellRenderer implements TableCellRenderer
              */
 
             if (!((value instanceof WorkItemPriority) || (value instanceof WorkItemStatus))) {
-                Date expectingDate = wic.get(table.convertRowIndexToModel(row)).getExpectedTimestamp();
                 try {
+                    Date expectingDate = wic.get(table.convertRowIndexToModel(row)).getExpectedTimestamp();
                     Date now = Calendar.getInstance().getTime();
                     Calendar weekBefore = new GregorianCalendar();
                     weekBefore.setTime(expectingDate);

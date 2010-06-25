@@ -164,11 +164,12 @@ public class LoginDialog extends JDialog implements ActionListener {
                     params.okButton.setEnabled(false);
                     Security.getInstance().signIn(signInParams.connectionInfo, signInParams.credentials);
                     params.setVisible(false);
-                    params.stornoButton.setEnabled(true);
-                    params.okButton.setEnabled(true);
                 } catch (SignInException siex) {
                     JOptionPane.showMessageDialog(loginDialog, "Bad user name or password!");
                     LoggingFacade.handleException(siex);
+                } finally {
+                    params.stornoButton.setEnabled(true);
+                    params.okButton.setEnabled(true);
                 }
             }
         }, progressBar);
