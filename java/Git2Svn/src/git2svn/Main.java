@@ -31,15 +31,15 @@ import java.util.Collections;
  */
 public class Main {
 
-    private static final String git = "c:/Program Files (x86)/Git/bin/git.exe";
-    private static final String svn = "svn";
-    private static final String src = "d:/repos/srcsvn/java/NotOnlyTeamWorkAssitant/";
-    private static final String dest = "d:/repos/svn/";
+    private static final String gitPath = "c:/Program Files (x86)/Git/bin/git.exe";
+    private static final String svnPath = "svn";
+    private static final String srcPath = "d:/repos/srcsvn/java/NotOnlyTeamWorkAssitant/";
+    private static final String destPath = "d:/repos/svn/";
 
-    private static SvnFacade sf = new SvnFacade(svn, dest);
-    private static GitFacade gf = new GitFacade(git, src);
-    private static DirectorySynchronizer ds = new DirectorySynchronizer();
-    private static DirectoryDiffProcessor ddp = new DirectoryDiffProcessor();
+    private static SvnFacade svn = new SvnFacade(svnPath, destPath);
+    private static GitFacade git = new GitFacade(gitPath, srcPath);
+    private static DirectorySynchronizer synchronizer = new DirectorySynchronizer();
+    private static DirectoryDiffProcessor diffProcessor = new DirectoryDiffProcessor();
 
     public static void main(String[] args) {
 
@@ -51,7 +51,7 @@ public class Main {
             /**
              * git log
              */
-            ArrayList<String> stdout = gf.log();
+            ArrayList<String> stdout = git.log();
 
             /**
              * Parse stdout
@@ -71,50 +71,80 @@ public class Main {
             stdout = null;
 
             /**
-             * Remove unwanted commits
+             * Remove unwanted commits regarding another projects
              */
             ArrayList<GitCommit> garbage = new ArrayList<GitCommit>();
+
             for (GitCommit gc : commits) {
                 String title = (gc.getMessageLines().size() > 0) ? gc.getMessageLines().get(0) : "";
                 if (!title.trim().startsWith("NOTWA")) {
                     garbage.add(gc);
                 }
             }
+
+            /**
+             * Having the collection sorted chronologicaly from the oldest to newest
+             * is the expected situtation for the following code
+             */
+            Collections.reverse(commits);
+
+            /**
+             * Remove commits with broken notwa.sql file
+             */
+            boolean isGarbage = false;
+            for (GitCommit gc : commits) {
+                if (gc.getSha1().equals("161ea8c8a38480e1759ce504496bfe7aaea421ad")) {
+                    isGarbage = true;
+                    
+                } 
+                if (isGarbage) {
+                    garbage.add(gc);
+                }
+                if (isGarbage && gc.getSha1().equals("2f107903d1012aa55bb2253da208e733238077b2")) {
+                    break;
+                }
+            }
+
             commits.removeAll(garbage);
 
             /**
              * Transport git repo to svn repo
-             * We want to go from the oldes history to the newest (surprising!)
              */
-            Collections.reverse(commits);
             for (GitCommit gc : commits) {
                 /**
                  * Be verboose a little!
                  */
-                System.out.println(String.format("Processing: ", gc));
+                System.out.println(String.format("Processing: %s", gc));
+
+                /**
+                 * Clean the git repo
+                 */
+                log(git.checkout("*"));
+                log(git.clean("-f"));
+                System.out.println("\t+ Cleaned the git repo");
 
                 /**
                  * Checkout commit to be ready in git repository directory
                  */
-                log(gf.checkout(gc.getSha1()));
+                log(git.checkout(gc.getSha1()));
                 System.out.println("\t+ Checked out");
 
                 /**
                  * Sync the git repo dir and svn repo dir and retrieve the directory diff
                  */
-                DirectoryDiff diff = ds.sync(new File(src), new File(dest));
+                DirectoryDiff diff = synchronizer.sync(new File(srcPath), new File(destPath));
                 System.out.println("\t+ Synchronized");
 
                 /**
                  * Promote the changes found by the synchronizer to the svn repo
                  */
-                ddp.applyChanges(diff, sf);
+                diffProcessor.applyChanges(diff, svn);
                 System.out.println("\t+ Changes applied to svn");
 
                 /**
                  * Commit the changes
                  */
-                log(sf.commit(gc));
+                log(svn.commit(gc));
                 System.out.println("\t+ Aplied changes commited to svn repo");
             }
 

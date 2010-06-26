@@ -45,6 +45,21 @@ public abstract class ExecutableFacade {
         return readFromStdout(p);
     }
 
+    protected ArrayList<String> test(String command, String ... args) throws Exception {
+        ProcessBuilder pb = new ProcessBuilder(buildCommand(command, args));
+        pb.directory(workingDir);
+
+        List<String> commandLine = pb.command();
+        StringBuilder line = new StringBuilder();
+        for (String cmd : commandLine) {
+            line.append(cmd + " ");
+        }
+        ArrayList<String> ret = new ArrayList<String>();
+        ret.add(line.toString());
+
+        return ret;
+    }
+
     private ArrayList<String> readFromStdout(Process p) throws Exception {
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
         BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));

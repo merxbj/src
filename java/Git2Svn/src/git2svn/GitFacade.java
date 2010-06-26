@@ -42,5 +42,9 @@ public class GitFacade extends ExecutableFacade {
     public ArrayList<String> checkout(String ... args) throws Exception {
         return executable("checkout", args);
     }
+
+    public ArrayList<String> clean(String ... args) throws Exception {
+        return executable("clean", args);
+    }
     
 }

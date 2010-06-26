@@ -23,8 +23,10 @@ package git2svn;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TreeSet;
@@ -117,19 +119,34 @@ public class DirectorySynchronizer {
     private void copyFile(String src, String dst) throws Exception {
         File in = new File(src);
         File out = new File(dst);
-        InputStream is = new FileInputStream(in);
-        OutputStream os = new FileOutputStream(out);
+        boolean success = false;
 
-        byte[] buf = new byte[1024];
-        int len = 0;
-        len = is.read(buf);
-        while (len > 0) {
-            os.write(buf, 0, len);
-            len = is.read(buf);
+        try {
+            InputStream is = new FileInputStream(in);
+            OutputStream os = new FileOutputStream(out);
+
+            try {
+                byte[] buf = new byte[1024];
+                int len = 0;
+                len = is.read(buf);
+                while (len > 0) {
+                    os.write(buf, 0, len);
+                    len = is.read(buf);
+                }
+                success = true;
+            } catch (Exception ex) {
+                success = false;
+            } finally {
+                is.close();
+                os.close();
+            }
+        } catch (Exception ex) {
+            success = false;
         }
 
-        is.close();
-        os.close();
+        if (!success) {
+            throw new Exception("Screwed!");
+        }
     }
 
     private TreeSet<ComparableFile> listAllFiles(File file, String root) {
@@ -183,24 +200,35 @@ public class DirectorySynchronizer {
         }
 
         public boolean compareToByContent(ComparableFile cf) {
+            boolean equals = true;
             try {
                 BufferedReader br1 = new BufferedReader(new FileReader(this.file));
                 BufferedReader br2 = new BufferedReader(new FileReader(cf.getFile()));
-
-                String line1 = br1.readLine();
-                while (line1 != null) {
-                    if (!br2.readLine().equals(line1)) {
-                        return false; // changed line
+                try {
+                    String line1 = br1.readLine();
+                    while (line1 != null) {
+                        if (!br2.readLine().equals(line1)) {
+                            equals = false;
+                            break; // changed line
+                        }
+                        line1 = br1.readLine();
                     }
-                    line1 = br1.readLine();
+                    if (equals && (br2.readLine() != null)) {
+                        equals = false; // second file has more lines
+                    }
+                } catch (Exception ex) {
+                    equals = false; // second file is shorter
+                } finally {
+                    try {
+                        br1.close();
+                        br2.close();
+                    } catch (IOException ioex) {}
                 }
-                if (br2.readLine() != null) {
-                    return false; // second file has more lines
-                }
-                return true;
-            } catch (Exception ex) {
-                return false; // second file is shorter
+            } catch (FileNotFoundException fnfex) {
+                equals = false;
             }
+
+            return equals;
         }
 
         public File getFile() {
