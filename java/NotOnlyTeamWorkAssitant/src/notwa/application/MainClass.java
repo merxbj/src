@@ -22,6 +22,7 @@ package notwa.application;
 
 import notwa.gui.MainWindow;
 import notwa.logger.LoggingFacade;
+import notwa.common.Config;
 
 /**
  * The Class representin the entry point to the application. It parses the input
@@ -45,6 +46,7 @@ public class MainClass {
             return; // TODO: Some kind of help text should be displayed here
         }
 
+        configureConfig(cl);
         configureLogging(cl);
 
         new MainWindow();
@@ -63,5 +65,15 @@ public class MainClass {
         if (cl.isDebug()) {
             lf.enableWindowLogging();
         }
+    }
+    
+    /**
+     * Configures the config file according to the given <code>CommandLine</code>.
+     *
+     * @param cl    The <code>CommandLine</code> containng the information to 
+     *              configure the config file.
+     */
+    private static void configureConfig(CommandLine cl) {
+        Config.setConfigFilePath(cl.getConfigFile());
     }
 }

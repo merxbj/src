@@ -33,8 +33,10 @@ public class CommandLine {
     private boolean debug;
     private boolean valid;
     private String logFile;
+    private String configFile;
 
     private static final String defaultLogFile = "./log/notwa.log";
+    private static final String defaultConfigFile = "./notwa.config";
 
     /**
      * Let us hide the constructor. The new CommandLine instances are going to be
@@ -44,6 +46,7 @@ public class CommandLine {
         debug = false;
         valid = false;
         logFile = defaultLogFile;
+        configFile = defaultConfigFile;
     }
 
     /**
@@ -57,9 +60,13 @@ public class CommandLine {
     public static CommandLine parse(String[] args) {
         CommandLine cl = new CommandLine();
 
-        for (String arg : args) {
-            if (arg.equalsIgnoreCase("/debug")) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("/debug")) {
                 cl.debug = true;
+            } else if (args[i].equalsIgnoreCase("/config")) {
+                cl.configFile = args[i + 1];
+            } else if (args[i].equalsIgnoreCase("/log")) {
+                cl.logFile = args[i + 1];
             }
         }
         cl.valid = true;
@@ -96,5 +103,15 @@ public class CommandLine {
      */
     public String getLogFile() {
         return logFile;
+    }
+    
+    /**
+     * Gets the config file customized path.
+     * 
+     * @return  The path to the config file where the user want to store the configuration
+     *          information.
+     */
+    public String getConfigFile() {
+        return configFile;
     }
 }

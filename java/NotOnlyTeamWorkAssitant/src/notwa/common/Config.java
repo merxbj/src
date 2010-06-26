@@ -57,14 +57,14 @@ public class Config {
     private List<Node> rawConnections;
     private Document dom;
     private List<Node> rawApplicationsSettings;
-    private final String CONFIG_FILE_NAME = "./notwa.config";
+    private static String configFilePath = "./notwa.config";
     private final XPath xpath = XPathFactory.newInstance().newXPath();
     
     /**
      * Hidden constructor to prevent instationing the class from outside world.
      */
     protected Config() {
-        File configFile = new File(CONFIG_FILE_NAME);
+        File configFile = new File(configFilePath);
         this.rawConnections = new ArrayList<Node>();
         this.rawApplicationsSettings = new ArrayList<Node>();
 
@@ -73,6 +73,16 @@ public class Config {
         } catch (Exception ex) {
             LoggingFacade.handleException(ex);
         }
+    }
+    
+    /**
+     * Intended to use only during the application startup to specify the config
+     * file path.
+     *
+     * @param path - The actual path to the config file.
+     */
+    public static void setConfigFilePath(String path) {
+        configFilePath = path;
     }
 
     /**
@@ -157,7 +167,7 @@ public class Config {
         try {
             Source source = new DOMSource(dom);
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
-            xformer.transform(source, new StreamResult(new File(CONFIG_FILE_NAME)));
+            xformer.transform(source, new StreamResult(new File(configFilePath)));
         } catch (Exception ex) {
             LoggingFacade.handleException(ex);
         }

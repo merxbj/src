@@ -1,4 +1,4 @@
-<project name="NotOnlyTeamWorkAssistant" default="dist" basedir=".">
+<project name="NotOnlyTeamWorkAssistant" default="build" basedir=".">
     <description>
         This should ensure that the Not Only Team Work Assistant 
         builds under any environemnt.
@@ -20,7 +20,7 @@
     <javac srcdir="${src}" destdir="${build}"/>
   </target>
 
-  <target name="dist" depends="compile" description="generate the distribution" >
+  <target name="build" depends="compile" description="generate the distribution" >
     <!-- Make sure that the distribution directory tree exists -->
     <mkdir dir="${dist}/lib"/>
     
@@ -39,9 +39,19 @@
     <copy file="${lib}/mysql-connector-java-5.1.12-bin.jar" tofile="${dist}/lib/mysql-connector-java-5.1.12-bin.jar" overwrite="true" />
     
     <!-- Copy the config file to the output path -->
-    <copy file="${config}/notwa.config" tofile="${dist}/lib/notwa.config" overwrite="true" />
+    <copy file="${config}/notwa.config" tofile="${dist}/notwa.config" overwrite="true" />
 
   </target>
+  
+  <target name="run" depends="build">
+        <java classname="notwa.application.MainClass" classpath="${dist}/lib/notwa.jar" fork="true">
+            <arg value="/config" />
+            <arg value="${dist}/notwa.config" />
+            <arg value="/log" />
+            <arg value="${dist}/log/notwa.log" />
+        </java>
+  </target>
+
 
   <target name="clean" description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
