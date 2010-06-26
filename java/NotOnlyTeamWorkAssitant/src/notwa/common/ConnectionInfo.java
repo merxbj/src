@@ -43,6 +43,7 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
     private String dbname;
     private String user;
     private String password;
+    private NotwaConnectionInfo nci;
 
     /**
      * Implemntation of the {@link Comparable} interface.
@@ -221,4 +222,11 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
         return cs;
     }
     
+    public void setNotwaConnectionInfo(NotwaConnectionInfo nci) {
+        this.nci = nci;
+    }
+    
+    public NotwaConnectionInfo getNotwaConnectionInfo() {
+        return nci;
+    }
 }

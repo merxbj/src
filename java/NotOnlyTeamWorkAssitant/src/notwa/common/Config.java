@@ -140,9 +140,20 @@ public class Config {
             if (appSetting.getNodeName().equals("Skin")) {
                 setSkin(appSetting, as.getSkin());
             }
+            else if (appSetting.getNodeName().equals("RememberLogin")) {
+                setLoginIndicator(appSetting, as.isRememberNotwaLogin());
+            }
         }
     }
 
+    public void setConnectionInfo(ConnectionInfo ci) {
+        for (Node availableDatabases : rawConnections) {
+            if (availableDatabases.getAttributes().getNamedItem("label").getTextContent().equals(ci.getLabel())) {
+                setConnectionInfo(availableDatabases, ci);
+            }
+        }
+    }
+    
     /**
      * Parse the XML configuration document utilizing the DOM {@link Document}.
      *
@@ -184,6 +195,9 @@ public class Config {
         for (Node appSetting : rawApplicationsSettings) {
             if (appSetting.getNodeName().equals("Skin")) {
                 as.setSkin(parseSkin(appSetting));
+            }
+            else if (appSetting.getNodeName().equals("RememberLogin")) {
+                as.setRememberNotwaLogin(parseLoginIndicator(appSetting));
             } else {
                 LoggingFacade.getLogger().logDebug("Unknown application setting %s", appSetting.getNodeName());
             }
@@ -210,6 +224,18 @@ public class Config {
 
         return skinClassName;
     }
+    
+    private boolean parseLoginIndicator(Node raw) {
+        String loginIndicator = "";
+
+        try {
+            loginIndicator = xpath.evaluate("./@remember", raw);
+        } catch (XPathExpressionException xpeex) {
+            LoggingFacade.handleException(xpeex);
+        }
+
+        return loginIndicator.equals("1") ? true : false;
+    }
 
     /**
      * Parses out all connection information from the provided <code>Node</code>
@@ -220,6 +246,7 @@ public class Config {
      */
     private ConnectionInfo parseConnectionInfo(Node rawCon) {
         ConnectionInfo ci = new ConnectionInfo();
+        NotwaConnectionInfo nci = new NotwaConnectionInfo();
 
         try {
             ci.setDbname(xpath.evaluate("./@dbname", rawCon));
@@ -228,6 +255,8 @@ public class Config {
             ci.setPort(xpath.evaluate("./@port", rawCon));
             ci.setPassword(xpath.evaluate("./@password", rawCon));
             ci.setLabel(xpath.evaluate("./@label", rawCon));
+            nci.setNotwaUserName(xpath.evaluate("./@notwaLogin", rawCon));
+            ci.setNotwaConnectionInfo(nci);
         } catch (XPathExpressionException xpeex) {
             LoggingFacade.handleException(xpeex);
             return null;
@@ -250,6 +279,32 @@ public class Config {
             skinNameNode.setTextContent(skin);
         } else {
             LoggingFacade.getLogger().logDebug("Unable to update the application skin!");
+        }
+    }
+    
+    private void setConnectionInfo(Node database, ConnectionInfo ci) {
+        Node notwaLogin = database.getAttributes().getNamedItem("notwaLogin");
+        /*TODO: <mrneo>
+         * Node dbName = database.getAttributes().getNamedItem("dbname");
+        Node host = database.getAttributes().getNamedItem("host");
+        Node port = database.getAttributes().getNamedItem("port");
+        Node user = database.getAttributes().getNamedItem("user");
+        Node password = database.getAttributes().getNamedItem("password");*/
+
+        if (notwaLogin != null) {
+            notwaLogin.setTextContent(ci.getNotwaConnectionInfo().getNotwaUserName());
+        } else {
+            LoggingFacade.getLogger().logDebug("Unable to update the connection info!");
+        }
+    }
+    
+    private void setLoginIndicator(Node appSetting, boolean rememberNotwaLogin) {
+        Node loginIndicatorNode = appSetting.getAttributes().getNamedItem("remember");
+
+        if (loginIndicatorNode != null) {
+            loginIndicatorNode.setTextContent(rememberNotwaLogin ? "1" : "0");
+        } else {
+            LoggingFacade.getLogger().logDebug("Unable to update login remember indicator!");
         }
     }
 

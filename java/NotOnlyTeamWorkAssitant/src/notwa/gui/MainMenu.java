@@ -48,10 +48,13 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenuItem mItemUserManagement;
     private JMenuItem mItemProjectManagement;
     private JMenuItem mItemAssignmentManager;
+    private JMenuItem mItemNewDBCreator;
+    private JMenuItem mItemUserRights;
     private JMenu menu;
     private TableRowSorter<WorkItemlModel> sorter;
     private EventHandler<GuiEvent> guiHandler;
     private JMenu toolsMenu;
+    private JMenu AdministrationMenu;
     
     public MainMenu() {
         init();
@@ -85,6 +88,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         menu.add(mItemConfigure);
         
         this.add(menu);
+
         /*
          * Build tools menu bar.
          */
@@ -105,7 +109,24 @@ public class MainMenu extends JMenuBar implements ActionListener {
         toolsMenu.add(mItemAssignmentManager);
         
         this.add(toolsMenu);
+
+        /*
+         * Build Administration menu bar.
+         */
+        AdministrationMenu = new JMenu("Administration");
+        AdministrationMenu.setMnemonic(KeyEvent.VK_A);
+
+        mItemUserRights = new JMenuItem("User rights");
+        mItemUserRights.addActionListener(this);
         
+        mItemNewDBCreator = new JMenuItem("Create new DB");
+        mItemNewDBCreator.addActionListener(this);
+        
+        AdministrationMenu.add(mItemUserRights);
+        AdministrationMenu.add(mItemNewDBCreator);
+        
+        this.add(AdministrationMenu);
+
         /*
          * Add search panel to MainMenu
          */

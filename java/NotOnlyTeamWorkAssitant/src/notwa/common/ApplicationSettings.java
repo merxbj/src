@@ -32,7 +32,8 @@ package notwa.common;
  */
 public class ApplicationSettings {
     private String skin;
-    
+    private boolean rememberNotwaLogin;
+
     /**
      * Sets the configured Look & Feel skin class name.
      * 
@@ -50,4 +51,13 @@ public class ApplicationSettings {
     public String getSkin() {
         return skin;
     }
+
+    public void setRememberNotwaLogin(boolean rememberNotwaLogin) {
+        this.rememberNotwaLogin = rememberNotwaLogin;
+    }
+
+    public boolean isRememberNotwaLogin() {
+        return rememberNotwaLogin;
+    }
+    
 }

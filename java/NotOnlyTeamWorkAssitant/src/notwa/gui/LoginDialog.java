@@ -24,16 +24,26 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import notwa.common.ApplicationSettings;
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
 import notwa.logger.LoggingFacade;
@@ -45,6 +55,19 @@ import notwa.security.Security;
 import notwa.threading.Action;
 import notwa.threading.IndeterminateProgressThread;
 
+
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton;
     private KeyValueComboBox<ConnectionInfo> connectionsBox;
@@ -53,6 +76,8 @@ public class LoginDialog extends JDialog implements ActionListener {
     private JLabel errorField = new JLabel(" ");
     private NotwaProgressBar progressBar = new NotwaProgressBar();
     private SignInParams signInParams = new SignInParams(null, null);
+    private JCheckBox rememberUser;
+    private ApplicationSettings appSettings = Config.getInstance().getApplicationSettings();
     
     public LoginDialog() {
         init();
@@ -61,7 +86,7 @@ public class LoginDialog extends JDialog implements ActionListener {
     public void init() {
         this.setLayout(new BorderLayout());
         this.setTitle("NOTWA - NOT Only Team Work Assistent - Sign-in");
-        this.setSize(500,200);
+        this.setSize(500,250);
         this.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -70,7 +95,36 @@ public class LoginDialog extends JDialog implements ActionListener {
         this.add(this.initButtons(), BorderLayout.SOUTH);
         this.add(progressBar, BorderLayout.NORTH);
         
+        this.registerKeyListener();
+        this.getInformationFromConfig();
+        this.fillLoginName();
+
         this.setVisible(true);
+    }
+    
+    private void registerKeyListener() {
+        AbstractAction cancelAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                LoginDialog.this.setVisible(false); 
+            }
+        };
+
+        AbstractAction okAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                 LoginDialog.this.actionPerformed(e);
+            }
+        };
+        InputMap inputMap = this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put( KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),  "CANCEL");
+        inputMap.put( KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),  "OK");
+        
+        ActionMap actionMap = this.getRootPane().getActionMap();
+        actionMap.put("CANCEL", cancelAction);
+        actionMap.put("OK", okAction);
+    }
+    
+    private void getInformationFromConfig() {
+        rememberUser.setSelected(appSettings.isRememberNotwaLogin());
     }
     
     private JPanel initComponents() {
@@ -79,26 +133,31 @@ public class LoginDialog extends JDialog implements ActionListener {
         
         login = new JTextField();
         password = new JPasswordField();
+        rememberUser = new JCheckBox("Remember login name");
 
         JLabel lDatabase = new JLabel("Database"); 
         lDatabase.setBounds(90, 19, 66, 15);
         componentsPanel.add(lDatabase);
         componentsPanel.add(initComboBox());
+        connectionsBox.addActionListener(this);
         
         JLabel lLogin = new JLabel("Login");
         lLogin.setBounds(90, 48, 66, 15);
         componentsPanel.add(lLogin);
         componentsPanel.add(login);
         login.setBounds(243, 46, 150, 20);
-        
+       
         JLabel lPassword = new JLabel("Password");
         lPassword.setBounds(90, 77, 66, 15);
         componentsPanel.add(lPassword);
         componentsPanel.add(password);
         password.setBounds(243, 75, 150, 20);
 
+        componentsPanel.add(rememberUser);
+        rememberUser.setBounds(243, 105, 192, 20);
+        
         componentsPanel.add(errorField);
-        errorField.setBounds(156, 107, 192, 20);
+        errorField.setBounds(156, 134, 192, 28);
         
         return componentsPanel;
     }
@@ -134,7 +193,7 @@ public class LoginDialog extends JDialog implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == okButton) {
+        if ((ae.getSource() == okButton) || (ae.getSource() == this.getRootPane())) {
             if (validateInput()) {
                 initErrorField("You must fill all fields");
             } else {
@@ -143,6 +202,11 @@ public class LoginDialog extends JDialog implements ActionListener {
         } else if (ae.getSource() == stornoButton) {
             this.setVisible(false);
         }
+        else if (ae.getSource() == connectionsBox) {
+            this.fillLoginName();
+            password.setText("");
+        }
+
     }
 
     private boolean validateInput() {
@@ -163,6 +227,15 @@ public class LoginDialog extends JDialog implements ActionListener {
                     params.stornoButton.setEnabled(false);
                     params.okButton.setEnabled(false);
                     Security.getInstance().signIn(signInParams.connectionInfo, signInParams.credentials);
+                    
+                    appSettings.setRememberNotwaLogin(rememberUser.isSelected());
+                    Config.getInstance().setApplicationsSettings(appSettings);
+                    if (rememberUser.isSelected()) {
+                        signInParams.connectionInfo.getNotwaConnectionInfo().setNotwaUserName(login.getText());
+                        Config.getInstance().setConnectionInfo(signInParams.connectionInfo);
+                    }
+                    Config.getInstance().save();
+                    
                     params.setVisible(false);
                 } catch (SignInException siex) {
                     JOptionPane.showMessageDialog(loginDialog, "Bad user name or password!");
@@ -199,6 +272,15 @@ public class LoginDialog extends JDialog implements ActionListener {
         public SignInParams(ConnectionInfo ci, Credentials c) {
             this.connectionInfo = ci;
             this.credentials = c;
+        }
+    }
+    
+    private void fillLoginName() {
+        if (rememberUser.isSelected()) {
+            login.setText(connectionsBox.getSelectedKey().getNotwaConnectionInfo().getNotwaUserName());
+        }
+        else {
+            login.setText("");
         }
     }
 }
