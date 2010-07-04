@@ -245,24 +245,22 @@ public class Config {
      * @return The instance of <code>ConnectionInfo</code>
      */
     private ConnectionInfo parseConnectionInfo(Node rawCon) {
-        ConnectionInfo ci = new ConnectionInfo();
         NotwaConnectionInfo nci = new NotwaConnectionInfo();
 
         try {
-            ci.setDbname(xpath.evaluate("./@dbname", rawCon));
-            ci.setHost(xpath.evaluate("./@host", rawCon));
-            ci.setUser(xpath.evaluate("./@user", rawCon));
-            ci.setPort(xpath.evaluate("./@port", rawCon));
-            ci.setPassword(xpath.evaluate("./@password", rawCon));
-            ci.setLabel(xpath.evaluate("./@label", rawCon));
+            nci.setDbname(xpath.evaluate("./@dbname", rawCon));
+            nci.setHost(xpath.evaluate("./@host", rawCon));
+            nci.setUser(xpath.evaluate("./@user", rawCon));
+            nci.setPort(xpath.evaluate("./@port", rawCon));
+            nci.setPassword(xpath.evaluate("./@password", rawCon));
+            nci.setLabel(xpath.evaluate("./@label", rawCon));
             nci.setNotwaUserName(xpath.evaluate("./@notwaLogin", rawCon));
-            ci.setNotwaConnectionInfo(nci);
         } catch (XPathExpressionException xpeex) {
             LoggingFacade.handleException(xpeex);
             return null;
         }
 
-        return ci;
+        return nci;
     }
 
     /**
@@ -291,10 +289,12 @@ public class Config {
         Node user = database.getAttributes().getNamedItem("user");
         Node password = database.getAttributes().getNamedItem("password");*/
 
-        if (notwaLogin != null) {
-            notwaLogin.setTextContent(ci.getNotwaConnectionInfo().getNotwaUserName());
-        } else {
-            LoggingFacade.getLogger().logDebug("Unable to update the connection info!");
+        if (ci instanceof NotwaConnectionInfo) {
+            if (notwaLogin != null) {
+                notwaLogin.setTextContent(((NotwaConnectionInfo) ci).getNotwaUserName());
+            } else {
+                LoggingFacade.getLogger().logDebug("Unable to update the connection info!");
+            }
         }
     }
     

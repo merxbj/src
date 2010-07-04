@@ -40,12 +40,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import notwa.common.ApplicationSettings;
 import notwa.common.Config;
 import notwa.common.ConnectionInfo;
+import notwa.common.NotwaConnectionInfo;
 import notwa.logger.LoggingFacade;
 import notwa.exception.SignInException;
 import notwa.gui.components.KeyValueComboBox;
@@ -104,12 +103,14 @@ public class LoginDialog extends JDialog implements ActionListener {
     
     private void registerKeyListener() {
         AbstractAction cancelAction = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 LoginDialog.this.setVisible(false); 
             }
         };
 
         AbstractAction okAction = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                  LoginDialog.this.actionPerformed(e);
             }
@@ -230,8 +231,8 @@ public class LoginDialog extends JDialog implements ActionListener {
                     
                     appSettings.setRememberNotwaLogin(rememberUser.isSelected());
                     Config.getInstance().setApplicationsSettings(appSettings);
-                    if (rememberUser.isSelected()) {
-                        signInParams.connectionInfo.getNotwaConnectionInfo().setNotwaUserName(login.getText());
+                    if (rememberUser.isSelected() && (signInParams.connectionInfo instanceof NotwaConnectionInfo)) {
+                        ((NotwaConnectionInfo)signInParams.connectionInfo).setNotwaUserName(login.getText());
                         Config.getInstance().setConnectionInfo(signInParams.connectionInfo);
                     }
                     Config.getInstance().save();
@@ -276,8 +277,8 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
     
     private void fillLoginName() {
-        if (rememberUser.isSelected()) {
-            login.setText(connectionsBox.getSelectedKey().getNotwaConnectionInfo().getNotwaUserName());
+        if (rememberUser.isSelected() && (connectionsBox.getSelectedKey() instanceof NotwaConnectionInfo)) {
+            login.setText(((NotwaConnectionInfo) connectionsBox.getSelectedKey()).getNotwaUserName());
         }
         else {
             login.setText("");
