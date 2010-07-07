@@ -21,7 +21,10 @@
 package notwa.common;
 
 import notwa.logger.LoggingFacade;
+
 import java.io.File;
+import java.io.FileWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.TreeSet;
 import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Source;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -54,9 +57,9 @@ import org.w3c.dom.*;
 public class Config {
 
     private static Config instance;
-    private List<Node> rawConnections;
     private Document dom;
-    private List<Node> rawApplicationsSettings;
+    private ApplicationSettings as = new ApplicationSettings();
+    private Set<NotwaConnectionInfo> connections = new TreeSet<NotwaConnectionInfo>();
     private static String configFilePath = "./notwa.config";
     private final XPath xpath = XPathFactory.newInstance().newXPath();
     
@@ -65,8 +68,6 @@ public class Config {
      */
     protected Config() {
         File configFile = new File(configFilePath);
-        this.rawConnections = new ArrayList<Node>();
-        this.rawApplicationsSettings = new ArrayList<Node>();
 
         try {
             this.parse(configFile);
@@ -99,17 +100,12 @@ public class Config {
 
     /**
      * Gets all connection information parsed from the configuration file.
-     * Every conneection information is wrapped into the <code>ConnectionInfo</code>
+     * Every connection information is wrapped into the <code>ConnectionInfo</code>
      * instance and all these instances are kept inside single <code>Collection</code>.
      *
      * @return <code>Collection</code> of all <code>ConnectionInfo</code>.
      */
-    public Collection<ConnectionInfo> getConnecionStrings() {
-        Set<ConnectionInfo> connections = new TreeSet<ConnectionInfo>();
-        for (Node con : rawConnections) {
-            connections.add(parseConnectionInfo(con));
-        }
-
+    public Collection<NotwaConnectionInfo> getConnecionStrings() {
         return connections;
     }
 
@@ -124,34 +120,15 @@ public class Config {
      * @return The parsed <code>ApplicationSettings</code>.
      */
     public ApplicationSettings getApplicationSettings() {
-        return parseApplicationSettings();
+        return as;
     }
 
-    /**
-     * Updates the <code>ApplicationSettings</code> maintained by the config
-     * file.
-     * <note>The changes will be promoted into the physical file as soon as you
-     * call {@link #save()}.</note>
-     *
-     * @param as The <code>ApplicationSettings</code> you want to update.
-     */
     public void setApplicationsSettings(ApplicationSettings as) {
-        for (Node appSetting : rawApplicationsSettings) {
-            if (appSetting.getNodeName().equals("Skin")) {
-                setSkin(appSetting, as.getSkin());
-            }
-            else if (appSetting.getNodeName().equals("RememberLogin")) {
-                setLoginIndicator(appSetting, as.isRememberNotwaLogin());
-            }
-        }
+        this.as = as;
     }
 
-    public void setConnectionInfo(ConnectionInfo ci) {
-        for (Node availableDatabases : rawConnections) {
-            if (availableDatabases.getAttributes().getNamedItem("label").getTextContent().equals(ci.getLabel())) {
-                setConnectionInfo(availableDatabases, ci);
-            }
-        }
+    public void setConnectionInfo(NotwaConnectionInfo nci) {
+        connections.add(nci);
     }
     
     /**
@@ -164,8 +141,22 @@ public class Config {
         if (configFile.exists()) {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             this.dom = db.parse(configFile);
-            this.rawConnections = getChildNodesByPath(dom.getDocumentElement(), "./AvailableDatabases/Database");
-            this.rawApplicationsSettings = getChildNodesByPath(dom.getDocumentElement(), "./ApplicationSettings/*");
+            
+            for (Node node : getChildNodesByPath(dom.getDocumentElement(), "./*")) {
+                if (node.getNodeName().equals("ApplicationSettings")) {
+                    as.parseFromConfig(node);
+                }
+                else if (node.getNodeName().equals("AvailableDatabases")) {
+                    for (int i=0; i<node.getChildNodes().getLength(); i++) {
+                        Node subNode = node.getChildNodes().item(i);
+                        if (subNode.getNodeName().equals("Database")) {
+                            NotwaConnectionInfo nci = new NotwaConnectionInfo();
+                            nci.parseFromConfig(subNode);
+                            connections.add(nci);
+                        }
+                    }
+                }
+            }
         } else {
             throw new Exception("Config file does not exists!");
         }
@@ -176,135 +167,80 @@ public class Config {
      */
     public void save() {
         try {
-            Source source = new DOMSource(dom);
-            Transformer xformer = TransformerFactory.newInstance().newTransformer();
-            xformer.transform(source, new StreamResult(new File(configFilePath)));
+            DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+    
+            /*
+             * NotwaConfiguration
+             */
+            Element notwaConfigurationElement = doc.createElement("NotwaConfiguration");
+            doc.appendChild(notwaConfigurationElement);
+    
+            /*
+             * ApplicationSettings
+             */
+            Element appSettings = doc.createElement("ApplicationSettings");
+            notwaConfigurationElement.appendChild(appSettings);
+            
+            /*
+             * ApplicationSettings - childs
+             */
+            Element skin = doc.createElement("Skin");
+            skin.setAttribute("name", as.getSkin());
+            
+            Element rememberLogin = doc.createElement("RememberLogin");
+            rememberLogin.setAttribute("remember", as.isRememberNotwaLogin() ? "1" : "0");
+            
+            appSettings.appendChild(skin);
+            appSettings.appendChild(rememberLogin);
+    
+            /*
+             * AvailableDatabases 
+             */
+            Element availableDatabases = doc.createElement("AvailableDatabases");
+            notwaConfigurationElement.appendChild(availableDatabases);
+    
+            /*
+             * AvailableDatabases - childs 
+             */
+            for (NotwaConnectionInfo nci : connections) {
+                Element database = doc.createElement("Database");
+    
+                database.setAttribute("label", nci.getLabel());
+                database.setAttribute("dbname", nci.getDbname());
+                database.setAttribute("host", nci.getHost());
+                database.setAttribute("port", nci.getPort());
+                database.setAttribute("user", nci.getUser());
+                database.setAttribute("password", nci.getPassword());
+                database.setAttribute("notwaLogin", nci.getNotwaUserName());
+                
+                availableDatabases.appendChild(database);
+            }
+            
+            //set up a transformer
+            TransformerFactory transfac = TransformerFactory.newInstance();
+            Transformer trans = transfac.newTransformer();
+            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            trans.setOutputProperty(OutputKeys.INDENT, "yes");
+    
+            
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+            DOMSource source = new DOMSource(doc);
+            trans.transform(source, result);
+    
+            File configFile = new File(configFilePath);
+            if (configFile.delete() || !configFile.exists()) {
+                FileWriter fw = new FileWriter(configFile, true);
+                fw.append(sw.toString());
+                fw.close();
+            }
+            else {
+                throw new Exception("Config file cannot be deleted!");
+            }
         } catch (Exception ex) {
             LoggingFacade.handleException(ex);
-        }
-    }
-
-    /**
-     * Iterates through all settings found under ApplicationSettings element and
-     * attempts to parse them, if they are known.
-     * 
-     * @return Parsed <code>ApplicationSettings</code> instance.
-     */
-    private ApplicationSettings parseApplicationSettings() {
-        ApplicationSettings as = new ApplicationSettings();
-        for (Node appSetting : rawApplicationsSettings) {
-            if (appSetting.getNodeName().equals("Skin")) {
-                as.setSkin(parseSkin(appSetting));
-            }
-            else if (appSetting.getNodeName().equals("RememberLogin")) {
-                as.setRememberNotwaLogin(parseLoginIndicator(appSetting));
-            } else {
-                LoggingFacade.getLogger().logDebug("Unknown application setting %s", appSetting.getNodeName());
-            }
-        }
-        
-        return as;
-    }
-
-    /**
-     * Attempts to parse the application setting node claimed to contain the
-     * L&F skin class name.
-     *
-     * @param rawSkin The node to contain the L&F skin class name.
-     * @return The L&F skin class name.
-     */
-    private String parseSkin(Node rawSkin) {
-        String skinClassName = "";
-
-        try {
-            skinClassName = xpath.evaluate("./@name", rawSkin);
-        } catch (XPathExpressionException xpeex) {
-            LoggingFacade.handleException(xpeex);
-        }
-
-        return skinClassName;
-    }
-    
-    private boolean parseLoginIndicator(Node raw) {
-        String loginIndicator = "";
-
-        try {
-            loginIndicator = xpath.evaluate("./@remember", raw);
-        } catch (XPathExpressionException xpeex) {
-            LoggingFacade.handleException(xpeex);
-        }
-
-        return loginIndicator.equals("1") ? true : false;
-    }
-
-    /**
-     * Parses out all connection information from the provided <code>Node</code>
-     * utilizing the {@link XPath}.
-     *
-     * @param rawCon The node containing all the connection information.
-     * @return The instance of <code>ConnectionInfo</code>
-     */
-    private ConnectionInfo parseConnectionInfo(Node rawCon) {
-        NotwaConnectionInfo nci = new NotwaConnectionInfo();
-
-        try {
-            nci.setDbname(xpath.evaluate("./@dbname", rawCon));
-            nci.setHost(xpath.evaluate("./@host", rawCon));
-            nci.setUser(xpath.evaluate("./@user", rawCon));
-            nci.setPort(xpath.evaluate("./@port", rawCon));
-            nci.setPassword(xpath.evaluate("./@password", rawCon));
-            nci.setLabel(xpath.evaluate("./@label", rawCon));
-            nci.setNotwaUserName(xpath.evaluate("./@notwaLogin", rawCon));
-        } catch (XPathExpressionException xpeex) {
-            LoggingFacade.handleException(xpeex);
-            return null;
-        }
-
-        return nci;
-    }
-
-    /**
-     * Sets the proper attribute of the node containing the Look & Feel skin
-     * class name.
-     * 
-     * @param appSetting The node to be properly updated.
-     * @param skin The L&F class name to be stored.
-     */
-    private void setSkin(Node appSetting, String skin) {
-        Node skinNameNode = appSetting.getAttributes().getNamedItem("name");
-
-        if (skinNameNode != null) {
-            skinNameNode.setTextContent(skin);
-        } else {
-            LoggingFacade.getLogger().logDebug("Unable to update the application skin!");
-        }
-    }
-    
-    private void setConnectionInfo(Node database, ConnectionInfo ci) {
-        Node notwaLogin = database.getAttributes().getNamedItem("notwaLogin");
-        /*TODO: <mrneo>
-         * Node dbName = database.getAttributes().getNamedItem("dbname");
-        Node host = database.getAttributes().getNamedItem("host");
-        Node port = database.getAttributes().getNamedItem("port");
-        Node user = database.getAttributes().getNamedItem("user");
-        Node password = database.getAttributes().getNamedItem("password");*/
-
-        if (ci instanceof NotwaConnectionInfo) {
-            if (notwaLogin != null) {
-                notwaLogin.setTextContent(((NotwaConnectionInfo) ci).getNotwaUserName());
-            } else {
-                LoggingFacade.getLogger().logDebug("Unable to update the connection info!");
-            }
-        }
-    }
-    
-    private void setLoginIndicator(Node appSetting, boolean rememberNotwaLogin) {
-        Node loginIndicatorNode = appSetting.getAttributes().getNamedItem("remember");
-
-        if (loginIndicatorNode != null) {
-            loginIndicatorNode.setTextContent(rememberNotwaLogin ? "1" : "0");
-        } else {
-            LoggingFacade.getLogger().logDebug("Unable to update login remember indicator!");
         }
     }
 

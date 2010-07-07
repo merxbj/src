@@ -69,7 +69,7 @@ import notwa.threading.IndeterminateProgressThread;
 */
 public class LoginDialog extends JDialog implements ActionListener {
     private JButton okButton, stornoButton;
-    private KeyValueComboBox<ConnectionInfo> connectionsBox;
+    private KeyValueComboBox<NotwaConnectionInfo> connectionsBox;
     private JTextField login;
     private JPasswordField password;
     private JLabel errorField = new JLabel(" ");
@@ -178,13 +178,13 @@ public class LoginDialog extends JDialog implements ActionListener {
         return jp;
     }
 
-    private KeyValueComboBox<ConnectionInfo> initComboBox() {
-        connectionsBox = new KeyValueComboBox<ConnectionInfo>();
+    private KeyValueComboBox<NotwaConnectionInfo> initComboBox() {
+        connectionsBox = new KeyValueComboBox<NotwaConnectionInfo>();
         connectionsBox.setEditable(false);
         connectionsBox.setBounds(243, 15, 150, 22);
 
-        Collection<ConnectionInfo> cci = Config.getInstance().getConnecionStrings();
-        for (ConnectionInfo connInfo : cci)
+        Collection<NotwaConnectionInfo> cci = Config.getInstance().getConnecionStrings();
+        for (NotwaConnectionInfo connInfo : cci)
         {
             connectionsBox.addItem(connInfo,connInfo.getLabel());
         }
@@ -267,10 +267,10 @@ public class LoginDialog extends JDialog implements ActionListener {
     }
 
     public class SignInParams {
-        public ConnectionInfo connectionInfo;
+        public NotwaConnectionInfo connectionInfo;
         public Credentials credentials;
 
-        public SignInParams(ConnectionInfo ci, Credentials c) {
+        public SignInParams(NotwaConnectionInfo ci, Credentials c) {
             this.connectionInfo = ci;
             this.credentials = c;
         }

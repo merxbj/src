@@ -200,6 +200,18 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
         return user;
     }
 
+    public String getDbname() {
+        return dbname;
+    }
+    
+    public String getHost() {
+        return host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
     /**
      * Build the connection string which is accepted by the {@link jdbc} to
      * connect to the requested database.

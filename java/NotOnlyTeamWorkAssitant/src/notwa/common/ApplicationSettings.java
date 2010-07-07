@@ -20,6 +20,8 @@
 
 package notwa.common;
 
+import org.w3c.dom.Node;
+
 /**
  * Class encapsulating all the application settings keeped by the config file.
  * These settings could be obtained by the {@link Config#getApplicationSettings()} and
@@ -59,5 +61,27 @@ public class ApplicationSettings {
     public boolean isRememberNotwaLogin() {
         return rememberNotwaLogin;
     }
+
+    private void setAllToDefault() {
+        this.skin = "javax.swing.plaf.metal.MetalLookAndFeel";
+        this.rememberNotwaLogin = false;
+    }
     
+    public void parseFromConfig(Node node) {
+        this.setAllToDefault();
+        
+        for (int i=0; i<node.getChildNodes().getLength(); i++) {
+            Node subNode = node.getChildNodes().item(i);
+
+            if (subNode.getNodeName().equals("Skin")) {
+                String skinName = subNode.getAttributes().getNamedItem("name").getTextContent();
+                if (!skinName.equals(""))
+                    this.setSkin(skinName);
+            }
+            if (subNode.getNodeName().equals("RememberLogin")) {
+                String rememberIndicator = subNode.getAttributes().getNamedItem("remember").getTextContent();
+                this.setRememberNotwaLogin(rememberIndicator.equals("1") ? true : false);
+            }
+        }
+    }
 }
