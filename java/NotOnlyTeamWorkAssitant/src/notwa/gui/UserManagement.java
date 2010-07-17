@@ -1,7 +1,5 @@
 package notwa.gui;
 
-import notwa.gui.components.KeyValueComboBox;
-import notwa.gui.datamodels.UserManagementModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -21,6 +19,9 @@ import javax.swing.event.ListSelectionListener;
 import notwa.common.ConnectionInfo;
 import notwa.dal.UserDal;
 import notwa.dal.WorkItemDal;
+import notwa.gui.components.JTableCellRenderer;
+import notwa.gui.components.KeyValueComboBox;
+import notwa.gui.datamodels.UserManagementModel;
 import notwa.sql.Parameter;
 import notwa.sql.ParameterSet;
 import notwa.sql.Parameters;

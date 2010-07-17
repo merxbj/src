@@ -32,7 +32,6 @@ public class NotwaConnectionInfo extends ConnectionInfo {
         return notwaUserName;
     }
     
-
     /**
      * Parses out all connection information from the provided <code>Node</code>
      * utilizing the {@link XPath}.
@@ -41,13 +40,21 @@ public class NotwaConnectionInfo extends ConnectionInfo {
      * @return The instance of <code>ConnectionInfo</code>
      */
     public NotwaConnectionInfo parseFromConfig(Node node) {
-        super.setDbname(node.getAttributes().getNamedItem("dbname").getTextContent());
-        super.setHost(node.getAttributes().getNamedItem("host").getTextContent());
-        super.setUser(node.getAttributes().getNamedItem("user").getTextContent());
-        super.setPort(node.getAttributes().getNamedItem("port").getTextContent());
-        super.setPassword(node.getAttributes().getNamedItem("password").getTextContent());
-        super.setLabel(node.getAttributes().getNamedItem("label").getTextContent());
-        this.setNotwaUserName(node.getAttributes().getNamedItem("notwaLogin").getTextContent());
+        Node dbname = node.getAttributes().getNamedItem("dbname");
+        Node host = node.getAttributes().getNamedItem("host");
+        Node user = node.getAttributes().getNamedItem("user");
+        Node port = node.getAttributes().getNamedItem("port");
+        Node password = node.getAttributes().getNamedItem("password");
+        Node label = node.getAttributes().getNamedItem("label");
+        Node notwaLogin = node.getAttributes().getNamedItem("notwaLogin");
+        
+        super.setDbname(dbname != null ? dbname.getNodeValue() : "");
+        super.setHost(host != null ? host.getNodeValue() : "");
+        super.setUser(user != null ? user.getNodeValue() : "");
+        super.setPort(port != null ? port.getNodeValue() : "");
+        super.setPassword(password != null ? password.getNodeValue() : "");
+        super.setLabel(label != null ? label.getNodeValue() : "");
+        this.setNotwaUserName(notwaLogin != null ? notwaLogin.getNodeValue() : "");
         
         return this;
     }

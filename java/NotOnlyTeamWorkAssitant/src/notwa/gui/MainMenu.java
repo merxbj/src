@@ -55,6 +55,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private EventHandler<GuiEvent> guiHandler;
     private JMenu toolsMenu;
     private JMenu AdministrationMenu;
+    private JMenuItem mItemDatabaseDef;
     
     public MainMenu() {
         init();
@@ -85,7 +86,11 @@ public class MainMenu extends JMenuBar implements ActionListener {
         mItemConfigure = new JMenuItem("Application settings", KeyEvent.VK_A);
         mItemConfigure.addActionListener(this);
         
+        mItemDatabaseDef = new JMenuItem("Database Definition");
+        mItemDatabaseDef.addActionListener(this);
+        
         menu.add(mItemConfigure);
+        menu.add(mItemDatabaseDef);
         
         this.add(menu);
 
@@ -198,6 +203,8 @@ public class MainMenu extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == mItemConfigure) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_CONFIGURE)));
+        } else if (ae.getSource() == mItemDatabaseDef) {
+            guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_DATABASE_DEFINITION)));
         } else if (ae.getSource() == mItemProjectManagement) {
             guiHandler.handleEvent(new GuiEvent(new GuiEventParams(GuiEventParams.MENU_EVENT_PROJECT_MANAGEMENT)));
         } else if (ae.getSource() == mItemUserManagement) {

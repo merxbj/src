@@ -60,15 +60,18 @@ public class ConnectionInfo implements Comparable<ConnectionInfo> {
      */
     @Override
     public int compareTo(ConnectionInfo ci) {
-        int compare = host.compareTo(ci.host);
+        int compare = (ci.label != null) ? label.compareTo(ci.label) : 0;
         if (compare == 0) {
-            compare = port.compareTo(ci.port);
+            compare = (ci.host != null) ? host.compareTo(ci.host) : 0;
         }
         if (compare == 0) {
-            compare = dbname.compareTo(ci.dbname);
+            compare = (ci.port != null) ? port.compareTo(ci.port) : 0;
         }
         if (compare == 0) {
-            compare = user.compareTo(ci.user);
+            compare = (ci.dbname != null) ? dbname.compareTo(ci.dbname) : 0;
+        }
+        if (compare == 0) {
+            compare = (ci.user != null) ? user.compareTo(ci.user) : 0;
         }
         return compare;
     }
