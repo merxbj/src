@@ -23,7 +23,7 @@ public class Vec {
     public Vec norm() { 
         Vec n = this.multiply(1/Math.sqrt(x*x+y*y+z*z));
         this.x = n.x; this.y=n.y; this.z = n.z;
-        return n;
+        return this;
     }
     public double dot(Vec b) { return x*b.x+y*b.y+z*b.z; } // cross:
     public Vec modulo(Vec b) { return new Vec(y*b.z-z*b.y,z*b.x-x*b.z,x*b.y-y*b.x);}

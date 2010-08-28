@@ -30,17 +30,17 @@ public class Main {
 
     public static int toInt(double x){ return (int)((Math.pow(clamp(x),1/2.2)*255+.5)); }
 
-    public static boolean intersect(Ray r, double t, int id) {
+    public static boolean intersect(Ray r, double[] t, int[] id) {
         int n = spheres.length - 1;
-        double d, inf=t=1e20;
-        for (int j = n; j > 0; j--) {
+        double d, inf=t[0]=1e20;
+        for (int j = n; j >= 0; j--) {
             d = spheres[j].intersect(r);
-            if((d != 0) && (d < t)) {
-                t = d;
-                id = j;
+            if((d != 0) && (d < t[0])) {
+                t[0] = d;
+                id[0] = j;
             }
         }
-        return t<inf;
+        return t[0]<inf;
     }
 
     public static double erand48(int[] Xi) {
@@ -48,11 +48,11 @@ public class Main {
     }
 
     public static Vec radiance(Ray r, int depth, int[] Xi){
-        double t = 0.0; // distance to intersection
-        int id=0; // id of intersected object
+        double t[] = {0.0}; // distance to intersection
+        int id[] = {0}; // id of intersected object
         if (!intersect(r, t, id)) return new Vec(); // if miss, return black
-        Sphere obj = spheres[id]; // the hit object
-        Vec x = r.o.add(r.d.multiply(t));
+        Sphere obj = spheres[id[0]]; // the hit object
+        Vec x = r.o.add(r.d.multiply(t[0]));
         Vec n = (x.substract(obj.p)).norm();
         Vec nl = n.dot(r.d) < 0 ? n : n.multiply(-1);
         Vec f= obj.c;
@@ -81,40 +81,78 @@ public class Main {
             radiance(reflRay,depth,Xi).multiply(Re).add(radiance(new Ray(x,tdir),depth,Xi).multiply(Tr))));
     }
 
+    public static final int width = 1024, height = 768;
+    public static Vec[] scene = new Vec[width*height];
+    public static int progress = 0;
+    public static final Object[] locks = {new Object(), new Object()};
+    public static JoinableThreadGroup jtg = new JoinableThreadGroup("Threads");
+    public static int threadCount = 0;
+    public static final Object signal = new Object();
+
+    public static synchronized Vec[] acquireScene() {
+        return scene;
+    }
+
     public static void main(String[] args) {
-        int w=1024, h=768, samps = args.length == 2 ? Integer.parseInt(args[1])/4 : 1; // # samples
-        Ray cam = new Ray(new Vec(50,52,295.6), new Vec(0,-0.042612,-1).norm()); // cam pos, dir
-        Vec cx = new Vec(w*.5135/h);
-        Vec cy = (cx.modulo(cam.d)).norm().multiply(.5135);
-        Vec r = new Vec();
-        Vec[] c = new Vec[w*h];
-        for (int p = 0; p < c.length; p++) {
-            c[p] = new Vec();
+        final int samps = args.length == 1 ? Integer.parseInt(args[0])/4 : 1; // # samples
+        final Ray cam = new Ray(new Vec(50,52,295.6), new Vec(0,-0.042612,-1).norm()); // cam pos, dir
+        final Vec cx = new Vec(width*.5135/height);
+        final Vec cy = (cx.modulo(cam.d)).norm().multiply(.5135);
+        for (int p = 0; p < scene.length; p++) {
+            scene[p] = new Vec();
         }
-        for (int y=0; y<h; y++){ // Loop over image rows
-            System.out.println(String.format("\rRendering (%d spp) %5.2f%%", samps*4, 100.*y/(h-1)));
-            int Xi[] = {0,0,y*y*y};
-            for (int x = 0; x<w; x++) { // Loop cols
-                for (int sy=0, i=(h-y-1)*w+x; sy<2; sy++) { // 2x2 subpixel rows
-                    for (int sx=0; sx<2; sx++, r = new Vec()){ // 2x2 subpixel cols
-                        for (int s=0; s<samps; s++){
-                        double r1=2*erand48(Xi), dx=r1<1 ? Math.sqrt(r1)-1: 1-Math.sqrt(2-r1);
-                        double r2=2*erand48(Xi), dy=r2<1 ? Math.sqrt(r2)-1: 1-Math.sqrt(2-r2);
-                        Vec d = cx.multiply( ( (sx+.5 + dx)/2 + x)/w - .5).add(
-                        cy.multiply( ( (sy+.5 + dy)/2 + y)/h - .5).add(cam.d));
-                        r = r.add(radiance(new Ray(cam.o.add(d.multiply(140)),d.norm()),0,Xi).multiply(1./samps));
-                        } // Camera rays are pushed ^^^^^ forward to start in interior
-                        c[i] = c[i].add(new Vec(clamp(r.x),clamp(r.y),clamp(r.z)).multiply(.25));
+        for (int y=0; y<height; y++){ // Loop over image rows
+            final int cury = y;
+            Thread t = new Thread(jtg, new Runnable() {
+                public void run() {
+                    int Xi[] = {0,0,cury*cury*cury};
+                    for (int x = 0; x<width; x++) { // Loop cols
+                        for (int sy=0, i=(height-cury-1)*width+x; sy<2; sy++) { // 2x2 subpixel rows
+                            Vec r = new Vec();
+                            for (int sx=0; sx<2; sx++, r = new Vec()){ // 2x2 subpixel cols
+                                for (int s=0; s<samps; s++){
+                                    double r1=2*erand48(Xi), dx=r1<1 ? Math.sqrt(r1)-1: 1-Math.sqrt(2-r1);
+                                    double r2=2*erand48(Xi), dy=r2<1 ? Math.sqrt(r2)-1: 1-Math.sqrt(2-r2);
+                                    Vec d = cx.multiply( ( (sx+.5 + dx)/2 + x)/width - .5).add(
+                                    cy.multiply( ( (sy+.5 + dy)/2 + cury)/height - .5).add(cam.d));
+                                    r = r.add(radiance(new Ray(cam.o.add(d.multiply(140)),d.norm()),0,Xi).multiply(1./samps));
+                                } // Camera rays are pushed ^^^^^ forward to start in interior
+                                acquireScene()[i] = acquireScene()[i].add(new Vec(clamp(r.x),clamp(r.y),clamp(r.z)).multiply(.25));
+                            }
+                        }
+                    }
+                    synchronized (signal) {
+                        System.out.println(String.format("\rRendered %5.2f%% | %d threads on duty | %d rows remaining", 100.*progress++/(height), threadCount--, height-progress));
+                        signal.notify(); // let the waitee know that we have finished to eventually spawn another thread
+                    }
+                }
+            });
+            
+            t.start();
+            synchronized (signal) {
+                /*
+                 * Make sure that we are not spawning more threads than 
+                 * availabke processors unless we will generate unnecessary overhead.
+                 */
+                if (++threadCount >= Runtime.getRuntime().availableProcessors()) {
+                    try {
+                        signal.wait();
+                    } catch (InterruptedException iex) {
+                        // don't care
                     }
                 }
             }
         }
+
+        // wait for all threads to get the job done!
+        jtg.join();
+
         File f = new File("image.ppm");
         try {
             FileWriter fw = new FileWriter(f);
-            fw.write(String.format("P3\n%d %d\n%d\n", w, h, 255));
-            for (int i=0; i<w*h; i++) {
-                fw.write(String.format("%d %d %d ", toInt(c[i].x), toInt(c[i].y), toInt(c[i].z)));
+            fw.write(String.format("P3\n%d %d\n%d\n", width, height, 255));
+            for (int i=0; i<width*height; i++) {
+                fw.write(String.format("%d %d %d ", toInt(scene[i].x), toInt(scene[i].y), toInt(scene[i].z)));
             }
         } catch (Exception ex) {
             
