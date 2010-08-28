@@ -19,21 +19,16 @@
  */
 package notwa.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JComponent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.TableCellRenderer;
 
+import notwa.gui.components.JTableCellRenderer;
+import notwa.gui.components.JTextAreaRenderer;
 import notwa.gui.datamodels.NoteHistoryModel;
 
 import notwa.wom.NoteCollection;
@@ -82,54 +77,5 @@ public class WorkItemNoteHistoryTable extends JComponent {
     public void loadFromWorkItem(WorkItem wi) {
         if (wi != null)
             setNoteCollection(wi.getNoteCollection());
-    }
-
-    public class JTextAreaRenderer extends JTextArea implements TableCellRenderer {
-        private List<List<Integer>> rowColHeight = new ArrayList<List<Integer>>();
-        
-        public JTextAreaRenderer() {
-            super();
-            setLineWrap(true);
-            setWrapStyleWord(true);
-            setOpaque(true);
-            setBorder(BorderFactory.createEtchedBorder());
-        }
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setFont(table.getFont());
-            setValue(value);
-            adjustRowHeight(table, row, column);
-            return this;
-        }
-        
-        private void adjustRowHeight(JTable table, int row, int column) {
-            int columnWidth = table.getTableHeader().getColumnModel().getColumn(column).getWidth();
-            setSize(new Dimension(columnWidth, 1000));
-
-            while (rowColHeight.size() <= row) {
-              rowColHeight.add(new ArrayList<Integer>(column));
-            }
-            
-            List<Integer> colHeights = rowColHeight.get(row);
-            while (colHeights.size() <= column) {
-              colHeights.add(0);
-            }
-            
-            int maxHeight = getPreferredSize().height;
-            colHeights.set(column, maxHeight);
-            for (Integer colHeight : colHeights) {
-              if (colHeight > maxHeight) {
-                maxHeight = colHeight;
-              }
-            }
-            
-            if (table.getRowHeight(row) != maxHeight) {
-              table.setRowHeight(row, maxHeight);
-            }
-        }
-        
-        protected void setValue(Object value) {
-            setText((value == null) ? "" : value.toString());
-        }
     }
 }

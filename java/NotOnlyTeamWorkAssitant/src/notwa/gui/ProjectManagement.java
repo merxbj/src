@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 
 import notwa.common.ConnectionInfo;
 import notwa.dal.ProjectDal;
+import notwa.gui.components.JTableCellRenderer;
 import notwa.gui.datamodels.ProjectManagementModel;
 import notwa.wom.Context;
 import notwa.wom.Project;

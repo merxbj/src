@@ -96,7 +96,6 @@ public class LoginDialog extends JDialog implements ActionListener {
         
         this.registerKeyListener();
         this.getInformationFromConfig();
-        this.fillLoginName();
 
         this.setVisible(true);
     }
@@ -126,6 +125,13 @@ public class LoginDialog extends JDialog implements ActionListener {
     
     private void getInformationFromConfig() {
         rememberUser.setSelected(appSettings.isRememberNotwaLogin());
+        
+        if (rememberUser.isSelected() && (connectionsBox.getSelectedKey() instanceof NotwaConnectionInfo)) {
+            login.setText(((NotwaConnectionInfo) connectionsBox.getSelectedKey()).getNotwaUserName());
+        }
+        else {
+            login.setText("");
+        }
     }
     
     private JPanel initComponents() {
@@ -204,7 +210,7 @@ public class LoginDialog extends JDialog implements ActionListener {
             this.setVisible(false);
         }
         else if (ae.getSource() == connectionsBox) {
-            this.fillLoginName();
+            this.getInformationFromConfig();
             password.setText("");
         }
 
@@ -273,15 +279,6 @@ public class LoginDialog extends JDialog implements ActionListener {
         public SignInParams(NotwaConnectionInfo ci, Credentials c) {
             this.connectionInfo = ci;
             this.credentials = c;
-        }
-    }
-    
-    private void fillLoginName() {
-        if (rememberUser.isSelected() && (connectionsBox.getSelectedKey() instanceof NotwaConnectionInfo)) {
-            login.setText(((NotwaConnectionInfo) connectionsBox.getSelectedKey()).getNotwaUserName());
-        }
-        else {
-            login.setText("");
         }
     }
 }

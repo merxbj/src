@@ -122,14 +122,21 @@ public class MainWindow extends JFrame {
         UIManager.put("TextArea.font", new FontUIResource("monospaced", Font.PLAIN, 12));
 
         /*
+         * Show dialog for inserting new ConnectionInfo
+         */
+        if (Config.getInstance().getConnecionStrings().isEmpty()) {
+            this.invokeDatabaseDefinition(null);
+        }
+
+        /*
          * Show login dialog
          */
-        invokeLogin(null);
+        this.invokeLogin(null);
         
         /*
          * Disable menu items that cannot be used until user is not logged
          */
-        setMenuEnabled(false);
+        this.setMenuEnabled(false);
     }
 
     private ConnectionInfo getActiveConnectionInfo() {
@@ -146,6 +153,9 @@ public class MainWindow extends JFrame {
         switch (e.getEventId()) {
             case GuiEventParams.MENU_EVENT_CONFIGURE:
                 invokeConfigure(e.getParams());
+                break;
+            case GuiEventParams.MENU_EVENT_DATABASE_DEFINITION:
+                invokeDatabaseDefinition(e.getParams());
                 break;
             case GuiEventParams.MENU_EVENT_EXIT:
                 invokeExit(e.getParams());
@@ -198,6 +208,10 @@ public class MainWindow extends JFrame {
     private void invokeConfigure(GuiEventParams params) {
         SettingsDialog sd = new SettingsDialog();
         SwingUtilities.updateComponentTreeUI(this);
+    }
+    
+    private void invokeDatabaseDefinition(GuiEventParams params) {
+        DatabaseDefinitionManager ddm = new DatabaseDefinitionManager();
     }
 
     private void invokeExit(GuiEventParams params) {

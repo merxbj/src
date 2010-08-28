@@ -64,7 +64,7 @@ public class Config {
     private final XPath xpath = XPathFactory.newInstance().newXPath();
     
     /**
-     * Hidden constructor to prevent instationing the class from outside world.
+     * Hidden constructor to prevent instancing the class from outside world.
      */
     protected Config() {
         File configFile = new File(configFilePath);
@@ -221,10 +221,10 @@ public class Config {
             //set up a transformer
             TransformerFactory transfac = TransformerFactory.newInstance();
             Transformer trans = transfac.newTransformer();
-            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             trans.setOutputProperty(OutputKeys.INDENT, "yes");
-    
-            
+            trans.setOutputProperty(OutputKeys.METHOD, "xml");
+            trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","3");
+
             StringWriter sw = new StringWriter();
             StreamResult result = new StreamResult(sw);
             DOMSource source = new DOMSource(doc);
@@ -263,5 +263,24 @@ public class Config {
         }
 
         return childs;
+    }
+    
+    /**
+     * This functions is needed when is unsure if config hasnt been modified
+     */
+    public void reloadConfig() {
+        /*
+         * Clear all already filled data
+         */
+        connections.clear();
+        
+        
+        File configFile = new File(configFilePath);
+
+        try {
+            this.parse(configFile);
+        } catch (Exception ex) {
+            LoggingFacade.handleException(ex);
+        }
     }
 }

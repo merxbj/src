@@ -27,7 +27,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
+
 import notwa.common.EventHandler;
+import notwa.gui.components.JTableCellRenderer;
 import notwa.gui.datamodels.ColumnSettings;
 import notwa.gui.datamodels.WorkItemlModel;
 
