@@ -1,4 +1,4 @@
-package xmltest;
+package xmlanalyze;
 
 import java.io.*;
 import java.util.Set;
