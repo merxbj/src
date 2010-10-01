@@ -38,9 +38,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            long start = System.currentTimeMillis();
             make();
-            System.out.println(String.format("Ellapsed time: %d", System.currentTimeMillis() - start));
         } catch (Exception ex) {
             System.out.println("ERROR");
         }
