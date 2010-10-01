@@ -34,11 +34,13 @@ import java.util.List;
 public class Main {
     
     static HashMap<String, Target> targets = new HashMap<String, Target>();
-    static List<String> output = new ArrayList<String>();
+    static StringBuilder output = new StringBuilder();
 
     public static void main(String[] args) {
         try {
+            long start = System.currentTimeMillis();
             make();
+            System.out.println(String.format("Ellapsed time: %d", System.currentTimeMillis() - start));
         } catch (Exception ex) {
             System.out.println("ERROR");
         }
@@ -65,9 +67,7 @@ public class Main {
         }
 
         root.make();
-        for (String outputLine : output) {
-            System.out.println(outputLine);
-        }
+        System.out.println(output);
     }
 
     static class Target implements Comparable<Target> {
@@ -84,6 +84,7 @@ public class Main {
             this.name = name;
         }
 
+        @Override
         public int compareTo(Target o) {
             return (this.name.compareTo(o.name));
         }
@@ -120,7 +121,7 @@ public class Main {
                 waitingForDependencies = false;
 
                 for (String line : work) {
-                    output.add(line);
+                    output.append(line).append("\n");
                 }
                 this.made = true;
             }
