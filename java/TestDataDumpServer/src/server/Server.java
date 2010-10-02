@@ -1,7 +1,5 @@
-package pal;
-
 /*
- * Client
+ * Server
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,39 +18,36 @@ package pal;
  *
  */
 
-import java.net.*;
-import java.io.*;
+package server;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  *
- * @author Jiri Fric
+ * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class Server {
 
     public static void main(String[] args) {
 
-        try {
+        boolean quit = false;
 
-            StringBuilder builder = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while (reader.ready()) {
-                builder.append(reader.readLine()).append("\n");
+        try {
+            ServerSocket ss = new ServerSocket(8080);
+
+            while (!quit) {
+                final Socket sock = ss.accept();
+                Thread t = new Thread(new ClientProcess(sock));
+                t.setDaemon(true);
+                t.start();
             }
 
-            Socket sock = new Socket("89.102.55.136", 80);
-
-            DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-            out.writeUTF(builder.toString());
-
-            sock.close();
-
+            ss.close();
         } catch (Exception e) {
-            System.out.println("ERROR");
+            System.out.println(e);
         }
-
-        System.out.println("ERROR");
-
     }
 
 }

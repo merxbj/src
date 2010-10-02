@@ -1,4 +1,4 @@
-package pal;
+package client;
 
 /*
  * Client
@@ -25,13 +25,13 @@ import java.io.*;
 
 /**
  *
- * @author Jiri Fric
+ * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class Client {
 
     public static void main(String[] args) {
-
+        
         try {
 
             StringBuilder builder = new StringBuilder();

@@ -1,7 +1,5 @@
-package pal;
-
 /*
- * Client
+ * ClientProcess
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,39 +18,40 @@ package pal;
  *
  */
 
-import java.net.*;
+package server;
+
 import java.io.*;
+import java.net.Socket;
 
 /**
  *
- * @author Jiri Fric
+ * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class ClientProcess implements Runnable{
 
-    public static void main(String[] args) {
+    private final Socket clientSocket;
 
+    public void run() {
         try {
 
-            StringBuilder builder = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while (reader.ready()) {
-                builder.append(reader.readLine()).append("\n");
-            }
+            System.out.println("Established connection!");
 
-            Socket sock = new Socket("89.102.55.136", 80);
+            DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 
-            DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-            out.writeUTF(builder.toString());
+            String str = in.readUTF();
 
-            sock.close();
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(new File(String.format("TestData%d.txt", System.currentTimeMillis() / 1000))));
+            out.writeUTF(str);
 
-        } catch (Exception e) {
-            System.out.println("ERROR");
+            clientSocket.close();
+            out.close();
+        } catch (IOException e) {
+            System.out.println(e);
         }
-
-        System.out.println("ERROR");
-
     }
 
+    public ClientProcess(final Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
 }
