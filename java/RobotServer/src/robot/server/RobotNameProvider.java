@@ -33,30 +33,36 @@ public class RobotNameProvider {
 
     public static List<String> names;
     public static HashMap<String,Boolean> reservations;
+    public static final Object lock;
 
     static {
         names = Arrays.asList(new String[] {
             "Jarda","Pepa","Misa","Robert","Karel",
             "Lojza","Vaclav","Tomas","Robocop","Optimus"});
         reservations = new HashMap<String, Boolean>();
+        lock = new Object();
     }
 
     public RobotNameProvider() {
     }
 
-    public synchronized String provideName() {
-        int pick = (int) Math.floor(Math.random() * names.size());
-        String name = names.get(pick);
-        while (reservations.containsKey(name) && reservations.get(name)) {
-            pick = (int) Math.floor(Math.random() * names.size());
-            name = names.get(pick);
+    public String provideName() {
+        synchronized (lock) {
+            int pick = (int) Math.floor(Math.random() * names.size());
+            String name = names.get(pick);
+            while (reservations.containsKey(name) && reservations.get(name)) {
+                pick = (int) Math.floor(Math.random() * names.size());
+                name = names.get(pick);
+            }
+            reservations.put(name, Boolean.TRUE);
+            return name;
         }
-        reservations.put(name, Boolean.TRUE);
-        return name;
     }
 
-    public synchronized void freeName(String name) {
-        reservations.put(name, Boolean.FALSE);
+    public void freeName(String name) {
+        synchronized (lock) {
+            reservations.put(name, Boolean.FALSE);
+        }
     }
 
 }
