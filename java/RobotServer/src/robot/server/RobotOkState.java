@@ -20,9 +20,7 @@
 
 package robot.server;
 
-import robot.common.exception.RobotDamagedException;
-import robot.common.exception.RobotCrashedException;
-import robot.common.exception.RobotBatteryEmptyException;
+import robot.common.exception.*;
 import robot.server.exception.*;
 
 /**
@@ -48,7 +46,7 @@ public class RobotOkState implements RobotState {
             throw new RobotBatteryEmptyException();
         }
 
-        boolean robotDamaged = Math.ceil(Math.random() * 10) < status.getStepsSoFar();
+        boolean robotDamaged = Math.ceil(Math.random() * 10) <= status.getStepsSoFar();
         if (robotDamaged) {
             int damagedBlock = (int) Math.ceil(Math.random() * 8) + 1;
             robot.setCurrentState(new RobotDamagedState(damagedBlock));
@@ -56,6 +54,10 @@ public class RobotOkState implements RobotState {
         }
 
 
+    }
+
+    public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

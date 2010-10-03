@@ -20,9 +20,7 @@
 
 package robot.common.request;
 
-import robot.common.response.ResponseBatteryEmpty;
-import robot.common.response.Response;
-import robot.common.response.ResponseOk;
+import robot.common.response.*;
 import java.util.Arrays;
 
 /**

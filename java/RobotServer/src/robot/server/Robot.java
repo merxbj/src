@@ -20,11 +20,7 @@
 
 package robot.server;
 
-import robot.common.exception.RobotCrumbledException;
-import robot.common.exception.RobotDamagedException;
-import robot.common.exception.RobotCrashedException;
-import robot.common.exception.RobotBatteryEmptyException;
-import robot.server.exception.*;
+import robot.common.exception.*;
 
 /**
  *
@@ -56,6 +52,11 @@ public class Robot {
 
     public RobotStatus doStep() throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException {
         currentState.doStep(this);
+        return status;
+    }
+
+    public RobotStatus turnLeft() throws RobotBatteryEmptyException {
+        currentState.turnLeft(this);
         return status;
     }
 

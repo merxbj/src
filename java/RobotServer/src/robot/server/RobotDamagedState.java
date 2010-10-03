@@ -20,7 +20,7 @@
 
 package robot.server;
 
-import robot.common.exception.RobotCrumbledException;
+import robot.common.exception.*;
 
 /**
  *

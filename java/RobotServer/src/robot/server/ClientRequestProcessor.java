@@ -21,18 +21,8 @@
 package robot.server;
 
 import robot.common.request.RequestProcessor;
-import robot.common.response.Response;
-import robot.common.response.ResponseBatteryEmpty;
-import robot.common.response.ResponseDamage;
-import robot.common.response.ResponseCrumbled;
-import robot.common.response.ResponseOk;
-import robot.common.response.ResponseCrash;
-import robot.common.exception.RobotCrumbledException;
-import robot.common.exception.RobotDamagedException;
-import robot.common.exception.RobotCrashedException;
-import robot.common.exception.RobotBatteryEmptyException;
-import robot.server.exception.*;
-import robot.common.*;
+import robot.common.response.*;
+import robot.common.exception.*;
 
 /**
  *
@@ -75,7 +65,12 @@ public class ClientRequestProcessor implements RequestProcessor {
     }
 
     public Response processTurnLeft() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            RobotStatus status = robot.turnLeft();
+            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+        } catch (RobotBatteryEmptyException ex) {
+            return new ResponseBatteryEmpty();
+        }
     }
 
 }

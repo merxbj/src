@@ -20,9 +20,7 @@
 
 package robot.server;
 
-import robot.common.request.Request;
-import robot.common.request.RequestStep;
-import robot.common.*;
+import robot.common.request.*;
 
 /**
  *
