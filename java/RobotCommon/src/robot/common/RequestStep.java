@@ -20,12 +20,24 @@
 
 package robot.common;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class RequestStep extends Request {
+
+    public RequestStep(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrash(),
+                                                new ResponseBatteryEmpty(), new ResponseDamage(), new ResponseCrumbled()});
+    }
+
+    public RequestStep() {
+        this("");
+    }
 
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" KROK ").append("\r\n").toString();

@@ -27,8 +27,20 @@ package robot.server;
  */
 public class CommandLine {
 
+    private int portNumber;
+
     public static CommandLine parse(String[] args) {
-        return new CommandLine();
+        CommandLine cl = new CommandLine();
+        cl.setPortNumber(Integer.parseInt(args[0]));
+        return cl;
+    }
+
+    public int getPortNumber() {
+        return portNumber;
+    }
+
+    public void setPortNumber(int portNumber) {
+        this.portNumber = portNumber;
     }
 
 }

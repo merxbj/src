@@ -31,4 +31,9 @@ public class ResponseCannotPickUp extends Response {
         return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
     }
 
+    @Override
+    public boolean isEndGame() {
+        return false;
+    }
+
 }

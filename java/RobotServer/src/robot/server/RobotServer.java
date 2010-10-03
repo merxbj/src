@@ -20,6 +20,9 @@
 
 package robot.server;
 
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -27,11 +30,28 @@ package robot.server;
  */
 public class RobotServer {
 
+    private int listeiningPort;
+
     public RobotServer(CommandLine params) {
+        this.listeiningPort = params.getPortNumber();
     }
 
     public void run() {
+        try {
+            boolean quit = false;
+            ServerSocket ss = new ServerSocket(listeiningPort);
 
+            while (!quit) {
+                final Socket sock = ss.accept();
+                Thread t = new Thread(new RobotClientProcess(sock));
+                //t.setDaemon(true);
+                t.start();
+            }
+
+            ss.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }

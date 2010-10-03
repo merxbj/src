@@ -31,4 +31,9 @@ public class ResponseCrumbled extends Response {
         return new StringBuilder("572 ").append("ROBOT SE ROZPADL ").append("\r\n").toString();
     }
 
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
+
 }

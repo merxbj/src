@@ -49,4 +49,9 @@ public class ResponseSuccess extends Response {
         this.secretString = secretString;
     }
 
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
+
 }

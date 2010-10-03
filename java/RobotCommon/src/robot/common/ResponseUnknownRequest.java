@@ -31,4 +31,9 @@ public class ResponseUnknownRequest extends Response {
         return new StringBuilder("500 ").append("NEZNAMY PRIKAZ ").append("\r\n").toString();
     }
 
+    @Override
+    public boolean isEndGame() {
+        return false;
+    }
+
 }

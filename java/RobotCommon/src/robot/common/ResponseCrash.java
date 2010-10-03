@@ -31,4 +31,9 @@ public class ResponseCrash extends Response {
         return new StringBuilder("530 ").append("HAVARIE ").append("\r\n").toString();
     }
 
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
+
 }

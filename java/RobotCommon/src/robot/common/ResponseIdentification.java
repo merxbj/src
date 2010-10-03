@@ -50,4 +50,9 @@ public class ResponseIdentification extends Response {
         this.robotName = robotName;
     }
 
+    @Override
+    public boolean isEndGame() {
+        return false;
+    }
+
 }

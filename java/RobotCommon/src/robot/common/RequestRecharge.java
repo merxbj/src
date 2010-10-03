@@ -20,12 +20,23 @@
 
 package robot.common;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class RequestRecharge extends Request {
+
+    public RequestRecharge(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrumbled(), new ResponseDamage()});
+    }
+
+    public RequestRecharge() {
+        this("");
+    }
 
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();

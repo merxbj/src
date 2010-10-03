@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * RobotDamagedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,26 @@
  *
  */
 
-package robot.common;
+package robot.server;
+
+import robot.server.exception.RobotCrumbledException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class RobotDamagedState implements RobotState {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+    private int damagedBlock;
+
+    public RobotDamagedState(int damagedBlock) {
+        assert((damagedBlock > 0) && (damagedBlock < 10));
+        this.damagedBlock = damagedBlock;
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public void doStep(Robot robot) throws RobotCrumbledException {
+        throw new RobotCrumbledException();
     }
 
 }

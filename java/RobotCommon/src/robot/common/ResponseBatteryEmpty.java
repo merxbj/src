@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * ResponseBatteryEmpty
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,15 +25,15 @@ package robot.common;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class ResponseBatteryEmpty extends Response {
 
     public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+        return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
     }
 
     @Override
     public boolean isEndGame() {
-        return false;
+        return true;
     }
 
 }

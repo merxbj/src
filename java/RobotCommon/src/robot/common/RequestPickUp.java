@@ -20,12 +20,23 @@
 
 package robot.common;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class RequestPickUp extends Request {
+
+    public RequestPickUp(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseSuccess(), new ResponseCannotPickUp()});
+    }
+
+    public RequestPickUp() {
+        this("");
+    }
 
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" ZVEDNI ").append("\r\n").toString();

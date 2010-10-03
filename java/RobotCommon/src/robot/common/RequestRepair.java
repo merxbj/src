@@ -20,6 +20,8 @@
 
 package robot.common;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -32,6 +34,7 @@ public class RequestRepair extends Request {
     public RequestRepair(String adress, int blockToRepair) {
         super(adress);
         this.blockToRepair = blockToRepair;
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
     }
 
     public RequestRepair(int blockToRepair) {

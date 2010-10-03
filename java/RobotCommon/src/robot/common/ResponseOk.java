@@ -38,6 +38,10 @@ public class ResponseOk extends Response {
         this.y = y;
     }
 
+    public ResponseOk() {
+        this(-1,-1,-1);
+    }
+
     public String formatForTcp() {
         return new StringBuilder("250 ").append("OK ").append(String.format(robotDataFormat, getRemainingBattery(), getX(), getY())).append("\r\n").toString();
     }
@@ -64,6 +68,11 @@ public class ResponseOk extends Response {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    @Override
+    public boolean isEndGame() {
+        return false;
     }
 
 }

@@ -48,7 +48,7 @@ public abstract class Request implements TcpFormatable, Processable {
         this.adress = adress;
     }
 
-    public boolean isResponseSupported(Response response) {
+    protected boolean isResponseSupported(Response response) {
         for (Response supportedResponse : supportedResponses) {
             if (supportedResponse.getClass().equals(response.getClass())) {
                 return true;
@@ -57,7 +57,7 @@ public abstract class Request implements TcpFormatable, Processable {
         return false;
     }
 
-    public Response assertValidResponse(Response response) {
+    protected Response assertValidResponse(Response response) {
         if (isResponseSupported(response)) {
             return response;
         } else {

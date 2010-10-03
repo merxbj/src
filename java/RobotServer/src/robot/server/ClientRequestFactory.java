@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * ClientRequestFactory
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,25 @@
  *
  */
 
-package robot.common;
+package robot.server;
+
+import robot.common.*;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class ClientRequestFactory {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+    private String robotName;
+
+    public ClientRequestFactory(String robotName) {
+        this.robotName = robotName;
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public Request parseRequest(String rawRequest) {
+        return new RequestStep();
     }
 
 }

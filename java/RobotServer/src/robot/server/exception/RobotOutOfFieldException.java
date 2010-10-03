@@ -1,5 +1,5 @@
 /*
- * ResponseBatteryLow
+ * RobotOutOfFieldException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseBatteryLow extends Response {
+public class RobotOutOfFieldException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
+    public RobotOutOfFieldException(Throwable cause) {
+        super(cause);
+    }
+
+    public RobotOutOfFieldException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotOutOfFieldException(String message) {
+        super(message);
+    }
+
+    public RobotOutOfFieldException() {
     }
 
 }

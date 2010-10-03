@@ -1,5 +1,5 @@
 /*
- * ResponseDamage
+ * RobotDamagedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,27 +18,33 @@
  *
  */
 
-package robot.common;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseDamage extends Response {
+public class RobotDamagedException extends Exception {
+    private int damagedBlock;
 
-    protected int damagedBlock;
-
-    public ResponseDamage(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
+    public RobotDamagedException(Throwable cause, int damagerBlock) {
+        super(cause);
+        this.damagedBlock = damagerBlock;
     }
 
-    public ResponseDamage() {
-        this(-1);
+    public RobotDamagedException(String message, Throwable cause, int damagerBlock) {
+        super(message, cause);
+        this.damagedBlock = damagerBlock;
     }
 
-    public String formatForTcp() {
-        return new StringBuilder("570 ").append(String.format("PORUCHA BLOK %d", getDamagedBlock())).append("\r\n").toString();
+    public RobotDamagedException(String message, int damagerBlock) {
+        super(message);
+        this.damagedBlock = damagerBlock;
+    }
+
+    public RobotDamagedException(int damageBlock) {
+        this.damagedBlock = damageBlock;
     }
 
     public int getDamagedBlock() {
@@ -47,11 +53,6 @@ public class ResponseDamage extends Response {
 
     public void setDamagedBlock(int damagedBlock) {
         this.damagedBlock = damagedBlock;
-    }
-
-    @Override
-    public boolean isEndGame() {
-        return false;
     }
 
 }

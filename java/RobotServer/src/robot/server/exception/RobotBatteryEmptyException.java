@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * RobotBateryLowException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class RobotBatteryEmptyException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+    public RobotBatteryEmptyException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public RobotBatteryEmptyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotBatteryEmptyException(String message) {
+        super(message);
+    }
+
+    public RobotBatteryEmptyException() {
     }
 
 }

@@ -20,12 +20,23 @@
 
 package robot.common;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class RequestTurnLeft extends Request {
+
+    public RequestTurnLeft(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
+    }
+
+    public RequestTurnLeft() {
+        this("");
+    }
 
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();

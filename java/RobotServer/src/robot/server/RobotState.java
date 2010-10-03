@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * RobotState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,17 @@
  *
  */
 
-package robot.common;
+package robot.server;
+
+import robot.server.exception.*;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public interface RobotState {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
-    }
-
-    @Override
-    public boolean isEndGame() {
-        return false;
-    }
-
+    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException ;
+    
 }

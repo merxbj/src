@@ -27,4 +27,6 @@ package robot.common;
  */
 public abstract class Response implements TcpFormatable {
 
+    public abstract boolean isEndGame();
+
 }

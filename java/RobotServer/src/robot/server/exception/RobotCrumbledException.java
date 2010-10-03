@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * RobotCrumbledException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class RobotCrumbledException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+    public RobotCrumbledException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public RobotCrumbledException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotCrumbledException(String message) {
+        super(message);
+    }
+
+    public RobotCrumbledException() {
     }
 
 }
