@@ -1,5 +1,5 @@
 /*
- * RobotBateryLowException
+ * ResponseCrash
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,22 @@
  *
  */
 
-package robot.server.exception;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotBatteryEmptyException extends Exception {
+public class ResponseCrash extends Response {
 
-    public RobotBatteryEmptyException(Throwable cause) {
-        super(cause);
+    public String formatForTcp() {
+        return new StringBuilder("530 ").append("HAVARIE ").append("\r\n").toString();
     }
 
-    public RobotBatteryEmptyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RobotBatteryEmptyException(String message) {
-        super(message);
-    }
-
-    public RobotBatteryEmptyException() {
+    @Override
+    public boolean isEndGame() {
+        return true;
     }
 
 }

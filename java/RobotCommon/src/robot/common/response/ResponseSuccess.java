@@ -1,5 +1,5 @@
 /*
- * RequestRecharge
+ * ResponseSuccess
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,33 +18,40 @@
  *
  */
 
-package robot.common;
-
-import java.util.Arrays;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestRecharge extends Request {
+public class ResponseSuccess extends Response {
 
-    public RequestRecharge(String adress) {
-        super(adress);
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrumbled(), new ResponseDamage()});
+    protected String secretString;
+
+    public ResponseSuccess(String secretString) {
+        this.secretString = secretString;
     }
 
-    public RequestRecharge() {
-        this("");
+    public ResponseSuccess() {
+        this("Neinicializovane tajemstvi - programator si nepral zadne sdelit!");
     }
 
     public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
+        return new StringBuilder("221 ").append("USPECH ").append(secretString).append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processRecharge();
-        return assertValidResponse(response);
+    public String getSecretString() {
+        return secretString;
+    }
+
+    public void setSecretString(String secretString) {
+        this.secretString = secretString;
+    }
+
+    @Override
+    public boolean isEndGame() {
+        return true;
     }
 
 }

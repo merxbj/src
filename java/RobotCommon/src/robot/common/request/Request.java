@@ -18,9 +18,13 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
 
+import robot.common.response.Response;
 import java.util.List;
+import robot.common.exception.MissbehavedRequestProcessorException;
+import robot.common.Processable;
+import robot.common.TcpFormatable;
 
 /**
  *

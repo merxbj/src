@@ -1,5 +1,5 @@
 /*
- * RobotDamagedException
+ * RobotNoDamageException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,41 +18,28 @@
  *
  */
 
-package robot.server.exception;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotDamagedException extends Exception {
-    private int damagedBlock;
+public class RobotNoDamageException extends Exception {
 
-    public RobotDamagedException(Throwable cause, int damagerBlock) {
+    public RobotNoDamageException(Throwable cause) {
         super(cause);
-        this.damagedBlock = damagerBlock;
     }
 
-    public RobotDamagedException(String message, Throwable cause, int damagerBlock) {
+    public RobotNoDamageException(String message, Throwable cause) {
         super(message, cause);
-        this.damagedBlock = damagerBlock;
     }
 
-    public RobotDamagedException(String message, int damagerBlock) {
+    public RobotNoDamageException(String message) {
         super(message);
-        this.damagedBlock = damagerBlock;
     }
 
-    public RobotDamagedException(int damageBlock) {
-        this.damagedBlock = damageBlock;
-    }
-
-    public int getDamagedBlock() {
-        return damagedBlock;
-    }
-
-    public void setDamagedBlock(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
+    public RobotNoDamageException() {
     }
 
 }

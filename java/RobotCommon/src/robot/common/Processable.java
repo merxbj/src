@@ -20,6 +20,9 @@
 
 package robot.common;
 
+import robot.common.request.RequestProcessor;
+import robot.common.response.Response;
+
 /**
  *
  * @author Jaroslav Merxbauer

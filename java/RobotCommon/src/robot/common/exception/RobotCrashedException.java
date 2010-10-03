@@ -1,5 +1,5 @@
 /*
- * ResponseCrumbled
+ * RobotCrashedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseCrumbled extends Response {
+public class RobotCrashedException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder("572 ").append("ROBOT SE ROZPADL ").append("\r\n").toString();
+    public RobotCrashedException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public boolean isEndGame() {
-        return true;
+    public RobotCrashedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotCrashedException(String message) {
+        super(message);
+    }
+
+    public RobotCrashedException() {
     }
 
 }

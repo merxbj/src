@@ -1,5 +1,5 @@
 /*
- * ResponseCannotPickUp
+ * ResponseNoDamage
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,17 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseCannotPickUp extends Response {
+public class ResponseNoDamage extends Response {
 
     public String formatForTcp() {
-        return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
+        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Response
+ * MissbehavedRequestProcessorException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,15 +18,17 @@
  *
  */
 
-package robot.common;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public abstract class Response implements TcpFormatable {
+public class MissbehavedRequestProcessorException extends RuntimeException {
 
-    public abstract boolean isEndGame();
+    public MissbehavedRequestProcessorException(String message) {
+        super(message);
+    }
 
 }

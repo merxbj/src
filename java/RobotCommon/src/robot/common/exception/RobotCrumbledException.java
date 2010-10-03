@@ -1,5 +1,5 @@
 /*
- * RobotCannotPickUpException
+ * RobotCrumbledException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,28 @@
  *
  */
 
-package robot.server.exception;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotCannotPickUpException extends Exception {
+public class RobotCrumbledException extends Exception {
 
-    public RobotCannotPickUpException(Throwable cause) {
+    public RobotCrumbledException(Throwable cause) {
         super(cause);
     }
 
-    public RobotCannotPickUpException(String message, Throwable cause) {
+    public RobotCrumbledException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public RobotCannotPickUpException(String message) {
+    public RobotCrumbledException(String message) {
         super(message);
     }
 
-    public RobotCannotPickUpException() {
+    public RobotCrumbledException() {
     }
 
 }

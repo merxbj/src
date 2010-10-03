@@ -1,5 +1,5 @@
 /*
- * ResponseBatteryEmpty
+ * ResponseIdentification
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,41 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseBatteryEmpty extends Response {
+public class ResponseIdentification extends Response {
+
+    protected String robotName;
+    protected static final String idFormatString = "Ahoj kliente! Oslovuj mne %s.";
+
+    public ResponseIdentification(String robotName) {
+        this.robotName = robotName;
+    }
+
+    public ResponseIdentification() {
+        this("");
+    }
 
     public String formatForTcp() {
-        return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
+        return new StringBuilder("220 ").append(String.format(idFormatString, getRobotName())).append("\r\n").toString();
+    }
+
+    public String getRobotName() {
+        return robotName;
+    }
+
+    public void setRobotName(String robotName) {
+        this.robotName = robotName;
     }
 
     @Override
     public boolean isEndGame() {
-        return true;
+        return false;
     }
 
 }

@@ -18,8 +18,11 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
 
+import robot.common.response.ResponseSuccess;
+import robot.common.response.Response;
+import robot.common.response.ResponseCannotPickUp;
 import java.util.Arrays;
 
 /**

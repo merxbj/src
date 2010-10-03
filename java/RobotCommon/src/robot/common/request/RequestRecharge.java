@@ -1,5 +1,5 @@
 /*
- * ResponseUnknownRequest
+ * RequestRecharge
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,37 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
+
+import robot.common.response.Response;
+import robot.common.response.ResponseOk;
+import robot.common.response.ResponseDamage;
+import robot.common.response.ResponseCrumbled;
+import java.util.Arrays;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseUnknownRequest extends Response {
+public class RequestRecharge extends Request {
 
-    public String formatForTcp() {
-        return new StringBuilder("500 ").append("NEZNAMY PRIKAZ ").append("\r\n").toString();
+    public RequestRecharge(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrumbled(), new ResponseDamage()});
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public RequestRecharge() {
+        this("");
+    }
+
+    public String formatForTcp() {
+        return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
+    }
+
+    public Response process(RequestProcessor processor) {
+        Response response = processor.processRecharge();
+        return assertValidResponse(response);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * RequestTurnLet
+ * RequestRepair
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,8 +18,11 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
 
+import robot.common.response.ResponseNoDamage;
+import robot.common.response.Response;
+import robot.common.response.ResponseOk;
 import java.util.Arrays;
 
 /**
@@ -27,23 +30,30 @@ import java.util.Arrays;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestTurnLeft extends Request {
+public class RequestRepair extends Request {
 
-    public RequestTurnLeft(String adress) {
+    private int blockToRepair;
+
+    public RequestRepair(String adress, int blockToRepair) {
         super(adress);
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
+        this.blockToRepair = blockToRepair;
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
     }
 
-    public RequestTurnLeft() {
-        this("");
+    public RequestRepair(int blockToRepair) {
+        this("", blockToRepair);
+    }
+
+    public RequestRepair() {
+        this("", 0);
     }
 
     public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
+        return new StringBuilder(getAdress()).append(" ZVEDNI ").append(blockToRepair).append("\r\n").toString();
     }
 
     public Response process(RequestProcessor processor) {
-        Response response = processor.processTurnLeft();
+        Response response = processor.processRepair(blockToRepair);
         return assertValidResponse(response);
     }
 

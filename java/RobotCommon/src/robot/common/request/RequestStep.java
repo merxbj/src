@@ -18,8 +18,14 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
 
+import robot.common.response.ResponseBatteryEmpty;
+import robot.common.response.ResponseCrash;
+import robot.common.response.Response;
+import robot.common.response.ResponseOk;
+import robot.common.response.ResponseDamage;
+import robot.common.response.ResponseCrumbled;
 import java.util.Arrays;
 
 /**

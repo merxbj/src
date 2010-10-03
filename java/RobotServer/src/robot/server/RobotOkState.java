@@ -20,6 +20,9 @@
 
 package robot.server;
 
+import robot.common.exception.RobotDamagedException;
+import robot.common.exception.RobotCrashedException;
+import robot.common.exception.RobotBatteryEmptyException;
 import robot.server.exception.*;
 
 /**

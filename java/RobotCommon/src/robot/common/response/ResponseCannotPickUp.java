@@ -1,5 +1,5 @@
 /*
- * RequestRepair
+ * ResponseCannotPickUp
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,40 +18,22 @@
  *
  */
 
-package robot.common;
-
-import java.util.Arrays;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestRepair extends Request {
-
-    private int blockToRepair;
-
-    public RequestRepair(String adress, int blockToRepair) {
-        super(adress);
-        this.blockToRepair = blockToRepair;
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
-    }
-
-    public RequestRepair(int blockToRepair) {
-        this("", blockToRepair);
-    }
-
-    public RequestRepair() {
-        this("", 0);
-    }
+public class ResponseCannotPickUp extends Response {
 
     public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" ZVEDNI ").append(blockToRepair).append("\r\n").toString();
+        return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processRepair(blockToRepair);
-        return assertValidResponse(response);
+    @Override
+    public boolean isEndGame() {
+        return false;
     }
 
 }

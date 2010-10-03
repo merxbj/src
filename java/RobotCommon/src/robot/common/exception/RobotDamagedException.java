@@ -1,5 +1,5 @@
 /*
- * RobotUnknownRequestException
+ * RobotDamagedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,41 @@
  *
  */
 
-package robot.server.exception;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotUnknownRequestException extends Exception {
+public class RobotDamagedException extends Exception {
+    private int damagedBlock;
 
-    public RobotUnknownRequestException(Throwable cause) {
+    public RobotDamagedException(Throwable cause, int damagerBlock) {
         super(cause);
+        this.damagedBlock = damagerBlock;
     }
 
-    public RobotUnknownRequestException(String message, Throwable cause) {
+    public RobotDamagedException(String message, Throwable cause, int damagerBlock) {
         super(message, cause);
+        this.damagedBlock = damagerBlock;
     }
 
-    public RobotUnknownRequestException(String message) {
+    public RobotDamagedException(String message, int damagerBlock) {
         super(message);
+        this.damagedBlock = damagerBlock;
     }
 
-    public RobotUnknownRequestException() {
+    public RobotDamagedException(int damageBlock) {
+        this.damagedBlock = damageBlock;
+    }
+
+    public int getDamagedBlock() {
+        return damagedBlock;
+    }
+
+    public void setDamagedBlock(int damagedBlock) {
+        this.damagedBlock = damagedBlock;
     }
 
 }

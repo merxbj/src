@@ -1,5 +1,5 @@
 /*
- * MissbehavedRequestProcessorException
+ * ResponseDamage
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,40 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-class MissbehavedRequestProcessorException extends RuntimeException {
+public class ResponseDamage extends Response {
 
-    public MissbehavedRequestProcessorException(String message) {
-        super(message);
+    protected int damagedBlock;
+
+    public ResponseDamage(int damagedBlock) {
+        this.damagedBlock = damagedBlock;
+    }
+
+    public ResponseDamage() {
+        this(-1);
+    }
+
+    public String formatForTcp() {
+        return new StringBuilder("570 ").append(String.format("PORUCHA BLOK %d", getDamagedBlock())).append("\r\n").toString();
+    }
+
+    public int getDamagedBlock() {
+        return damagedBlock;
+    }
+
+    public void setDamagedBlock(int damagedBlock) {
+        this.damagedBlock = damagedBlock;
+    }
+
+    @Override
+    public boolean isEndGame() {
+        return false;
     }
 
 }

@@ -18,7 +18,7 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *

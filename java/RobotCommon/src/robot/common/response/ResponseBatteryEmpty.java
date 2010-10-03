@@ -1,5 +1,5 @@
 /*
- * RequestProcessor
+ * ResponseBatteryEmpty
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,22 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface RequestProcessor {
-    public Response processStep();
-    public Response processTurnLeft();
-    public Response processPickUp();
-    public Response processRepair(int blockToRepair);
-    public Response processRecharge();
+public class ResponseBatteryEmpty extends Response {
+
+    public String formatForTcp() {
+        return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
+    }
+
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
+
 }

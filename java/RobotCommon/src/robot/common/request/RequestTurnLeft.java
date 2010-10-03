@@ -1,5 +1,5 @@
 /*
- * ResponseSuccess
+ * RequestTurnLet
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,40 +18,36 @@
  *
  */
 
-package robot.common;
+package robot.common.request;
+
+import robot.common.response.ResponseBatteryEmpty;
+import robot.common.response.Response;
+import robot.common.response.ResponseOk;
+import java.util.Arrays;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseSuccess extends Response {
+public class RequestTurnLeft extends Request {
 
-    protected String secretString;
-
-    public ResponseSuccess(String secretString) {
-        this.secretString = secretString;
+    public RequestTurnLeft(String adress) {
+        super(adress);
+        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
     }
 
-    public ResponseSuccess() {
-        this("Neinicializovane tajemstvi - programator si nepral zadne sdelit!");
+    public RequestTurnLeft() {
+        this("");
     }
 
     public String formatForTcp() {
-        return new StringBuilder("221 ").append("USPECH ").append(secretString).append("\r\n").toString();
+        return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
     }
 
-    public String getSecretString() {
-        return secretString;
-    }
-
-    public void setSecretString(String secretString) {
-        this.secretString = secretString;
-    }
-
-    @Override
-    public boolean isEndGame() {
-        return true;
+    public Response process(RequestProcessor processor) {
+        Response response = processor.processTurnLeft();
+        return assertValidResponse(response);
     }
 
 }

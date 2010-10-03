@@ -1,5 +1,5 @@
 /*
- * ResponseDamage
+ * RobotBateryLowException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,40 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseDamage extends Response {
+public class RobotBatteryEmptyException extends Exception {
 
-    protected int damagedBlock;
-
-    public ResponseDamage(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
+    public RobotBatteryEmptyException(Throwable cause) {
+        super(cause);
     }
 
-    public ResponseDamage() {
-        this(-1);
+    public RobotBatteryEmptyException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public String formatForTcp() {
-        return new StringBuilder("570 ").append(String.format("PORUCHA BLOK %d", getDamagedBlock())).append("\r\n").toString();
+    public RobotBatteryEmptyException(String message) {
+        super(message);
     }
 
-    public int getDamagedBlock() {
-        return damagedBlock;
-    }
-
-    public void setDamagedBlock(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
-    }
-
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public RobotBatteryEmptyException() {
     }
 
 }

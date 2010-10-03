@@ -1,5 +1,5 @@
 /*
- * RobotCrumbledException
+ * Response
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,17 @@
  *
  */
 
-package robot.server.exception;
+package robot.common.response;
+
+import robot.common.TcpFormatable;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotCrumbledException extends Exception {
+public abstract class Response implements TcpFormatable {
 
-    public RobotCrumbledException(Throwable cause) {
-        super(cause);
-    }
-
-    public RobotCrumbledException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RobotCrumbledException(String message) {
-        super(message);
-    }
-
-    public RobotCrumbledException() {
-    }
+    public abstract boolean isEndGame();
 
 }

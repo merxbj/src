@@ -1,5 +1,5 @@
 /*
- * ResponseNoDamage
+ * RobotUnknownRequestException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseNoDamage extends Response {
+public class RobotUnknownRequestException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+    public RobotUnknownRequestException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public boolean isEndGame() {
-        return false;
+    public RobotUnknownRequestException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotUnknownRequestException(String message) {
+        super(message);
+    }
+
+    public RobotUnknownRequestException() {
     }
 
 }
