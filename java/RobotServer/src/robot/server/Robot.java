@@ -42,11 +42,9 @@ public class Robot {
         int bat = 100;
         int x = (int) Math.floor(Math.random() * 35) - 17;
         int y = (int) Math.floor(Math.random() * 35) - 17;
-        int dir_x = (int) Math.floor(Math.random() * 3) - 1;
-        int dir_y = (dir_x != 0) ? 0 :
-            (int) ((Math.random() > 0.5) ? 1 : -1);
+        RobotStatus.Direction direction = RobotStatus.Direction.values()[(int) Math.floor(Math.random() * 4)];
         
-        this.status = new RobotStatus(bat, x, y, dir_x, dir_y);
+        this.status = new RobotStatus(bat, x, y, direction);
         this.currentState = new RobotOkState();
     }
 
@@ -60,8 +58,26 @@ public class Robot {
         return status;
     }
 
+    public RobotStatus repair(int blockToRepair) throws RobotNoDamageException {
+        currentState.repair(this, blockToRepair);
+        return status;
+    }
+
+    public String pickUp() throws RobotCannotPickUpException {
+        return currentState.pickUp(this);
+    }
+
+    public RobotStatus recharge() throws RobotCrumbledException, RobotDamagedException {
+        currentState.recharge(this);
+        return status;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getSecretMessage() {
+        return SecretMessageProvider.getRandomSecretMessage();
     }
 
     public RobotState getCurrentState() {
@@ -73,11 +89,7 @@ public class Robot {
     }
 
     public RobotStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(RobotStatus status) {
-        this.status = status;
+        return this.status;
     }
 
 }

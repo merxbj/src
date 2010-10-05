@@ -1,5 +1,5 @@
 /*
- * RequestProcessor
+ * SecretMessageProvider
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,20 +18,27 @@
  *
  */
 
-package robot.common.request;
+package robot.server;
 
-import robot.common.response.Response;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface RequestProcessor {
-    public Response processStep();
-    public Response processTurnLeft();
-    public Response processPickUp();
-    public Response processRepair(int blockToRepair);
-    public Response processRecharge();
-    public Response processUnknown();
+public class SecretMessageProvider {
+
+    private static List<String> messages = Arrays.asList(new String[] {
+        "This is so secret that I would have to kill you if I tell it.",
+        "You really thought that this is secret, huh?",
+        "My secret is that I have no secrets!",
+        "Tell me your secret at first!"
+    });
+
+    public static synchronized String getRandomSecretMessage() {
+        return messages.get((int) Math.floor(Math.random() * messages.size()));
+    }
+
 }

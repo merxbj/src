@@ -1,5 +1,5 @@
 /*
- * RequestProcessor
+ * RequestUnknown
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,13 +25,16 @@ import robot.common.response.Response;
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface RequestProcessor {
-    public Response processStep();
-    public Response processTurnLeft();
-    public Response processPickUp();
-    public Response processRepair(int blockToRepair);
-    public Response processRecharge();
-    public Response processUnknown();
+public class RequestUnknown extends Request {
+
+    public String formatForTcp() {
+        throw new UnsupportedOperationException("Does not make sense.");
+    }
+
+    public Response process(RequestProcessor processor) {
+        return processor.processUnknown();
+    }
+
 }

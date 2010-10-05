@@ -38,15 +38,32 @@ public class ClientRequestProcessor implements RequestProcessor {
     }
 
     public Response processPickUp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            String secretMessage = robot.pickUp();
+            return new ResponseSuccess(secretMessage);
+        } catch (RobotCannotPickUpException ex) {
+            return new ResponseCannotPickUp();
+        }
     }
 
     public Response processRecharge() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            RobotStatus status = robot.recharge();
+            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+        } catch (RobotCrumbledException ex) {
+            return new ResponseCrumbled();
+        } catch (RobotDamagedException ex) {
+            return new ResponseDamage(ex.getDamagedBlock());
+        }
     }
 
     public Response processRepair(int blockToRepair) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            RobotStatus status = robot.repair(blockToRepair);
+            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+        } catch (RobotNoDamageException ex) {
+            return new ResponseNoDamage();
+        }
     }
 
     public Response processStep() {
@@ -71,6 +88,10 @@ public class ClientRequestProcessor implements RequestProcessor {
         } catch (RobotBatteryEmptyException ex) {
             return new ResponseBatteryEmpty();
         }
+    }
+
+    public Response processUnknown() {
+        return new ResponseUnknownRequest();
     }
 
 }

@@ -34,22 +34,20 @@ public class RobotOkState implements RobotState {
         RobotStatus status = robot.getStatus();
 
         try {
-            status.setX(status.getX() + status.getDir_x());
-            status.setY(status.getY() + status.getDir_y());
+            status.move();
             status.setStepsSoFar(status.getStepsSoFar() + 1);
         } catch (RobotOutOfFieldException ex) {
             throw new RobotCrashedException(ex);
         }
 
         status.setBattery(status.getBattery() - 10);
-        if (status.getBattery() == 0) {
+        if (status.getBattery() <= 0) {
             throw new RobotBatteryEmptyException();
         }
 
-        boolean robotDamaged = Math.ceil(Math.random() * 10) <= status.getStepsSoFar();
+        boolean robotDamaged = Math.ceil(Math.random() * 10) <= (status.getStepsSoFar() % 10);
         if (robotDamaged) {
-            int damagedBlock = (int) Math.ceil(Math.random() * 8) + 1;
-            robot.setCurrentState(new RobotDamagedState(damagedBlock));
+            int damagedBlock = damageRobot(robot);
             throw new RobotDamagedException(damagedBlock);
         }
 
@@ -57,7 +55,33 @@ public class RobotOkState implements RobotState {
     }
 
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        robot.getStatus().turn();
+    }
+
+    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
+        throw new RobotNoDamageException();
+    }
+
+    public String pickUp(Robot robot) throws RobotCannotPickUpException {
+        if (robot.getStatus().getX() != 0 || robot.getStatus().getY() != 0) {
+            throw new RobotCannotPickUpException();
+        }
+
+        return robot.getSecretMessage();
+    }
+
+    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
+        boolean robotDamaged = (Math.random() < 0.5);
+        if (robotDamaged) {
+            int damagedBlock = damageRobot(robot);
+            throw new RobotDamagedException(damagedBlock);
+        }
+    }
+
+    private int damageRobot(Robot robot) {
+        int damagedBlock = (int) Math.ceil(Math.random() * 8) + 1;
+        robot.setCurrentState(new RobotDamagedState(damagedBlock));
+        return damagedBlock;
     }
 
 }

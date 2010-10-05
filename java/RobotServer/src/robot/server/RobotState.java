@@ -20,11 +20,7 @@
 
 package robot.server;
 
-import robot.common.exception.RobotCrumbledException;
-import robot.common.exception.RobotDamagedException;
-import robot.common.exception.RobotCrashedException;
-import robot.common.exception.RobotBatteryEmptyException;
-import robot.server.exception.*;
+import robot.common.exception.*;
 
 /**
  *
@@ -33,6 +29,10 @@ import robot.server.exception.*;
  */
 public interface RobotState {
 
-    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException ;
+    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException;
+    public void turnLeft(Robot robot) throws RobotBatteryEmptyException;
+    public String pickUp(Robot robot) throws RobotCannotPickUpException;
+    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException;
+    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException;
     
 }

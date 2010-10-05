@@ -35,7 +35,6 @@ public class RobotClientProcess implements Runnable{
     private final Socket clientSocket;
     private final ClientRequestFactory requestFactory;
     private final ClientRequestProcessor requestProcessor;
-    private final RobotNameProvider nameProvider;
     private Robot robot;
 
     public void run() {
@@ -61,8 +60,7 @@ public class RobotClientProcess implements Runnable{
 
     public RobotClientProcess(final Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.nameProvider = new RobotNameProvider();
-        this.robot = new Robot(this.nameProvider.provideName());
+        this.robot = new Robot(RobotNameProvider.provideName());
         this.requestFactory = new ClientRequestFactory(robot.getName());
         this.requestProcessor = new ClientRequestProcessor(robot);
     }

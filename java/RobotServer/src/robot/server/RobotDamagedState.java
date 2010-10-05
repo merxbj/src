@@ -40,4 +40,27 @@ public class RobotDamagedState implements RobotState {
         throw new RobotCrumbledException();
     }
 
+    public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
+        robot.getStatus().turn();
+    }
+
+    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
+        if (damagedBlock != blockToRepair) {
+            throw new RobotNoDamageException();
+        }
+        robot.setCurrentState(new RobotOkState());
+    }
+
+    public String pickUp(Robot robot) throws RobotCannotPickUpException {
+        if (robot.getStatus().getX() != 0 || robot.getStatus().getY() != 0) {
+            throw new RobotCannotPickUpException();
+        }
+
+        return robot.getSecretMessage();
+    }
+
+    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
+        throw new RobotCrumbledException();
+    }
+
 }

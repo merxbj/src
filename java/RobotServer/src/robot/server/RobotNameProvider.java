@@ -43,10 +43,7 @@ public class RobotNameProvider {
         lock = new Object();
     }
 
-    public RobotNameProvider() {
-    }
-
-    public String provideName() {
+    public static String provideName() {
         synchronized (lock) {
             int pick = (int) Math.floor(Math.random() * names.size());
             String name = names.get(pick);
@@ -59,7 +56,7 @@ public class RobotNameProvider {
         }
     }
 
-    public void freeName(String name) {
+    public static void freeName(String name) {
         synchronized (lock) {
             reservations.put(name, Boolean.FALSE);
         }
