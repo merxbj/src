@@ -22,18 +22,22 @@ package robot.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotServer {
+public class RobotServer implements RobotRequestRouter {
 
     private int listeiningPort;
+    private HashMap<String, Resumable> processThreads;
 
     public RobotServer(CommandLine params) {
         this.listeiningPort = params.getPortNumber();
+        this.processThreads = new LinkedHashMap<String, Resumable>();
     }
 
     public void run() {
@@ -43,8 +47,7 @@ public class RobotServer {
 
             while (!quit) {
                 final Socket sock = ss.accept();
-                Thread t = new Thread(new RobotClientProcess(sock));
-                //t.setDaemon(true);
+                Thread t = new Thread(new RobotClientProcess(sock, this));
                 t.start();
             }
 
@@ -52,6 +55,22 @@ public class RobotServer {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public synchronized void registerProcess(Resumable process, String address) {
+        processThreads.put(address, process);
+    }
+
+    public synchronized boolean routeAddress(String address, Socket sock) {
+        if (processThreads.containsKey(address)) {
+            Resumable process = processThreads.get(address);
+            return process.resume(sock);
+        }
+        return false;
+    }
+
+    public synchronized void unregisterProcess(String address) {
+        processThreads.remove(address);
     }
 
 }

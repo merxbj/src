@@ -1,5 +1,5 @@
 /*
- * RequestRecharge
+ * InvalidAddressException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,33 +18,29 @@
  *
  */
 
-package robot.common.request;
-
-import java.util.List;
-import robot.common.response.Response;
-import robot.common.response.ResponseOk;
-import robot.common.response.ResponseDamage;
-import robot.common.response.ResponseCrumbled;
-import java.util.Arrays;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestRecharge extends Request {
+public class InvalidAddressException extends Exception {
 
-    public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
+    private String requestedAddress;
+    private String expectedAddress;
+
+    public InvalidAddressException(String requested, String expected) {
+        this.requestedAddress = requested;
+        this.expectedAddress = expected;
     }
 
-    public Response route(RequestProcessor processor) {
-        return processor.processRecharge();
+    public String getRequestedAddress() {
+        return this.requestedAddress;
     }
 
-    @Override
-    protected List<Response> getSupportedResponses() {
-        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrumbled(), new ResponseDamage()});
+    public String getExpectedAddress() {
+        return expectedAddress;
     }
 
 }

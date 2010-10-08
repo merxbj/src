@@ -1,5 +1,5 @@
 /*
- * RequestRecharge
+ * Main
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,33 +18,17 @@
  *
  */
 
-package robot.common.request;
-
-import java.util.List;
-import robot.common.response.Response;
-import robot.common.response.ResponseOk;
-import robot.common.response.ResponseDamage;
-import robot.common.response.ResponseCrumbled;
-import java.util.Arrays;
+package robot.client;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestRecharge extends Request {
+public class Main {
 
-    public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
-    }
-
-    public Response route(RequestProcessor processor) {
-        return processor.processRecharge();
-    }
-
-    @Override
-    protected List<Response> getSupportedResponses() {
-        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrumbled(), new ResponseDamage()});
+    public static void main(String[] args) {
+        
     }
 
 }

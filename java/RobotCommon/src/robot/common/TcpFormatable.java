@@ -20,6 +20,8 @@
 
 package robot.common;
 
+import java.util.List;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -27,4 +29,5 @@ package robot.common;
  */
 public interface TcpFormatable {
     public String formatForTcp();
+    public boolean parseFromTcp(List<String> requestStringAndParams);
 }

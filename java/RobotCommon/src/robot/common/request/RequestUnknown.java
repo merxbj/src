@@ -20,7 +20,10 @@
 
 package robot.common.request;
 
+import java.util.Arrays;
+import java.util.List;
 import robot.common.response.Response;
+import robot.common.response.ResponseUnknownRequest;
 
 /**
  *
@@ -33,8 +36,13 @@ public class RequestUnknown extends Request {
         throw new UnsupportedOperationException("Does not make sense.");
     }
 
-    public Response process(RequestProcessor processor) {
+    public Response route(RequestProcessor processor) {
         return processor.processUnknown();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseUnknownRequest()});
     }
 
 }

@@ -42,12 +42,18 @@ public class RobotDamagedState implements RobotState {
 
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
         robot.getStatus().turn();
+
+        robot.getStatus().setBattery(robot.getStatus().getBattery() - 10);
+        if (robot.getStatus().getBattery() <= 0) {
+            throw new RobotBatteryEmptyException();
+        }
     }
 
     public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
         if (damagedBlock != blockToRepair) {
             throw new RobotNoDamageException();
         }
+        robot.getStatus().setStepsSoFar(0);
         robot.setCurrentState(new RobotOkState());
     }
 

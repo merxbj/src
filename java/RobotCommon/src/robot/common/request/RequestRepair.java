@@ -24,6 +24,7 @@ import robot.common.response.ResponseNoDamage;
 import robot.common.response.Response;
 import robot.common.response.ResponseOk;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -37,7 +38,6 @@ public class RequestRepair extends Request {
     public RequestRepair(String adress, int blockToRepair) {
         super(adress);
         this.blockToRepair = blockToRepair;
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
     }
 
     public RequestRepair(int blockToRepair) {
@@ -52,9 +52,26 @@ public class RequestRepair extends Request {
         return new StringBuilder(getAdress()).append(" ZVEDNI ").append(blockToRepair).append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processRepair(blockToRepair);
-        return assertValidResponse(response);
+    public Response route(RequestProcessor processor) {
+        return processor.processRepair(blockToRepair);
+    }
+
+    @Override
+    public boolean parseFromTcp(List<String> requestStringAndParams) {
+        if (requestStringAndParams.size() == 2) {
+            try {
+                this.blockToRepair = Integer.parseInt(requestStringAndParams.get(1));
+                return true;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
     }
 
 }

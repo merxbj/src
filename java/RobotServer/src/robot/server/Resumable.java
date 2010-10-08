@@ -1,5 +1,5 @@
 /*
- * RequestProcessor
+ * Resumable
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,21 +18,15 @@
  *
  */
 
-package robot.common.request;
+package robot.server;
 
-import robot.common.response.Response;
+import java.net.Socket;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @authoer %I% %G%
  */
-public interface RequestProcessor {
-    public Response processStep();
-    public Response processTurnLeft();
-    public Response processPickUp();
-    public Response processRepair(int blockToRepair);
-    public Response processRecharge();
-    public Response processUnknown();
-    public String getExpectedAddress();
+public interface Resumable {
+    public abstract boolean resume(Socket newSocket);
 }

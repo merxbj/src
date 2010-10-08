@@ -20,6 +20,7 @@
 
 package robot.common.request;
 
+import java.util.List;
 import robot.common.response.ResponseBatteryEmpty;
 import robot.common.response.ResponseCrash;
 import robot.common.response.Response;
@@ -35,23 +36,18 @@ import java.util.Arrays;
  */
 public class RequestStep extends Request {
 
-    public RequestStep(String adress) {
-        super(adress);
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrash(),
-                                                new ResponseBatteryEmpty(), new ResponseDamage(), new ResponseCrumbled()});
-    }
-
-    public RequestStep() {
-        this("");
-    }
-
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" KROK ").append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processStep();
-        return assertValidResponse(response);
+    public Response route(RequestProcessor processor) {
+        return processor.processStep();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrash(),
+                                                new ResponseBatteryEmpty(), new ResponseDamage(), new ResponseCrumbled()});
     }
 
 }

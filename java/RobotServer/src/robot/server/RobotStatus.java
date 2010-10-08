@@ -20,6 +20,9 @@
 
 package robot.server;
 
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
 import robot.server.exception.RobotOutOfFieldException;
 
 /**
@@ -31,8 +34,7 @@ public class RobotStatus {
     private int battery;
     private int x;
     private int y;
-    private int dir_x;
-    private int dir_y;
+    private Direction direction;
     private int stepsSoFar;
 
     private static final int MAX_X =  17;
@@ -40,12 +42,23 @@ public class RobotStatus {
     private static final int MIN_X = -17;
     private static final int MIN_Y = -17;
 
-    public RobotStatus(int battery, int x, int y, int dir_x, int dir_y) {
+    private static final EnumMap<Direction, Vector> directions;
+    private static final List<Direction> directionRotationOrder;
+    static {
+        directions = new EnumMap<Direction, Vector>(Direction.class);
+        directions.put(Direction.North, new Vector( 0, 1));
+        directions.put(Direction.East,  new Vector( 1, 0));
+        directions.put(Direction.South, new Vector(-1, 0));
+        directions.put(Direction.West,  new Vector( 1, 0));
+
+        directionRotationOrder = Arrays.asList(new Direction[] {Direction.North, Direction.West, Direction.South, Direction.East});
+    }
+
+    public RobotStatus(int battery, int x, int y, Direction direction) {
         this.battery = battery;
         this.x = x;
         this.y = y;
-        this.dir_x = dir_x;
-        this.dir_y = dir_y;
+        this.direction = direction;
         this.stepsSoFar = 0;
     }
 
@@ -61,38 +74,22 @@ public class RobotStatus {
         return x;
     }
 
-    public void setX(int x) throws RobotOutOfFieldException {
-        if (x < MIN_X || x > MAX_X) {
-            throw new RobotOutOfFieldException();
-        }
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) throws RobotOutOfFieldException {
-        if (y < MIN_Y || y > MAX_Y) {
-            throw new RobotOutOfFieldException();
+    public void move() throws RobotOutOfFieldException {
+        Vector vec = directions.get(direction);
+        x = x + vec.x;
+        y = y + vec.y;
+        if (x < MIN_X || x > MAX_X || y < MIN_Y || y > MAX_Y) {
+            throw new RobotOutOfFieldException(x,y);
         }
-        this.y = y;
     }
 
-    public int getDir_x() {
-        return dir_x;
-    }
-
-    public void setDir_x(int dir_x) {
-        this.dir_x = dir_x;
-    }
-
-    public int getDir_y() {
-        return dir_y;
-    }
-
-    public void setDir_y(int dir_y) {
-        this.dir_y = dir_y;
+    public void turn() {
+        int directionIndex = directionRotationOrder.indexOf(direction);
+        direction = directionRotationOrder.get((directionIndex + 1) % 4);
     }
 
     public int getStepsSoFar() {
@@ -101,6 +98,21 @@ public class RobotStatus {
 
     public void setStepsSoFar(int stepsSoFar) {
         this.stepsSoFar = stepsSoFar;
+    }
+
+    private static class Vector {
+
+        int x;
+        int y;
+
+        public Vector(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public static enum Direction {
+        North, West, South, East;
     }
 
 }

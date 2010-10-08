@@ -56,6 +56,11 @@ public class RobotOkState implements RobotState {
 
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
         robot.getStatus().turn();
+
+        robot.getStatus().setBattery(robot.getStatus().getBattery() - 10);
+        if (robot.getStatus().getBattery() <= 0) {
+            throw new RobotBatteryEmptyException();
+        }
     }
 
     public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
@@ -74,8 +79,10 @@ public class RobotOkState implements RobotState {
         boolean robotDamaged = (Math.random() < 0.5);
         if (robotDamaged) {
             int damagedBlock = damageRobot(robot);
+            robot.getStatus().setBattery(1);
             throw new RobotDamagedException(damagedBlock);
         }
+        robot.getStatus().setBattery(100);
     }
 
     private int damageRobot(Robot robot) {

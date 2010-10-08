@@ -20,6 +20,7 @@
 
 package robot.common.request;
 
+import java.util.List;
 import robot.common.response.*;
 import java.util.Arrays;
 
@@ -30,22 +31,17 @@ import java.util.Arrays;
  */
 public class RequestTurnLeft extends Request {
 
-    public RequestTurnLeft(String adress) {
-        super(adress);
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
-    }
-
-    public RequestTurnLeft() {
-        this("");
-    }
-
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processTurnLeft();
-        return assertValidResponse(response);
+    public Response route(RequestProcessor processor) {
+        return processor.processTurnLeft();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
     }
 
 }

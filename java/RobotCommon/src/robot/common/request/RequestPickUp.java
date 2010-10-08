@@ -20,6 +20,7 @@
 
 package robot.common.request;
 
+import java.util.List;
 import robot.common.response.ResponseSuccess;
 import robot.common.response.Response;
 import robot.common.response.ResponseCannotPickUp;
@@ -32,22 +33,17 @@ import java.util.Arrays;
  */
 public class RequestPickUp extends Request {
 
-    public RequestPickUp(String adress) {
-        super(adress);
-        this.supportedResponses = Arrays.asList(new Response[] {new ResponseSuccess(), new ResponseCannotPickUp()});
-    }
-
-    public RequestPickUp() {
-        this("");
-    }
-
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" ZVEDNI ").append("\r\n").toString();
     }
 
-    public Response process(RequestProcessor processor) {
-        Response response = processor.processPickUp();
-        return assertValidResponse(response);
+    public Response route(RequestProcessor processor) {
+        return processor.processPickUp();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseSuccess(), new ResponseCannotPickUp()});
     }
 
 }

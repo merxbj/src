@@ -20,6 +20,10 @@
 
 package robot.server;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import robot.server.exception.InvalidAddressException;
 import robot.common.request.*;
 
 /**
@@ -29,14 +33,64 @@ import robot.common.request.*;
  */
 public class ClientRequestFactory {
 
-    private String robotName;
+    private String address;
+    
+    private final static List<String> validRequestNames;
+    private final static HashMap<String, Request> prototypes;
+    static {
+        prototypes = new HashMap<String, Request>();
+        prototypes.put("KROK", new RequestStep());
+        prototypes.put("VLEVO", new RequestTurnLeft());
+        prototypes.put("ZVEDNI", new RequestPickUp());
+        prototypes.put("OPRAVIT", new RequestRepair());
+        prototypes.put("NABIT", new RequestRecharge());
 
-    public ClientRequestFactory(String robotName) {
-        this.robotName = robotName;
+        validRequestNames = Arrays.asList(new String[] {"KROK", "VLEVO", "ZVEDNI", "OPRAVIT", "NABIT"});
     }
 
-    public Request parseRequest(String rawRequest) {
-        return new RequestStep();
+    public ClientRequestFactory(String address) {
+        this.address = address;
+    }
+
+    public Request parseRequest(String rawRequest) throws InvalidAddressException {
+        
+        if (!rawRequest.startsWith(address)) {
+            throw new InvalidAddressException(extractPotentialAddress(rawRequest), address);
+        }
+
+        try {
+
+            String requestStringOnly = rawRequest.substring(address.length() + 1); // strip out the address
+            String[] tokens = requestStringOnly.split(" ");
+
+            Request prototype = prototypes.get(tokens[0]);
+            if (prototype == null) {
+                return new RequestUnknown();
+            }
+
+            Request request = prototype.clone();
+            request.setAdress(address);
+            if (request.parseFromTcp(Arrays.asList(tokens))) {
+                return request;
+            } else {
+                return new RequestUnknown();
+            }
+
+
+        } catch (Exception ex) {
+            return new RequestUnknown();
+        }
+    }
+
+    private String extractPotentialAddress(String rawRequest) {
+
+        for (String request : validRequestNames) {
+            int requestPos = rawRequest.indexOf(request);
+            if (requestPos > 2) {
+                return rawRequest.substring(0, requestPos - 1);
+            }
+        }
+        return "/unknown/";
     }
 
 }

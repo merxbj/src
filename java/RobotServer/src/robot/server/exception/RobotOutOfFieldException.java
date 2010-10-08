@@ -26,20 +26,20 @@ package robot.server.exception;
  * @version %I% %G%
  */
 public class RobotOutOfFieldException extends Exception {
+    private int x;
+    private int y;
 
-    public RobotOutOfFieldException(Throwable cause) {
-        super(cause);
+    public RobotOutOfFieldException(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public RobotOutOfFieldException(String message, Throwable cause) {
-        super(message, cause);
+    public int getX() {
+        return x;
     }
 
-    public RobotOutOfFieldException(String message) {
-        super(message);
-    }
-
-    public RobotOutOfFieldException() {
+    public int getY() {
+        return y;
     }
 
 }

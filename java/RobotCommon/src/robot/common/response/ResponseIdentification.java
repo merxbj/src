@@ -27,11 +27,11 @@ package robot.common.response;
  */
 public class ResponseIdentification extends Response {
 
-    protected String robotName;
+    protected String address;
     protected static final String idFormatString = "Ahoj kliente! Oslovuj mne %s.";
 
-    public ResponseIdentification(String robotName) {
-        this.robotName = robotName;
+    public ResponseIdentification(String address) {
+        this.address = address;
     }
 
     public ResponseIdentification() {
@@ -39,15 +39,15 @@ public class ResponseIdentification extends Response {
     }
 
     public String formatForTcp() {
-        return new StringBuilder("220 ").append(String.format(idFormatString, getRobotName())).append("\r\n").toString();
+        return new StringBuilder("220 ").append(String.format(idFormatString, getAddress())).append("\r\n").toString();
     }
 
-    public String getRobotName() {
-        return robotName;
+    public String getAddress() {
+        return address;
     }
 
-    public void setRobotName(String robotName) {
-        this.robotName = robotName;
+    public void setAddress(String robotName) {
+        this.address = robotName;
     }
 
     @Override

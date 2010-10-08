@@ -94,4 +94,8 @@ public class ClientRequestProcessor implements RequestProcessor {
         return new ResponseUnknownRequest();
     }
 
+    public String getExpectedAddress() {
+        return robot.getName();
+    }
+
 }

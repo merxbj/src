@@ -31,7 +31,17 @@ public class CommandLine {
 
     public static CommandLine parse(String[] args) {
         CommandLine cl = new CommandLine();
-        cl.setPortNumber(Integer.parseInt(args[0]));
+
+        try {
+            cl.setPortNumber(Integer.parseInt(args[0]));
+        } catch (Exception ex) {
+            throw new RuntimeException("The one and only argument must be the port number in closed interval <3500,3800>!", ex);
+        }
+
+        if (cl.getPortNumber() < 3500 || cl.getPortNumber() > 3800) {
+            throw new RuntimeException("The port number must be in closed interval <3500,3800>!");
+        }
+
         return cl;
     }
 
