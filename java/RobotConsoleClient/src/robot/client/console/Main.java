@@ -1,5 +1,5 @@
 /*
- * ResponseUnknown
+ * Main
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,30 +17,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package robot.client.console;
 
-package robot.common.response;
-
-import robot.common.exception.RobotException;
-import robot.common.exception.RobotUnknownResponseException;
+import robot.client.*;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseUnknown extends Response {
+public class Main {
 
-    @Override
-    public boolean isEndGame() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public static void main(String[] args) {
 
-    public String formatForTcp() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void handle(ResponseHandler handler) throws RobotException {
-        throw new RobotException(new RobotUnknownResponseException());
+        CommandLine cl = CommandLine.parse(args);
+        RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
+        AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
+        
+        try {
+            String secret = robot.findSecret();
+        } catch (Exception ex) {
+            
+        }
+        
     }
 
 }

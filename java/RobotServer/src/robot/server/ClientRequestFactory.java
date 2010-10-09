@@ -23,6 +23,7 @@ package robot.server;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import robot.common.StringUtils;
 import robot.server.exception.InvalidAddressException;
 import robot.common.request.*;
 
@@ -61,16 +62,16 @@ public class ClientRequestFactory {
         try {
 
             String requestStringOnly = rawRequest.substring(address.length() + 1); // strip out the address
-            String[] tokens = requestStringOnly.split(" ");
+            List<String> tokens = Arrays.asList(requestStringOnly.split(" "));
 
-            Request prototype = prototypes.get(tokens[0]);
+            Request prototype = prototypes.get(tokens.get(0));
             if (prototype == null) {
                 return new RequestUnknown();
             }
 
             Request request = prototype.clone();
             request.setAdress(address);
-            if (request.parseParams((tokens.length == 2) ? tokens[1] : "")) { // this is kind of a hack
+            if (request.parseParamsFromTcp(StringUtils.join(tokens.subList(1, tokens.size()), " "))) {
                 return request;
             } else {
                 return new RequestUnknown();

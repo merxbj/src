@@ -21,8 +21,11 @@
 package robot.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import robot.common.networking.SocketUtils;
+import robot.common.request.Request;
+import robot.common.response.Response;
 
 /**
  *
@@ -31,17 +34,27 @@ import java.net.UnknownHostException;
  */
 public class RobotServerConnection {
 
-    public boolean connect() throws UnknownHostException, IOException {
-        Socket sock = new Socket("localhost", 22222);
-        return true;
+    private InetAddress address;
+    private int port;
+    private Socket socket;
+    private ServerResponseFactory factory;
+
+    public RobotServerConnection(InetAddress address, int port) {
+        this.address = address;
+        this.port = port;
+        this.factory = new ServerResponseFactory();
     }
-    
-    public boolean connect(InetAddress address, int port) {
 
+    public Response connect() throws IOException {
+        this.socket = new Socket(address, port);
+        String rawResponse = SocketUtils.readStringFromSocket(socket);
+        return factory.parseResponse(rawResponse);
     }
 
-    public boolean connect(String address, int port) {
-
+    public Response processRequest(Request req) throws IOException {
+        SocketUtils.sendStringToSocket(req.formatForTcp(), socket);
+        String rawResponse = SocketUtils.readStringFromSocket(socket);
+        return factory.parseResponse(rawResponse);
     }
 
 }

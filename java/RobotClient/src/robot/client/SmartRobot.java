@@ -1,5 +1,5 @@
 /*
- * ResponseUnknown
+ * SmartRobot
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,29 +18,19 @@
  *
  */
 
-package robot.common.response;
-
-import robot.common.exception.RobotException;
-import robot.common.exception.RobotUnknownResponseException;
+package robot.client;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseUnknown extends Response {
+public class SmartRobot {
 
-    @Override
-    public boolean isEndGame() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    Robot robot;
 
-    public String formatForTcp() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void handle(ResponseHandler handler) throws RobotException {
-        throw new RobotException(new RobotUnknownResponseException());
+    public SmartRobot(Robot robot) {
+        this.robot = robot;
     }
 
 }

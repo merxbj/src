@@ -20,6 +20,8 @@
 
 package robot.common.response;
 
+import robot.common.exception.RobotException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -34,6 +36,10 @@ public class ResponseCrash extends Response {
     @Override
     public boolean isEndGame() {
         return true;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleCrash();
     }
 
 }

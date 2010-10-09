@@ -27,5 +27,5 @@ package robot.common;
  */
 public interface TcpFormatable {
     public String formatForTcp();
-    public boolean parseParams(String params);
+    public boolean parseParamsFromTcp(String params);
 }

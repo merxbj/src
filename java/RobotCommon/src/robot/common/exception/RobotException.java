@@ -1,5 +1,5 @@
 /*
- * ResponseUnknown
+ * RobotException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,29 +18,28 @@
  *
  */
 
-package robot.common.response;
-
-import robot.common.exception.RobotException;
-import robot.common.exception.RobotUnknownResponseException;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseUnknown extends Response {
+public class RobotException extends Exception {
 
-    @Override
-    public boolean isEndGame() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public RobotException(Throwable cause) {
+        super(cause);
     }
 
-    public String formatForTcp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public RobotException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void handle(ResponseHandler handler) throws RobotException {
-        throw new RobotException(new RobotUnknownResponseException());
+    public RobotException(String message) {
+        super(message);
+    }
+
+    public RobotException() {
     }
 
 }

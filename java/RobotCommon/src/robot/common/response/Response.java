@@ -20,6 +20,7 @@
 
 package robot.common.response;
 
+import robot.common.Handlable;
 import robot.common.TcpFormatable;
 
 /**
@@ -27,11 +28,11 @@ import robot.common.TcpFormatable;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public abstract class Response implements TcpFormatable {
+public abstract class Response implements TcpFormatable, Handlable {
 
     public abstract boolean isEndGame();
 
-    public boolean parseParams(String params) {
+    public boolean parseParamsFromTcp(String params) {
         return true;
     }
 

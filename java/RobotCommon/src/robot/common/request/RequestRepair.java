@@ -57,7 +57,7 @@ public class RequestRepair extends Request {
     }
 
     @Override
-    public boolean parseParams(String params) {
+    public boolean parseParamsFromTcp(String params) {
         String[] tokens = params.split(" ");
         if (tokens.length == 1) {
             try {

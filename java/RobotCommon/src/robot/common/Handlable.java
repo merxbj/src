@@ -1,5 +1,5 @@
 /*
- * ResponseUnknown
+ * Handlable
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,29 +18,16 @@
  *
  */
 
-package robot.common.response;
+package robot.common;
 
 import robot.common.exception.RobotException;
-import robot.common.exception.RobotUnknownResponseException;
+import robot.common.response.ResponseHandler;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseUnknown extends Response {
-
-    @Override
-    public boolean isEndGame() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String formatForTcp() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void handle(ResponseHandler handler) throws RobotException {
-        throw new RobotException(new RobotUnknownResponseException());
-    }
-
+public interface Handlable {
+    public void handle(ResponseHandler handler) throws RobotException;
 }

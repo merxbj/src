@@ -20,6 +20,10 @@
 
 package robot.common.response;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import robot.common.exception.RobotException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -73,6 +77,30 @@ public class ResponseOk extends Response {
     @Override
     public boolean isEndGame() {
         return false;
+    }
+
+    @Override
+    public boolean parseParamsFromTcp(String params) {
+        Pattern pattern = Pattern.compile("\\(.+\\)");
+        Matcher match = pattern.matcher(params);
+        if (match.groupCount() == 1) {
+            String temp = match.group();
+            String status = temp.substring(1, temp.length() - 1);
+            String[] tokens = status.split(",");
+            if (tokens.length == 3) {
+                try {
+                    this.remainingBattery = Integer.parseInt(tokens[0]);
+                    this.x = Integer.parseInt(tokens[1]);
+                    this.y = Integer.parseInt(tokens[2]);
+                    return true;
+                } catch (Exception ex) {}
+            }
+        }
+        return false;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleOk(remainingBattery, x, y);
     }
 
 }

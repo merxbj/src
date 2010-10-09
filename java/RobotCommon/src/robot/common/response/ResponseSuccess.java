@@ -20,6 +20,11 @@
 
 package robot.common.response;
 
+import java.util.Arrays;
+import java.util.List;
+import robot.common.StringUtils;
+import robot.common.exception.RobotException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -50,8 +55,22 @@ public class ResponseSuccess extends Response {
     }
 
     @Override
+    public boolean parseParamsFromTcp(String params) {
+        List<String> tokens = Arrays.asList(params.split(" "));
+        if (tokens.size() > 1) {
+            this.secretString = StringUtils.join(tokens.subList(1, tokens.size()), " ");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean isEndGame() {
         return true;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleSuccess(secretString);
     }
 
 }

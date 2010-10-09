@@ -20,6 +20,9 @@
 
 package robot.client;
 
+import java.io.IOException;
+import robot.common.exception.RobotCrashedException;
+import robot.common.exception.RobotException;
 import robot.common.response.*;
 import robot.common.request.*;
 
@@ -31,33 +34,39 @@ import robot.common.request.*;
 public class Robot {
 
     private RobotServerConnection server;
+    private ServerResponseHandler handler;
     String name;
 
-    public Robot(RobotServerConnection server, String name) {
+    public Robot(RobotServerConnection server) {
         this.server = server;
-        this.name = name;
+        this.name = server.getAddress();
+        this.handler = new ServerResponseHandler(this);
     }
 
-    public Response doStep() {
-        RequestStep req = new RequestStep(name);
-        Response res = server.processRequest(req);
+    public void doStep() throws IOException, RobotCrashedException {
+        try {
+            Response res = server.processRequest(new RequestStep(name));
+            res.handle(handler);
+        } catch (RobotException ex) {
+            throw ex.getCause();
+        }
     }
 
-    public Response turnLeft() {
-        RequestStep req = new RequestTurnLeft(name);
+    public void turnLeft() {
+        RequestTurnLeft req = new RequestTurnLeft(name);
         Response res = server.processRequest(req);
     }
     
-    public Response pickUp() {
-        RequestStep req = new RequestTurnLeft(name);
+    public String pickUp() {
+        RequestPickUp req = new RequestPickUp();
         Response res = server.processRequest(req);
     }
     
-    public Response repair(int blockToRepair) {
+    public void repair(int blockToRepair) {
 
     }
     
-    public Response recharge() {
+    public void recharge() {
         
     }
 

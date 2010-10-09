@@ -20,6 +20,13 @@
 
 package robot.common.response;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import robot.common.StringUtils;
+import robot.common.exception.RobotException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -46,13 +53,30 @@ public class ResponseIdentification extends Response {
         return address;
     }
 
-    public void setAddress(String robotName) {
-        this.address = robotName;
+    @Override
+    public boolean parseParamsFromTcp(String params) {
+        Pattern pattern = Pattern.compile("Oslovuj mne [^ .\n\r$]+[.\n\r$]");
+        Matcher match = pattern.matcher(params);
+        if (match.groupCount() == 1) {
+            List<String> tokens = Arrays.asList(match.group().split(" "));
+            String almostAddress = StringUtils.join(tokens.subList(2, tokens.size()), " ");
+            pattern = Pattern.compile("[^.\n\r]+");
+            match = pattern.matcher(almostAddress);
+            if (match.groupCount() == 1) {
+                this.address = match.group();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean isEndGame() {
         return false;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleIdentification(address);
     }
 
 }

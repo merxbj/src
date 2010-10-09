@@ -20,6 +20,9 @@
 
 package robot.common.response;
 
+import robot.common.exception.RobotException;
+import robot.common.exception.RobotUnknownRequestException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -34,6 +37,10 @@ public class ResponseUnknownRequest extends Response {
     @Override
     public boolean isEndGame() {
         return false;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        throw new RobotException(new RobotUnknownRequestException());
     }
 
 }

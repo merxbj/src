@@ -20,6 +20,10 @@
 
 package robot.common.response;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import robot.common.exception.RobotException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -52,6 +56,23 @@ public class ResponseDamage extends Response {
     @Override
     public boolean isEndGame() {
         return false;
+    }
+
+    @Override
+    public boolean parseParamsFromTcp(String params) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher match = pattern.matcher(params);
+        if (match.groupCount() == 1) {
+            try {
+                this.damagedBlock = Integer.parseInt(match.group());
+                return true;
+            } catch (Exception ex) {}
+        }
+        return false;
+    }
+
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleDamage(damagedBlock);
     }
 
 }

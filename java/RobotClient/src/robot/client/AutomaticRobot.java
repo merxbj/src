@@ -1,5 +1,5 @@
 /*
- * Main
+ * AutomaticRobot
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,10 +25,16 @@ package robot.client;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class AutomaticRobot {
 
-    public static void main(String[] args) {
-        
+    SmartRobot robot;
+
+    public AutomaticRobot(SmartRobot robot) {
+        this.robot = robot;
+    }
+
+    public String findSecret() {
+        return "";
     }
 
 }

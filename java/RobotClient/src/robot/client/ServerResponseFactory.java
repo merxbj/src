@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import robot.common.response.*;
+import robot.common.StringUtils;
 
 /**
  *
@@ -32,7 +33,6 @@ import robot.common.response.*;
  */
 public class ServerResponseFactory {
 
-    private final static List<String> validResponseNumbers;
     private final static HashMap<String, Response> prototypes;
     static {
         prototypes = new HashMap<String, Response>();
@@ -46,47 +46,29 @@ public class ServerResponseFactory {
         prototypes.put("570", new ResponseDamage());
         prototypes.put("571", new ResponseNoDamage());
         prototypes.put("572", new ResponseCrumbled());
-
-        validResponseNumbers = Arrays.asList(new String[] {"220", "221", "250", "500", "530", "540", "550", "570", "571", "572"});
-    }
-
-    public ServerResponseFactory() {
     }
 
     public Response parseResponse(String rawResponse) {
 
         try {
 
-            String[] tokens = rawResponse.split(" ");
+            List<String> tokens = Arrays.asList(rawResponse.split(" "));
 
-            Response prototype = prototypes.get(tokens[0]);
+            Response prototype = prototypes.get(tokens.get(0));
             if (prototype == null) {
                 return new ResponseUnknown();
             }
 
             Response response = prototype.clone();
-            response.parseParams();
-            if (request.parseFromTcp(Arrays.asList(tokens))) {
-                return request;
+            if (response.parseParamsFromTcp(StringUtils.join(tokens.subList(1, tokens.size()), " "))) {
+                return response;
             } else {
-                return new RequestUnknown();
+                return new ResponseUnknown();
             }
-
 
         } catch (Exception ex) {
-            return new RequestUnknown();
+            return new ResponseUnknown();
         }
-    }
-
-    private String extractPotentialAddress(String rawRequest) {
-
-        for (String request : validResponseNumbers) {
-            int requestPos = rawRequest.indexOf(request);
-            if (requestPos > 2) {
-                return rawRequest.substring(0, requestPos - 1);
-            }
-        }
-        return "/unknown/";
     }
 
 }
