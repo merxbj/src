@@ -33,6 +33,12 @@ import java.util.Arrays;
  */
 public class RequestPickUp extends Request {
 
+    public RequestPickUp() {
+    }
+
+    public RequestPickUp(String adress) {
+    }
+
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" ZVEDNI ").append("\r\n").toString();
     }

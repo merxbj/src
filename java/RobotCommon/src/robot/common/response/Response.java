@@ -20,7 +20,6 @@
 
 package robot.common.response;
 
-import java.util.List;
 import robot.common.TcpFormatable;
 
 /**
@@ -32,8 +31,17 @@ public abstract class Response implements TcpFormatable {
 
     public abstract boolean isEndGame();
 
-    public boolean parseFromTcp(List<String> requestStringAndParams) {
+    public boolean parseParams(String params) {
         return true;
+    }
+
+    @Override
+    public Response clone() {
+        Response clone = null;
+        try {
+            clone = (Response) super.clone();
+        } catch (CloneNotSupportedException ex) {}
+        return clone;
     }
 
 }

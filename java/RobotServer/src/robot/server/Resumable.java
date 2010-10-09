@@ -28,5 +28,5 @@ import java.net.Socket;
  * @authoer %I% %G%
  */
 public interface Resumable {
-    public abstract boolean resume(Socket newSocket);
+    public abstract boolean resume(Socket newSocket, String lastRequest);
 }

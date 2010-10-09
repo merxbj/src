@@ -57,12 +57,13 @@ public class RequestRepair extends Request {
     }
 
     @Override
-    public boolean parseFromTcp(List<String> requestStringAndParams) {
-        if (requestStringAndParams.size() == 2) {
+    public boolean parseParams(String params) {
+        String[] tokens = params.split(" ");
+        if (tokens.length == 1) {
             try {
-                this.blockToRepair = Integer.parseInt(requestStringAndParams.get(1));
+                this.blockToRepair = Integer.parseInt(tokens[0]);
                 return true;
-            } catch (NumberFormatException ex) {
+            } catch (Exception ex) {
                 return false;
             }
         }

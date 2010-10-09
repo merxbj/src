@@ -1,5 +1,5 @@
 /*
- * RequestTurnLet
+ * Robot
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,36 +18,47 @@
  *
  */
 
-package robot.common.request;
+package robot.client;
 
-import java.util.List;
 import robot.common.response.*;
-import java.util.Arrays;
+import robot.common.request.*;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RequestTurnLeft extends Request {
+public class Robot {
 
-    public RequestTurnLeft(String adress) {
+    private RobotServerConnection server;
+    String name;
+
+    public Robot(RobotServerConnection server, String name) {
+        this.server = server;
+        this.name = name;
     }
 
-    public RequestTurnLeft() {
+    public Response doStep() {
+        RequestStep req = new RequestStep(name);
+        Response res = server.processRequest(req);
     }
 
-    public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
+    public Response turnLeft() {
+        RequestStep req = new RequestTurnLeft(name);
+        Response res = server.processRequest(req);
     }
-
-    public Response route(RequestProcessor processor) {
-        return processor.processTurnLeft();
+    
+    public Response pickUp() {
+        RequestStep req = new RequestTurnLeft(name);
+        Response res = server.processRequest(req);
     }
+    
+    public Response repair(int blockToRepair) {
 
-    @Override
-    protected List<Response> getSupportedResponses() {
-        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
+    }
+    
+    public Response recharge() {
+        
     }
 
 }

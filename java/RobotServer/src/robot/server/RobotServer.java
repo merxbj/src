@@ -24,6 +24,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import robot.common.request.Request;
 
 /**
  *
@@ -61,10 +62,10 @@ public class RobotServer implements RobotRequestRouter {
         processThreads.put(address, process);
     }
 
-    public synchronized boolean routeAddress(String address, Socket sock) {
+    public synchronized boolean routeRequest(String request, String address, Socket sock) {
         if (processThreads.containsKey(address)) {
             Resumable process = processThreads.get(address);
-            return process.resume(sock);
+            return process.resume(sock, request);
         }
         return false;
     }

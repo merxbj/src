@@ -66,7 +66,7 @@ public abstract class Request implements TcpFormatable, Processable, Cloneable {
         return response;
     }
 
-    public boolean parseFromTcp(List<String> requestStringAndParams) {
+    public boolean parseParams(String params) {
         return true;
     }
 

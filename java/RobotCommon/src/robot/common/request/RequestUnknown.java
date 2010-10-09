@@ -32,6 +32,12 @@ import robot.common.response.ResponseUnknownRequest;
  */
 public class RequestUnknown extends Request {
 
+    public RequestUnknown(String adress) {
+    }
+
+    public RequestUnknown() {
+    }
+
     public String formatForTcp() {
         throw new UnsupportedOperationException("Does not make sense.");
     }

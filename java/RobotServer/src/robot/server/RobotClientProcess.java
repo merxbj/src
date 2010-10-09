@@ -42,6 +42,7 @@ public class RobotClientProcess implements Runnable, Resumable {
     private Robot robot;
     private Logger log;
     private boolean waiting;
+    private String enforcedRequest;
 
     public void run() {
 
@@ -80,9 +81,9 @@ public class RobotClientProcess implements Runnable, Resumable {
                     }
                 } catch (InvalidAddressException ex) {
                     log.logMessage("Received unexpected address %s from the client. Expected was %s.", ex.getRequestedAddress(), ex.getExpectedAddress());
-                    if (router.routeAddress(ex.getRequestedAddress(), clientSocket)) {
-                        goodBye();
-                        return; // someone took over the socket, leave without closing it
+                    if (router.routeRequest(ex.getReceivedRequest(), ex.getRequestedAddress(), clientSocket)) {
+                        clientSocket = null; // someone took over the socket, make sure that it will not be closed
+                        quit = true;
                     }
                 }
 
@@ -93,7 +94,9 @@ public class RobotClientProcess implements Runnable, Resumable {
         } finally {
             try {
                 goodBye();
-                clientSocket.close();
+                if (clientSocket != null) {
+                    clientSocket.close();
+                }
             } catch (Exception ex) {
                 log.logException(ex);
             }
@@ -111,12 +114,25 @@ public class RobotClientProcess implements Runnable, Resumable {
     }
 
     private String readRequestFromSocket() throws IOException {
+        
+        if (enforcedRequest != null) {
+            String request = enforcedRequest;
+            enforcedRequest = null;
+            return request;
+        }
+
         InputStreamReader in = new InputStreamReader(clientSocket.getInputStream(), "US-ASCII");
         StringBuilder builder = new StringBuilder();
 
         try {
             while (true) {
-                char ch = (char) in.read();
+                int i = in.read();
+                if (i == -1) {
+                    clientSocket.close();
+                    throw new IOException("Unexpected end of stram reached!");
+                }
+
+                char ch = (char) i;
                 if (ch == '\r') {
                     ch = (char) in.read();
                     if (ch == '\n') {
@@ -160,15 +176,16 @@ public class RobotClientProcess implements Runnable, Resumable {
         RobotNameProvider.freeName(robot.getName());
     }
 
-    public boolean resume(Socket newSocket) {
+    public boolean resume(Socket newSocket, String lastRequest) {
         if (waiting) {
             synchronized (this) {
+                this.clientSocket = newSocket;
+                this.enforcedRequest = lastRequest;
                 this.notify();
                 return true;
             }
         }
         return false;
     }
-
 
 }

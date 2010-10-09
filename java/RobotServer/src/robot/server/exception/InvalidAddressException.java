@@ -29,10 +29,12 @@ public class InvalidAddressException extends Exception {
 
     private String requestedAddress;
     private String expectedAddress;
+    private String receivedRequest;
 
-    public InvalidAddressException(String requested, String expected) {
+    public InvalidAddressException(String requested, String expected, String receivedRequest) {
         this.requestedAddress = requested;
         this.expectedAddress = expected;
+        this.receivedRequest = receivedRequest;
     }
 
     public String getRequestedAddress() {
@@ -41,6 +43,10 @@ public class InvalidAddressException extends Exception {
 
     public String getExpectedAddress() {
         return expectedAddress;
+    }
+
+    public String getReceivedRequest() {
+        return receivedRequest;
     }
 
 }

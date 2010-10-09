@@ -34,6 +34,12 @@ import java.util.Arrays;
  */
 public class RequestRecharge extends Request {
 
+    public RequestRecharge(String adress) {
+    }
+
+    public RequestRecharge() {
+    }
+
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
     }

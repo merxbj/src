@@ -55,7 +55,7 @@ public class ClientRequestFactory {
     public Request parseRequest(String rawRequest) throws InvalidAddressException {
         
         if (!rawRequest.startsWith(address)) {
-            throw new InvalidAddressException(extractPotentialAddress(rawRequest), address);
+            throw new InvalidAddressException(extractPotentialAddress(rawRequest), address, rawRequest);
         }
 
         try {
@@ -70,7 +70,7 @@ public class ClientRequestFactory {
 
             Request request = prototype.clone();
             request.setAdress(address);
-            if (request.parseFromTcp(Arrays.asList(tokens))) {
+            if (request.parseParams((tokens.length == 2) ? tokens[1] : "")) { // this is kind of a hack
                 return request;
             } else {
                 return new RequestUnknown();

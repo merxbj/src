@@ -50,8 +50,6 @@ public class RobotOkState implements RobotState {
             int damagedBlock = damageRobot(robot);
             throw new RobotDamagedException(damagedBlock);
         }
-
-
     }
 
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {

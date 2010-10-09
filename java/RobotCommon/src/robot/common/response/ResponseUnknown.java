@@ -1,5 +1,5 @@
 /*
- * TcpFormatable
+ * ResponseUnknown
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,14 +18,22 @@
  *
  */
 
-package robot.common;
+package robot.common.response;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface TcpFormatable {
-    public String formatForTcp();
-    public boolean parseParams(String params);
+public class ResponseUnknown extends Response {
+
+    @Override
+    public boolean isEndGame() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public String formatForTcp() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

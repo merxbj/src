@@ -21,6 +21,7 @@
 package robot.server;
 
 import java.net.Socket;
+import robot.common.request.Request;
 
 /**
  *
@@ -30,5 +31,5 @@ import java.net.Socket;
 public interface RobotRequestRouter {
     public void registerProcess(Resumable process, String address);
     public void unregisterProcess(String address);
-    public boolean routeAddress(String address, Socket sock);
+    public boolean routeRequest(String request, String address, Socket sock);
 }

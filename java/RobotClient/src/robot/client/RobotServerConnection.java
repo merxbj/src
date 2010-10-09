@@ -1,5 +1,5 @@
 /*
- * TcpFormatable
+ * RobotServerConnection
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,14 +18,30 @@
  *
  */
 
-package robot.common;
+package robot.client;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface TcpFormatable {
-    public String formatForTcp();
-    public boolean parseParams(String params);
+public class RobotServerConnection {
+
+    public boolean connect() throws UnknownHostException, IOException {
+        Socket sock = new Socket("localhost", 22222);
+        return true;
+    }
+    
+    public boolean connect(InetAddress address, int port) {
+
+    }
+
+    public boolean connect(String address, int port) {
+
+    }
+
 }

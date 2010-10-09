@@ -36,6 +36,12 @@ import java.util.Arrays;
  */
 public class RequestStep extends Request {
 
+    public RequestStep(String adress) {
+    }
+
+    public RequestStep() {
+    }
+
     public String formatForTcp() {
         return new StringBuilder(getAdress()).append(" KROK ").append("\r\n").toString();
     }
