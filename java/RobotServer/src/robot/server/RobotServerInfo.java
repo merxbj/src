@@ -1,5 +1,5 @@
 /*
- * RobotStatus
+ * RobotServerInfo
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -23,6 +23,7 @@ package robot.server;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
+import robot.common.RobotInfo;
 import robot.server.exception.RobotOutOfFieldException;
 
 /**
@@ -30,11 +31,8 @@ import robot.server.exception.RobotOutOfFieldException;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotStatus {
-    private int battery;
-    private int x;
-    private int y;
-    private Direction direction;
+public class RobotServerInfo extends RobotInfo {
+
     private int stepsSoFar;
 
     private static final int MAX_X =  17;
@@ -42,40 +40,9 @@ public class RobotStatus {
     private static final int MIN_X = -17;
     private static final int MIN_Y = -17;
 
-    private static final EnumMap<Direction, Vector> directions;
-    private static final List<Direction> directionRotationOrder;
-    static {
-        directions = new EnumMap<Direction, Vector>(Direction.class);
-        directions.put(Direction.North, new Vector( 0, 1));
-        directions.put(Direction.East,  new Vector( 1, 0));
-        directions.put(Direction.South, new Vector(-1, 0));
-        directions.put(Direction.West,  new Vector( 1, 0));
-
-        directionRotationOrder = Arrays.asList(new Direction[] {Direction.North, Direction.West, Direction.South, Direction.East});
-    }
-
-    public RobotStatus(int battery, int x, int y, Direction direction) {
-        this.battery = battery;
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
+    public RobotServerInfo(int battery, int x, int y, Direction direction) {
+        super(battery, x, y, direction);
         this.stepsSoFar = 0;
-    }
-
-    public int getBattery() {
-        return battery;
-    }
-
-    public void setBattery(int battery) {
-        this.battery = battery;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void move() throws RobotOutOfFieldException {
@@ -98,21 +65,6 @@ public class RobotStatus {
 
     public void setStepsSoFar(int stepsSoFar) {
         this.stepsSoFar = stepsSoFar;
-    }
-
-    private static class Vector {
-
-        int x;
-        int y;
-
-        public Vector(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    public static enum Direction {
-        North, West, South, East;
     }
 
 }

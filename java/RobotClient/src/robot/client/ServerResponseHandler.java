@@ -20,6 +20,7 @@
 
 package robot.client;
 
+import robot.common.exception.*;
 import robot.common.response.ResponseHandler;
 
 /**
@@ -35,44 +36,47 @@ public class ServerResponseHandler implements ResponseHandler {
         this.robot = robot;
     }
 
-    public void handleBatteryEmpty() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleBatteryEmpty() throws RobotBatteryEmptyException {
+        this.robot.getServer().disconnect();
+        throw new RobotBatteryEmptyException("The robot run out of battery!");
     }
 
-    public void handleCannotPickUp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleCannotPickUp() throws RobotCannotPickUpException {
+        throw new RobotCannotPickUpException("Pick up command issued without robot standing on 0,0!");
     }
 
-    public void handleCrash() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleCrash() throws RobotCrashedException {
+        throw new RobotCrashedException("Robot paced out from the field!");
     }
 
-    public void handleCrumbled() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleCrumbled() throws RobotCrumbledException {
+        throw new RobotCrumbledException("The robot attempted to perform such operation which made him crumbled!");
     }
 
-    public void handleDamage(int damagedBlock) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleDamage(int damagedBlock) throws RobotDamagedException {
+        throw new RobotDamagedException("The robot has damaged block!", damagedBlock);
     }
 
     public void handleIdentification(String address) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.robot.setName(address);
     }
 
-    public void handleNoDamage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleNoDamage() throws RobotNoDamageException {
+        throw new RobotNoDamageException("Repair command issued on block that has no damage!");
     }
 
     public void handleOk(int battery, int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.robot.getBat().level = battery;
+        this.robot.getPos().x = x;
+        this.robot.getPos().y = y;
     }
 
     public void handleSuccess(String secretMessage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.robot.setSecretMessage(secretMessage);
     }
 
-    public void handleUnknownRequest() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void handleUnknownRequest() throws RobotUnknownRequestException {
+        throw new RobotUnknownRequestException("Unknown request sent by client! Programmer error?");
     }
 
 }

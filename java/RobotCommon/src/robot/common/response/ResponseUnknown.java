@@ -40,7 +40,7 @@ public class ResponseUnknown extends Response {
     }
 
     public void handle(ResponseHandler handler) throws RobotException {
-        throw new RobotException(new RobotUnknownResponseException());
+        throw new RobotUnknownResponseException();
     }
 
 }

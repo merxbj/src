@@ -48,8 +48,8 @@ public class ClientRequestProcessor implements RequestProcessor {
 
     public Response processRecharge() {
         try {
-            RobotStatus status = robot.recharge();
-            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+            RobotServerInfo info = robot.recharge();
+            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
         } catch (RobotCrumbledException ex) {
             return new ResponseCrumbled();
         } catch (RobotDamagedException ex) {
@@ -59,8 +59,8 @@ public class ClientRequestProcessor implements RequestProcessor {
 
     public Response processRepair(int blockToRepair) {
         try {
-            RobotStatus status = robot.repair(blockToRepair);
-            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+            RobotServerInfo info = robot.repair(blockToRepair);
+            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
         } catch (RobotNoDamageException ex) {
             return new ResponseNoDamage();
         }
@@ -68,8 +68,8 @@ public class ClientRequestProcessor implements RequestProcessor {
 
     public Response processStep() {
         try {
-            RobotStatus status = robot.doStep();
-            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+            RobotServerInfo info = robot.doStep();
+            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
         } catch (RobotCrashedException ex) {
             return new ResponseCrash();
         } catch (RobotBatteryEmptyException ex) {
@@ -83,8 +83,8 @@ public class ClientRequestProcessor implements RequestProcessor {
 
     public Response processTurnLeft() {
         try {
-            RobotStatus status = robot.turnLeft();
-            return new ResponseOk(status.getBattery(), status.getX(), status.getY());
+            RobotServerInfo info = robot.turnLeft();
+            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
         } catch (RobotBatteryEmptyException ex) {
             return new ResponseBatteryEmpty();
         }

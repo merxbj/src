@@ -27,10 +27,12 @@ package robot.client;
  */
 public class SmartRobot {
 
-    Robot robot;
+    private Robot robot;
 
     public SmartRobot(Robot robot) {
         this.robot = robot;
     }
+
+    public stepForward()
 
 }

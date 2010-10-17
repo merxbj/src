@@ -1,5 +1,5 @@
 /*
- * RobotBateryLowException
+ * UnexpectedResponseException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,25 @@
  *
  */
 
-package robot.common.exception;
+package robot.client.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotBatteryEmptyException extends RobotException {
+public class UnexpectedResponseException extends RuntimeException {
 
-    public RobotBatteryEmptyException(Throwable cause) {
-        super(cause);
+    public UnexpectedResponseException(Throwable cause) {
     }
 
-    public RobotBatteryEmptyException(String message, Throwable cause) {
-        super(message, cause);
+    public UnexpectedResponseException(String message, Throwable cause) {
     }
 
-    public RobotBatteryEmptyException(String message) {
-        super(message);
+    public UnexpectedResponseException(String message) {
     }
 
-    public RobotBatteryEmptyException() {
+    public UnexpectedResponseException() {
     }
 
 }

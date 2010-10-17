@@ -1,5 +1,5 @@
 /*
- * RobotBateryLowException
+ * Position
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,14 @@
  *
  */
 
-package robot.common.exception;
+package robot.common;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotBatteryEmptyException extends RobotException {
-
-    public RobotBatteryEmptyException(Throwable cause) {
-        super(cause);
-    }
-
-    public RobotBatteryEmptyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RobotBatteryEmptyException(String message) {
-        super(message);
-    }
-
-    public RobotBatteryEmptyException() {
-    }
-
+public class Position {
+    public int x;
+    public int y;
 }

@@ -25,7 +25,7 @@ package robot.common.exception;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotDamagedException extends Exception {
+public class RobotDamagedException extends RobotException {
     private int damagedBlock;
 
     public RobotDamagedException(Throwable cause, int damagerBlock) {

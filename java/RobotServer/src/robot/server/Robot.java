@@ -30,7 +30,7 @@ import robot.common.exception.*;
 public class Robot {
 
     private String name;
-    private RobotStatus status;
+    private RobotServerInfo info;
     private RobotState currentState;
 
     public Robot(String name) {
@@ -42,34 +42,34 @@ public class Robot {
         int bat = 100;
         int x = (int) Math.floor(Math.random() * 35) - 17;
         int y = (int) Math.floor(Math.random() * 35) - 17;
-        RobotStatus.Direction direction = RobotStatus.Direction.values()[(int) Math.floor(Math.random() * 4)];
+        RobotServerInfo.Direction direction = RobotServerInfo.Direction.values()[(int) Math.floor(Math.random() * 4)];
         
-        this.status = new RobotStatus(bat, x, y, direction);
+        this.info = new RobotServerInfo(bat, x, y, direction);
         this.currentState = new RobotOkState();
     }
 
-    public RobotStatus doStep() throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException {
+    public RobotServerInfo doStep() throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException {
         currentState.doStep(this);
-        return status;
+        return info;
     }
 
-    public RobotStatus turnLeft() throws RobotBatteryEmptyException {
+    public RobotServerInfo turnLeft() throws RobotBatteryEmptyException {
         currentState.turnLeft(this);
-        return status;
+        return info;
     }
 
-    public RobotStatus repair(int blockToRepair) throws RobotNoDamageException {
+    public RobotServerInfo repair(int blockToRepair) throws RobotNoDamageException {
         currentState.repair(this, blockToRepair);
-        return status;
+        return info;
     }
 
     public String pickUp() throws RobotCannotPickUpException {
         return currentState.pickUp(this);
     }
 
-    public RobotStatus recharge() throws RobotCrumbledException, RobotDamagedException {
+    public RobotServerInfo recharge() throws RobotCrumbledException, RobotDamagedException {
         currentState.recharge(this);
-        return status;
+        return info;
     }
 
     public String getName() {
@@ -88,8 +88,8 @@ public class Robot {
         this.currentState = currentState;
     }
 
-    public RobotStatus getStatus() {
-        return this.status;
+    public RobotServerInfo getInfo() {
+        return this.info;
     }
 
 }

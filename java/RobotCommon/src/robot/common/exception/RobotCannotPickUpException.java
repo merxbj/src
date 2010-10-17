@@ -25,7 +25,7 @@ package robot.common.exception;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotCannotPickUpException extends Exception {
+public class RobotCannotPickUpException extends RobotException {
 
     public RobotCannotPickUpException(Throwable cause) {
         super(cause);

@@ -41,10 +41,10 @@ public class RobotDamagedState implements RobotState {
     }
 
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
-        robot.getStatus().turn();
+        robot.getInfo().turn();
 
-        robot.getStatus().setBattery(robot.getStatus().getBattery() - 10);
-        if (robot.getStatus().getBattery() <= 0) {
+        robot.getInfo().setBattery(robot.getInfo().getBattery() - 10);
+        if (robot.getInfo().getBattery() <= 0) {
             throw new RobotBatteryEmptyException();
         }
     }
@@ -53,12 +53,12 @@ public class RobotDamagedState implements RobotState {
         if (damagedBlock != blockToRepair) {
             throw new RobotNoDamageException();
         }
-        robot.getStatus().setStepsSoFar(0);
+        robot.getInfo().setStepsSoFar(0);
         robot.setCurrentState(new RobotOkState());
     }
 
     public String pickUp(Robot robot) throws RobotCannotPickUpException {
-        if (robot.getStatus().getX() != 0 || robot.getStatus().getY() != 0) {
+        if (robot.getInfo().getX() != 0 || robot.getInfo().getY() != 0) {
             throw new RobotCannotPickUpException();
         }
 

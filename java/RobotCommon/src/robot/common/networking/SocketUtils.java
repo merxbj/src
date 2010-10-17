@@ -23,8 +23,9 @@ package robot.common.networking;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
+import java.io.OutputStream;
 
 /**
  *
@@ -33,16 +34,15 @@ import java.net.Socket;
  */
 public class SocketUtils {
 
-    public static String readStringFromSocket(Socket socket) throws IOException {
+    public static String readStringFromStream(InputStream stream) throws IOException {
 
-        InputStreamReader in = new InputStreamReader(socket.getInputStream(), "US-ASCII");
+        InputStreamReader in = new InputStreamReader(stream, "US-ASCII");
         StringBuilder builder = new StringBuilder();
 
         try {
             while (true) {
                 int i = in.read();
                 if (i == -1) {
-                    socket.close();
                     throw new IOException("Unexpected end of stram reached!");
                 }
 
@@ -64,8 +64,8 @@ public class SocketUtils {
         return builder.toString();
     }
 
-    public static void sendStringToSocket(String data, Socket socket) throws IOException {
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+    public static void sendStringToStream(String data, OutputStream stream) throws IOException {
+        DataOutputStream out = new DataOutputStream(stream);
         char[] chars = data.toCharArray();
 
         for (Character ch : chars) {

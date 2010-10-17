@@ -20,7 +20,7 @@
 
 package robot.common.response;
 
-import robot.common.exception.RobotException;
+import robot.common.exception.RobotCrumbledException;
 
 /**
  *
@@ -38,7 +38,7 @@ public class ResponseCrumbled extends Response {
         return true;
     }
 
-    public void handle(ResponseHandler handler) throws RobotException {
+    public void handle(ResponseHandler handler) throws RobotCrumbledException {
         handler.handleCrumbled();
     }
 

@@ -25,7 +25,7 @@ package robot.common.exception;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotUnknownResponseException extends Exception {
+public class RobotUnknownResponseException extends RobotException {
 
     public RobotUnknownResponseException(Throwable cause) {
     }

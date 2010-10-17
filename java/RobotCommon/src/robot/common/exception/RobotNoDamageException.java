@@ -25,7 +25,7 @@ package robot.common.exception;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotNoDamageException extends Exception {
+public class RobotNoDamageException extends RobotException {
 
     public RobotNoDamageException(Throwable cause) {
         super(cause);

@@ -36,8 +36,9 @@ public class Main {
         
         try {
             String secret = robot.findSecret();
+            System.out.println("Secret message found: " + secret);
         } catch (Exception ex) {
-            
+            System.out.println("Failed to retrieve the secret message :-(");
         }
         
     }

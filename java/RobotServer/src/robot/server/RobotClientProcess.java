@@ -24,6 +24,7 @@ import robot.common.request.Request;
 import robot.common.response.Response;
 import java.io.*;
 import java.net.*;
+import robot.common.networking.SocketUtils;
 import robot.common.response.ResponseIdentification;
 import robot.server.exception.InvalidAddressException;
 import robot.server.logging.Logger;
@@ -36,6 +37,8 @@ import robot.server.logging.Logger;
 public class RobotClientProcess implements Runnable, Resumable {
 
     private Socket clientSocket;
+    private InputStream in;
+    private OutputStream out;
     private ClientRequestFactory requestFactory;
     private ClientRequestProcessor requestProcessor;
     RobotRequestRouter router;
@@ -50,6 +53,8 @@ public class RobotClientProcess implements Runnable, Resumable {
 
         try {
 
+            this.in = clientSocket.getInputStream();
+            this.out = clientSocket.getOutputStream();
             log.logMessage("Client connected! Going to send him the robot identification address %s!", robot.getName());
             sendResponseToSocket(new ResponseIdentification(robot.getName()));
 
@@ -58,7 +63,7 @@ public class RobotClientProcess implements Runnable, Resumable {
 
                 try {
                     String rawRequest = readRequestFromSocket();
-                    log.logMessage("Read request message %s from the client!", rawRequest);
+                    log.logMessage("Read request message %s from the client %s!", rawRequest, clientSocket.getInetAddress());
 
                     Request request = requestFactory.parseRequest(rawRequest);
                     log.logRequest(request);
@@ -95,6 +100,8 @@ public class RobotClientProcess implements Runnable, Resumable {
             try {
                 goodBye();
                 if (clientSocket != null) {
+                    in.close();
+                    out.close();
                     clientSocket.close();
                 }
             } catch (Exception ex) {
@@ -121,42 +128,11 @@ public class RobotClientProcess implements Runnable, Resumable {
             return request;
         }
 
-        InputStreamReader in = new InputStreamReader(clientSocket.getInputStream(), "US-ASCII");
-        StringBuilder builder = new StringBuilder();
-
-        try {
-            while (true) {
-                int i = in.read();
-                if (i == -1) {
-                    clientSocket.close();
-                    throw new IOException("Unexpected end of stram reached!");
-                }
-
-                char ch = (char) i;
-                if (ch == '\r') {
-                    ch = (char) in.read();
-                    if (ch == '\n') {
-                        break;
-                    } else {
-                        return "";
-                    }
-                }
-                builder.append(ch);
-            }
-        } catch (EOFException ex) {
-            return "";
-        }
-
-        return builder.toString();
+        return SocketUtils.readStringFromStream(in);
     }
 
     private void sendResponseToSocket(Response response) throws IOException {
-        DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-        char[] chars = response.formatForTcp().toCharArray();
-        
-        for (Character ch : chars) {
-            out.writeChar((int) ch);
-        }
+        SocketUtils.sendStringToStream(response.formatForTcp(), out);
     }
 
     private boolean waitForReconnect(int timeout) throws Exception {
@@ -179,8 +155,17 @@ public class RobotClientProcess implements Runnable, Resumable {
     public boolean resume(Socket newSocket, String lastRequest) {
         if (waiting) {
             synchronized (this) {
-                this.clientSocket = newSocket;
                 this.enforcedRequest = lastRequest;
+                this.clientSocket = newSocket;
+
+                try {
+                    this.in = clientSocket.getInputStream();
+                    this.out = clientSocket.getOutputStream();
+                } catch (IOException ex) {
+                    this.log.logException(new Exception("Error while getting I/O streams!", ex));
+                    return false;
+                }
+
                 this.notify();
                 return true;
             }

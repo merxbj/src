@@ -21,6 +21,8 @@
 package robot.client;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import robot.common.networking.SocketUtils;
@@ -37,6 +39,8 @@ public class RobotServerConnection {
     private InetAddress address;
     private int port;
     private Socket socket;
+    private InputStream in;
+    private OutputStream out;
     private ServerResponseFactory factory;
 
     public RobotServerConnection(InetAddress address, int port) {
@@ -47,13 +51,23 @@ public class RobotServerConnection {
 
     public Response connect() throws IOException {
         this.socket = new Socket(address, port);
-        String rawResponse = SocketUtils.readStringFromSocket(socket);
+        this.in = socket.getInputStream();
+        this.out = socket.getOutputStream();
+        String rawResponse = SocketUtils.readStringFromStream(in);
         return factory.parseResponse(rawResponse);
     }
 
+    public void disconnect() {
+        try {
+            this.in.close();
+            this.out.close();
+            this.socket.close();
+        } catch (Exception ex) {}
+    }
+
     public Response processRequest(Request req) throws IOException {
-        SocketUtils.sendStringToSocket(req.formatForTcp(), socket);
-        String rawResponse = SocketUtils.readStringFromSocket(socket);
+        SocketUtils.sendStringToStream(req.formatForTcp(), out);
+        String rawResponse = SocketUtils.readStringFromStream(in);
         return factory.parseResponse(rawResponse);
     }
 

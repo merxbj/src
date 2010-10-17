@@ -20,6 +20,8 @@
 
 package robot.common.response;
 
+import robot.common.exception.*;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -29,11 +31,11 @@ public interface ResponseHandler {
     public void handleOk(int battery, int x, int y);
     public void handleIdentification(String address);
     public void handleSuccess(String secretMessage);
-    public void handleUnknownRequest();
-    public void handleCrash();
-    public void handleBatteryEmpty();
-    public void handleCannotPickUp();
-    public void handleDamage(int damagedBlock);
-    public void handleNoDamage();
-    public void handleCrumbled();
+    public void handleUnknownRequest() throws RobotUnknownRequestException;
+    public void handleCrash() throws RobotCrashedException;
+    public void handleBatteryEmpty() throws RobotBatteryEmptyException;
+    public void handleCannotPickUp() throws RobotCannotPickUpException;
+    public void handleDamage(int damagedBlock) throws RobotDamagedException;
+    public void handleNoDamage() throws RobotNoDamageException;
+    public void handleCrumbled() throws RobotCrumbledException;
 }
