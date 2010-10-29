@@ -23,6 +23,7 @@ package pal;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,12 +52,12 @@ public class Main {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(reader.readLine());//pocet budov
         int I = Integer.parseInt(reader.readLine());//pocet pripojeni
-        List<Hrana> pole = new ArrayList<Hrana>();
+        List<Hrana> pole = new ArrayList<Hrana>(1000);
         int odkud =-1;
         int kam =-1;
         int cena =-1;
 
-        while (odkud !=0 || kam!=0 || cena!=0){
+        while (odkud !=0 || kam!=0 || cena!=0) {
             StringTokenizer st = new StringTokenizer(reader.readLine());
             odkud = Integer.parseInt(st.nextToken());
             kam = Integer.parseInt(st.nextToken());
@@ -73,10 +74,6 @@ public class Main {
         }
 
         Collections.sort(pole);
-        for (int i = 1; i < pole.size(); i++) {
-            pole.remove(i);
-        }
-
         for(Hrana h : pole) {
             System.out.println(h);
         }
@@ -85,14 +82,53 @@ public class Main {
 
     public static class Hrana implements Comparable<Hrana> {
 
-        int odkud;
-        int kam;
-        int cena;
+        Integer odkud;
+        Integer kam;
+        Integer cena;
 
         @Override
         public int compareTo(Hrana o) {
-            Integer objektovaCena = this.cena;
-            return objektovaCena.compareTo(o.cena);
+            int compare = cena.compareTo(o.cena);
+            if (compare != 0) {
+                return compare;
+            }
+
+            compare = odkud.compareTo(o.odkud);
+            if (compare != 0) {
+                return compare;
+            }
+            
+            return kam.compareTo(o.kam);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Hrana other = (Hrana) obj;
+            if (this.odkud != other.odkud) {
+                return false;
+            }
+            if (this.kam != other.kam) {
+                return false;
+            }
+            if (this.cena != other.cena) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 71 * hash + this.odkud;
+            hash = 71 * hash + this.kam;
+            hash = 71 * hash + this.cena;
+            return hash;
         }
 
         public Hrana(int odkud, int kam, int cena) {
