@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,46 +56,43 @@ public class Main {
 
         Collections.sort(pole);
         for (Hrana h : pole) {
-            System.out.println(h);
+            //System.out.println(h);
         }
         //kruskal
         //Nastavim do poleVrcholu vsem vrcholum koren na -1, vytvorim tedy N koster, ty pak budu spojovat
         List<Vrchol> poleVrcholu = new ArrayList<Vrchol>(N);
-        for (int j = 0; j < N; j++) {
-            poleVrcholu.add(new Vrchol(j, -1));
+        for (int j = 1; j <= N; j++) { // Vrcholy se cisluji od 1ky
+            poleVrcholu.add(new Vrchol(j, null));
         }
 
         int pocStruktur = N;
         int i = 0;
 
         int cenaCelkem = 0;
-        while (pocStruktur != I) {
-            int koren1 = findKoren(poleVrcholu, pole.get(i).odkud);
-            int koren2 = findKoren(poleVrcholu, pole.get(i).kam);
-            System.out.println(koren1);
-            System.out.println(koren2);
-            if (koren1 != koren2) {
-                if (koren1 < koren2) {
-                    poleVrcholu.get(koren2).koren = poleVrcholu.get(koren1).koren;
+        while (pocStruktur > I) {
+            Vrchol koren1 = najdiKoren(poleVrcholu.get(pole.get(i).odkud - 1));
+            Vrchol koren2 = najdiKoren(poleVrcholu.get(pole.get(i).kam - 1));
+            if (koren1.cislo != koren2.cislo) {
+                if (koren1.cislo < koren2.cislo) {
+                    koren2.rodic = koren1;
                 } else {
-                    poleVrcholu.get(koren1).koren = poleVrcholu.get(koren2).koren;
+                    koren1.rodic = koren2;
                 }
                 cenaCelkem = cenaCelkem + pole.get(i).cena;
-                //System.out.println(pole.get(i).cena);
+                System.out.println(pole.get(i));
                 pocStruktur--;
             }
             i++;
         }
-        // System.out.print(cenaCelkem);
+        System.out.println(cenaCelkem);
 
     }
 
-    public static int findKoren(List<Vrchol> poleVrcholu, int pozice) {
-        Vrchol bod = poleVrcholu.get(pozice);
-        while (bod.koren != -1) {
-            bod.cislo = bod.koren;
+    public static Vrchol najdiKoren(Vrchol bod) {
+        while (bod.rodic != null) {
+            bod = bod.rodic;
         }
-        return bod.cislo;
+        return bod;
     }
 
     public static class Hrana implements Comparable<Hrana> {
@@ -107,12 +103,12 @@ public class Main {
 
         @Override
         public int compareTo(Hrana o) {
-            int compare = odkud.compareTo(o.odkud);
+            int compare = cena.compareTo(o.cena);
             if (compare != 0) {
                 return compare;
             }
 
-            compare = cena.compareTo(o.cena);
+            compare = odkud.compareTo(o.odkud);
             if (compare != 0) {
                 return compare;
             }
@@ -165,11 +161,11 @@ public class Main {
     public static class Vrchol {
 
         Integer cislo;
-        Integer koren;
+        Vrchol rodic;
 
-        public Vrchol(int cislo, int koren) {
+        public Vrchol(int cislo, Vrchol rodic) {
             this.cislo = cislo;
-            this.koren = koren;
+            this.rodic = rodic;
         }
     }
 
