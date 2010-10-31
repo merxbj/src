@@ -2,7 +2,6 @@ package pal;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  *
@@ -25,7 +24,7 @@ public class Main {
         }
     }
 
-    public static String sit() throws Exception {
+    public final static String sit() throws Exception {
         StringBuilder builder = new StringBuilder(4000000);
         BufferedInputStream stream = new BufferedInputStream(System.in, 50 * 1024 * 1024); // 50 MB of file size?
         BufferedReader reader = new BufferedReader(stream);
@@ -50,8 +49,8 @@ public class Main {
             }
         }
 
-        Arrays.sort(poleHran, 0, poleHranNacteno);
-        //quicksort(poleHran, 0, poleHranNacteno - 1);
+        //Arrays.sort(poleHran, 0, poleHranNacteno);
+        quicksort(poleHran, 0, poleHranNacteno - 1);
 
         //kruskal
         //Nastavim do poleVrcholu vsem vrcholum koren na -1, vytvorim tedy N koster, ty pak budu spojovat
@@ -89,14 +88,14 @@ public class Main {
         return builder.toString();
     }
 
-    public static Vrchol najdiKoren(Vrchol bod) {
+    public final static Vrchol najdiKoren(Vrchol bod) {
         while (bod.rodic != null) {
             bod = bod.rodic;
         }
         return bod;
     }
 
-    public static String formatujKoreny(Vrchol[] vrcholy, int maxKorenu) {
+    public final static String formatujKoreny(Vrchol[] vrcholy, int maxKorenu) {
         StringBuilder builder = new StringBuilder(vrcholy.length * 10);
         int korenuCelkem = 0;
 
@@ -116,24 +115,25 @@ public class Main {
         return builder.toString();
     }
 
-    public static class Hrana implements Comparable<Hrana> {
+    public final static class Hrana implements Comparable<Hrana> {
 
-        Integer odkud;
-        Integer kam;
-        Integer cena;
+        int odkud;
+        int kam;
+        int cena;
 
         @Override
-        public int compareTo(Hrana o) {
-            int compare = cena.compareTo(o.cena);
-            if (compare == 0) {
-                compare = odkud.compareTo(o.odkud);
+        public final int compareTo(Hrana o) {
+            int compare = (cena < o.cena) ? -1 : (cena == o.cena) ? 0 : 1;
+            if (compare != 0) {
+                return compare;
             }
 
-            if (compare == 0) {
-                compare = kam.compareTo(o.kam);
+            compare = (odkud < o.odkud) ? -1 : (odkud == o.odkud) ? 0 : 1;
+            if (compare != 0) {
+                return compare;
             }
 
-            return compare;
+            return (kam < o.kam) ? -1 : (kam == o.kam) ? 0 : 1;
         }
 
         public Hrana(int odkud, int kam, int cena) {
@@ -143,14 +143,14 @@ public class Main {
         }
 
         @Override
-        public String toString() {
+        public final String toString() {
             return String.format("%d %d %d\n", odkud, kam, cena);
         }
     }
 
     public static class Vrchol {
-        Integer cislo;
-        Vrchol rodic;
+        private final int cislo;
+        public Vrchol rodic;
 
         public Vrchol(int cislo, Vrchol rodic) {
             this.cislo = cislo;
@@ -158,7 +158,7 @@ public class Main {
         }
     }
 
-    private static void quicksort(Hrana[] hrany, int low, int high) {
+    private final static void quicksort(Hrana[] hrany, int low, int high) {
         int i = low, j = high;
         Hrana pivot = hrany[low + (high - low) / 2];
 
@@ -183,13 +183,13 @@ public class Main {
         }
     }
 
-    private static void prohod(Hrana[] hrany, int i, int j) {
+    private static final void prohod(Hrana[] hrany, int i, int j) {
         Hrana temp = hrany[i];
         hrany[i] = hrany[j];
         hrany[j] = temp;
     }
 
-    private static class BufferedReader {
+    private final static class BufferedReader {
         private byte [] buffer = null;
         private int bufferPos = 0;
         private int bufferSize = 0;
@@ -200,7 +200,7 @@ public class Main {
             this.buffer = new byte[50 * 1024 * 1024];
         }
 
-        public int nextInt() throws Exception {
+        public final int nextInt() throws Exception {
             byte ascii = read();
             int cislo = 0;
             while ((ascii != '\n') && (ascii != '\r') && (ascii != ' ')) {
@@ -211,7 +211,7 @@ public class Main {
             return cislo;
         }
 
-        public byte read() throws Exception{
+        public final byte read() throws Exception {
             if (bufferSize <= bufferPos) {
                 int available = stream.available();
                 bufferSize = stream.read(buffer, 0, available);
@@ -220,7 +220,7 @@ public class Main {
             return buffer[bufferPos++];
         }
 
-        private int asciiToInt(byte ascii) throws Exception {
+        private final int asciiToInt(byte ascii) throws Exception {
             int cislice = ascii - 48;
             if (cislice < 0) {
                 throw new Exception("Invalid input");
