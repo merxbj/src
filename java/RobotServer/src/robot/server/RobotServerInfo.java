@@ -20,10 +20,10 @@
 
 package robot.server;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
+import robot.common.Direction;
+import robot.common.Position;
 import robot.common.RobotInfo;
+import robot.common.Vector;
 import robot.server.exception.RobotOutOfFieldException;
 
 /**
@@ -46,17 +46,17 @@ public class RobotServerInfo extends RobotInfo {
     }
 
     public void move() throws RobotOutOfFieldException {
-        Vector vec = directions.get(direction);
-        x = x + vec.x;
-        y = y + vec.y;
-        if (x < MIN_X || x > MAX_X || y < MIN_Y || y > MAX_Y) {
-            throw new RobotOutOfFieldException(x,y);
+        Vector vec = Direction.toVector(direction);
+        Position pos = getPosition();
+        pos.x = pos.x + vec.x;
+        pos.y = pos.y + vec.y;
+        if (pos.x < MIN_X || pos.x > MAX_X || pos.y < MIN_Y || pos.y > MAX_Y) {
+            throw new RobotOutOfFieldException(pos.x, pos.y);
         }
     }
 
     public void turn() {
-        int directionIndex = directionRotationOrder.indexOf(direction);
-        direction = directionRotationOrder.get((directionIndex + 1) % 4);
+        direction = Direction.getNextDirection(direction);
     }
 
     public int getStepsSoFar() {

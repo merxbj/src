@@ -20,6 +20,7 @@
 
 package robot.server;
 
+import robot.common.Direction;
 import robot.common.exception.*;
 
 /**
@@ -42,7 +43,7 @@ public class Robot {
         int bat = 100;
         int x = (int) Math.floor(Math.random() * 35) - 17;
         int y = (int) Math.floor(Math.random() * 35) - 17;
-        RobotServerInfo.Direction direction = RobotServerInfo.Direction.values()[(int) Math.floor(Math.random() * 4)];
+        Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
         
         this.info = new RobotServerInfo(bat, x, y, direction);
         this.currentState = new RobotOkState();

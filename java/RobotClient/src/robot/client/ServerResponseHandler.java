@@ -66,7 +66,7 @@ public class ServerResponseHandler implements ResponseHandler {
     }
 
     public void handleOk(int battery, int x, int y) {
-        this.robot.getBat().level = battery;
+        this.robot.getBattery().level = battery;
         this.robot.getPos().x = x;
         this.robot.getPos().y = y;
     }

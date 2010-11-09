@@ -20,6 +20,17 @@
 
 package robot.client;
 
+import robot.client.exception.UnexpectedException;
+import robot.common.Direction;
+import robot.common.Position;
+import robot.common.RobotInfo;
+import robot.common.exception.RobotBatteryEmptyException;
+import robot.common.exception.RobotCannotPickUpException;
+import robot.common.exception.RobotCrashedException;
+import robot.common.exception.RobotCrumbledException;
+import robot.common.exception.RobotDamagedException;
+import robot.common.exception.RobotNoDamageException;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -33,6 +44,121 @@ public class SmartRobot {
         this.robot = robot;
     }
 
-    public stepForward()
+    public RobotInfo initialize() {
+        this.robot.initialize();
+        turn();
+        Position initialPosition = this.robot.getPos();
+        step();
+        Position afterFirstStep = this.robot.getPos();
+        Direction direction = determineDirection(initialPosition, afterFirstStep);
+        this.robot.setDirection(direction);
+        return this.robot.getInfo();
+    }
+
+    public void stepUp() {
+        turn(Direction.North);
+        step();
+    }
+
+    public void stepLeft() {
+        turn(Direction.West);
+        step();
+    }
+
+    public void stepRight() {
+        turn(Direction.East);
+        step();
+    }
+
+    public void stepDown() {
+        turn(Direction.South);
+        step();
+    }
+
+    public String pickUp() {
+        try {
+            return robot.pickUp();
+        } catch (RobotCannotPickUpException ex) {
+            throw new UnexpectedException("Robot tried to pick up the secret message on place where it isn't allowed! Connection lost!", ex);
+        }
+    }
+
+    private void turn(Direction direction) {
+        Direction currentDir = robot.getDirection();
+        while (!currentDir.equals(direction)) {
+            turn();
+            currentDir = Direction.getNextDirection(currentDir);
+        }
+    }
+
+    private void turn() {
+        RobotInfo info = null;
+        do {
+            try {
+                batteryCheck();
+                info = robot.turnLeft();
+            } catch (RobotBatteryEmptyException ex) {
+                throw new UnexpectedException("Robot run out of battery while trying to turn left! Connection lost!", ex);
+            }
+        } while (info == null);
+    }
+
+    private void step() {
+        RobotInfo info = null;
+        do {
+            try {
+                batteryCheck();
+                info = robot.doStep();
+            } catch (RobotBatteryEmptyException ex) {
+                throw new UnexpectedException("Robot run out of batter while trying to do a step! Connection lost!", ex);
+            } catch (RobotCrashedException ex) {
+                throw new UnexpectedException("Robot stepped out of the field! Connection lost!", ex);
+            } catch (RobotCrumbledException ex) {
+                throw new UnexpectedException("Robot crumbled while trying to do a step! Connection lost!", ex);
+            } catch (RobotDamagedException ex) {
+                repair(ex.getDamagedBlock());
+            }
+        } while (info == null);
+    }
+
+    private void recharge() {
+        boolean recharged = false;
+        do {
+            try {
+                robot.recharge();
+                recharged = true;
+            } catch (RobotDamagedException ex) {
+                repair(ex.getDamagedBlock());
+            } catch (RobotCrumbledException ex) {
+                throw new UnexpectedException("Robot crumbled during recharging! Connection lost!", ex);
+            }
+        } while (!recharged);
+    }
+
+    private void repair(int blockToRepair) {
+        boolean repaired = false;
+        do {
+            try {
+                robot.repair(blockToRepair);
+                repaired = true;
+            } catch (RobotNoDamageException ex) {
+                throw new UnexpectedException("Attempted to repair block, which is not damaged! Unable to recover!", ex);
+            }
+        } while (!repaired);
+    }
+
+    private void batteryCheck() {
+        if (robot.getBattery().level <= 10) {
+            recharge();
+        }
+    }
+
+    private Direction determineDirection(Position from, Position to) {
+        Direction dir = Direction.fromVector(to.substract(from));
+        if (dir == null || dir.equals(Direction.Unknown)) {
+            throw new UnexpectedException("Unable to determine the robot direction! Unable to recover!");
+        }
+        return dir;
+    }
 
 }

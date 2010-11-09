@@ -24,7 +24,7 @@ public class Main {
         }
     }
 
-    public final static String sit() throws Exception {
+    public static String sit() throws Exception {
         StringBuilder builder = new StringBuilder(4000000);
         BufferedInputStream stream = new BufferedInputStream(System.in, 50 * 1024 * 1024); // 50 MB of file size?
         BufferedReader reader = new BufferedReader(stream);
@@ -88,14 +88,14 @@ public class Main {
         return builder.toString();
     }
 
-    public final static Vrchol najdiKoren(Vrchol bod) {
+    public static Vrchol najdiKoren(Vrchol bod) {
         while (bod.rodic != null) {
             bod = bod.rodic;
         }
         return bod;
     }
 
-    public final static String formatujKoreny(Vrchol[] vrcholy, int maxKorenu) {
+    public static String formatujKoreny(Vrchol[] vrcholy, int maxKorenu) {
         StringBuilder builder = new StringBuilder(vrcholy.length * 10);
         int korenuCelkem = 0;
 
@@ -158,7 +158,7 @@ public class Main {
         }
     }
 
-    private final static void quicksort(Hrana[] hrany, int low, int high) {
+    private static void quicksort(Hrana[] hrany, int low, int high) {
         int i = low, j = high;
         Hrana pivot = hrany[low + (high - low) / 2];
 
@@ -183,7 +183,7 @@ public class Main {
         }
     }
 
-    private static final void prohod(Hrana[] hrany, int i, int j) {
+    private static void prohod(Hrana[] hrany, int i, int j) {
         Hrana temp = hrany[i];
         hrany[i] = hrany[j];
         hrany[j] = temp;
@@ -220,14 +220,12 @@ public class Main {
             return buffer[bufferPos++];
         }
 
-        private final int asciiToInt(byte ascii) throws Exception {
+        private int asciiToInt(byte ascii) throws Exception {
             int cislice = ascii - 48;
             if (cislice < 0) {
                 throw new Exception("Invalid input");
             }
             return cislice;
         }
-
-
     }
 }

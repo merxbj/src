@@ -49,7 +49,7 @@ public class ClientRequestProcessor implements RequestProcessor {
     public Response processRecharge() {
         try {
             RobotServerInfo info = robot.recharge();
-            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
+            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
         } catch (RobotCrumbledException ex) {
             return new ResponseCrumbled();
         } catch (RobotDamagedException ex) {
@@ -60,7 +60,7 @@ public class ClientRequestProcessor implements RequestProcessor {
     public Response processRepair(int blockToRepair) {
         try {
             RobotServerInfo info = robot.repair(blockToRepair);
-            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
+            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
         } catch (RobotNoDamageException ex) {
             return new ResponseNoDamage();
         }
@@ -69,7 +69,7 @@ public class ClientRequestProcessor implements RequestProcessor {
     public Response processStep() {
         try {
             RobotServerInfo info = robot.doStep();
-            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
+            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
         } catch (RobotCrashedException ex) {
             return new ResponseCrash();
         } catch (RobotBatteryEmptyException ex) {
@@ -84,7 +84,7 @@ public class ClientRequestProcessor implements RequestProcessor {
     public Response processTurnLeft() {
         try {
             RobotServerInfo info = robot.turnLeft();
-            return new ResponseOk(info.getBattery(), info.getX(), info.getY());
+            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
         } catch (RobotBatteryEmptyException ex) {
             return new ResponseBatteryEmpty();
         }

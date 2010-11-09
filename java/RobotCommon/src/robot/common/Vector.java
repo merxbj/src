@@ -1,5 +1,5 @@
 /*
- * ResponseCannotPickUp
+ * Vector
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,50 @@
  *
  */
 
-package robot.common.response;
-
-import robot.common.exception.RobotException;
+package robot.common;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseCannotPickUp extends Response {
+public class Vector {
+    public int x;
+    public int y;
 
-    public String formatForTcp() {
-        return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
+    public Vector(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Vector substract(Vector other) {
+        return new Vector(this.x - other.x, this.y - other.y);
     }
 
     @Override
-    public boolean isEndGame() {
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vector other = (Vector) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
         return true;
     }
 
-    public void handle(ResponseHandler handler) throws RobotException {
-        handler.handleCannotPickUp();
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + this.x;
+        hash = 89 * hash + this.y;
+        return hash;
     }
 
 }

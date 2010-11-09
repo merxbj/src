@@ -17,8 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package robot.client.console;
+package robot.client.stress;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import robot.client.*;
 
 /**
@@ -30,17 +32,19 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Logger log = Logger.getAnonymousLogger();
+
         CommandLine cl = CommandLine.parse(args);
         RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
         AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
         
         try {
             String secret = robot.findSecret();
-            System.out.println("Secret message found: " + secret);
+            log.log(Level.FINE, "Secret message found: {0}", secret);
         } catch (Exception ex) {
-            System.out.println("Failed to retrieve the secret message :-(");
+            log.log(Level.WARNING, "Failed to retrieve the secret message :-(");
+            log.log(Level.SEVERE, "Exception occured!", ex);
         }
-        
     }
 
 }

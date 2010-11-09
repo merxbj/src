@@ -20,9 +20,7 @@
 
 package robot.common;
 
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 
 /**
  *
@@ -34,22 +32,13 @@ public class RobotInfo {
     protected Position position;
     protected Direction direction;
 
-    protected static final EnumMap<Direction, Vector> directions;
-    protected static final List<Direction> directionRotationOrder;
-    static {
-        directions = new EnumMap<Direction, Vector>(Direction.class);
-        directions.put(Direction.North, new Vector( 0, 1));
-        directions.put(Direction.East,  new Vector( 1, 0));
-        directions.put(Direction.South, new Vector(-1, 0));
-        directions.put(Direction.West,  new Vector( 1, 0));
-
-        directionRotationOrder = Arrays.asList(new Direction[] {Direction.North, Direction.West, Direction.South, Direction.East});
+    public RobotInfo() {
+        this(0, 0, 0, Direction.Unknown);
     }
 
     public RobotInfo(int battery, int x, int y, Direction direction) {
-        this.battery.level = battery;
-        this.position.x = x;
-        this.position.y = y;
+        this.battery = new Battery(battery);
+        this.position = new Position(x, y);
         this.direction = direction;
     }
 
@@ -61,19 +50,12 @@ public class RobotInfo {
         return this.position;
     }
 
-    protected static class Vector {
-
-        int x;
-        int y;
-
-        public Vector(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+    public Direction getDirection() {
+        return direction;
     }
 
-    public static enum Direction {
-        North, West, South, East;
+    public void setDirection(Direction newDirection) {
+        this.direction = newDirection;
     }
 
 }

@@ -23,6 +23,10 @@ package robot.client;
 import java.io.IOException;
 import robot.client.exception.UnexpectedException;
 import robot.client.exception.UnexpectedResponseException;
+import robot.common.Battery;
+import robot.common.Direction;
+import robot.common.Position;
+import robot.common.RobotInfo;
 import robot.common.exception.*;
 import robot.common.response.*;
 import robot.common.request.*;
@@ -36,17 +40,17 @@ public class Robot {
 
     private RobotServerConnection server;
     private ServerResponseHandler handler;
-    String name;
-    String secretMessage;
-    Position pos;
-    Battery bat;
+    private String name;
+    private String secretMessage;
+    private RobotInfo info;
 
     public Robot(RobotServerConnection server) {
         this.server = server;        
         this.handler = new ServerResponseHandler(this);
-        this.bat = new Battery();
-        this.pos = new Position();
+        this.info = new RobotInfo();
+    }
 
+    public void initialize() {
         try {
             Response res = this.server.connect();
             res.handle(handler);
@@ -57,10 +61,11 @@ public class Robot {
         }
     }
 
-    public void doStep() throws RobotCrashedException, RobotCrumbledException, RobotBatteryEmptyException, RobotDamagedException {
+    public RobotInfo doStep() throws RobotCrashedException, RobotCrumbledException, RobotBatteryEmptyException, RobotDamagedException {
         try {
             Response res = server.processRequest(new RequestStep(name));
             res.handle(handler);
+            return info;
         } catch (RobotCrumbledException ex) {
             throw ex;
         } catch (RobotCrashedException ex) {
@@ -76,10 +81,11 @@ public class Robot {
         }
     }
 
-    public void turnLeft() throws RobotBatteryEmptyException {
+    public RobotInfo turnLeft() throws RobotBatteryEmptyException {
         try {
             Response res = server.processRequest(new RequestTurnLeft(name));
             res.handle(handler);
+            return this.info;
         } catch (RobotBatteryEmptyException ex) {
             throw ex;
         } catch (RobotException ex) {
@@ -139,21 +145,12 @@ public class Robot {
         this.secretMessage = secretMessage;
     }
 
-    public Battery getBat() {
-        return bat;
+    public Battery getBattery() {
+        return this.info.getBattery();
     }
 
     public Position getPos() {
-        return pos;
-    }
-
-    public class Position {
-        public int x = 0;
-        public int y = 0;
-    }
-
-    public class Battery {
-        public int level = 100;
+        return this.info.getPosition();
     }
 
     public String getName() {
@@ -166,6 +163,18 @@ public class Robot {
 
     public RobotServerConnection getServer() {
         return server;
+    }
+
+    public Direction getDirection() {
+        return this.info.getDirection();
+    }
+
+    public RobotInfo getInfo() {
+        return info;
+    }
+
+    public void setDirection(Direction direction) {
+        this.info.setDirection(direction);
     }
 
 }

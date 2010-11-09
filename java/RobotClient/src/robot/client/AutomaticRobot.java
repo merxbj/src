@@ -20,6 +20,8 @@
 
 package robot.client;
 
+import robot.common.RobotInfo;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -34,7 +36,31 @@ public class AutomaticRobot {
     }
 
     public String findSecret() {
-        return "";
+        RobotInfo info = robot.initialize();
+
+        int xPos = info.getPosition().x;
+        while (xPos != 0) {
+            if (xPos > 0) {
+                robot.stepLeft();
+                xPos--;
+            } else {
+                robot.stepRight();
+                xPos++;
+            }
+        }
+
+        int yPos = info.getPosition().y;
+        while (yPos != 0) {
+            if (yPos > 0) {
+                robot.stepDown();
+                yPos--;
+            } else {
+                robot.stepUp();
+                yPos++;
+            }
+        }
+
+        return robot.pickUp();
     }
 
 }

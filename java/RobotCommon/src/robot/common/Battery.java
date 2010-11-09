@@ -27,4 +27,9 @@ package robot.common;
  */
 public class Battery {
     public int level;
+
+    public Battery(int level) {
+        this.level = level;
+    }
+    
 }

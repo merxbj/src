@@ -40,8 +40,8 @@ public class RobotOkState implements RobotState {
             throw new RobotCrashedException(ex);
         }
 
-        info.setBattery(info.getBattery() - 10);
-        if (info.getBattery() <= 0) {
+        info.getBattery().level -= 10;
+        if (info.getBattery().level <= 0) {
             throw new RobotBatteryEmptyException();
         }
 
@@ -55,8 +55,8 @@ public class RobotOkState implements RobotState {
     public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
         robot.getInfo().turn();
 
-        robot.getInfo().setBattery(robot.getInfo().getBattery() - 10);
-        if (robot.getInfo().getBattery() <= 0) {
+        robot.getInfo().getBattery().level -= 10;
+        if (robot.getInfo().getBattery().level <= 0) {
             throw new RobotBatteryEmptyException();
         }
     }
@@ -66,7 +66,7 @@ public class RobotOkState implements RobotState {
     }
 
     public String pickUp(Robot robot) throws RobotCannotPickUpException {
-        if (robot.getInfo().getX() != 0 || robot.getInfo().getY() != 0) {
+        if (robot.getInfo().getPosition().x != 0 || robot.getInfo().getPosition().y != 0) {
             throw new RobotCannotPickUpException();
         }
 
@@ -77,10 +77,10 @@ public class RobotOkState implements RobotState {
         boolean robotDamaged = (Math.random() < 0.5);
         if (robotDamaged) {
             int damagedBlock = damageRobot(robot);
-            robot.getInfo().setBattery(1);
+            robot.getInfo().getBattery().level = 1;
             throw new RobotDamagedException(damagedBlock);
         }
-        robot.getInfo().setBattery(100);
+        robot.getInfo().getBattery().level = 100;
     }
 
     private int damageRobot(Robot robot) {

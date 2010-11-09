@@ -25,7 +25,10 @@ package robot.common;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Position {
-    public int x;
-    public int y;
+public class Position extends Vector {
+
+    public Position(int x, int y) {
+        super(x,y);
+    }
+    
 }
