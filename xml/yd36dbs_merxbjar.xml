@@ -69,7 +69,11 @@
         pracovních úkolů se může dostat do jednoho nebo více (Work_Item_Build)
         buildů (Build). V určitém okamžiku, kdy se build stane stabilním je
         možné tento povýšit na doručitelný balíček (Package) s označením verze
-        vydání.</para>
+        vydání. Systém obsahuje smyčku User - Assignment - Work_Item -
+        Involvment - Project - Managed by - Project_User - Manage - User. Je
+        tedy potřeba zajistit entitě Work_Item integritní omezení, které
+        zajistí, že pracovní úkol pro určitý projekt nebude přiřazen
+        uživateli, který tento nemá na starosti.</para>
       </dm_discussion>
     </data_model>
 
