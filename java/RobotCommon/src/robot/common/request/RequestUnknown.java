@@ -32,7 +32,8 @@ import robot.common.response.ResponseUnknownRequest;
  */
 public class RequestUnknown extends Request {
 
-    public RequestUnknown(String adress) {
+    public RequestUnknown(String address) {
+        super(address);
     }
 
     public RequestUnknown() {

@@ -33,15 +33,15 @@ import robot.common.TcpFormatable;
  */
 public abstract class Request implements TcpFormatable, Processable, Cloneable {
 
-    protected String adress;
+    protected String address;
     protected List<Response> supportedResponses;
 
     public Request() {
         this("/nobody/");
     }
 
-    public Request(String adress) {
-        this.adress = adress;
+    public Request(String address) {
+        this.address = address;
     }
 
     @Override
@@ -71,11 +71,11 @@ public abstract class Request implements TcpFormatable, Processable, Cloneable {
     }
 
     public String getAdress() {
-        return adress;
+        return address;
     }
 
     public void setAdress(String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     protected boolean isResponseSupported(Response response) {

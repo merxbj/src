@@ -20,6 +20,8 @@
 
 package robot.client;
 
+import robot.common.Battery;
+import robot.common.Position;
 import robot.common.exception.*;
 import robot.common.response.ResponseHandler;
 
@@ -66,9 +68,8 @@ public class ServerResponseHandler implements ResponseHandler {
     }
 
     public void handleOk(int battery, int x, int y) {
-        this.robot.getBattery().level = battery;
-        this.robot.getPos().x = x;
-        this.robot.getPos().y = y;
+        this.robot.setBattery(new Battery(battery));
+        this.robot.setPos(new Position(x,y));
     }
 
     public void handleSuccess(String secretMessage) {

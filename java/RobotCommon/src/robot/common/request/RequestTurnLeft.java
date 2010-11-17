@@ -31,7 +31,8 @@ import java.util.Arrays;
  */
 public class RequestTurnLeft extends Request {
 
-    public RequestTurnLeft(String adress) {
+    public RequestTurnLeft(String address) {
+        super(address);
     }
 
     public RequestTurnLeft() {

@@ -20,7 +20,6 @@
 
 package robot.common.networking;
 
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,12 +64,7 @@ public class SocketUtils {
     }
 
     public static void sendStringToStream(String data, OutputStream stream) throws IOException {
-        DataOutputStream out = new DataOutputStream(stream);
-        char[] chars = data.toCharArray();
-
-        for (Character ch : chars) {
-            out.writeChar((int) ch);
-        }
+        stream.write(data.getBytes());
     }
 
 }

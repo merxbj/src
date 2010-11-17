@@ -146,11 +146,22 @@ public class Robot {
     }
 
     public Battery getBattery() {
-        return this.info.getBattery();
+        return new Battery(this.info.getBattery().level);
+    }
+
+    public void setBattery(Battery battery) {
+        this.info.getBattery().level = battery.level;
     }
 
     public Position getPos() {
-        return this.info.getPosition();
+        Position pos = this.info.getPosition();
+        return new Position(pos.x, pos.y);
+    }
+
+    public void setPos(Position position) {
+        Position pos = this.info.getPosition();
+        pos.x = position.x;
+        pos.y = position.y;
     }
 
     public String getName() {

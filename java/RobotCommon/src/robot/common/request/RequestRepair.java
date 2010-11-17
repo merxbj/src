@@ -35,8 +35,8 @@ public class RequestRepair extends Request {
 
     private int blockToRepair;
 
-    public RequestRepair(String adress, int blockToRepair) {
-        super(adress);
+    public RequestRepair(String address, int blockToRepair) {
+        super(address);
         this.blockToRepair = blockToRepair;
     }
 
@@ -49,7 +49,7 @@ public class RequestRepair extends Request {
     }
 
     public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" ZVEDNI ").append(blockToRepair).append("\r\n").toString();
+        return new StringBuilder(getAdress()).append(" OPRAVIT ").append(blockToRepair).append("\r\n").toString();
     }
 
     public Response route(RequestProcessor processor) {
