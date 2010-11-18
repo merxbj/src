@@ -28,7 +28,7 @@ import robot.common.TcpFormatable;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public abstract class Response implements TcpFormatable, Handlable {
+public abstract class Response implements TcpFormatable, Handlable, Cloneable {
 
     public abstract boolean isEndGame();
 

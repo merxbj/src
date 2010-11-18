@@ -83,7 +83,7 @@ public class ResponseOk extends Response {
     public boolean parseParamsFromTcp(String params) {
         Pattern pattern = Pattern.compile("\\(.+\\)");
         Matcher match = pattern.matcher(params);
-        if (match.groupCount() == 1) {
+        if (match.find()) {
             String temp = match.group();
             String status = temp.substring(1, temp.length() - 1);
             String[] tokens = status.split(",");

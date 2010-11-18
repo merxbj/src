@@ -36,7 +36,8 @@ public class RequestPickUp extends Request {
     public RequestPickUp() {
     }
 
-    public RequestPickUp(String adress) {
+    public RequestPickUp(String address) {
+        super(address);
     }
 
     public String formatForTcp() {

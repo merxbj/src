@@ -36,7 +36,8 @@ import java.util.Arrays;
  */
 public class RequestStep extends Request {
 
-    public RequestStep(String adress) {
+    public RequestStep(String address) {
+        super(address);
     }
 
     public RequestStep() {

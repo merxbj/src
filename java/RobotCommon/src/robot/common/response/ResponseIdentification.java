@@ -57,12 +57,12 @@ public class ResponseIdentification extends Response {
     public boolean parseParamsFromTcp(String params) {
         Pattern pattern = Pattern.compile("Oslovuj mne [^ .\n\r$]+[.\n\r$]");
         Matcher match = pattern.matcher(params);
-        if (match.groupCount() == 1) {
+        if (match.find()) {
             List<String> tokens = Arrays.asList(match.group().split(" "));
             String almostAddress = StringUtils.join(tokens.subList(2, tokens.size()), " ");
             pattern = Pattern.compile("[^.\n\r]+");
             match = pattern.matcher(almostAddress);
-            if (match.groupCount() == 1) {
+            if (match.find()) {
                 this.address = match.group();
                 return true;
             }

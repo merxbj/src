@@ -34,7 +34,8 @@ import java.util.Arrays;
  */
 public class RequestRecharge extends Request {
 
-    public RequestRecharge(String adress) {
+    public RequestRecharge(String address) {
+        super(address);
     }
 
     public RequestRecharge() {

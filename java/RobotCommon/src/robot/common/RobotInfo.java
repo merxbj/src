@@ -20,7 +20,6 @@
 
 package robot.common;
 
-import java.util.EnumMap;
 
 /**
  *
@@ -33,7 +32,7 @@ public class RobotInfo {
     protected Direction direction;
 
     public RobotInfo() {
-        this(0, 0, 0, Direction.Unknown);
+        this(100, 0, 0, Direction.Unknown); // a new robot comes fully charged
     }
 
     public RobotInfo(int battery, int x, int y, Direction direction) {

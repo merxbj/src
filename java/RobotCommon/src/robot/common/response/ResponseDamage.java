@@ -62,7 +62,7 @@ public class ResponseDamage extends Response {
     public boolean parseParamsFromTcp(String params) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher match = pattern.matcher(params);
-        if (match.groupCount() == 1) {
+        if (match.find()) {
             try {
                 this.damagedBlock = Integer.parseInt(match.group());
                 return true;
