@@ -62,10 +62,10 @@ public class Main {
             this.address = address;
         }
 
-        public Request parseRequest(String rawRequest) throws InvalidAddressException {
+        public Request parseRequest(String rawRequest) {
 
             if (!rawRequest.startsWith(address)) {
-                throw new InvalidAddressException(extractPotentialAddress(rawRequest), address, rawRequest);
+                return new RequestUnknown();
             }
 
             try {
@@ -90,17 +90,6 @@ public class Main {
             } catch (Exception ex) {
                 return new RequestUnknown();
             }
-        }
-
-        private String extractPotentialAddress(String rawRequest) {
-
-            for (String request : validRequestNames) {
-                int requestPos = rawRequest.indexOf(request);
-                if (requestPos > 2) {
-                    return rawRequest.substring(0, requestPos - 1);
-                }
-            }
-            return "/unknown/";
         }
     }
 
@@ -203,11 +192,6 @@ public class Main {
         }
     }
 
-    public static interface Resumable {
-
-        public abstract boolean resume(Socket newSocket, String lastRequest);
-    }
-
     public static class Robot {
 
         private String name;
@@ -221,8 +205,8 @@ public class Main {
              * Generate the robot starting position and direction
              */
             int bat = 100;
-            int x = (int) Math.floor(Math.random() * 35) - 17;
-            int y = (int) Math.floor(Math.random() * 35) - 17;
+            int x = (int) Math.ceil(Math.random() * 32) - 16;
+            int y = (int) Math.ceil(Math.random() * 32) - 16;
             Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
 
             this.info = new RobotServerInfo(bat, x, y, direction);
@@ -274,22 +258,17 @@ public class Main {
         }
     }
 
-    public static class RobotClientProcess implements Runnable, Resumable {
+    public static class RobotClientProcess implements Runnable {
 
         private Socket clientSocket;
         private InputStream in;
         private OutputStream out;
         private ClientRequestFactory requestFactory;
         private ClientRequestProcessor requestProcessor;
-        RobotRequestRouter router;
         private Robot robot;
         private Logger log;
-        private boolean waiting;
-        private String enforcedRequest;
 
         public void run() {
-
-            router.registerProcess(this, robot.getName());
 
             try {
 
@@ -313,23 +292,9 @@ public class Main {
                         quit = response.isEndGame();
                     } catch (IOException ex) {
                         clientSocket.close();
-                        log.logMessage("Connection lost. Let's wait a minute for reconnect if it makes sense ...");
-                        if (!quit && waitForReconnect(60000)) {
-                            log.logMessage("Connection reestablished! Let's keep going!");
-                        } else if (quit) {
-                            log.logMessage("Will not wait because the end game has been already reached!");
-                        } else {
-                            log.logMessage("Giving up waiting. Goodbye()!");
-                            quit = true;
-                        }
-                    } catch (InvalidAddressException ex) {
-                        log.logMessage("Received unexpected address %s from the client. Expected was %s.", ex.getRequestedAddress(), ex.getExpectedAddress());
-                        if (router.routeRequest(ex.getReceivedRequest(), ex.getRequestedAddress(), clientSocket)) {
-                            clientSocket = null; // someone took over the socket, make sure that it will not be closed
-                            quit = true;
-                        }
+                        log.logMessage("Connection lost.");
+                        quit = true;
                     }
-
                 }
 
             } catch (Exception ex) {
@@ -348,24 +313,15 @@ public class Main {
             }
         }
 
-        public RobotClientProcess(Socket clientSocket, RobotRequestRouter router) {
+        public RobotClientProcess(Socket clientSocket) {
             this.clientSocket = clientSocket;
             this.robot = new Robot(RobotNameProvider.provideName());
             this.requestFactory = new ClientRequestFactory(robot.getName());
             this.requestProcessor = new ClientRequestProcessor(robot);
             this.log = Logger.getLogger(this.robot.getName());
-            this.router = router;
-            this.waiting = false;
         }
 
         private String readRequestFromSocket() throws IOException {
-
-            if (enforcedRequest != null) {
-                String request = enforcedRequest;
-                enforcedRequest = null;
-                return request;
-            }
-
             return SocketUtils.readStringFromStream(in);
         }
 
@@ -373,43 +329,10 @@ public class Main {
             SocketUtils.sendStringToStream(response.formatForTcp(), out);
         }
 
-        private boolean waitForReconnect(int timeout) throws Exception {
-            synchronized (this) {
-                if (clientSocket.isClosed()) {
-                    waiting = true;
-                    this.wait(timeout); // we have lost the connection - lets wait some time
-                    waiting = false;
-                    return !clientSocket.isClosed();
-                }
-                return false;
-            }
-        }
-
         private void goodBye() {
-            router.unregisterProcess(robot.getName());
             RobotNameProvider.freeName(robot.getName());
         }
 
-        public boolean resume(Socket newSocket, String lastRequest) {
-            if (waiting) {
-                synchronized (this) {
-                    this.enforcedRequest = lastRequest;
-                    this.clientSocket = newSocket;
-
-                    try {
-                        this.in = clientSocket.getInputStream();
-                        this.out = clientSocket.getOutputStream();
-                    } catch (IOException ex) {
-                        this.log.logException(new Exception("Error while getting I/O streams!", ex));
-                        return false;
-                    }
-
-                    this.notify();
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     public static class RobotDamagedState implements RobotState {
@@ -459,29 +382,15 @@ public class Main {
 
         public static final List<String> names;
         public static HashMap<String, Boolean> reservations;
-        public static int freeCount;
-        public static final Object signal;
 
         static {
             names = Arrays.asList(new String[]{
                         "Jarda", "Pepa", "Misa", "Robert", "Karel",
                         "Lojza", "Vaclav", "Tomas", "Robocop", "Optimus"});
-            freeCount = names.size();
             reservations = new HashMap<String, Boolean>();
-            signal = new Object();
         }
 
         public static synchronized String provideName() {
-
-            if (freeCount == 0) {
-                try {
-                    System.out.println("We have run out of names! Let us wait!");
-                    synchronized (signal) {
-                        signal.wait();
-                    }
-                } catch (Exception ex) {
-                }
-            }
 
             int pick = (int) Math.floor(Math.random() * names.size());
             String name = names.get(pick);
@@ -490,16 +399,11 @@ public class Main {
                 name = names.get(pick);
             }
             reservations.put(name, Boolean.TRUE);
-            freeCount--;
             return name;
         }
 
         public static synchronized void freeName(String name) {
             reservations.put(name, Boolean.FALSE);
-            freeCount++;
-            synchronized (signal) {
-                signal.notifyAll();
-            }
         }
     }
 
@@ -566,23 +470,12 @@ public class Main {
         }
     }
 
-    public static interface RobotRequestRouter {
-
-        public void registerProcess(Resumable process, String address);
-
-        public void unregisterProcess(String address);
-
-        public boolean routeRequest(String request, String address, Socket sock);
-    }
-
-    public static class RobotServer implements RobotRequestRouter {
+    public static class RobotServer {
 
         private int listeiningPort;
-        private HashMap<String, Resumable> processThreads;
 
         public RobotServer(CommandLine params) {
             this.listeiningPort = params.getPortNumber();
-            this.processThreads = new LinkedHashMap<String, Resumable>();
         }
 
         public void run() {
@@ -592,7 +485,7 @@ public class Main {
 
                 while (!quit) {
                     final Socket sock = ss.accept();
-                    Thread t = new Thread(new RobotClientProcess(sock, this));
+                    Thread t = new Thread(new RobotClientProcess(sock));
                     t.start();
                 }
 
@@ -600,22 +493,6 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e);
             }
-        }
-
-        public synchronized void registerProcess(Resumable process, String address) {
-            processThreads.put(address, process);
-        }
-
-        public synchronized boolean routeRequest(String request, String address, Socket sock) {
-            if (processThreads.containsKey(address)) {
-                Resumable process = processThreads.get(address);
-                return process.resume(sock, request);
-            }
-            return false;
-        }
-
-        public synchronized void unregisterProcess(String address) {
-            processThreads.remove(address);
         }
     }
 
@@ -1635,7 +1512,6 @@ public class Main {
 
     public static class ResponseOk extends Response {
 
-        protected final static String robotDataFormat = "(%d,%d,%d)";
         protected int remainingBattery;
         protected int x;
         protected int y;
@@ -1651,7 +1527,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder("250 ").append("OK ").append(String.format(robotDataFormat, getRemainingBattery(), getX(), getY())).append("\r\n").toString();
+            return new StringBuilder("250 ").append("OK ").append(String.format("(%d,%d,%d)", getRemainingBattery(), getX(), getY())).append("\r\n").toString();
         }
 
         public int getRemainingBattery() {

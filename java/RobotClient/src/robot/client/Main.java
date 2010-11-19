@@ -36,24 +36,16 @@ public class Main {
 
         final CommandLine cl = CommandLine.parse(args);
 
-        for (int i = 0; i < 1000; i++) {
-            try {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
-                            AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
-                            System.out.println(robot.findSecret());
-                        } catch (Exception ex) {
-                            System.out.println(formatException(ex));
-                        }
-                    }
-                }.start();
-            } catch (Exception ex) {
-                System.out.println(formatException(ex));
-            }
+        try {
+
+            RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
+            AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
+            System.out.println(robot.findSecret());
+
+        } catch (Exception ex) {
+            System.out.println(formatException(ex));
         }
+
     }
 
     public static class CommandLine {
