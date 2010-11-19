@@ -1609,7 +1609,7 @@ public class Main {
         Throwable innerException = ex.getCause();
         while (innerException != null) {
             sb.append("\t caused by ");
-            sb.append(innerException.toString());
+            sb.append(formatException(innerException));
             sb.append("\n");
             innerException = innerException.getCause();
         }
