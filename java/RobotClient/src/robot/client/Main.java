@@ -17,12 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package robot.server;
+package robot.client;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 import java.net.*;
+import java.util.regex.*;
 import java.util.Map.Entry;
 
 /**
@@ -34,157 +34,41 @@ public class Main {
 
     public static void main(String[] args) {
 
-        CommandLine params = CommandLine.parse(args);
+        final CommandLine cl = CommandLine.parse(args);
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
-    }
-
-    public static class ClientRequestFactory {
-
-        private String address;
-        private final static List<String> validRequestNames;
-        private final static HashMap<String, Request> prototypes;
-
-        static {
-            prototypes = new HashMap<String, Request>();
-            prototypes.put("KROK", new RequestStep());
-            prototypes.put("VLEVO", new RequestTurnLeft());
-            prototypes.put("ZVEDNI", new RequestPickUp());
-            prototypes.put("OPRAVIT", new RequestRepair());
-            prototypes.put("NABIT", new RequestRecharge());
-
-            validRequestNames = Arrays.asList(new String[]{"KROK", "VLEVO", "ZVEDNI", "OPRAVIT", "NABIT"});
-        }
-
-        public ClientRequestFactory(String address) {
-            this.address = address;
-        }
-
-        public Request parseRequest(String rawRequest) throws InvalidAddressException {
-
-            if (!rawRequest.startsWith(address)) {
-                throw new InvalidAddressException(extractPotentialAddress(rawRequest), address, rawRequest);
-            }
-
+        for (int i = 0; i < 1000; i++) {
             try {
-
-                String requestStringOnly = rawRequest.substring(address.length() + 1); // strip out the address
-                List<String> tokens = Arrays.asList(requestStringOnly.split(" "));
-
-                Request prototype = prototypes.get(tokens.get(0));
-                if (prototype == null) {
-                    return new RequestUnknown();
-                }
-
-                Request request = prototype.clone();
-                request.setAdress(address);
-                if (request.parseParamsFromTcp(StringUtils.join(tokens.subList(1, tokens.size()), " "))) {
-                    return request;
-                } else {
-                    return new RequestUnknown();
-                }
-
-
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
+                            AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
+                            System.out.println(robot.findSecret());
+                        } catch (Exception ex) {
+                            System.out.println(formatException(ex));
+                        }
+                    }
+                }.start();
             } catch (Exception ex) {
-                return new RequestUnknown();
+                System.out.println(formatException(ex));
             }
-        }
-
-        private String extractPotentialAddress(String rawRequest) {
-
-            for (String request : validRequestNames) {
-                int requestPos = rawRequest.indexOf(request);
-                if (requestPos > 2) {
-                    return rawRequest.substring(0, requestPos - 1);
-                }
-            }
-            return "/unknown/";
-        }
-    }
-
-    public static class ClientRequestProcessor implements RequestProcessor {
-
-        private Robot robot;
-
-        public ClientRequestProcessor(Robot robot) {
-            this.robot = robot;
-        }
-
-        public Response processPickUp() {
-            try {
-                String secretMessage = robot.pickUp();
-                return new ResponseSuccess(secretMessage);
-            } catch (RobotCannotPickUpException ex) {
-                return new ResponseCannotPickUp();
-            }
-        }
-
-        public Response processRecharge() {
-            try {
-                RobotServerInfo info = robot.recharge();
-                return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-            } catch (RobotCrumbledException ex) {
-                return new ResponseCrumbled();
-            } catch (RobotDamagedException ex) {
-                return new ResponseDamage(ex.getDamagedBlock());
-            }
-        }
-
-        public Response processRepair(int blockToRepair) {
-            try {
-                RobotServerInfo info = robot.repair(blockToRepair);
-                return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-            } catch (RobotNoDamageException ex) {
-                return new ResponseNoDamage();
-            }
-        }
-
-        public Response processStep() {
-            try {
-                RobotServerInfo info = robot.doStep();
-                return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-            } catch (RobotCrashedException ex) {
-                return new ResponseCrash();
-            } catch (RobotBatteryEmptyException ex) {
-                return new ResponseBatteryEmpty();
-            } catch (RobotCrumbledException ex) {
-                return new ResponseCrumbled();
-            } catch (RobotDamagedException ex) {
-                return new ResponseDamage(ex.getDamagedBlock());
-            }
-        }
-
-        public Response processTurnLeft() {
-            try {
-                RobotServerInfo info = robot.turnLeft();
-                return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-            } catch (RobotBatteryEmptyException ex) {
-                return new ResponseBatteryEmpty();
-            }
-        }
-
-        public Response processUnknown() {
-            return new ResponseUnknownRequest();
-        }
-
-        public String getExpectedAddress() {
-            return robot.getName();
         }
     }
 
     public static class CommandLine {
 
         private int portNumber;
+        private InetAddress address;
 
         public static CommandLine parse(String[] args) {
             CommandLine cl = new CommandLine();
 
             try {
-                cl.setPortNumber(Integer.parseInt(args[0]));
+                cl.setAddress(InetAddress.getByName(args[0]));
+                cl.setPortNumber(Integer.parseInt(args[1]));
             } catch (Exception ex) {
-                throw new RuntimeException("The one and only argument must be the port number in closed interval <3500,3800>!", ex);
+                throw new RuntimeException("Client parameters are valid ip adress (DNS name) and port number <3500,3800>!", ex);
             }
 
             if (cl.getPortNumber() < 3500 || cl.getPortNumber() > 3800) {
@@ -201,573 +85,498 @@ public class Main {
         public void setPortNumber(int portNumber) {
             this.portNumber = portNumber;
         }
-    }
 
-    public static interface Resumable {
+        public InetAddress getAddress() {
+            return address;
+        }
 
-        public abstract boolean resume(Socket newSocket, String lastRequest);
+        public void setAddress(InetAddress address) {
+            this.address = address;
+        }
     }
 
     public static class Robot {
 
+        private RobotServerConnection server;
+        private ServerResponseHandler handler;
         private String name;
-        private RobotServerInfo info;
-        private RobotState currentState;
+        private String secretMessage;
+        private RobotInfo info;
 
-        public Robot(String name) {
-            this.name = name;
-
-            /**
-             * Generate the robot starting position and direction
-             */
-            int bat = 100;
-            int x = (int) Math.floor(Math.random() * 35) - 17;
-            int y = (int) Math.floor(Math.random() * 35) - 17;
-            Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
-
-            this.info = new RobotServerInfo(bat, x, y, direction);
-            this.currentState = new RobotOkState();
+        public Robot(RobotServerConnection server) {
+            this.server = server;
+            this.handler = new ServerResponseHandler(this);
+            this.info = new RobotInfo();
         }
 
-        public RobotServerInfo doStep() throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException {
-            currentState.doStep(this);
-            return info;
+        public void initialize() {
+            try {
+                Response res = this.server.connect();
+                res.handle(handler);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            } catch (RobotException ex) {
+                throw new UnexpectedException(ex);
+            }
         }
 
-        public RobotServerInfo turnLeft() throws RobotBatteryEmptyException {
-            currentState.turnLeft(this);
-            return info;
+        public void doStep() throws RobotCrashedException, RobotCrumbledException, RobotBatteryEmptyException, RobotDamagedException {
+            try {
+                Response res = server.processRequest(new RequestStep(name));
+                res.handle(handler);
+            } catch (RobotCrumbledException ex) {
+                throw ex;
+            } catch (RobotCrashedException ex) {
+                throw ex;
+            } catch (RobotBatteryEmptyException ex) {
+                throw ex;
+            } catch (RobotDamagedException ex) {
+                throw ex;
+            } catch (RobotException ex) {
+                throw new UnexpectedResponseException(ex);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            }
         }
 
-        public RobotServerInfo repair(int blockToRepair) throws RobotNoDamageException {
-            currentState.repair(this, blockToRepair);
-            return info;
+        public void turnLeft() throws RobotBatteryEmptyException {
+            try {
+                Response res = server.processRequest(new RequestTurnLeft(name));
+                res.handle(handler);
+            } catch (RobotBatteryEmptyException ex) {
+                throw ex;
+            } catch (RobotException ex) {
+                throw new UnexpectedResponseException(ex);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            }
         }
 
-        public String pickUp() throws RobotCannotPickUpException {
-            return currentState.pickUp(this);
+        public void pickUp() throws RobotCannotPickUpException {
+            try {
+                Response res = server.processRequest(new RequestPickUp(name));
+                res.handle(handler);
+            } catch (RobotCannotPickUpException ex) {
+                throw ex;
+            } catch (RobotException ex) {
+                throw new UnexpectedResponseException(ex);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            }
         }
 
-        public RobotServerInfo recharge() throws RobotCrumbledException, RobotDamagedException {
-            currentState.recharge(this);
-            return info;
+        public void repair(int blockToRepair) throws RobotNoDamageException {
+            try {
+                Response res = server.processRequest(new RequestRepair(name, blockToRepair));
+                res.handle(handler);
+            } catch (RobotNoDamageException ex) {
+                throw ex;
+            } catch (RobotException ex) {
+                throw new UnexpectedResponseException(ex);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            }
+        }
+
+        public void recharge() throws RobotDamagedException, RobotCrumbledException {
+            try {
+                Response res = server.processRequest(new RequestRecharge(name));
+                res.handle(handler);
+            } catch (RobotDamagedException ex) {
+                throw ex;
+            } catch (RobotCrumbledException ex) {
+                throw ex;
+            } catch (RobotException ex) {
+                throw new UnexpectedResponseException(ex);
+            } catch (IOException ex) {
+                throw new UnexpectedException(ex);
+            }
+        }
+
+        public String getSecretMessage() {
+            return secretMessage;
+        }
+
+        public void setSecretMessage(String secretMessage) {
+            this.secretMessage = secretMessage;
+        }
+
+        public Battery getBattery() {
+            return new Battery(this.info.getBattery().level);
+        }
+
+        public void setBattery(Battery battery) {
+            this.info.getBattery().level = battery.level;
+        }
+
+        public Position getPos() {
+            Position pos = this.info.getPosition();
+            return new Position(pos.x, pos.y);
+        }
+
+        public void setPos(Position position) {
+            Position pos = this.info.getPosition();
+            pos.x = position.x;
+            pos.y = position.y;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getSecretMessage() {
-            return SecretMessageProvider.getRandomSecretMessage();
-        }
-
-        public RobotState getCurrentState() {
-            return currentState;
-        }
-
-        public void setCurrentState(RobotState currentState) {
-            this.currentState = currentState;
-        }
-
-        public RobotServerInfo getInfo() {
-            return this.info;
-        }
-    }
-
-    public static class RobotClientProcess implements Runnable, Resumable {
-
-        private Socket clientSocket;
-        private InputStream in;
-        private OutputStream out;
-        private ClientRequestFactory requestFactory;
-        private ClientRequestProcessor requestProcessor;
-        RobotRequestRouter router;
-        private Robot robot;
-        private Logger log;
-        private boolean waiting;
-        private String enforcedRequest;
-
-        public void run() {
-
-            router.registerProcess(this, robot.getName());
-
-            try {
-
-                this.in = clientSocket.getInputStream();
-                this.out = clientSocket.getOutputStream();
-                log.logMessage("Client connected! Going to send him the robot identification address %s!", robot.getName());
-                sendResponseToSocket(new ResponseIdentification(robot.getName()));
-
-                boolean quit = false;
-                while (!quit) {
-
-                    try {
-                        String rawRequest = readRequestFromSocket();
-                        log.logMessage("Request message %s from the client %s!", rawRequest, clientSocket.getInetAddress());
-
-                        Request request = requestFactory.parseRequest(rawRequest);
-                        Response response = request.process(requestProcessor);
-                        log.logMessage("Response message %s for the client %s!", response.formatForTcp(), clientSocket.getInetAddress());
-
-                        sendResponseToSocket(response);
-                        quit = response.isEndGame();
-                    } catch (IOException ex) {
-                        clientSocket.close();
-                        log.logMessage("Connection lost. Let's wait a minute for reconnect if it makes sense ...");
-                        if (!quit && waitForReconnect(60000)) {
-                            log.logMessage("Connection reestablished! Let's keep going!");
-                        } else if (quit) {
-                            log.logMessage("Will not wait because the end game has been already reached!");
-                        } else {
-                            log.logMessage("Giving up waiting. Goodbye()!");
-                            quit = true;
-                        }
-                    } catch (InvalidAddressException ex) {
-                        log.logMessage("Received unexpected address %s from the client. Expected was %s.", ex.getRequestedAddress(), ex.getExpectedAddress());
-                        if (router.routeRequest(ex.getReceivedRequest(), ex.getRequestedAddress(), clientSocket)) {
-                            clientSocket = null; // someone took over the socket, make sure that it will not be closed
-                            quit = true;
-                        }
-                    }
-
-                }
-
-            } catch (Exception ex) {
-                log.logException(ex);
-            } finally {
-                try {
-                    goodBye();
-                    if (clientSocket != null) {
-                        in.close();
-                        out.close();
-                        clientSocket.close();
-                    }
-                } catch (Exception ex) {
-                    log.logException(ex);
-                }
-            }
-        }
-
-        public RobotClientProcess(Socket clientSocket, RobotRequestRouter router) {
-            this.clientSocket = clientSocket;
-            this.robot = new Robot(RobotNameProvider.provideName());
-            this.requestFactory = new ClientRequestFactory(robot.getName());
-            this.requestProcessor = new ClientRequestProcessor(robot);
-            this.log = Logger.getLogger(this.robot.getName());
-            this.router = router;
-            this.waiting = false;
-        }
-
-        private String readRequestFromSocket() throws IOException {
-
-            if (enforcedRequest != null) {
-                String request = enforcedRequest;
-                enforcedRequest = null;
-                return request;
-            }
-
-            return SocketUtils.readStringFromStream(in);
-        }
-
-        private void sendResponseToSocket(Response response) throws IOException {
-            SocketUtils.sendStringToStream(response.formatForTcp(), out);
-        }
-
-        private boolean waitForReconnect(int timeout) throws Exception {
-            synchronized (this) {
-                if (clientSocket.isClosed()) {
-                    waiting = true;
-                    this.wait(timeout); // we have lost the connection - lets wait some time
-                    waiting = false;
-                    return !clientSocket.isClosed();
-                }
-                return false;
-            }
-        }
-
-        private void goodBye() {
-            router.unregisterProcess(robot.getName());
-            RobotNameProvider.freeName(robot.getName());
-        }
-
-        public boolean resume(Socket newSocket, String lastRequest) {
-            if (waiting) {
-                synchronized (this) {
-                    this.enforcedRequest = lastRequest;
-                    this.clientSocket = newSocket;
-
-                    try {
-                        this.in = clientSocket.getInputStream();
-                        this.out = clientSocket.getOutputStream();
-                    } catch (IOException ex) {
-                        this.log.logException(new Exception("Error while getting I/O streams!", ex));
-                        return false;
-                    }
-
-                    this.notify();
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    public static class RobotDamagedState implements RobotState {
-
-        private int damagedBlock;
-
-        public RobotDamagedState(int damagedBlock) {
-            assert ((damagedBlock > 0) && (damagedBlock < 10));
-            this.damagedBlock = damagedBlock;
-        }
-
-        public void doStep(Robot robot) throws RobotCrumbledException {
-            throw new RobotCrumbledException();
-        }
-
-        public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
-            robot.getInfo().turn();
-
-            robot.getInfo().getBattery().level -= 10;
-            if (robot.getInfo().getBattery().level <= 0) {
-                throw new RobotBatteryEmptyException();
-            }
-        }
-
-        public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
-            if (damagedBlock != blockToRepair) {
-                throw new RobotNoDamageException();
-            }
-            robot.getInfo().setStepsSoFar(0);
-            robot.setCurrentState(new RobotOkState());
-        }
-
-        public String pickUp(Robot robot) throws RobotCannotPickUpException {
-            if (robot.getInfo().getPosition().x != 0 || robot.getInfo().getPosition().y != 0) {
-                throw new RobotCannotPickUpException();
-            }
-
-            return robot.getSecretMessage();
-        }
-
-        public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
-            throw new RobotCrumbledException();
-        }
-    }
-
-    public static class RobotNameProvider {
-
-        public static final List<String> names;
-        public static HashMap<String, Boolean> reservations;
-        public static int freeCount;
-        public static final Object signal;
-
-        static {
-            names = Arrays.asList(new String[]{
-                        "Jarda", "Pepa", "Misa", "Robert", "Karel",
-                        "Lojza", "Vaclav", "Tomas", "Robocop", "Optimus"});
-            freeCount = names.size();
-            reservations = new HashMap<String, Boolean>();
-            signal = new Object();
-        }
-
-        public static synchronized String provideName() {
-
-            if (freeCount == 0) {
-                try {
-                    System.out.println("We have run out of names! Let us wait!");
-                    synchronized (signal) {
-                        signal.wait();
-                    }
-                } catch (Exception ex) {
-                }
-            }
-
-            int pick = (int) Math.floor(Math.random() * names.size());
-            String name = names.get(pick);
-            while (reservations.containsKey(name) && reservations.get(name)) {
-                pick = (int) Math.floor(Math.random() * names.size());
-                name = names.get(pick);
-            }
-            reservations.put(name, Boolean.TRUE);
-            freeCount--;
-            return name;
-        }
-
-        public static synchronized void freeName(String name) {
-            reservations.put(name, Boolean.FALSE);
-            freeCount++;
-            synchronized (signal) {
-                signal.notifyAll();
-            }
-        }
-    }
-
-    public static class RobotOkState implements RobotState {
-
-        public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotDamagedException {
-
-            RobotServerInfo info = robot.getInfo();
-
-            boolean robotDamaged = Math.ceil(Math.random() * 10) <= (info.getStepsSoFar() % 10);
-            if (robotDamaged) {
-                int damagedBlock = damageRobot(robot);
-                throw new RobotDamagedException(damagedBlock);
-            }
-
-            info.getBattery().level -= 10;
-            if (info.getBattery().level <= 0) {
-                throw new RobotBatteryEmptyException();
-            }
-
-            try {
-                info.move();
-                info.setStepsSoFar(info.getStepsSoFar() + 1);
-            } catch (RobotOutOfFieldException ex) {
-                throw new RobotCrashedException(ex);
-            }
-        }
-
-        public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
-            robot.getInfo().turn();
-
-            robot.getInfo().getBattery().level -= 10;
-            if (robot.getInfo().getBattery().level <= 0) {
-                throw new RobotBatteryEmptyException();
-            }
-        }
-
-        public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
-            throw new RobotNoDamageException();
-        }
-
-        public String pickUp(Robot robot) throws RobotCannotPickUpException {
-            if (robot.getInfo().getPosition().x != 0 || robot.getInfo().getPosition().y != 0) {
-                throw new RobotCannotPickUpException();
-            }
-
-            return robot.getSecretMessage();
-        }
-
-        public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
-            boolean robotDamaged = (Math.random() < 0.5);
-            if (robotDamaged) {
-                int damagedBlock = damageRobot(robot);
-                robot.getInfo().getBattery().level = 1;
-                throw new RobotDamagedException(damagedBlock);
-            }
-            robot.getInfo().getBattery().level = 100;
-        }
-
-        private int damageRobot(Robot robot) {
-            int damagedBlock = (int) Math.ceil(Math.random() * 8) + 1;
-            robot.setCurrentState(new RobotDamagedState(damagedBlock));
-            return damagedBlock;
-        }
-    }
-
-    public static interface RobotRequestRouter {
-
-        public void registerProcess(Resumable process, String address);
-
-        public void unregisterProcess(String address);
-
-        public boolean routeRequest(String request, String address, Socket sock);
-    }
-
-    public static class RobotServer implements RobotRequestRouter {
-
-        private int listeiningPort;
-        private HashMap<String, Resumable> processThreads;
-
-        public RobotServer(CommandLine params) {
-            this.listeiningPort = params.getPortNumber();
-            this.processThreads = new LinkedHashMap<String, Resumable>();
-        }
-
-        public void run() {
-            try {
-                boolean quit = false;
-                ServerSocket ss = new ServerSocket(listeiningPort);
-
-                while (!quit) {
-                    final Socket sock = ss.accept();
-                    Thread t = new Thread(new RobotClientProcess(sock, this));
-                    t.start();
-                }
-
-                ss.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-
-        public synchronized void registerProcess(Resumable process, String address) {
-            processThreads.put(address, process);
-        }
-
-        public synchronized boolean routeRequest(String request, String address, Socket sock) {
-            if (processThreads.containsKey(address)) {
-                Resumable process = processThreads.get(address);
-                return process.resume(sock, request);
-            }
-            return false;
-        }
-
-        public synchronized void unregisterProcess(String address) {
-            processThreads.remove(address);
-        }
-    }
-
-    public static class RobotServerInfo extends RobotInfo {
-
-        private int stepsSoFar;
-        private static final int MAX_X = 17;
-        private static final int MAX_Y = 17;
-        private static final int MIN_X = -17;
-        private static final int MIN_Y = -17;
-
-        public RobotServerInfo(int battery, int x, int y, Direction direction) {
-            super(battery, x, y, direction);
-            this.stepsSoFar = 0;
-        }
-
-        public void move() throws RobotOutOfFieldException {
-            Vector vec = Direction.toVector(direction);
-            Position pos = getPosition();
-            pos.x = pos.x + vec.x;
-            pos.y = pos.y + vec.y;
-            if (pos.x < MIN_X || pos.x > MAX_X || pos.y < MIN_Y || pos.y > MAX_Y) {
-                throw new RobotOutOfFieldException(pos.x, pos.y);
-            }
-        }
-
-        public void turn() {
-            direction = Direction.getNextDirection(direction);
-        }
-
-        public int getStepsSoFar() {
-            return stepsSoFar;
-        }
-
-        public void setStepsSoFar(int stepsSoFar) {
-            this.stepsSoFar = stepsSoFar;
-        }
-    }
-
-    public static interface RobotState {
-
-        public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException;
-
-        public void turnLeft(Robot robot) throws RobotBatteryEmptyException;
-
-        public String pickUp(Robot robot) throws RobotCannotPickUpException;
-
-        public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException;
-
-        public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException;
-    }
-
-    public static class SecretMessageProvider {
-
-        private static List<String> messages = Arrays.asList(new String[]{
-                    "This is so secret that I would have to kill you if I tell it.",
-                    "You really thought that this is secret, huh?",
-                    "My secret is that I have no secrets!",
-                    "Tell me your secret at first!"
-                });
-
-        public static synchronized String getRandomSecretMessage() {
-            return messages.get((int) Math.floor(Math.random() * messages.size()));
-        }
-    }
-
-    public static class Logger {
-
-        private String name;
-        private static HashMap<String, Logger> loggers;
-
-        static {
-            loggers = new HashMap<String, Logger>();
-        }
-
-        public static synchronized Logger getLogger(String robot) {
-            if (loggers.containsKey(robot)) {
-                return loggers.get(robot);
-            } else {
-                Logger log = new Logger(robot);
-                loggers.put(robot, log);
-                return log;
-            }
-        }
-
-        private Logger(String name) {
+        public void setName(String name) {
             this.name = name;
         }
 
-        public void logRequest(Request request) {
-            log(String.format("Received request %s addressed to %s!", request.getClass().getName(), request.getAdress()));
+        public RobotServerConnection getServer() {
+            return server;
         }
 
-        public void logResponse(Response response) {
-            log(String.format("Sent response %s. This %s close the connection!", response.getClass().getName(), response.isEndGame() ? "will" : "will not"));
+        public Direction getDirection() {
+            return this.info.getDirection();
         }
 
-        public void logException(Throwable exception) {
-            log(formatException(exception));
+        public RobotInfo getInfo() {
+            return info;
         }
 
-        public void logMessage(String message, Object... args) {
-            log(String.format(message, args));
-        }
-
-        private void log(String message) {
-            Date date = Calendar.getInstance().getTime();
-            System.out.println(String.format("%25s | [%s] | %s", date, name, message));
+        public void setDirection(Direction direction) {
+            this.info.setDirection(direction);
         }
     }
 
-    public static class InvalidAddressException extends Exception {
+    public static class RobotServerConnection {
 
-        private String requestedAddress;
-        private String expectedAddress;
-        private String receivedRequest;
+        private InetAddress address;
+        private int port;
+        private Socket socket;
+        private InputStream in;
+        private OutputStream out;
+        private ServerResponseFactory factory;
 
-        public InvalidAddressException(String requested, String expected, String receivedRequest) {
-            this.requestedAddress = requested;
-            this.expectedAddress = expected;
-            this.receivedRequest = receivedRequest;
+        public RobotServerConnection(InetAddress address, int port) {
+            this.address = address;
+            this.port = port;
+            this.factory = new ServerResponseFactory();
         }
 
-        public String getRequestedAddress() {
-            return this.requestedAddress;
+        public Response connect() throws IOException {
+            this.socket = new Socket(address, port);
+            this.in = socket.getInputStream();
+            this.out = socket.getOutputStream();
+            String rawResponse = SocketUtils.readStringFromStream(in);
+            return factory.parseResponse(rawResponse);
         }
 
-        public String getExpectedAddress() {
-            return expectedAddress;
+        public void disconnect() {
+            try {
+                this.in.close();
+                this.out.close();
+                this.socket.close();
+            } catch (Exception ex) {
+            }
         }
 
-        public String getReceivedRequest() {
-            return receivedRequest;
+        public Response processRequest(Request req) throws IOException {
+            SocketUtils.sendStringToStream(req.formatForTcp(), out);
+            String rawResponse = SocketUtils.readStringFromStream(in);
+            return factory.parseResponse(rawResponse);
         }
     }
 
-    public static class RobotOutOfFieldException extends Exception {
+    public static class ServerResponseFactory {
 
-        private int x;
-        private int y;
+        private final static HashMap<String, Response> prototypes;
 
-        public RobotOutOfFieldException(int x, int y) {
-            this.x = x;
-            this.y = y;
+        static {
+            prototypes = new HashMap<String, Response>();
+            prototypes.put("220", new ResponseIdentification());
+            prototypes.put("221", new ResponseSuccess());
+            prototypes.put("250", new ResponseOk());
+            prototypes.put("500", new ResponseUnknownRequest());
+            prototypes.put("530", new ResponseCrash());
+            prototypes.put("540", new ResponseBatteryEmpty());
+            prototypes.put("550", new ResponseCannotPickUp());
+            prototypes.put("570", new ResponseDamage());
+            prototypes.put("571", new ResponseNoDamage());
+            prototypes.put("572", new ResponseCrumbled());
         }
 
-        public int getX() {
-            return x;
+        public Response parseResponse(String rawResponse) {
+
+            try {
+
+                List<String> tokens = Arrays.asList(rawResponse.split(" "));
+
+                Response prototype = prototypes.get(tokens.get(0));
+                if (prototype == null) {
+                    return new ResponseUnknown();
+                }
+
+                Response response = prototype.clone();
+                if (response.parseParamsFromTcp(StringUtils.join(tokens.subList(1, tokens.size()), " "))) {
+                    return response;
+                } else {
+                    return new ResponseUnknown();
+                }
+
+            } catch (Exception ex) {
+                return new ResponseUnknown();
+            }
+        }
+    }
+
+    public static class ServerResponseHandler implements ResponseHandler {
+
+        private Robot robot;
+
+        public ServerResponseHandler(Robot robot) {
+            this.robot = robot;
         }
 
-        public int getY() {
-            return y;
+        public void handleBatteryEmpty() throws RobotBatteryEmptyException {
+            this.robot.getServer().disconnect();
+            throw new RobotBatteryEmptyException("The robot run out of battery!");
+        }
+
+        public void handleCannotPickUp() throws RobotCannotPickUpException {
+            throw new RobotCannotPickUpException("Pick up command issued without robot standing on 0,0!");
+        }
+
+        public void handleCrash() throws RobotCrashedException {
+            throw new RobotCrashedException("Robot paced out from the field!");
+        }
+
+        public void handleCrumbled() throws RobotCrumbledException {
+            throw new RobotCrumbledException("The robot attempted to perform such operation which made him crumbled!");
+        }
+
+        public void handleDamage(int damagedBlock) throws RobotDamagedException {
+            throw new RobotDamagedException("The robot has damaged block!", damagedBlock);
+        }
+
+        public void handleIdentification(String address) {
+            this.robot.setName(address);
+        }
+
+        public void handleNoDamage() throws RobotNoDamageException {
+            throw new RobotNoDamageException("Repair command issued on block that has no damage!");
+        }
+
+        public void handleOk(int battery, int x, int y) {
+            this.robot.setBattery(new Battery(battery));
+            this.robot.setPos(new Position(x, y));
+        }
+
+        public void handleSuccess(String secretMessage) {
+            this.robot.setSecretMessage(secretMessage);
+        }
+
+        public void handleUnknownRequest() throws RobotUnknownRequestException {
+            throw new RobotUnknownRequestException("Unknown request sent by client! Programmer error?");
+        }
+    }
+
+    public static class SmartRobot {
+
+        private Robot robot;
+
+        public SmartRobot(Robot robot) {
+            this.robot = robot;
+        }
+
+        public RobotInfo initialize() {
+            this.robot.initialize();
+            turn();
+            Position initialPosition = this.robot.getPos();
+            step();
+            Position afterFirstStep = this.robot.getPos();
+            Direction direction = determineDirection(initialPosition, afterFirstStep);
+            this.robot.setDirection(direction);
+            return this.robot.getInfo();
+        }
+
+        public void stepUp() {
+            turn(Direction.North);
+            step();
+        }
+
+        public void stepLeft() {
+            turn(Direction.West);
+            step();
+        }
+
+        public void stepRight() {
+            turn(Direction.East);
+            step();
+        }
+
+        public void stepDown() {
+            turn(Direction.South);
+            step();
+        }
+
+        public String pickUp() {
+            try {
+                robot.pickUp();
+                return robot.getSecretMessage();
+            } catch (RobotCannotPickUpException ex) {
+                throw new UnexpectedException("Robot tried to pick up the secret message on place where it isn't allowed! Connection lost!", ex);
+            }
+        }
+
+        private void turn(Direction direction) {
+            Direction currentDir = robot.getDirection();
+            while (!currentDir.equals(direction)) {
+                turn();
+                currentDir = Direction.getNextDirection(currentDir);
+            }
+            robot.setDirection(direction);
+        }
+
+        private void turn() {
+            do {
+                try {
+                    batteryCheck();
+                    robot.turnLeft();
+                    return;
+                } catch (RobotBatteryEmptyException ex) {
+                    throw new UnexpectedException("Robot run out of battery while trying to turn left! Connection lost!", ex);
+                }
+            } while (true);
+        }
+
+        private void step() {
+            do {
+                try {
+                    batteryCheck();
+                    robot.doStep();
+                    return;
+                } catch (RobotBatteryEmptyException ex) {
+                    throw new UnexpectedException("Robot run out of batter while trying to do a step! Connection lost!", ex);
+                } catch (RobotCrashedException ex) {
+                    throw new UnexpectedException("Robot stepped out of the field! Connection lost!", ex);
+                } catch (RobotCrumbledException ex) {
+                    throw new UnexpectedException("Robot crumbled while trying to do a step! Connection lost!", ex);
+                } catch (RobotDamagedException ex) {
+                    repair(ex.getDamagedBlock());
+                }
+            } while (true);
+        }
+
+        private void recharge() {
+            boolean recharged = false;
+            do {
+                try {
+                    robot.recharge();
+                    recharged = true;
+                } catch (RobotDamagedException ex) {
+                    repair(ex.getDamagedBlock());
+                } catch (RobotCrumbledException ex) {
+                    throw new UnexpectedException("Robot crumbled during recharging! Connection lost!", ex);
+                }
+            } while (!recharged);
+        }
+
+        private void repair(int blockToRepair) {
+            boolean repaired = false;
+            do {
+                try {
+                    robot.repair(blockToRepair);
+                    repaired = true;
+                } catch (RobotNoDamageException ex) {
+                    throw new UnexpectedException("Attempted to repair block, which is not damaged! Unable to recover!", ex);
+                }
+            } while (!repaired);
+        }
+
+        private void batteryCheck() {
+            if (robot.getBattery().level <= 10) {
+                recharge();
+            }
+        }
+
+        private Direction determineDirection(Position from, Position to) {
+            Direction dir = Direction.fromVector(to.substract(from));
+            if (dir == null || dir.equals(Direction.Unknown)) {
+                throw new UnexpectedException("Unable to determine the robot direction! Unable to recover!");
+            }
+            return dir;
+        }
+    }
+
+    public static class AutomaticRobot {
+
+        SmartRobot robot;
+
+        public AutomaticRobot(SmartRobot robot) {
+            this.robot = robot;
+        }
+
+        public String findSecret() {
+            RobotInfo info = robot.initialize();
+
+            int xPos = info.getPosition().x;
+            while (xPos != 0) {
+                if (xPos > 0) {
+                    robot.stepLeft();
+                    xPos--;
+                } else {
+                    robot.stepRight();
+                    xPos++;
+                }
+            }
+
+            int yPos = info.getPosition().y;
+            while (yPos != 0) {
+                if (yPos > 0) {
+                    robot.stepDown();
+                    yPos--;
+                } else {
+                    robot.stepUp();
+                    yPos++;
+                }
+            }
+
+            return robot.pickUp();
+        }
+    }
+
+    public static class UnexpectedException extends RuntimeException {
+
+        public UnexpectedException(Throwable cause) {
+            super(cause);
+        }
+
+        public UnexpectedException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public UnexpectedException(String message) {
+            super(message);
+        }
+
+        public UnexpectedException() {
+            super();
+        }
+    }
+
+    public static class UnexpectedResponseException extends RuntimeException {
+
+        public UnexpectedResponseException(Throwable cause) {
+            super(cause);
+        }
+
+        public UnexpectedResponseException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public UnexpectedResponseException(String message) {
+            super(message);
+        }
+
+        public UnexpectedResponseException() {
+            super();
         }
     }
 
@@ -1111,19 +920,15 @@ public class Main {
     public static class RobotUnknownResponseException extends RobotException {
 
         public RobotUnknownResponseException(Throwable cause) {
-            super(cause);
         }
 
         public RobotUnknownResponseException(String message, Throwable cause) {
-            super(message, cause);
         }
 
         public RobotUnknownResponseException(String message) {
-            super(message);
         }
 
         public RobotUnknownResponseException() {
-            super();
         }
     }
 

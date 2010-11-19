@@ -21,3 +21,4 @@ csharp/*/bin/
 csharp/*/obj/
 *.settings
 java/.metadata
+genfiles.properties
