@@ -385,8 +385,10 @@ public class Main {
 
         static {
             names = Arrays.asList(new String[]{
-                        "Jarda", "Pepa", "Misa", "Robert", "Karel",
-                        "Lojza", "Vaclav", "Tomas", "Robocop", "Optimus"});
+                        "Jardo", "Pepo", "Miso", "Roberte", "Karle",
+                        "Lojzo", "Vaclave", "Tomasi", "Robocope", "Optime",
+                        "Iron Mane", "Bumblebee", "Martinku", "Chlupatoure Obecny",
+                        "Edwarde", "Bello", "Jacobe", "Jaspere"});
             reservations = new HashMap<String, Boolean>();
         }
 
@@ -551,7 +553,8 @@ public class Main {
                     "This is so secret that I would have to kill you if I tell it.",
                     "You really thought that this is secret, huh?",
                     "My secret is that I have no secrets!",
-                    "Tell me your secret at first!"
+                    "Tell me your secret at first!",
+                    "Edward dates Bella as well as Robert Pattison dates Christine Steward!"
                 });
 
         public static synchronized String getRandomSecretMessage() {
@@ -1527,7 +1530,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder("250 ").append("OK ").append(String.format("(%d,%d,%d)", getRemainingBattery(), getX(), getY())).append("\r\n").toString();
+            return new StringBuilder("250 OK ").append(String.format("(%d,%d,%d)", getRemainingBattery(), getX(), getY())).append("\r\n").toString();
         }
 
         public int getRemainingBattery() {
