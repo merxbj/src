@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   
+    <xs:complexType name="Player">
+        <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="id" type="xs:string" />
+    </xs:complexType>
+    
+    <xs:complexType name="Players">
+        <xs:sequence>
+            <xs:element name="Player" type="Player" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Team">
+        <xs:attribute name="id" type="xs:string" />
+        <xs:attribute name="type" type="TeamType" />
+        <xs:attribute name="isRandom" type="xs:boolean" />
+        <xs:attribute name="league" type="LeagueName" />
+    </xs:complexType>
+    
+    <xs:complexType name="Teams">
+        <xs:sequence>
+            <xs:element name="Team" type="Team" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="TeamRef">
+        <xs:attribute name="id" type="xs:string" />
+        <xs:attribute name="races" type="xs:string" />
+    </xs:complexType>
+    
+    <xs:complexType name="Game">
+        <xs:sequence>
+            <xs:element name="TeamARef" type="TeamRef" />
+            <xs:element name="TeamBRef" type="TeamRef" />
+        </xs:sequence>
+        <xs:attribute name="date" type="xs:date" />
+        <xs:attribute name="result" type="ResultType" />
+        <xs:attribute name="points" type="xs:integer" />
+    </xs:complexType>
+    
+    <xs:complexType name="Games">
+        <xs:sequence>
+            <xs:element name="Game" type="Game" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="Starcraft">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Players" type="Players"/>
+                <xs:element name="Teams" type="Teams" />
+                <xs:element name="Games" type="Games" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+  
+    <xs:simpleType name="TeamType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1v1" />
+            <xs:enumeration value="2v2" />
+            <xs:enumeration value="3v3" />
+            <xs:enumeration value="4v4" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="LeagueName">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Bronze" />
+            <xs:enumeration value="Silver" />
+            <xs:enumeration value="Gold" />
+            <xs:enumeration value="Platinum" />
+            <xs:enumeration value="Diamond" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="ResultType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TeamAWon" />
+            <xs:enumeration value="TeamADefeated" />
+            <xs:enumeration value="Tied" />
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

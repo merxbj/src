@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Starcraft>
+    <Players>
+        <Player name="eTeR" id="eTeR#1"/>
+        <Player name="mrneo" id="mrneo#1"/>
+        <Player name="Radian" id="Radian#1"/>
+        <Player name="Nexus" id="Nexus#1"/>
+        <Player name="eTeRtest" id="eTeR#2"/>
+        <Player name="mrneotest" id="mrneo#2"/>
+        <Player name="Radiantest" id="Radian#2"/>
+        <Player name="Nexustest" id="Nexus#2"/>
+    </Players>
+    <Teams>
+        <Team id="eter#1:mrneo#1:Radian#1:Nexus#1" type="4v4" isRandom="false" league="Bronze"/>
+        <Team id="eter#2:mrneo#2:Radian#2:Nexus#2" type="4v4" isRandom="false" league="Silver"/>
+    </Teams>
+    <Games>
+        <Game date="2010-12-01" result="TeamAWon" points="40">
+            <TeamARef id="eter#1:mrneo#1:Radian#1:Nexus#1" races="Protoss:Protoss:Random:Protoss" />
+            <TeamBRef id="eter#2:mrneo#2:Radian#2:Nexus#2" races="Terran:Protoss:Random:Zerg" />
+        </Game>
+    </Games>
+</Starcraft>

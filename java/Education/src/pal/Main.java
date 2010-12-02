@@ -81,7 +81,7 @@ public class Main {
         //-4...111111 111111 111111 111111 111111 0 0
         //00 pinda, 01 jezdec, 10 dama
         System.out.println("----Uloz Figuru-----");
-        System.out.println(sachovnice);
+        //   System.out.println(sachovnice);
         System.out.println(pozice);
         System.out.println(typ);
         switch (typ) {
@@ -133,9 +133,6 @@ public class Main {
 
     public static int vypoctiPozici(char pismeno, int cislo) {
         //dostanu pismeno a cislo a vratim cislo na sachovnici 0..48
-        System.out.println("----VYPOCTI POZICI------");
-        System.out.println(pismeno);
-        System.out.println(cislo);
         return (pismeno - 97) * 7 + cislo - 1;
     }
 
@@ -239,6 +236,7 @@ public class Main {
     public static void playChess(int sachovnice, int pocetPultahuBileho) throws Exception {
         int hloubka = 1;
         int i;
+
         int novaSachovnice = 0;
         boolean hrajeBily = true;
         //spustGenerator(sachovnice, true, 0, pocetPultahuBileho);
@@ -261,57 +259,375 @@ public class Main {
             //Bila vez
             if (V.x < 7 && V.x > -1 && V.y < 7 && V.y > -1) {//Figura tam je...
                 novaSachovnice = sachovnice;
+                boolean postup = true;
+                //Tahy vodorovne
+                for (i = (V.x - 1); i > -1; i--) {
+                    pozice = vypoctiPozici2(i, V.y);
+                    if (pozice == P.pozice || pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == T.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                    }
+                }
+                postup = true;
+                for (i = (V.x + 1); i < 7; i++) {
+                    pozice = vypoctiPozici2(i, V.y);
+                    if (pozice == P.pozice || pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == T.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                    }
 
-                //Tahy doleva vodorovne
-                for (i = 0; i == (V.x - 1); i++) {
-                    if (((i > P.x) && (V.y == P.y)) || (V.y != P.y)) {//Pokud nalevo neni Pinda
-                        if (((i > K.x) && (V.y == K.y)) || (V.y != K.y)) {//Pokud nalevo neni Kralik
-                            if (((i >= T.x) && (V.y == T.y)) || (V.y != T.y)) {//Pokud nalevo neni Cerna Vez(tu muzu vzit)
-                                if (((i > A.x) && (V.y == A.y)) || (V.y != A.y)) {//Radeji testuji aj Cernyho Kinga, i kdyz mozna zbytecne
-                                    novaSachovnice = ulozFiguru(novaSachovnice, vypoctiPozici2(i, V.y), V.typ);
-                                    System.out.println(novaSachovnice);
-                                   // playChess(novaSachovnice,pocetPultahuBileho);
-                                }
+                }
+                //Tahy Svisle
+                postup = true;
+                for (i = (V.y + 1); i < 7; i++) {
+                    pozice = vypoctiPozici2(V.x, i);
+                    if (pozice == P.pozice || pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == T.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                    }
+                }
+                postup = true;
+                for (i = (V.y - 1); i > -1; i--) {
+                    pozice = vypoctiPozici2(V.x, i);
+                    if (pozice == P.pozice || pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == T.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, V.typ);
+                    }
+
+                }
+            }
+            //Bile Cosi
+            if (P.x < 7 && P.x > -1 && P.y < 7 && P.y > 0) {//Figura tam je...
+                switch (P.typ2) {
+                    case 'P': {
+                        novaSachovnice = sachovnice;
+                        if (P.y + 1 == 6) {
+                           novaSachovnice = ulozFiguru(novaSachovnice, pozice, 'R');
+                           novaSachovnice = ulozFiguru(novaSachovnice, pozice, 'D');
+                        } else {
+                            pozice = vypoctiPozici2(P.x, P.y + 1);
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice || pozice != T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        if (P.x != 6) {
+                            pozice = vypoctiPozici2(P.x + 1, P.y + 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                        }
+
+                        if (P.x != 0) {
+                            pozice = vypoctiPozici2(P.x - 1, P.y + 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
                             }
                         }
 
                     }
-
-
-
-
-                }
-            }
-
-
-
-                //Bile Cosi
-                if (P.x < 7 && P.x > -1 && P.y < 7 && P.y > 0) {//Figura tam je...
-                    switch (P.typ2) {
-                        case 'P': {
+                    break;
+                    case 'R': {
+                        //  <-|
+                        //    |
+                        //    x
+                        if (P.x > 0 && P.y < 5) {
+                            pozice = vypoctiPozici2(P.x - 1, P.y + 2);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
                         }
-                        break;
-                        case 'R': {
+                        //    |->
+                        //    |
+                        //    x
+                        if (P.x < 6 && P.y < 5) {
+                            pozice = vypoctiPozici2(P.x + 1, P.y + 2);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
                         }
-                        break;
-                        case 'D': {
+                        // <--|
+                        //    x
+                        if (P.x > 1 && P.y < 6) {
+                            pozice = vypoctiPozici2(P.x - 2, P.y + 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        //    |-->
+                        //    x
+                        if (P.x < 5 && P.y < 6) {
+                            pozice = vypoctiPozici2(P.x + 2, P.y + 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        //    x
+                        //    |
+                        //  <-|
+                        if (P.x > 0 && P.y > 1) {
+                            pozice = vypoctiPozici2(P.x - 1, P.y - 2);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        //    x
+                        //    |
+                        //    |->
+                        if (P.x < 6 && P.y > 1) {
+                            pozice = vypoctiPozici2(P.x + 1, P.y - 2);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        //    x
+                        //    |-->
+                        if (P.x < 5 && P.y > 0) {
+                            pozice = vypoctiPozici2(P.x + 2, P.y - 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        //    x
+                        // <--|
+                        if (P.x > 1 && P.y > 0) {
+                            pozice = vypoctiPozici2(P.x - 2, P.y - 1);
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                            }
+                            if (pozice != V.pozice || pozice != K.pozice || pozice != A.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
                         }
                     }
-                }
-                //Bily Kral
-                if (K.x < 7 && K.x > -1 && K.y < 7 && K.y > 0) {//Figura tam je...
-                }
-            } //Hraje Cerny
-            else {
-                //Cerny Kral
-                if (A.x < 7 && A.x > -1 && A.y < 7 && A.y > 0) {//Figura tam je...
-                }
-                //Cerna Vez
-                if (T.x < 7 && T.x > -1 && T.y < 7 && T.y > 0) {//Figura tam je...
+                    break;
+                    case 'D': {
+                        novaSachovnice = sachovnice;
+                        boolean postup = true;
+                        //Tahy vodorovne
+                        for (i = (P.x - 1); i > -1; i--) {
+                            pozice = vypoctiPozici2(i, P.y);
+                            if (pozice == V.pozice || pozice == K.pozice || pozice == A.pozice) {
+                                postup = false;
+                            }
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                                postup = false;
+                            }
+                            if (postup) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        postup = true;
+                        for (i = (P.x + 1); i < 7; i++) {
+                            pozice = vypoctiPozici2(i, P.y);
+                            if (pozice == V.pozice || pozice == K.pozice || pozice == A.pozice) {
+                                postup = false;
+                            }
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                                postup = false;
+                            }
+                            if (postup) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+
+                        }
+                        //Tahy Svisle
+                        postup = true;
+                        for (i = (P.y + 1); i < 7; i++) {
+                            pozice = vypoctiPozici2(V.x, i);
+                            if (pozice == V.pozice || pozice == K.pozice || pozice == A.pozice) {
+                                postup = false;
+                            }
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                                postup = false;
+                            }
+                            if (postup) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+                        }
+                        postup = true;
+                        for (i = (P.y - 1); i > -1; i--) {
+                            pozice = vypoctiPozici2(V.x, i);
+                            if (pozice == V.pozice || pozice == K.pozice || pozice == A.pozice) {
+                                postup = false;
+                            }
+                            if (pozice == T.pozice) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                                novaSachovnice = ulozFiguru(novaSachovnice, 63, T.typ);//Smaz Cernou Vez
+                                postup = false;
+                            }
+                            if (postup) {
+                                novaSachovnice = ulozFiguru(novaSachovnice, pozice, P.typ);
+                            }
+
+                        }
+                        //Dama Tahy Uhlopricne
+                    }
                 }
             }
+            //Bily Kral
+            if (K.x < 7 && K.x > -1 && K.y < 7 && K.y > 0) {//Figura tam je...
+            }
+        } //Hraje Cerny
+        else {
+            //Cerny Kral
+            if (A.x < 7 && A.x > -1 && A.y < 7 && A.y > 0) {//Figura tam je...
+            }
+            //Cerna Vez
+            if (T.x < 7 && T.x > -1 && T.y < 7 && T.y > 0) {//Figura tam je...
+                novaSachovnice = sachovnice;
+                boolean postup = true;
+                //Tahy vodorovne
+                for (i = (T.x - 1); i > -1; i--) {
+                    pozice = vypoctiPozici2(i, T.y);
+                    if (pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == V.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, V.typ);//Smaz Bilou Vez
+                        postup = false;
+                    }
+                    if (pozice == P.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, P.typ);//Smaz Bile cosi
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                    }
+                }
+                postup = true;
+                for (i = (T.x + 1); i < 7; i++) {
+                    pozice = vypoctiPozici2(i, T.y);
+                    if (pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == V.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, V.typ);//Smaz Bilou Vez
+                        postup = false;
+                    }
+                    if (pozice == P.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, P.typ);//Smaz Bile cosi
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                    }
 
+                }
+                //Tahy Svisle
+                postup = true;
+                for (i = (T.y + 1); i < 7; i++) {
+                    pozice = vypoctiPozici2(i, T.y);
+                    if (pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == V.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, V.typ);//Smaz Bilou Vez
+                        postup = false;
+                    }
+                    if (pozice == P.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, P.typ);//Smaz Bile cosi
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                    }
+                }
+                postup = true;
+                for (i = (T.y - 1); i > -1; i--) {
+                    pozice = vypoctiPozici2(i, T.y);
+                    if (pozice == K.pozice || pozice == A.pozice) {
+                        postup = false;
+                    }
+                    if (pozice == V.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, V.typ);//Smaz Bilou Vez
+                        postup = false;
+                    }
+                    if (pozice == P.pozice) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                        novaSachovnice = ulozFiguru(novaSachovnice, 63, P.typ);//Smaz Bile cosi
+                        postup = false;
+                    }
+                    if (postup) {
+                        novaSachovnice = ulozFiguru(novaSachovnice, pozice, T.typ);
+                    }
+
+                }
+            }
         }
+
+    }
 
     static int spustGenerator(int sachovnice, boolean hrajeBily, int hloubka, int pocetPultahuBileho) {
 
