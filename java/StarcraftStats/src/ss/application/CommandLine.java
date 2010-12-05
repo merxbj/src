@@ -29,10 +29,12 @@ public class CommandLine {
 
     private String dataFilePath;
     private boolean dumpData;
+    private boolean quickStats;
 
     private CommandLine() {
         dataFilePath = "Starcraft2.xml";
         dumpData = false;
+        quickStats = false;
     }
 
     public static CommandLine parse(String[] args) throws InvalidCommandLineException {
@@ -40,9 +42,13 @@ public class CommandLine {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase("-dumpdata")) {
                 cl.dumpData = true;
+            } else if (args[i].equals("-quickstats")) {
+                cl.quickStats = true;
+            } else if (args[i].startsWith("-")) {
+                throw new InvalidCommandLineException(args[i]);
             }
         }
-        cl.dataFilePath = args[args.length - 1]; // last parameter always the data file
+        cl.dataFilePath = args[args.length - 1]; // last parameter is always the data file
         return cl;
     }
 
@@ -65,6 +71,10 @@ public class CommandLine {
 
     public String getDataFilePath() {
         return dataFilePath;
+    }
+
+    public boolean isDumpData() {
+        return dumpData;
     }
 
     /**

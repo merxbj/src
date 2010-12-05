@@ -23,12 +23,11 @@ package ss.data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import org.w3c.dom.Document;
 import javax.xml.XMLConstants;
@@ -54,8 +53,8 @@ public class GameData {
     private static final XPath xpath;
     private static final SimpleDateFormat dateFormat;
     private static final DocumentBuilderFactory dbf;
-    private Hashtable<String, Player> players;
-    private Hashtable<String, Team> teams;
+    private HashMap<String, Player> players;
+    private HashMap<String, Team> teams;
     private List<Game> games;
 
     static {
@@ -115,7 +114,7 @@ public class GameData {
     }
 
     private void loadPlayers(NodeList xmlPlayers) {
-        players = new Hashtable<String, Player>(xmlPlayers.getLength());
+        players = new HashMap<String, Player>(xmlPlayers.getLength());
         for (int i = 0; i < xmlPlayers.getLength(); i++) {
             Node xmlPlayer = xmlPlayers.item(i);
             Player player = loadPlayer(xmlPlayer);
@@ -124,7 +123,7 @@ public class GameData {
     }
 
     private void loadTeams(NodeList xmlTeams) {
-        teams = new Hashtable<String, Team>(xmlTeams.getLength());
+        teams = new HashMap<String, Team>(xmlTeams.getLength());
         for (int i = 0; i < xmlTeams.getLength(); i++) {
             Node xmlTeam = xmlTeams.item(i);
             Team team = loadTeam(xmlTeam);
@@ -132,7 +131,7 @@ public class GameData {
         }
     }
 
-    private void loadGames(NodeList xmlGames) throws ParseException {
+    private void loadGames(NodeList xmlGames) throws Exception {
         games = new ArrayList<Game>(xmlGames.getLength());
         for (int i = 0; i < xmlGames.getLength(); i++) {
             Node xmlGame = xmlGames.item(i);
@@ -157,22 +156,22 @@ public class GameData {
         return team;
     }
 
-    private Game loadGame(Node xmlGame) throws ParseException {
+    private Game loadGame(Node xmlGame) throws Exception {
         Date date = dateFormat.parse(xmlGame.getAttributes().getNamedItem("date").getNodeValue());
         GameResult result = GameResult.lookup(xmlGame.getAttributes().getNamedItem("result").getNodeValue());
         int points = Integer.parseInt(xmlGame.getAttributes().getNamedItem("points").getNodeValue());
-        Team teamA = teams.get(xmlGame.getChildNodes().item(0).getAttributes().getNamedItem("id").getNodeValue());
-        Team teamB = teams.get(xmlGame.getChildNodes().item(1).getAttributes().getNamedItem("id").getNodeValue());
+        Team teamA = teams.get(xpath.evaluate("TeamARef/@id", xmlGame));
+        Team teamB = teams.get(xpath.evaluate("TeamBRef/@id", xmlGame));
         Game game = new Game(date, result, points, teamA, teamB);
         loadRaceSelection(game, xmlGame);
         return game;
     }
 
-    private void loadRaceSelection(Game game, Node xmlGame) {
+    private void loadRaceSelection(Game game, Node xmlGame) throws Exception {
         Collection<Player> teamAPlayers = game.getTeamA().getMembers();
         Collection<Player> teamBPlayers = game.getTeamB().getMembers();
-        String[] teamARaceSelection = xmlGame.getChildNodes().item(0).getAttributes().getNamedItem("races").getNodeValue().split(":");
-        String[] teamBRaceSelection = xmlGame.getChildNodes().item(1).getAttributes().getNamedItem("races").getNodeValue().split(":");
+        String[] teamARaceSelection = xpath.evaluate("TeamARef/@races", xmlGame).split(":");
+        String[] teamBRaceSelection = xpath.evaluate("TeamBRef/@races", xmlGame).split(":");
 
         int i = 0;
         for (Player player : teamAPlayers) {

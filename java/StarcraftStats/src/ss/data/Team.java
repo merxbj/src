@@ -90,7 +90,7 @@ public class Team implements Comparable<Team> {
     public String toString() {
         StringBuilder builder = new StringBuilder(type.toString()).append(" ");
         builder.append(isRandom ? "Random" : "Team").append(" ");
-        builder.append(league).append("Members: {");
+        builder.append(league).append(" ").append("Members: {");
         for (Player p : members) {
             builder.append(p.getName()).append(",");
         }

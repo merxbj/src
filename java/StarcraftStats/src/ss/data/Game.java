@@ -22,7 +22,7 @@ package ss.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +31,7 @@ import java.util.Map;
  * @version %I% %G%
  */
 public class Game {
-    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("dd. MM. YYYY");
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("dd. MM. yyyy");
     private Date date;
     private GameResult result;
     private int points;
@@ -45,7 +45,7 @@ public class Game {
         this.points = points;
         this.teamA = teamA;
         this.teamB = teamB;
-        this.raceSelection = new Hashtable<Player, Race>();
+        this.raceSelection = new HashMap<Player, Race>();
     }
 
     public Date getDate() {

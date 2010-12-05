@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Starcraft>
-    <Players>
-        <Player name="eTeR" id="eTeR#1"/>
+	<Players>
+        <Player name="eTeR" id="eter#1"/>
         <Player name="mrneo" id="mrneo#1"/>
         <Player name="Radian" id="Radian#1"/>
         <Player name="Nexus" id="Nexus#1"/>
-        <Player name="eTeRtest" id="eTeR#2"/>
+        <Player name="eTeRtest" id="eter#2"/>
         <Player name="mrneotest" id="mrneo#2"/>
         <Player name="Radiantest" id="Radian#2"/>
         <Player name="Nexustest" id="Nexus#2"/>

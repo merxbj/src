@@ -1,5 +1,5 @@
 /*
- * Application
+ * XmlHelpers
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,40 +18,29 @@
  *
  */
 
-package ss.application;
+package ss.helpers;
 
-import ss.data.GameData;
-import ss.gui.MainFrame;
+import javax.xml.transform.Transformer;
+import org.w3c.dom.Node;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import ss.application.CommandLine;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Application {
+public class XmlHelpers {
 
-    public static void main(String[] args) {
+    public static void printNode(Node node) {
         try {
-            final CommandLine cl = CommandLine.parse(args);
-            final GameData data = new GameData(cl.getDataFilePath());
-
-            if (cl.isDumpData()) {
-                System.out.println(data);
-            } else {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        new MainFrame(data).setVisible(true);
-                    }
-                });
-            }
-
-        } catch (InvalidCommandLineException ex) {
-            CommandLine.handleInvalidInput(ex);
-            CommandLine.showHelp();
-        } catch (InvalidDataFileException ex) {
-            CommandLine.handleInvalidDataFile(ex);
+            Transformer trans = TransformerFactory.newInstance().newTransformer();
+            trans.transform(new DOMSource(node), new StreamResult(System.out));
         } catch (Exception ex) {
             CommandLine.handleException(ex);
         }
     }
+
 }
