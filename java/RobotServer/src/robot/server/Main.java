@@ -205,8 +205,8 @@ public class Main {
              * Generate the robot starting position and direction
              */
             int bat = 100;
-            int x = (int) Math.ceil(Math.random() * 32) - 16;
-            int y = (int) Math.ceil(Math.random() * 32) - 16;
+            int x = (int) Math.ceil(Math.random() * 32) - (Math.min(Math.abs(RobotServerInfo.MAX_X), Math.abs(RobotServerInfo.MIN_X) - 1));
+            int y = (int) Math.ceil(Math.random() * 32) - (Math.min(Math.abs(RobotServerInfo.MAX_Y), Math.abs(RobotServerInfo.MIN_Y) - 1));
             Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
 
             this.info = new RobotServerInfo(bat, x, y, direction);
@@ -318,7 +318,7 @@ public class Main {
             this.robot = new Robot(RobotNameProvider.provideName());
             this.requestFactory = new ClientRequestFactory(robot.getName());
             this.requestProcessor = new ClientRequestProcessor(robot);
-            this.log = Logger.getLogger(this.robot.getName());
+            this.log = FileLogger.getLogger(this.robot.getName());
         }
 
         private String readRequestFromSocket() throws IOException {
@@ -564,8 +564,8 @@ public class Main {
 
     public static class Logger {
 
-        private String name;
-        private static HashMap<String, Logger> loggers;
+        protected String name;
+        protected static HashMap<String, Logger> loggers;
 
         static {
             loggers = new HashMap<String, Logger>();
@@ -581,29 +581,111 @@ public class Main {
             }
         }
 
-        private Logger(String name) {
+        protected Logger(String name) {
             this.name = name;
         }
 
-        public void logRequest(Request request) {
+        protected void initialize() {
+        }
+
+        public synchronized void logRequest(Request request) {
             log(String.format("Received request %s addressed to %s!", request.getClass().getName(), request.getAdress()));
         }
 
-        public void logResponse(Response response) {
+        public synchronized void logResponse(Response response) {
             log(String.format("Sent response %s. This %s close the connection!", response.getClass().getName(), response.isEndGame() ? "will" : "will not"));
         }
 
-        public void logException(Throwable exception) {
+        public synchronized void logException(Throwable exception) {
             log(formatException(exception));
         }
 
-        public void logMessage(String message, Object... args) {
+        public synchronized void logMessage(String message, Object... args) {
             log(String.format(message, args));
         }
 
-        private void log(String message) {
+        /**
+         * Formats the given <code>Exception</code> in a unified manner.
+         *
+         * @param ex <code>Exception</code> to be formatted.
+         * @return The <code>Exception</code> formatted <code>String</code> representation.
+         */
+        private static String formatException(Throwable ex) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(ex.toString());
+            sb.append("\n");
+            for (StackTraceElement ste : ex.getStackTrace()) {
+                sb.append("\t at ");
+                sb.append(ste.toString());
+                sb.append("\n");
+            }
+
+            Throwable innerException = ex.getCause();
+            while (innerException != null) {
+                sb.append("\t caused by ");
+                sb.append(formatException(innerException));
+                sb.append("\n");
+                innerException = innerException.getCause();
+            }
+
+            return sb.toString();
+        }
+
+        protected String formatMessage(String message) {
             Date date = Calendar.getInstance().getTime();
-            System.out.println(String.format("%25s | [%s] | %s", date, name, message));
+            return String.format("%25s | [%s] | %s", date, name, message);
+        }
+
+        protected void log(String message) {
+            System.out.println(formatMessage(message));
+        }
+    }
+
+    public static class FileLogger extends Logger {
+
+        private File file;
+
+        public static synchronized Logger getLogger(String name) {
+            Logger log = null;
+            if (loggers.containsKey(name)) {
+                log = loggers.get(name);
+            } else {
+                log = new FileLogger(name);
+                loggers.put(name, log);
+            }
+            log.initialize();
+            return log;
+        }
+
+        public FileLogger(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void initialize() {
+            super.initialize();
+            file = new File(String.format("%s.log", name));
+            int counter = 1;
+            while (file.exists()) {
+                file = new File(String.format("%s#%d.log", name, ++counter));
+            }
+        }
+
+        @Override
+        protected void log(String message) {
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(new FileWriter(file, true));
+                writer.append(formatMessage(message));
+                writer.newLine();
+            } catch (IOException ex) {
+                super.log(message);
+            } finally {
+                try {
+                    writer.close();
+                } catch (Exception ex) {
+                }
+            }
         }
     }
 
@@ -1127,7 +1209,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" ZVEDNI ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" ZVEDNI").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1167,7 +1249,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" NABIT").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1235,7 +1317,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" KROK ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" KROK").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1259,7 +1341,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" VLEVO").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1317,7 +1399,7 @@ public class Main {
     public static class ResponseBatteryEmpty extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
+            return new StringBuilder("540 ").append("BATERIE PRAZDA").append("\r\n").toString();
         }
 
         @Override
@@ -1333,7 +1415,7 @@ public class Main {
     public static class ResponseCannotPickUp extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
+            return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU").append("\r\n").toString();
         }
 
         @Override
@@ -1349,7 +1431,7 @@ public class Main {
     public static class ResponseCrash extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("530 ").append("HAVARIE ").append("\r\n").toString();
+            return new StringBuilder("530 ").append("HAVARIE").append("\r\n").toString();
         }
 
         @Override
@@ -1365,7 +1447,7 @@ public class Main {
     public static class ResponseCrumbled extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("572 ").append("ROBOT SE ROZPADL ").append("\r\n").toString();
+            return new StringBuilder("572 ").append("ROBOT SE ROZPADL").append("\r\n").toString();
         }
 
         @Override
@@ -1472,7 +1554,7 @@ public class Main {
 
         @Override
         public boolean parseParamsFromTcp(String params) {
-            Pattern pattern = Pattern.compile("Oslovuj mne [^ .\n\r$]+[.\n\r$]");
+            Pattern pattern = Pattern.compile("Oslovuj mne [^.\n\r$]+[.\n\r$]");
             Matcher match = pattern.matcher(params);
             if (match.find()) {
                 List<String> tokens = Arrays.asList(match.group().split(" "));
@@ -1651,7 +1733,7 @@ public class Main {
     public static class ResponseUnknownRequest extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("500 ").append("NEZNAMY PRIKAZ ").append("\r\n").toString();
+            return new StringBuilder("500 ").append("NEZNAMY PRIKAZ").append("\r\n").toString();
         }
 
         @Override
@@ -1662,32 +1744,5 @@ public class Main {
         public void handle(ResponseHandler handler) throws RobotException {
             throw new RobotException(new RobotUnknownRequestException());
         }
-    }
-
-    /**
-     * Formats the given <code>Exception</code> in a unified manner.
-     *
-     * @param ex <code>Exception</code> to be formatted.
-     * @return The <code>Exception</code> formatted <code>String</code> representation.
-     */
-    private static String formatException(Throwable ex) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(ex.toString());
-        sb.append("\n");
-        for (StackTraceElement ste : ex.getStackTrace()) {
-            sb.append("\t at ");
-            sb.append(ste.toString());
-            sb.append("\n");
-        }
-
-        Throwable innerException = ex.getCause();
-        while (innerException != null) {
-            sb.append("\t caused by ");
-            sb.append(formatException(innerException));
-            sb.append("\n");
-            innerException = innerException.getCause();
-        }
-
-        return sb.toString();
     }
 }

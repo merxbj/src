@@ -1044,7 +1044,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" ZVEDNI ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" ZVEDNI").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1084,7 +1084,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" NABIT ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" NABIT").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1152,7 +1152,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" KROK ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" KROK").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1176,7 +1176,7 @@ public class Main {
         }
 
         public String formatForTcp() {
-            return new StringBuilder(getAdress()).append(" VLEVO ").append("\r\n").toString();
+            return new StringBuilder(getAdress()).append(" VLEVO").append("\r\n").toString();
         }
 
         public Response route(RequestProcessor processor) {
@@ -1234,7 +1234,7 @@ public class Main {
     public static class ResponseBatteryEmpty extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("540 ").append("BATERIE PRAZDA ").append("\r\n").toString();
+            return new StringBuilder("540 ").append("BATERIE PRAZDA").append("\r\n").toString();
         }
 
         @Override
@@ -1250,7 +1250,7 @@ public class Main {
     public static class ResponseCannotPickUp extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU ").append("\r\n").toString();
+            return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU").append("\r\n").toString();
         }
 
         @Override
@@ -1266,7 +1266,7 @@ public class Main {
     public static class ResponseCrash extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("530 ").append("HAVARIE ").append("\r\n").toString();
+            return new StringBuilder("530 ").append("HAVARIE").append("\r\n").toString();
         }
 
         @Override
@@ -1282,7 +1282,7 @@ public class Main {
     public static class ResponseCrumbled extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("572 ").append("ROBOT SE ROZPADL ").append("\r\n").toString();
+            return new StringBuilder("572 ").append("ROBOT SE ROZPADL").append("\r\n").toString();
         }
 
         @Override
@@ -1389,7 +1389,7 @@ public class Main {
 
         @Override
         public boolean parseParamsFromTcp(String params) {
-            Pattern pattern = Pattern.compile("Oslovuj mne [^ .\n\r$]+[.\n\r$]");
+            Pattern pattern = Pattern.compile("Oslovuj mne [^.\n\r$]+[.\n\r$]");
             Matcher match = pattern.matcher(params);
             if (match.find()) {
                 List<String> tokens = Arrays.asList(match.group().split(" "));
@@ -1417,7 +1417,7 @@ public class Main {
     public static class ResponseNoDamage extends Response {
 
         public String formatForTcp() {
-            return new StringBuilder("571 ").append("NENI PORUCHA ").append("\r\n").toString();
+            return new StringBuilder("571 ").append("NENI PORUCHA").append("\r\n").toString();
         }
 
         @Override

@@ -22,3 +22,4 @@ csharp/*/obj/
 *.settings
 java/.metadata
 genfiles.properties
+*.log

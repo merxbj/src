@@ -3,7 +3,7 @@
  * and open the template in the editor.
  * https://cw.felk.cvut.cz/lib/exe/fetch.php/courses/a4m33pal/cviceni/chessassignment2.pdf
  */
-package pal;
+package pal4;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
