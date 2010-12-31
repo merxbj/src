@@ -45,4 +45,9 @@ public class Vector {
     public Vector multiple(int koef) {
         return new Vector(koef * this.x, koef * this.y);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d,%d)", this.x, this.y);
+    }
 }

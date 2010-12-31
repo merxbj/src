@@ -41,7 +41,7 @@ public class Hatchery implements Drawable {
     }
 
     public void init() {
-        int initialWormCount = 10; // TODO: Configurable!
+        int initialWormCount = 20; // TODO: Configurable!
 
         for (; initialWormCount-- > 0;) {
             Worm w = new Worm(this); // breed worm at random pos

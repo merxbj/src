@@ -21,7 +21,6 @@
 package swarm.application;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import swarm.core.Hatchery;
@@ -78,7 +77,7 @@ public class MainCanvas extends Canvas implements Runnable {
 
     public void run() {
 
-        this.offscreen = createImage(getSize().height, getSize().width);
+        this.offscreen = createImage(getSize().width, getSize().height);
         this.backBuffer = offscreen.getGraphics();
         this.hatch.init();
 
