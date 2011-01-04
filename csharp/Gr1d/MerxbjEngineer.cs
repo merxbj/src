@@ -6,16 +6,17 @@ using Gr1d.Api.Node;
 
 namespace Gr1d
 {
-    public class MerxbjEngineer : IEngineer1
+    public class MerxbjEngineer : IEngineer2
     {
         private IDeck deck;
         private INodeInformation currentNode;
         private List<INodeInformation> visited;
+        private IEnumerator<INodeInformation> walker;
 
         public void Initialise(IDeck deck)
         {
             this.deck = deck;
-            this.visited = new List<INodeInformation>();
+            visited = new List<INodeInformation>();
         }
 
         public void Tick(IAgentUpdateInfo agentUpdate)
@@ -36,14 +37,28 @@ namespace Gr1d
             {
                 this.UnitTest();
             }
+            else
+            {
+                deck.Trace("UnitTest effect already applied. Will not extend ...", TraceType.Verbose);
+            }
 
             if (currentNode == null)
             {
+                deck.Trace("Current node was initialised for this agent!", TraceType.Verbose);
                 currentNode = agentUpdate.Node;
                 visited.Add(currentNode);
             }
 
-            if (!currentNode.Owner.Equals(agentUpdate.Owner))
+            if (currentNode != null)
+            {
+                foreach (IAgentInfo agent in currentNode.OtherAgents)
+                {
+                    this.Pin(agent);
+                    this.Attack(agent);
+                }
+            }
+
+            if (currentNode != null && !currentNode.Owner.Equals(agentUpdate.Owner))
             {
                 if (currentNode.IsClaimable)
                 {
@@ -51,26 +66,61 @@ namespace Gr1d
                 }
                 else
                 {
-                    
+                    deck.Trace("Agent met unclaimable node!", TraceType.Verbose);
                 }
             }
             else
             {
-                deck.Trace("Current node already owned by this agent!", TraceType.Warning);
+                deck.Trace("No current node or already owned by this agent!", TraceType.Warning);
             }
 
-            if (currentNode != null)
+            if (walker == null)
             {
-                foreach (INodeInformation node in currentNode.Exits.Values)
+                if (currentNode != null)
                 {
-                    if (node.Sector.Equals(currentNode.Sector) && !this.visited.Contains(node))
+                    walker = currentNode.Exits.Values.GetEnumerator();
+                }
+                else
+                {
+                    deck.Trace("Walker not initialised! Current node was not set.", TraceType.Critical);
+                }
+            }
+            else
+            {
+                if (!walker.MoveNext() && currentNode != null)
+                {
+                    walker = currentNode.Exits.Values.GetEnumerator();
+                }
+                else
+                {
+                    deck.Trace("Agent is probably stuck on a single node!", TraceType.Critical);
+                }
+            }
+
+            if (walker != null)
+            {
+                INodeInformation nextNode = walker.Current;
+                while (nextNode == null)
+                {
+                    if(!walker.MoveNext() && currentNode != null)
                     {
-                        // be conservative - walk through nodes only in the same sector - for now :-)
-                        this.Move(node);
-                        this.currentNode = node;
-                        this.visited.Add(currentNode);
-                        return; // we have just moved about - lets wait for another tick
+                        walker = currentNode.Exits.Values.GetEnumerator();
                     }
+                    else
+                    {
+                        deck.Trace("Agent is probably stuck on a single node!", TraceType.Critical);
+                        break;
+                    }
+                }
+
+                if (nextNode != null)
+                {
+                    this.Move(nextNode);
+                    currentNode = nextNode;
+                }
+                else
+                {
+                    deck.Trace("Next node is null - will not move anywher!", TraceType.Error);
                 }
             }
 
@@ -78,12 +128,27 @@ namespace Gr1d
 
         public void OnAttacked(IAgentInfo attacker, IAgentUpdateInfo agentUpdate)
         {
-            this.deck.Trace("Agent attacked by {0}!", TraceType.Warning, attacker.ToString());
+            this.Attack(attacker); // just fight back - don't know what else to do, now
         }
 
         public void OnArrived(IAgentInfo arriver, IAgentUpdateInfo agentUpdate)
         {
-            this.deck.Trace("Arrived {0} to agent!", TraceType.Warning, arriver.ToString());
+            if (arriver.Clan != agentUpdate.Clan)
+            {
+                if (arriver.Level >= agentUpdate.Level + 1)
+                {
+                    this.Attack(arriver);
+                    this.Pin(arriver);
+                }
+                else
+                {
+                    deck.Trace("Agent met by another agent with too high level! Will not attack.", TraceType.Verbose);
+                }
+            }
+            else
+            {
+                deck.Trace("Agent met by another agent from the same clan! Will not attack.", TraceType.Verbose);
+            }
         }
     }
 }
