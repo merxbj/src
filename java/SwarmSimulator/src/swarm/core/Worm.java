@@ -89,13 +89,13 @@ public class Worm implements Drawable {
         List<Direction> forbidden = new LinkedList<Direction>();
         if (pos.x <= 0) {
             forbidden.add(Direction.West);
-        } else if (pos.x >= this.hatch.getSize().width - 5) {
+        } else if (pos.x >= (this.hatch.getSize().width - 5)) {
             forbidden.add(Direction.East);
         }
 
         if (pos.y <= 0) {
             forbidden.add(Direction.North);
-        } else if (pos.y >= this.hatch.getSize().height - 5) {
+        } else if (pos.y >= (this.hatch.getSize().height - 5)) {
             forbidden.add(Direction.South);
         }
 
@@ -128,11 +128,11 @@ public class Worm implements Drawable {
     private void checkInvariants() {
         
         if ((this.pos.x < 0) || (this.pos.x > (this.hatch.getSize().width - this.size.width))) {
-            throw new AssertionError(String.format("The Worm is out of horiznotal bounds: %s !", this.pos));
+        //    throw new AssertionError(String.format("The Worm is out of horiznotal bounds: %s !", this.pos));
         }
 
         if ((this.pos.y < 0) || (this.pos.y > (this.hatch.getSize().height - this.size.height))) {
-            throw new AssertionError(String.format("The Worm is out of vertical bounds: %s !", this.pos));
+          //  throw new AssertionError(String.format("The Worm is out of vertical bounds: %s !", this.pos));
         }
     }
 

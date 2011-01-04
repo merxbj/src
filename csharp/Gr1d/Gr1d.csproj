@@ -43,6 +43,7 @@
     <Reference Include="Gr1d.Api">
       <HintPath>api\Gr1d.Api.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MerxbjEngineer.cs" />
