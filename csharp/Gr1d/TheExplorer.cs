@@ -6,7 +6,7 @@ using Gr1d.Api.Node;
 
 namespace Gr1d
 {
-    public class MerxbjEngineer : IEngineer2
+    public class TheExplorer : IEngineer1
     {
         private IDeck deck;
         private INodeInformation currentNode;
@@ -53,7 +53,6 @@ namespace Gr1d
             {
                 foreach (IAgentInfo agent in currentNode.OtherAgents)
                 {
-                    this.Pin(agent);
                     this.Attack(agent);
                 }
             }
@@ -138,7 +137,6 @@ namespace Gr1d
                 if (arriver.Level >= agentUpdate.Level + 1)
                 {
                     this.Attack(arriver);
-                    this.Pin(arriver);
                 }
                 else
                 {
