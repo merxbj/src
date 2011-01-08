@@ -1,17 +1,17 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileChecker", "FileChecker\FileChecker.vcproj", "{851DACB0-4000-4763-83B3-50A955E15B6F}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileChecker", "FileChecker\FileChecker.vcxproj", "{851DACB0-4000-4763-83B3-50A955E15B6F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdInArraySort", "StdInArraySort\StdInArraySort.vcproj", "{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdInArraySort", "StdInArraySort\StdInArraySort.vcxproj", "{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CronFormatConverter", "CronFormatConverter\CronFormatConverter.vcproj", "{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CronFormatConverter", "CronFormatConverter\CronFormatConverter.vcxproj", "{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Queue", "Queue\Queue.vcproj", "{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Queue", "Queue\Queue.vcxproj", "{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trees", "Trees\Trees.vcproj", "{872F7A22-78E0-48C0-B77D-D97F28AD81C5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trees", "Trees\Trees.vcxproj", "{872F7A22-78E0-48C0-B77D-D97F28AD81C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestStl", "TestStl\TestStl.vcproj", "{954E13DD-1C8F-4F21-B349-688520553CC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestStl", "TestStl\TestStl.vcxproj", "{954E13DD-1C8F-4F21-B349-688520553CC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
