@@ -1,5 +1,5 @@
 /*
- * Drawable
+ * FemaleWorm
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,15 +20,27 @@
 
 package swarm.core;
 
-import java.awt.Graphics2D;
+import java.awt.Color;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface Drawable {
+public class FemaleWorm extends Worm {
 
-    public void draw(Graphics2D g);
+    public FemaleWorm(Hatchery hatch) {
+        super(hatch);
+    }
+
+    public FemaleWorm(Hatchery hatch, Vector pos) {
+        super(hatch, pos);
+    }
+
+
+    @Override
+    protected Color getColor() {
+        return Color.MAGENTA;
+    }
 
 }

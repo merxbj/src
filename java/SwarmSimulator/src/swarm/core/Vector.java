@@ -46,8 +46,49 @@ public class Vector {
         return new Vector(koef * this.x, koef * this.y);
     }
 
+    public Vector abs() {
+        return new Vector(Math.abs(x), Math.abs(y));
+    }
+
+    public Vector toDirectionVector() {
+        int dirX = this.x == 0 ? 0 : this.x / (Math.abs(this.x));
+        int dirY = this.y == 0 ? 0 : this.y / (Math.abs(this.y));
+        return new Vector(dirX, dirY);
+    }
+
+    public Vector inverse() {
+        return new Vector(this.x * -1, this.y * -1);
+    }
+
     @Override
     public String toString() {
         return String.format("(%d,%d)", this.x, this.y);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vector other = (Vector) obj;
+        if (this.x != other.x) {
+            return false;
+        }
+        if (this.y != other.y) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 61 * hash + this.x;
+        hash = 61 * hash + this.y;
+        return hash;
+    }
+
 }

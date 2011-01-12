@@ -30,16 +30,20 @@ import java.util.Map.Entry;
  */
 public enum Direction {
 
-    North, West, South, East, Unknown;
+    North, West, South, East, Stay, NorthWest, NorthEast, SouthWest, SouthEast, Unknown;
     protected static final EnumMap<Direction, Vector> dirToVec;
 
     static {
         dirToVec = new EnumMap<Direction, Vector>(Direction.class);
+        dirToVec.put(Direction.Stay, new Vector(0, 0));
         dirToVec.put(Direction.North, new Vector(0, -1));
         dirToVec.put(Direction.East, new Vector(1, 0));
         dirToVec.put(Direction.South, new Vector(0, 1));
         dirToVec.put(Direction.West, new Vector(-1, 0));
-        dirToVec.put(Direction.Unknown, new Vector(0, 0));
+        dirToVec.put(Direction.NorthWest, new Vector(-1, -1));
+        dirToVec.put(Direction.NorthEast, new Vector(1, -1));
+        dirToVec.put(Direction.SouthWest, new Vector(-1, 1));
+        dirToVec.put(Direction.SouthEast, new Vector(1, 1));
     }
 
     public Vector toVector() {
@@ -56,7 +60,7 @@ public enum Direction {
     }
 
     public static Direction getRandom() {
-        int pick = (int) Math.floor(Math.random() * 4);
+        int pick = (int) Math.floor(Math.random() * 9);
         return Direction.values()[pick];
     }
 }
