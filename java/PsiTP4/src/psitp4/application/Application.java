@@ -30,7 +30,7 @@ public class Application {
     
     public static void main(String[] args) {
         CommandLine cl = CommandLine.parse(args);
-        FileTransporter transporter = new FileTransporter();
+        FileTransporter transporter = new FileTransporter(new SimpleProgressSink());
         long size = 0;
 
         try {
@@ -48,7 +48,7 @@ public class Application {
     }
 
     private static void handleException(Exception ex) {
-        System.out.println(ex.toString());
+        System.out.println(CommandLine.formatException(ex));
     }
     
 }

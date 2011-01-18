@@ -20,13 +20,19 @@
 
 package psitp4.core;
 
-import java.util.Arrays;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  */
 public class PsiTP4Packet {
+
+    public static int MAX_SIZE = 264; // header + data
 
     private int con;
     private short seq;
@@ -44,38 +50,45 @@ public class PsiTP4Packet {
 
     public void deserialize(byte[] data) throws DeserializationException {
 
-        this.con = 0;
-        for (int i = 0; i < 4; i++) {
-            this.con += data[i];
-            this.con <<= 1;
-        }
-
-        this.seq = 0;
-        for (int i = 4; i < 6; i++) {
-            this.seq += data[i];
-            this.seq <<= 1;
-        }
-
-        this.ack = 0;
-        for (int i = 6; i < 8; i++) {
-            this.ack += data[i];
-            this.ack <<= 1;
-        }
-
-        this.flag = PsiTP4Flag.deserialize(data[8]);
-
-        this.data = Arrays.copyOfRange(data, 9, data.length);
+        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
         
+        try {
+            this.con = stream.readInt();
+            this.seq = stream.readShort();
+            this.ack = stream.readShort();
+            this.flag = PsiTP4Flag.deserialize(stream);
+            stream.read(data);
+        } catch (IOException ex) {
+            throw new DeserializationException("IOException thrown while deserializing!", ex);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException ex) {}
+        }
     }
 
-    public byte[] serialize() {
-        byte[] d = new byte[9 + this.data.length];
+    public byte[] serialize() throws SerializationException {
         
-        for (int i = 0; i < 2; i++) {
-            d[i] = this.con
+        byte[] bytes = new byte[9 + this.data.length];
+        ByteArrayOutputStream bytesStream  = new ByteArrayOutputStream(bytes.length);
+        DataOutputStream stream = new DataOutputStream(bytesStream);
+
+        try {
+            stream.writeInt(this.con);
+            stream.writeShort(this.seq);
+            stream.writeShort(this.ack);
+            this.flag.serialize(stream);
+            stream.write(this.data);
+            bytes = bytesStream.toByteArray();
+        } catch (IOException ex) {
+            throw new SerializationException("IOException thrown while serializing!", ex);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException ex) {}
         }
 
-        return d;
+        return bytes;
     }
 
     public short getAck() {
@@ -108,6 +121,14 @@ public class PsiTP4Packet {
 
     public void setSeq(short seq) {
         this.seq = seq;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
 }

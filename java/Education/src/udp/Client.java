@@ -1,5 +1,5 @@
 /*
- * CommandLine
+ * Client
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,66 +18,39 @@
  *
  */
 
-package psitp4.application;
+package udp;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class CommandLine {
-
-    private int port;
-    private InetAddress hostname;
-    private String remoteFileName;
-    private String localFileName;
-
-    public static CommandLine parse(String[] args) {
-        CommandLine cl = new CommandLine();
+public class Client {
+    public static void main(String[] args) {
 
         try {
-            cl.setHostname(InetAddress.getByName(args[0]));
-            cl.setPort(Integer.parseInt(args[1]));
-            cl.setRemoteFileName(args[2]);
-            cl.setLocalFileName(args[3]);
+
+            DatagramSocket socket = new DatagramSocket();
+            byte[] buf = new byte[1024];
+            String data = "Ahoj, jak se mas?";
+            buf = data.getBytes();
+            DatagramPacket toSend = new DatagramPacket(buf, buf.length, InetAddress.getByName(args[0]), 9999);
+            socket.send(toSend);
+
+            DatagramPacket toReceive = new DatagramPacket(buf, buf.length);
+            socket.receive(toReceive);
+            data = new String(toReceive.getData());
+            System.out.println(data);
+
         } catch (Exception ex) {
-            throw new RuntimeException("Client parameters are valid ip adress (DNS name), port number, remote file name and local file name!", ex);
+            System.out.println(formatException(ex));
         }
 
-        return cl;
-    }
 
-    public InetAddress getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(InetAddress hostname) {
-        this.hostname = hostname;
-    }
-
-    public String getLocalFileName() {
-        return localFileName;
-    }
-
-    public void setLocalFileName(String localFileName) {
-        this.localFileName = localFileName;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getRemoteFileName() {
-        return remoteFileName;
-    }
-
-    public void setRemoteFileName(String remoteFileName) {
-        this.remoteFileName = remoteFileName;
     }
 
     /**
@@ -106,5 +79,4 @@ public class CommandLine {
 
         return sb.toString();
     }
-
 }

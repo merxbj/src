@@ -20,6 +20,12 @@
 
 package psitp4.core;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  *
  * @author Jaroslav Merxbauer
@@ -30,34 +36,48 @@ public enum PsiTP4Flag {
     FIN,
     RST;
 
-    public static PsiTP4Flag deserialize(byte raw) throws DeserializationException {
-        raw &= 7; // mask out 5 leading values - they are not signficant
-        switch (raw) {
-            case 0:
-                return NONE;
-            case 1:
-                return SYN;
-            case 2:
-                return FIN;
-            case 4:
-                return RST;
-            default:
-                throw new DeserializationException("Flags are mixed together! It is allowed to have only one flag set!");
+    public static PsiTP4Flag deserialize(InputStream stream) throws DeserializationException {
+        DataInputStream in = new DataInputStream(stream);
+        try {
+            byte raw = (byte) (in.readByte() & 7); // mask out 5 leading values - they are not signficant
+            switch (raw) {
+                case 0:
+                    return NONE;
+                case 1:
+                    return SYN;
+                case 2:
+                    return FIN;
+                case 4:
+                    return RST;
+                default:
+                    throw new DeserializationException("Flags are mixed together! It is allowed to have only one flag set!");
+            }
+        } catch (IOException ex) {
+            throw new DeserializationException("IOException thrown while deserializing the flag!", ex);
         }
     }
 
-    public static byte serialize(PsiTP4Flag flag) throws SerializationException {
-        switch (flag) {
-            case NONE:
-                return 0;
-            case SYN:
-                return 1;
-            case RST:
-                return 2;
-            case FIN:
-                return 4;
-            default:
-                throw new SerializationException("Unusable flag used! Cannot serialize!");
+    public void serialize(OutputStream stream) throws SerializationException {
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+            switch (this) {
+                case NONE:
+                    out.write(0);
+                    break;
+                case SYN:
+                    out.write(1);
+                    break;
+                case RST:
+                    out.write(2);
+                    break;
+                case FIN:
+                    out.write(0);
+                    break;
+                default:
+                    throw new SerializationException("Unusable flag used! Cannot serialize!");
+            }
+        } catch (IOException ex) {
+            throw new SerializationException("IOException thrown while serializing the flag!", ex);
         }
     }
 
