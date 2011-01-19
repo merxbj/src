@@ -1,5 +1,5 @@
 /*
- * ProgressSink
+ * TransmissionFailedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,24 +18,23 @@
  *
  */
 
-package psitp4.application;
-
-import psitp4.core.PsiTP4Connection;
-import psitp4.core.PsiTP4Packet;
-import psitp4.statemachine.TransmissionState;
+package psitp4.statemachine;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface ProgressSink {
+public class TransmissionFailedState implements TransmissionState {
 
-    public void onWindowSlide(long bytes);
-    public void onDataGramReceived(PsiTP4Packet packet);
-    public void onDataGramSent(PsiTP4Packet packet);
-    public void onConnectionOpen(PsiTP4Connection con);
-    public void onConnectionClose(PsiTP4Connection con);
-    public void onTransferCompleted(long fileSize);
-    public void onChangedState(TransmissionState state);
+    private TransmissionState failedState;
+    
+    public TransmissionFailedState(TransmissionState failedState) {
+        this.failedState = failedState;
+    }
+
+    public TransmissionState process(StateMachine machine) {
+        return null;
+    }
+
 }

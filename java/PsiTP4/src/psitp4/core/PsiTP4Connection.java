@@ -99,7 +99,7 @@ public class PsiTP4Connection {
 
     public void close() throws PsiTP4Exception {
 
-        CloseConnectionPacket closeRequest = new CloseConnectionPacket();
+        FinishedPacket closeRequest = new FinishedPacket();
         this.send(closeRequest);
 
         sink.onConnectionClose(this);

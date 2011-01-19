@@ -30,25 +30,8 @@ public class Application {
     
     public static void main(String[] args) {
         CommandLine cl = CommandLine.parse(args);
+
         FileTransporter transporter = new FileTransporter(new SimpleProgressSink());
-        long size = 0;
-
-        try {
-            size = transporter.transfer(cl.getHostname(), cl.getPort(), cl.getRemoteFileName(), cl.getLocalFileName());
-        } catch (Exception ex) {
-            handleException(ex);
-        }
-
-        reportSuccess(size, cl);
-    }
-
-    private static void reportSuccess(long size, CommandLine cl) {
-        String message = String.format("Successfully transfered %d of bytes!", size);
-        System.out.println(message);
-    }
-
-    private static void handleException(Exception ex) {
-        System.out.println(CommandLine.formatException(ex));
-    }
-    
+        transporter.transfer(cl.getHostname(), cl.getPort(), cl.getRemoteFileName(), cl.getLocalFileName());        
+    }  
 }

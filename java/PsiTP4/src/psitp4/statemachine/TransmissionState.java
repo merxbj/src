@@ -1,5 +1,5 @@
 /*
- * ProgressSink
+ * TransmissionState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,24 +18,17 @@
  *
  */
 
-package psitp4.application;
+package psitp4.statemachine;
 
-import psitp4.core.PsiTP4Connection;
-import psitp4.core.PsiTP4Packet;
-import psitp4.statemachine.TransmissionState;
+import psitp4.core.ConnectionResetException;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface ProgressSink {
+public interface TransmissionState {
 
-    public void onWindowSlide(long bytes);
-    public void onDataGramReceived(PsiTP4Packet packet);
-    public void onDataGramSent(PsiTP4Packet packet);
-    public void onConnectionOpen(PsiTP4Connection con);
-    public void onConnectionClose(PsiTP4Connection con);
-    public void onTransferCompleted(long fileSize);
-    public void onChangedState(TransmissionState state);
+    public TransmissionState process(StateMachine machine) throws ConnectionResetException;
+
 }

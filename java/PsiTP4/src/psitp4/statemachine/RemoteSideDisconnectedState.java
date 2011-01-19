@@ -1,5 +1,5 @@
 /*
- * CloseConnectionPacket
+ * RemoteSideDisconnectedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,30 @@
  *
  */
 
-package psitp4.core;
+package psitp4.statemachine;
+
+import psitp4.application.CommandLine;
+import psitp4.core.PsiTP4Connection;
+import psitp4.core.PsiTP4Exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class CloseConnectionPacket extends PsiTP4Packet {
+public class RemoteSideDisconnectedState implements TransmissionState {
 
-    public CloseConnectionPacket() {
-        setFlag(PsiTP4Flag.FIN);
+    public TransmissionState process(StateMachine machine) {
+        try {
+            PsiTP4Connection connection = machine.getConnection();
+            if (connection != null) {
+                connection.close();
+                return new TransmissionSuccessfulState();
+            }
+        } catch (PsiTP4Exception ex) {
+            System.out.println(CommandLine.formatException(ex));
+        }
+        return new TransmissionFailedState(this);
     }
 
 }

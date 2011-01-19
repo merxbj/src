@@ -22,6 +22,7 @@ package psitp4.application;
 
 import psitp4.core.PsiTP4Connection;
 import psitp4.core.PsiTP4Packet;
+import psitp4.statemachine.TransmissionState;
 
 /**
  *
@@ -55,6 +56,15 @@ public class SimpleProgressSink implements ProgressSink {
 
     public void onDataGramSent(PsiTP4Packet packet) {
         System.out.println(String.format("snd: seq=%x, ack=%x, flg=%s, sze=%d", packet.getSeq(), packet.getAck(), packet.getFlag(), packet.getData().length));
+    }
+
+    public void onTransferCompleted(long fileSize) {
+        System.out.println(String.format("File transfer completed! Transfered %d bytes.", fileSize));
+    }
+
+    public void onChangedState(TransmissionState state) {
+        String stateName = state.getClass().getSimpleName();
+        System.out.println(String.format("Changed current transmission state to %s", stateName));
     }
 
 }
