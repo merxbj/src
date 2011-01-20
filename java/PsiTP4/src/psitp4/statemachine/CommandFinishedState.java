@@ -21,10 +21,10 @@
 package psitp4.statemachine;
 
 import psitp4.application.CommandLine;
-import psitp4.core.FinishedPacket;
 import psitp4.core.PsiTP4Connection;
 import psitp4.core.PsiTP4Exception;
 import psitp4.core.PsiTP4Packet;
+import psitp4.core.ResponsePacket;
 
 /**
  *
@@ -37,7 +37,9 @@ public class CommandFinishedState implements TransmissionState {
         try {
             PsiTP4Connection connection = machine.getConnection();
             if (connection != null) {
-                PsiTP4Packet getCommandFinishedPacket = new FinishedPacket();
+                PsiTP4Packet lastPacket = connection.getHistory().pop();
+                PsiTP4Packet getCommandFinishedPacket = new ResponsePacket(lastPacket.getSeq());
+                getCommandFinishedPacket.setSeq(lastPacket.getAck());
                 connection.send(getCommandFinishedPacket);
 
                 short expectedAck = (short) (getCommandFinishedPacket.getSeq() + 1);

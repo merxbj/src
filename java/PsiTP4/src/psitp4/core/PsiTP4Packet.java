@@ -48,16 +48,17 @@ public class PsiTP4Packet {
         this.data = new byte[0];
     }
 
-    public void deserialize(byte[] data) throws DeserializationException {
+    public void deserialize(byte[] data, int length) throws DeserializationException {
 
-        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
+        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data, 0, length));
         
         try {
             this.con = stream.readInt();
             this.seq = stream.readShort();
             this.ack = stream.readShort();
             this.flag = PsiTP4Flag.deserialize(stream);
-            stream.read(data);
+            this.data = new byte[stream.available()];
+            stream.read(this.data);
         } catch (IOException ex) {
             throw new DeserializationException("IOException thrown while deserializing!", ex);
         } finally {

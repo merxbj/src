@@ -34,32 +34,41 @@ import psitp4.application.ProgressSink;
 public class SlidingWindow {
     private short begin;
     private short end;
+    private short size;
     private Map<Short, byte[]> currentWindow;
     private List<Byte> data;
     private ProgressSink sink;
 
-    public SlidingWindow(short size, ProgressSink sink) {
-        this.begin = 0;
-        this.end = size;
+    public SlidingWindow(short begin, short size, ProgressSink sink) {
+        this.begin = begin;
+        this.end = (short) (begin + size);
+        this.size = size;
         this.currentWindow = new HashMap<Short, byte[]>();
         this.data = new ArrayList<Byte>();
+        this.sink = sink;
     }
 
     public short push(byte[] chunk, short seq) {
-        currentWindow.put(seq, chunk);
-        slideWidnow();
+        if (fitsToWindow(seq)) {
+            currentWindow.put(seq, chunk);
+            slideWidnow();
+        }
         return begin;
     }
 
     private void slideWidnow() {
+        System.out.println(String.format("wnd_before: begin=%d, end=%d", begin, end));
         while (currentWindow.containsKey(this.begin)) {
             byte[] chunk = currentWindow.remove(this.begin);
             for (byte b : chunk) {
                 data.add(b);
             }
             this.begin += chunk.length;
+            this.end += chunk.length;
             sink.onWindowSlide(chunk.length);
         }
+        System.out.println(String.format("wnd_after: begin=%d, end=%d", begin, end));
+        System.out.println(String.format("wnd: %d chunks remaining", currentWindow.size()));
     }
 
     public byte[] pull() {
@@ -69,6 +78,21 @@ public class SlidingWindow {
             d[i++] = b;
         }
         return d;
+    }
+
+    private boolean fitsToWindow(short seq) {
+        /*
+         * The following cast ensures unsigned comparsion of signed numbers.
+         * The additive constant will move the renge round the overflow-circle
+         * to ensure the invariant that begin < end
+         */
+        int offset = (((int) begin) & 0xffff) < (((int) end) & 0xffff) ? 0 : size;
+        int _begin = ((int) (begin + offset)) & 0xffff;
+        int _end = ((int) (end + offset)) & 0xffff;
+        int _seq = ((int) (seq + offset)) & 0xffff;
+        
+        System.out.println(String.format("wnd: sanity_check: b=%d, e=%d, s=%d", _begin, _end, _seq));
+        return ((_seq >= _begin) && (_seq <= _end));
     }
 
 }

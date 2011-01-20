@@ -38,7 +38,10 @@ public class CommandState implements TransmissionState {
             PsiTP4Connection connection = machine.getConnection();
             if (connection != null) {
                 String remoteFileName = machine.getRemoteFileName();
+                PsiTP4Packet lastPacket = connection.getHistory().pop();
                 PsiTP4Packet getCommandPacket = new GetPacket(remoteFileName);
+                getCommandPacket.setSeq(lastPacket.getAck());
+                getCommandPacket.setAck((short) (lastPacket.getSeq() + 1));
                 connection.send(getCommandPacket);
 
                 short expectedAck = (short) (getCommandPacket.getSeq() + 3 + remoteFileName.length()); // 3 for "GET"

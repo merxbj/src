@@ -20,11 +20,7 @@
 
 package psitp4.core;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.InetAddress;
-import psitp4.application.CommandLine;
 import psitp4.application.ProgressSink;
 import psitp4.statemachine.StateMachine;
 

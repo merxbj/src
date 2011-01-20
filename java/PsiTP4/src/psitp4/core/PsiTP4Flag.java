@@ -68,10 +68,10 @@ public enum PsiTP4Flag {
                     out.write(1);
                     break;
                 case RST:
-                    out.write(2);
+                    out.write(4);
                     break;
                 case FIN:
-                    out.write(0);
+                    out.write(2);
                     break;
                 default:
                     throw new SerializationException("Unusable flag used! Cannot serialize!");

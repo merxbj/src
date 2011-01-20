@@ -45,7 +45,7 @@ public class FileTransmissionState implements TransmissionState {
         try {
             PsiTP4Connection connection = machine.getConnection();
             if (connection != null) {
-                SlidingWindow window = new SlidingWindow(SLIDING_WINDOW_SIZE, machine.getSink());
+                SlidingWindow window = new SlidingWindow(connection.getHistory().pop().getSeq(), SLIDING_WINDOW_SIZE, machine.getSink());
 
                 PsiTP4Packet received = connection.receive();
                 while (received.getFlag() != PsiTP4Flag.FIN) {
@@ -53,7 +53,9 @@ public class FileTransmissionState implements TransmissionState {
                     checkFlags(received.getFlag());
 
                     short ack = window.push(received.getData(), received.getSeq());
-                    connection.send(new ResponsePacket(ack));
+                    PsiTP4Packet response = new ResponsePacket(ack);
+                    response.setSeq(received.getAck());
+                    connection.send(response);
 
                     received = connection.receive();
                 }

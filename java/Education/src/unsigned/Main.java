@@ -1,5 +1,5 @@
 /*
- * ResponsePacket
+ * Main
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,18 +18,17 @@
  *
  */
 
-package psitp4.core;
+package unsigned;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponsePacket extends PsiTP4Packet {
-
-    public ResponsePacket(short ack) {
-        setAck(ack);
-        setFlag(PsiTP4Flag.FIN);
+public class Main {
+    public static void main(String[] args) {
+        short s = -50;
+        int l = (int) s & 0xffff;
+        System.out.println(l);
     }
-
 }

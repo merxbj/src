@@ -38,11 +38,12 @@ public class SimpleProgressSink implements ProgressSink {
     }
 
     public void onConnectionClose(PsiTP4Connection con) {
-        System.out.println(String.format("Closed connection (0x%x) with the server ...", con.getId()));
+        int conId = (int) con.getId() & 0xffff;
+        System.out.println(String.format("Closed connection (%d) with the server ...", conId));
     }
 
     public void onConnectionOpen(PsiTP4Connection con) {
-        System.out.println(String.format("Established connection (0x%x) with the server ...", con.getId()));
+        System.out.println(String.format("Established connection (%d) with the server ...", con.getId()));
     }
 
     public void onWindowSlide(long bytes) {
@@ -51,11 +52,15 @@ public class SimpleProgressSink implements ProgressSink {
     }
 
     public void onDataGramReceived(PsiTP4Packet packet) {
-        System.out.println(String.format("rcv: seq=%x, ack=%x, flg=%s, sze=%d", packet.getSeq(), packet.getAck(), packet.getFlag(), packet.getData().length));
+        int seq = (int) packet.getSeq() & 0xffff;
+        int ack = (int) packet.getAck() & 0xffff;
+        System.out.println(String.format("rcv: seq=%d, ack=%d, flg=%s, sze=%d", seq, ack, packet.getFlag(), packet.getData().length));
     }
 
     public void onDataGramSent(PsiTP4Packet packet) {
-        System.out.println(String.format("snd: seq=%x, ack=%x, flg=%s, sze=%d", packet.getSeq(), packet.getAck(), packet.getFlag(), packet.getData().length));
+        int seq = (int) packet.getSeq() & 0xffff;
+        int ack = (int) packet.getAck() & 0xffff;
+        System.out.println(String.format("snd: seq=%d, ack=%d, flg=%s, sze=%d", seq, ack, packet.getFlag(), packet.getData().length));
     }
 
     public void onTransferCompleted(long fileSize) {
