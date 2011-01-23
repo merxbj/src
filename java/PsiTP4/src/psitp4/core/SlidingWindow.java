@@ -21,9 +21,9 @@
 package psitp4.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import psitp4.application.ProgressSink;
 
 /**
@@ -35,7 +35,7 @@ public class SlidingWindow {
     private short begin;
     private short end;
     private short size;
-    private Map<Short, byte[]> currentWindow;
+    private SortedMap<Short, byte[]> currentWindow;
     private List<Byte> data;
     private ProgressSink sink;
 
@@ -43,7 +43,7 @@ public class SlidingWindow {
         this.begin = begin;
         this.end = (short) (begin + size);
         this.size = size;
-        this.currentWindow = new HashMap<Short, byte[]>();
+        this.currentWindow = new TreeMap<Short, byte[]>();
         this.data = new ArrayList<Byte>();
         this.sink = sink;
     }
@@ -51,13 +51,15 @@ public class SlidingWindow {
     public short push(byte[] chunk, short seq) {
         if (fitsToWindow(seq)) {
             currentWindow.put(seq, chunk);
-            slideWidnow();
+            if (slideWidnow()) {
+                wipeWindow();
+            }
         }
         return begin;
     }
 
-    private void slideWidnow() {
-        System.out.println(String.format("wnd_before: begin=%d, end=%d", begin, end));
+    private boolean slideWidnow() {
+        short oldBegin = this.begin;
         while (currentWindow.containsKey(this.begin)) {
             byte[] chunk = currentWindow.remove(this.begin);
             for (byte b : chunk) {
@@ -67,8 +69,19 @@ public class SlidingWindow {
             this.end += chunk.length;
             sink.onWindowSlide(chunk.length);
         }
-        System.out.println(String.format("wnd_after: begin=%d, end=%d", begin, end));
-        System.out.println(String.format("wnd: %d chunks remaining", currentWindow.size()));
+        return (this.begin != oldBegin);
+    }
+
+    private void wipeWindow() {
+        List<Short> wiped = new ArrayList<Short>(currentWindow.size());
+        for (Short s : currentWindow.keySet()) {
+            if (!fitsToWindow(s)) {
+                wiped.add(s);
+            }
+        }
+        for (Short s : wiped) {
+            currentWindow.remove(s);
+        }
     }
 
     public byte[] pull() {
@@ -90,8 +103,7 @@ public class SlidingWindow {
         int _begin = ((int) (begin + offset)) & 0xffff;
         int _end = ((int) (end + offset)) & 0xffff;
         int _seq = ((int) (seq + offset)) & 0xffff;
-        
-        System.out.println(String.format("wnd: sanity_check: b=%d, e=%d, s=%d", _begin, _end, _seq));
+
         return ((_seq >= _begin) && (_seq <= _end));
     }
 
