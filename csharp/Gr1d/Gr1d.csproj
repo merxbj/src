@@ -46,7 +46,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MerxbjEngineer.cs" />
+    <Compile Include="TheAttacker.cs" />
+    <Compile Include="TheAttackerArsenal\BuffAplicator.cs" />
+    <Compile Include="TheAttackerArsenal\BuffChecker.cs" />
+    <Compile Include="TheExplorer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
