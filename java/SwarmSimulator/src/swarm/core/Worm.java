@@ -215,7 +215,7 @@ public class Worm implements Drawable {
                     this.hatch.died(victim);
                     this.victim = null;
                     this.speed = 1;
-                    this.cooldown = 500;
+                    this.cooldown = 250;
                     return false;
                 } else {
                     double lucky = Math.random();
