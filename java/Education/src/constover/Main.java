@@ -27,40 +27,38 @@ package constover;
  */
 public class Main {
     public static void main(String[] args) {
-        Derived d = new Derived();
+        MujSuperSilnyAgent d = new MujSuperSilnyAgent();
     }
     
-    private static class Base {
+    private static abstract class Agent {
         
-        protected String string;
-
-        public Base() {
-            init();
-            if (this.string.compareTo("Base::init()") == 0) {
-                System.out.println("Asi je vse OK!");
-            }
+        public Agent() {
+            onInit();
         }
         
-        protected void init() {
-            string = "Base::init()";
-        }
-
-        public String getString() {
-            return string;
-        }
+        protected abstract void onInit();
         
     }
     
-    private static class Derived extends Base {
+    private static class MujSuperSilnyAgent extends Agent {
 
-        public Derived() {
+        private Fucker fucker; // jsem super silny, proto budu mit sveho fuckera
+        
+        public MujSuperSilnyAgent() {
+            fucker = new Fucker(); // tohle je muj construktor, tady si fuckera vyrobim
         }
 
         @Override
-        protected void init() {
-            string = null; // to sem ale svine!!!
+        protected void onInit() {
+            fucker.fuck();
         }
         
+    }
+    
+    private static class Fucker {
+        public void fuck() {
+            System.out.println("Fuckuju!!");
+        }
     }
     
 }
