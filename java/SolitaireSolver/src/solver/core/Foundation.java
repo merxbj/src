@@ -23,7 +23,7 @@ public class Foundation {
         this.usedUpPiles = new LinkedList<Pile<Card>>();
     }
     
-    public void found(Pile<Card> completeTableau) {
+    public int found(Pile<Card> completeTableau) {
         if (!validateTableau(completeTableau)) {
             throw new RuntimeException("This is not a complete tableau!");
         }
@@ -31,6 +31,8 @@ public class Foundation {
         if (availablePiles-- > 0) {
             usedUpPiles.add(completeTableau);
         }
+        
+        return usedUpPiles.size();
     }
 
     private boolean validateTableau(Pile<Card> completeTableau) {

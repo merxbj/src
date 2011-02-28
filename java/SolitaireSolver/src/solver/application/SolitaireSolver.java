@@ -5,7 +5,7 @@
 
 package solver.application;
 
-import solver.core.GameResults;
+import solver.core.GameProgress;
 import solver.core.SpideretteSolitaire;
 import solver.core.Table;
 import solver.player.SolitairePlayer;
@@ -22,9 +22,15 @@ public class SolitaireSolver {
         Table table = game.initNewGame();
         
         SolitairePlayer player = new SolitairePlayer();
+        GameProgress results = new GameProgress();
         
-        GameResults results = player.play(table);
-        results.print();
+        try {
+            player.play(table, results);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            results.print();
+        }
         
     }
 

@@ -5,8 +5,14 @@
 
 package solver.player;
 
-import solver.core.GameResults;
+import java.util.Collections;
+import java.util.List;
+import solver.core.Card;
+import solver.core.GameProgress;
+import solver.core.Pile;
+import solver.core.PileUnflippedCountComparator;
 import solver.core.Table;
+import solver.core.Waste;
 
 /**
  *
@@ -15,9 +21,18 @@ import solver.core.Table;
 public class SolitairePlayer implements Player {
 
     @Override
-    public GameResults play(Table table) {
-        GameResults results = new GameResults();
-        return results;
+    public void play(Table table, GameProgress results) {
+        
+        Waste waste = table.getWaste();
+        List<Pile<Card>> piles = waste.getPiles();
+        Collections.sort(piles, new PileUnflippedCountComparator());
+        
+        while (true) {
+            
+            
+            
+        }
+        
     }
     
 }

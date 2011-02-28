@@ -33,4 +33,8 @@ public class Table {
         waste.deal(stock);
     }
     
+    public Waste getWaste() {
+        return waste;
+    }
+    
 }

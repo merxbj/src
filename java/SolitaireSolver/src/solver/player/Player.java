@@ -5,7 +5,7 @@
 
 package solver.player;
 
-import solver.core.GameResults;
+import solver.core.GameProgress;
 import solver.core.Table;
 
 /**
@@ -13,5 +13,5 @@ import solver.core.Table;
  * @author jmerxbauer
  */
 public interface Player {
-    public GameResults play(Table table);
+    public void play(Table table, GameProgress results);
 }
