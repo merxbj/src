@@ -5,12 +5,9 @@
 
 package solver.player;
 
-import java.util.Collections;
 import java.util.List;
-import solver.core.Card;
-import solver.core.GameProgress;
-import solver.core.Pile;
-import solver.core.PileUnflippedCountComparator;
+import java.util.Stack;
+import solver.actions.Action;
 import solver.core.Table;
 import solver.core.Waste;
 
@@ -20,19 +17,43 @@ import solver.core.Waste;
  */
 public class SolitairePlayer implements Player {
 
+    private Stack<Action> actions;
+
+    public SolitairePlayer() {
+        actions = new Stack<Action>();
+    }
+    
     @Override
-    public void play(Table table, GameProgress results) {
+    public boolean play(Table table) {
         
-        Waste waste = table.getWaste();
-        List<Pile<Card>> piles = waste.getPiles();
-        Collections.sort(piles, new PileUnflippedCountComparator());
-        
-        while (true) {
-            
-            
-            
+        if (table.solved()) {
+            return true;
         }
         
+        List<Action> currentActions = generateAvailableActions(table.getWaste());
+        if (currentActions.isEmpty()) {
+            return false;
+        }
+        
+        for (Action action : currentActions) {
+            actions.push(action);
+            action.perform(table);
+            if (play(table)) {
+                return true;
+            } else {
+                actions.pop();
+            }
+        }
+        
+        return false;
+    }
+
+    private List<Action> generateAvailableActions(Waste waste) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public Stack<Action> getActions() {
+        return actions;
     }
     
 }

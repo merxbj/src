@@ -5,7 +5,8 @@
 
 package solver.application;
 
-import solver.core.GameProgress;
+import solver.actions.ActionInterpreter;
+import solver.actions.ActionPrinter;
 import solver.core.SpideretteSolitaire;
 import solver.core.Table;
 import solver.player.SolitairePlayer;
@@ -22,16 +23,18 @@ public class SolitaireSolver {
         Table table = game.initNewGame();
         
         SolitairePlayer player = new SolitairePlayer();
-        GameProgress results = new GameProgress();
-        
+        ActionInterpreter printer = new ActionPrinter();
+
         try {
-            player.play(table, results);
+            if (player.play(table)) {
+                printer.interpret(player.getActions());
+            } else {
+                System.out.println("Game was not ");
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-        } finally {
-            results.print();
         }
-        
+
     }
 
 }

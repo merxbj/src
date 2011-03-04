@@ -19,7 +19,7 @@ public class Waste {
     public Waste() {
         piles = new LinkedList<Pile<Card>>();
     }
-    
+
     /**
      * 
      * @param deck Initial (full) deck of cards.
@@ -41,7 +41,7 @@ public class Waste {
     }
     
     public void deal(Deck stock) {
-        // TODO: Implement
+        // TODO: Implement!
     }
     
     public List<Pile<Card>> getPiles() {

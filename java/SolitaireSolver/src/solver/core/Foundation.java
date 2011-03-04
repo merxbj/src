@@ -63,4 +63,8 @@ public class Foundation {
         return true;
     }
 
+    public int getAvailablePiles() {
+        return availablePiles;
+    }
+
 }

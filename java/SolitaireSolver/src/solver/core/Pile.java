@@ -58,11 +58,6 @@ public class Pile<E extends Card> implements Iterable<E>, Comparable<Pile<E>> {
         return pile;
     }
     
-    public Pile<E> moveableSublist() {
-        // TODO: Implement
-        throw new NotImplementedException();
-    }
-    
     public enum Facing {
         Top, Bottom
     }

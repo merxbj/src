@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package solver.player;
+package solver.actions;
 
 import solver.core.Table;
 
@@ -11,6 +11,6 @@ import solver.core.Table;
  *
  * @author jmerxbauer
  */
-public interface Player {
-    public boolean play(Table table);
+public interface Action {
+    public void perform(Table t);
 }

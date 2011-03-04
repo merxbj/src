@@ -36,5 +36,14 @@ public class Table {
     public Waste getWaste() {
         return waste;
     }
+
+    public Foundation getFoundation() {
+        return foundation;
+    }
     
+    public boolean solved() {
+        // TODO: Implement!
+        return true;
+    }
+
 }
