@@ -42,8 +42,7 @@ public class Table {
     }
     
     public boolean solved() {
-        // TODO: Implement!
-        return true;
+        return ((waste.size() == 0) && (foundation.getAvailablePiles() == 0));
     }
 
 }

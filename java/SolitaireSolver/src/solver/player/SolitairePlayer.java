@@ -49,6 +49,7 @@ public class SolitairePlayer implements Player {
     }
 
     private List<Action> generateAvailableActions(Waste waste) {
+        // TODO: Implement!
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

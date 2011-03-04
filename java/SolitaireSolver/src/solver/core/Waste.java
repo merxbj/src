@@ -41,11 +41,43 @@ public class Waste {
     }
     
     public void deal(Deck stock) {
-        // TODO: Implement!
+        if (!readyToDealStock()) {
+            throw new RuntimeException("Attempted to deal a stock when it is not possible!");
+        }
+        
+        for (Pile<Card> pile : piles) {
+            Card card = stock.pop();
+            if (card == null) {
+                break; // we have dealt everything from the stock
+            }
+            pile.stack(card, Pile.Facing.Top);
+        }
     }
     
     public List<Pile<Card>> getPiles() {
         return piles;
+    }
+
+    private boolean readyToDealStock() {
+        int emptyPiles = 0;
+        int totalCardsLeft = 0;
+
+        for (Pile<Card> pile : piles) {
+            totalCardsLeft += pile.size();
+            if (pile.size() == 0) {
+                emptyPiles++;
+            }
+        }
+        
+        return ((emptyPiles != 0) || (emptyPiles > totalCardsLeft));
+    }
+    
+    public int size() {
+        int size = 0;
+        for (Pile<Card> pile : piles) {
+            size += pile.size();
+        }
+        return size;
     }
 
 }
