@@ -6,6 +6,7 @@
 package solver.actions;
 
 import solver.core.Table;
+import solver.core.Waste;
 
 /**
  *
@@ -13,9 +14,15 @@ import solver.core.Table;
  */
 public class FlipAction implements Action {
 
+    private int tableauNumber;
+
+    public FlipAction(int tableauNumber) {
+        this.tableauNumber = tableauNumber;
+    }
+
     @Override
     public void perform(Table t) {
-        // TODO: Implement!
+        t.flipWasteCardOnTableau(tableauNumber);
     }
     
 }

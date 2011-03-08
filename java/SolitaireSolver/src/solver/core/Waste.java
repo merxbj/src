@@ -7,6 +7,7 @@ package solver.core;
 
 import java.util.LinkedList;
 import java.util.List;
+import solver.core.Pile.FacedCard;
 
 /**
  *
@@ -78,6 +79,16 @@ public class Waste {
             size += pile.size();
         }
         return size;
+    }
+
+    void flipCardOnTableau(int tableauNumber) {
+        Pile<Card> pileToFlipCardOn = piles.get(tableauNumber);
+        FacedCard faced = pileToFlipCardOn.pop();
+        if (faced.getFacing().equals(Pile.Facing.Top)) {
+            pileToFlipCardOn.stack(faced.getCard(), faced.getFacing());
+            throw new RuntimeException("Attempted to flip already top-facing card!");
+        }
+        pileToFlipCardOn.stack(faced.getCard(), Pile.Facing.Top);
     }
 
 }

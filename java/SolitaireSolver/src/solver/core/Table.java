@@ -45,4 +45,12 @@ public class Table {
         return ((waste.size() == 0) && (foundation.getAvailablePiles() == 0));
     }
 
+    public void flipWasteCardOnTableau(int tableauNumber) {
+        waste.flipCardOnTableau(tableauNumber);
+    }
+
+    public void foundTableau(int tableauNumber) {
+        // TODO: Implement!
+    }
+
 }

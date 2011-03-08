@@ -11,11 +11,11 @@ import solver.core.Table;
  *
  * @author jmerxbauer
  */
-public class DealDeckAction implements Action {
+public class DealStockAction implements Action {
 
     @Override
     public void perform(Table t) {
-        // TODO: Implement!
+        t.dealStock();
     }
 
 }

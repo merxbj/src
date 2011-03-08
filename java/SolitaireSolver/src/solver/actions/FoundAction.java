@@ -13,9 +13,15 @@ import solver.core.Table;
  */
 public class FoundAction implements Action {
 
+    private int tableauNumber;
+
+    public FoundAction(int tableauNumber) {
+        this.tableauNumber = tableauNumber;
+    }
+    
     @Override
     public void perform(Table t) {
-        // TODO: Implement!
+        t.foundTableau(tableauNumber);
     }
     
 }
