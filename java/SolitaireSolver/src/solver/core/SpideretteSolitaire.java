@@ -19,8 +19,7 @@ public class SpideretteSolitaire {
         this.table = new Table();
     }
     
-    public Table initNewGame() {
-        DeckFactory factory = new FrenchPrimaryDeckFactory();
+    public Table initNewGame(DeckFactory factory) {
         Deck deck = factory.createDeck();
         deck.shuffle();
         

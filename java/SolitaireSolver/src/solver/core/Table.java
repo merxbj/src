@@ -45,12 +45,18 @@ public class Table {
         return ((waste.size() == 0) && (foundation.getAvailablePiles() == 0));
     }
 
-    public void flipWasteCardOnTableau(int tableauNumber) {
+    public void flipCardOnTableau(int tableauNumber) {
         waste.flipCardOnTableau(tableauNumber);
     }
 
     public void foundTableau(int tableauNumber) {
-        // TODO: Implement!
+        Pile<Card> toFound = waste.borrowCardsToFound(tableauNumber);
+        foundation.found(toFound);
+        waste.founded(tableauNumber);
+    }
+
+    public void transfer(int from, int to, int size) {
+        waste.transfer(from, to, size);
     }
 
 }

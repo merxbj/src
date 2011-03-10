@@ -5,9 +5,14 @@
 
 package solver.player;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import solver.actions.Action;
+import solver.actions.FlipAction;
+import solver.core.Card;
+import solver.core.Pile;
+import solver.core.Pile.Facing;
 import solver.core.Table;
 import solver.core.Waste;
 
@@ -50,7 +55,15 @@ public class SolitairePlayer implements Player {
 
     private List<Action> generateAvailableActions(Waste waste) {
         // TODO: Implement!
-        throw new UnsupportedOperationException("Not yet implemented");
+        List<Action> genActions = new LinkedList<Action>();
+        for (Pile<Card> pile : waste.getPiles()) {
+            if (pile.peek().getFacing() == Facing.Bottom) {
+                genActions.add(new FlipAction(pile.getNumber()));
+            } else {
+                
+            }
+        }
+        return new LinkedList<Action>();
     }
 
     public Stack<Action> getActions() {

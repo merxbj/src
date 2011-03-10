@@ -5,8 +5,11 @@
 
 package solver.core;
 
+import java.util.Deque;
+import java.util.EnumMap;
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  *
@@ -14,7 +17,7 @@ import java.util.Stack;
  */
 public class Pile<E extends Card> implements Comparable<Pile<E>>, Iterable<E> {
 
-    private Stack<FacedCard> pile;
+    private Deque<FacedCard> pile;
     private int number;
 
     public Pile() {
@@ -22,7 +25,7 @@ public class Pile<E extends Card> implements Comparable<Pile<E>>, Iterable<E> {
     }
 
     public Pile(int number) {
-        this.pile = new Stack<FacedCard>();
+        this.pile = new LinkedList<FacedCard>();
         this.number = number;
     }
 
@@ -36,11 +39,29 @@ public class Pile<E extends Card> implements Comparable<Pile<E>>, Iterable<E> {
     }
     
     public void stack(E card, Facing facing) {
-        pile.push(new FacedCard(card, facing));
+        pile.addFirst(new FacedCard(card, facing));
+    }
+    
+    public void stack(Pile<E> cards) {
+        FacedCard element = cards.getPile().removeLast();
+        while (element != null) {
+            if (element.getFacing() != Facing.Top) {
+                throw new RuntimeException("Attempted to stack bottom-facing card!");
+            }
+            pile.addFirst(element);
+            element = cards.getPile().removeLast();
+        }
+    }
+    
+    public void remove(Pile<E> cards) {
+        int toRemove = cards.size();
+        while (toRemove-- > 0) {
+            pile.removeFirst();
+        }
     }
     
     public FacedCard pop() {
-        return pile.pop();
+        return pile.removeFirst();
     }
     
     public int size() {
@@ -52,11 +73,46 @@ public class Pile<E extends Card> implements Comparable<Pile<E>>, Iterable<E> {
     }
     
     public FacedCard peek() {
-        return pile.peek();
+        return pile.peekFirst();
     }
     
-    public Stack<FacedCard> getPile() {
+    public Deque<FacedCard> getPile() {
         return pile;
+    }
+    
+    public Pile<E> subPile(int size) {
+        Pile<E> subPile = new Pile<E>();
+        for (FacedCard element : pile) {
+            subPile.getPile().addLast(element);
+            if (subPile.size() == size) {
+                break;
+            }
+        }
+        return subPile;
+    }
+    
+    public boolean isTransferable() {
+        Map<Card.Suit, Integer> suitsInTableau = new EnumMap<Card.Suit, Integer>(Card.Suit.class);
+        Card.Rank expectedRank = Card.Rank.Ace;
+        for (Card card : this) {
+            if (card.getRank() != expectedRank) {
+                return false;
+            }
+            
+            int suitCount = 0;
+            if (suitsInTableau.containsKey(card.getSuit())) {
+                suitCount = suitsInTableau.get(card.getSuit());
+            }
+            suitsInTableau.put(card.getSuit(), ++suitCount);
+            
+            expectedRank = Card.Rank.values()[expectedRank.ordinal() + 1];
+        }
+        
+        if (suitsInTableau.size() > 1) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override

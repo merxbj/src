@@ -39,28 +39,8 @@ public class Foundation {
         if (completeTableau.size() != Card.Rank.values().length) {
             return false;
         }
-        
-        Map<Card.Suit, Integer> suitsInTableau = new EnumMap<Card.Suit, Integer>(Card.Suit.class);
-        Card.Rank expectedRank = Card.Rank.Ace;
-        for (Card card : completeTableau) {
-            if (card.getRank() != expectedRank) {
-                return false;
-            }
-            
-            int suitCount = 0;
-            if (suitsInTableau.containsKey(card.getSuit())) {
-                suitCount = suitsInTableau.get(card.getSuit());
-            }
-            suitsInTableau.put(card.getSuit(), ++suitCount);
-            
-            expectedRank = Card.Rank.values()[expectedRank.ordinal() + 1];
-        }
-        
-        if (suitsInTableau.size() > 1) {
-            return false;
-        }
-        
-        return true;
+
+        return completeTableau.isTransferable();
     }
 
     public int getAvailablePiles() {

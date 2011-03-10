@@ -22,7 +22,7 @@ public class FlipAction implements Action {
 
     @Override
     public void perform(Table t) {
-        t.flipWasteCardOnTableau(tableauNumber);
+        t.flipCardOnTableau(tableauNumber);
     }
     
 }

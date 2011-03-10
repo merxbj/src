@@ -91,4 +91,24 @@ public class Waste {
         pileToFlipCardOn.stack(faced.getCard(), Pile.Facing.Top);
     }
 
+    Pile<Card> borrowCardsToFound(int tableauNumber) {
+        Pile<Card> cardsToFound = piles.get(tableauNumber).subPile(Card.Rank.values().length);
+        return cardsToFound;
+    }
+
+    void founded(int tableauNumber) {
+        Pile<Card> cardsFounded = piles.get(tableauNumber).subPile(Card.Rank.values().length);
+        piles.get(tableauNumber).remove(cardsFounded);
+    }
+
+    void transfer(int from, int to, int size) {
+        Pile<Card> transfer = piles.get(from).subPile(size);
+        if (transfer.isTransferable()) {
+            Pile<Card> pileFrom = piles.get(from);
+            Pile<Card> pileTo = piles.get(to);
+            pileFrom.remove(transfer);
+            pileFrom.stack(transfer);
+        }
+    }
+
 }
