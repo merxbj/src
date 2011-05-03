@@ -18,12 +18,13 @@
  *
  */
 
-package ad7b32kbe;
+package crypto.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,11 +32,13 @@ import java.util.List;
  * @author eTeR
  * @version %I% %G%
  */
-public class CryptoVocabulary {
+public class CryptoVocabulary implements Iterable<String> {
 
     private HashMap<String, String> vocabulary;
+    private VocabularyAnalyzeSink sink;
 
-    public CryptoVocabulary() {
+    public CryptoVocabulary(VocabularyAnalyzeSink sink) {
+        this.sink = sink;
         vocabulary = new HashMap<String, String>();
     }
     
@@ -54,18 +57,14 @@ public class CryptoVocabulary {
         }
     }
     
-    public boolean isSentenseNoSpaces(String sentenseWithoutSpaces) {
+    public boolean isSentenseNoSpaces(String sentenseWithoutSpaces, int minWordSize, int minWordOccurence) {
         List<String> words = new ArrayList<String>(4);
-        int totalSize = 0;
         for (String word : vocabulary.keySet()) {
-            if (sentenseWithoutSpaces.contains(word)) {
+            if (word.length() >= minWordSize && sentenseWithoutSpaces.contains(word)) {
                 words.add(word);
-                totalSize += word.length();
-                if (totalSize + 10 >= sentenseWithoutSpaces.length()) {
-                    System.out.println("Found maybe sentense: " + sentenseWithoutSpaces + " based on words:");
-                    for (String w : words) {
-                        System.out.println(w);
-                    }
+                if (words.size() >= minWordOccurence) {
+                    sink.reportMaybeSentense(sentenseWithoutSpaces);
+                    sink.reportKeyWords(words);
                     return true;
                 }
             }
@@ -75,6 +74,15 @@ public class CryptoVocabulary {
     
     public boolean isWord(String word) {
         return vocabulary.containsKey(word);
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return vocabulary.keySet().iterator();
+    }
+    
+    public int size() {
+        return vocabulary.size();
     }
     
 }

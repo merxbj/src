@@ -1,5 +1,5 @@
 /*
- * NGramsLookup
+ * AffineCipherKey
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package ad7b32kbe;
+package crypto.core;
 
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-public class NGramsLookup {
+public class AffineCipherKey extends Key {
+    public byte a, b;
 
-    public List<Integer> findTrigrams(String sentense) {
-        
-    }
-    
-    public List<Integer> findDigrams(String sentense) {
-        
-    }
-    
-    private List<Integer> findNGrams(String sentense, int size) {
-        
+    public AffineCipherKey(byte a, byte b) {
+        this.a = a;
+        this.b = b;
     }
 
+    @Override
+    public String toString() {
+        return "Key{" + "a=" + a + ", b=" + b + '}';
+    }
 }

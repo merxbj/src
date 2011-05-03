@@ -18,14 +18,14 @@
  *
  */
 
-package ad7b32kbe;
+package crypto.utils;
 
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-class InvalidKeyException extends Exception {
+public class InvalidKeyException extends RuntimeException {
 
     public InvalidKeyException(String string) {
         super(string);
