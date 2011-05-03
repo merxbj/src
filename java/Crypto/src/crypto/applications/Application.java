@@ -26,6 +26,7 @@ import crypto.core.Key;
 import crypto.core.KeyCipher;
 import crypto.core.KeyCipherKey;
 import crypto.core.PlainShiftKey;
+import crypto.core.TableCipher;
 import crypto.utils.CryptoVocabulary;
 import crypto.utils.SilentVocabularyAnalyzeSink;
 import crypto.utils.VerbooseVocabularyAnalyzeSink;
@@ -45,7 +46,8 @@ public class Application {
         
         //excerciseOne(args);
         //excerciseTwo(args);
-        excerciseThree(args);
+        //excerciseThree(args);
+        excerciseFour(args);
         
     }
     
@@ -101,7 +103,7 @@ public class Application {
         final Object lock = new Object();
         ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
-        for (final String word : new String[] {"AHOJ", "JA", "JSEM", "JARA"}) {
+        for (final String word : voc) {
             Runnable task = new Runnable() {
 
                 @Override
@@ -112,7 +114,7 @@ public class Application {
                     cipher.assignKey(key);
                     char[] openChars = cipher.decipher(cipheredChars);
                     String deciphered = new String(openChars);
-                    foundSentense = voc.isSentenseNoSpaces(deciphered, 4, 10);
+                    foundSentense = voc.isSentenseNoSpaces(deciphered, 5, 15);
                     
                     synchronized (lock) {
                         System.out.println(String.format("\rAnalyzed %5.2f%% | %d words remaining", 100.*wordsProcessed++ / (wordsCount), wordsCount - wordsProcessed));
@@ -128,16 +130,26 @@ public class Application {
         
         try {
             System.out.println("All tasks queued up - awaiting termination.");
-            // will not terminate with all threads finished their work - need another impl (maybe ExecutorCompletionService?)
+            threadPool.shutdown();
             threadPool.awaitTermination(15, TimeUnit.MINUTES);
         } catch (InterruptedException ex) {
             System.out.println(ex);
         }
         
+        System.out.println("Let's take a look what have we found ...");
         for (String sentense : sentenses) {
-            System.out.println("Let's take a look what have we found ...");
             System.out.println(sentense);
         }
 
+    }
+
+    private static void excerciseFour(String[] args) {
+        String ciphered = "GAEXOTHYHSGTNGNOUHSDHUOEYOHDIGOTAHGATUROOEHVSDYNAITTMVUDKAEHMSDRRTHAIKAIDHEOAOPLHEYCNPNPELRYVTSEWBTOPGRRINSEHOFIEUWEHOEKITRESLNSASTEMVENHTRHADULHIRIEDGAHEEXORSETHSRTMTESGAWEFHEUEYOYCFAANAAOAASDTEBOLGVDNTRDNBTHAEMAOESDEAADAOIT";
+        char[] cipheredChars = ciphered.toCharArray();
+        
+        CryptoVocabulary voc = new CryptoVocabulary(new VerbooseVocabularyAnalyzeSink());
+        voc.loadFromFile(args[0]);
+        
+        //Cipher cipher = new TableCipher();
     }
 }
