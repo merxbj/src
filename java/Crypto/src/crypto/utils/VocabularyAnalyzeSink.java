@@ -19,14 +19,12 @@
  */
 package crypto.utils;
 
-import java.util.List;
-
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
 public interface VocabularyAnalyzeSink {
-    public void reportMaybeSentense(String sentense);
-    public void reportKeyWords(List<String> words);
+    public void reportWord(String words);
+    public void reportProcessedSentense(String sentense);
 }

@@ -1,5 +1,5 @@
 /*
- * AffineCipherKey
+ * TableCipherKeyGenerator
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -19,21 +19,39 @@
  */
 package crypto.core;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-public class AffineCipherKey extends Key {
-    public char a, b;
+public class TableCipherKeyGenerator implements Iterable<TableCipherKey> {
 
-    public AffineCipherKey(char a, char b) {
-        this.a = a;
-        this.b = b;
+    List<TableCipherKey> keys;
+    
+    public TableCipherKeyGenerator(int textLength) {
+        generateKeys(textLength);
     }
 
     @Override
-    public String toString() {
-        return "Key{" + "a=" + a + ", b=" + b + '}';
+    public Iterator<TableCipherKey> iterator() {
+        return keys.iterator();
     }
+    
+    public int count() {
+        return keys.size();
+    }
+
+    private void generateKeys(int length) {
+        keys = new LinkedList<TableCipherKey>();
+        for (int divider = 2; divider < length; divider++) {
+            if (length % divider == 0) {
+                keys.add(new TableCipherKey(divider, length / divider));
+            }
+        }
+    }
+    
 }

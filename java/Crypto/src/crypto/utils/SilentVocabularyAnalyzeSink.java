@@ -19,8 +19,6 @@
  */
 package crypto.utils;
 
-import java.util.List;
-
 /**
  *
  * @author eTeR
@@ -29,12 +27,12 @@ import java.util.List;
 public class SilentVocabularyAnalyzeSink implements VocabularyAnalyzeSink {
 
     @Override
-    public void reportKeyWords(List<String> words) {
+    public void reportWord(String word) {
         
     }
 
     @Override
-    public void reportMaybeSentense(String sentense) {
+    public void reportProcessedSentense(String sentense) {
         
     }
     

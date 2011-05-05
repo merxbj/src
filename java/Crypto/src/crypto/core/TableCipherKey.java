@@ -1,5 +1,5 @@
 /*
- * CompleteTableCipher
+ * TableCipherKey
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -24,6 +24,18 @@ package crypto.core;
  * @author eTeR
  * @version %I% %G%
  */
-public abstract class TableCipher {
-    
+public class TableCipherKey extends Key {
+    public int width;
+    public int height;
+
+    public TableCipherKey(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public String toString() {
+        return "TableCipherKey{" + "width=" + width + ", height=" + height + '}';
+    }
+
 }

@@ -19,8 +19,6 @@
  */
 package crypto.utils;
 
-import java.util.List;
-
 /**
  *
  * @author eTeR
@@ -29,15 +27,13 @@ import java.util.List;
 public class VerbooseVocabularyAnalyzeSink implements VocabularyAnalyzeSink {
 
     @Override
-    public void reportKeyWords(List<String> words) {
-        for (String w : words) {
-            System.out.println(w);
-        }
+    public void reportWord(String word) {
+        System.out.println("\t" + word);
     }
 
     @Override
-    public void reportMaybeSentense(String sentense) {
-        System.out.println("Found maybe sentense: " + sentense + " based on words:");
+    public void reportProcessedSentense(String sentense) {
+        System.out.println("Processing sentense: " + sentense);
     }
     
 }

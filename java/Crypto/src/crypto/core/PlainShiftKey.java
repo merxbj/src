@@ -28,12 +28,12 @@ import crypto.utils.InvalidKeyException;
  */
 public class PlainShiftKey extends AffineCipherKey {
 
-    public PlainShiftKey(byte shift) {
-        super((byte) 1, shift);
+    public PlainShiftKey(char shift) {
+        super((char) 1, shift);
     }
     
-    public PlainShiftKey(byte a, byte b) {
-        super((byte) 0, (byte)0);
+    public PlainShiftKey(char a, char b) {
+        super((char) 0, (char)0);
         throw new InvalidKeyException("Such constructor does not have sense in this case!");
     }
     

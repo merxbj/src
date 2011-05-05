@@ -1,5 +1,5 @@
 /*
- * AffineCipherKey
+ * DoubleTableCipherKey
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -24,16 +24,18 @@ package crypto.core;
  * @author eTeR
  * @version %I% %G%
  */
-public class AffineCipherKey extends Key {
-    public char a, b;
+public class DoubleTableCipherKey extends Key {
+    public TableCipherKey outerKey;
+    public TableCipherKey innerKey;
 
-    public AffineCipherKey(char a, char b) {
-        this.a = a;
-        this.b = b;
+    public DoubleTableCipherKey(TableCipherKey outerKey, TableCipherKey innerKey) {
+        this.outerKey = outerKey;
+        this.innerKey = innerKey;
     }
 
     @Override
     public String toString() {
-        return "Key{" + "a=" + a + ", b=" + b + '}';
+        return "DoubleTableCipherKey{" + "outerKey=" + outerKey + ", innerKey=" + innerKey + '}';
     }
+    
 }

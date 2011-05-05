@@ -58,13 +58,13 @@ public class CryptoVocabulary implements Iterable<String> {
     }
     
     public boolean isSentenseNoSpaces(String sentenseWithoutSpaces, int minWordSize, int minWordOccurence) {
+        sink.reportProcessedSentense(sentenseWithoutSpaces);
         List<String> words = new ArrayList<String>(4);
         for (String word : vocabulary.keySet()) {
             if (word.length() >= minWordSize && sentenseWithoutSpaces.contains(word)) {
                 words.add(word);
+                sink.reportWord(word);
                 if (words.size() >= minWordOccurence) {
-                    sink.reportMaybeSentense(sentenseWithoutSpaces);
-                    sink.reportKeyWords(words);
                     return true;
                 }
             }
