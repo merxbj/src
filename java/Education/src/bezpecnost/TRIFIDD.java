@@ -38,14 +38,15 @@ import java.util.List;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Trifid {
+class Bezpecnost {
 
     public static void main(String[] args) {
-        
-        /*String input = "e radio**QQQ**5 Education is what remains after one has forgotten everything he learned in school.\nend";
+        /*
+        String input = "e radio**QQQ**5 Education is what remains after one has forgotten everything he learned in school.\nend";
         String input = "d radio**QQQ**5 DD#EO QFLMJ YBF#W ARXHI MPROH RH#XL HFRNG IXIAP ITYYW EFQGX K#DKZ RHDY# AQMXK FGLL\nend";
         byte[] inputBytes = input.getBytes();
-        ByteArrayInputStream stream = new ByteArrayInputStream(inputBytes);*/
+        ByteArrayInputStream stream = new ByteArrayInputStream(inputBytes);
+         */
         InputStream stream = System.in;
         
         List<SecureMessage> messages = loadInputFromStream(stream);
