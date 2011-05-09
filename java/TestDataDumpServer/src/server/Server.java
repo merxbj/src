@@ -35,7 +35,7 @@ public class Server {
         boolean quit = false;
 
         try {
-            ServerSocket ss = new ServerSocket(8080);
+            ServerSocket ss = new ServerSocket(5451);
 
             while (!quit) {
                 final Socket sock = ss.accept();

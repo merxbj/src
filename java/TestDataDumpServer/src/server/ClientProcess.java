@@ -37,12 +37,15 @@ public class ClientProcess implements Runnable{
 
             System.out.println("Established connection!");
 
-            DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            
+            while (reader.ready()) {
+                builder.append(reader.readLine());
+            }
 
-            String str = in.readUTF();
-
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(new File(String.format("TestData%d.txt", System.currentTimeMillis() / 1000))));
-            out.writeUTF(str);
+            PrintStream out = new PrintStream(new File(String.format("TestData%d.txt", System.currentTimeMillis() / 1000)));
+            out.print(builder.toString());
 
             clientSocket.close();
             out.close();

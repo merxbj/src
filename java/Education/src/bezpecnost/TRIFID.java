@@ -3,24 +3,13 @@
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is should be licensed by some license published by 
+ *  Czech Technical University.
  *
  */
 package bezpecnost;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -28,6 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * The purpose of this application is to read the input commands from the stdin,
+ * based on them perform an <code>trifid</code> encryption/decription and finally 
+ * print the results to stdout.
+ * 
  * Testing vectors:
  * 
  * e radio**QQQ**5 Education is what remains after one has forgotten everything he learned in school.
@@ -40,13 +33,14 @@ import java.util.List;
  */
 class Bezpecnost {
 
+    /**
+     * Main entry point:
+     *  - prefetch all the commands
+     *  - execute them
+     *  - fetch the results and print them
+     * @param args 
+     */
     public static void main(String[] args) {
-        /*
-        String input = "e radio**QQQ**5 Education is what remains after one has forgotten everything he learned in school.\nend";
-        String input = "d radio**QQQ**5 DD#EO QFLMJ YBF#W ARXHI MPROH RH#XL HFRNG IXIAP ITYYW EFQGX K#DKZ RHDY# AQMXK FGLL\nend";
-        byte[] inputBytes = input.getBytes();
-        ByteArrayInputStream stream = new ByteArrayInputStream(inputBytes);
-         */
         InputStream stream = System.in;
         
         List<SecureMessage> messages = loadInputFromStream(stream);
@@ -57,6 +51,14 @@ class Bezpecnost {
         }
     }
     
+    /**
+     * Loads the input commands from the given stream.
+     * <b>The expectation is that the input is well-formated.</b>
+     * 
+     * @param stream
+     * @return The list of parsed commands represented as instances of class
+     *         SecureMessage.
+     */
     private static List<SecureMessage> loadInputFromStream(InputStream stream) {
         List<SecureMessage> messages = new ArrayList<SecureMessage>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -70,12 +72,20 @@ class Bezpecnost {
                 }
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            throw new RuntimeException(ex);
         }
         
         return messages;
     }
 
+    /**
+     * Goes over instances of SecureMessage (either OpenedMessage or CipheredMessage)
+     * making them exact oposites (invert them). This will cause e.g. OpenedMessage
+     * turn to CipheredMessage which is the exact purpose of this excercise.
+     * 
+     * @param messages
+     * @return 
+     */
     private static List<SecureMessage> invertMessages(List<SecureMessage> messages) {
         List<SecureMessage> invertedMessages = new ArrayList<SecureMessage>(messages.size());
         TrifidCipher cipher = new TrifidCipher();
@@ -86,13 +96,22 @@ class Bezpecnost {
         return invertedMessages;
     }
     
+    /**
+     * Interface representing the message that could be either encrypted or
+     * decrypted. This operation is generalized by the <code>invert</code>
+     * method.
+     */
     public static interface SecureMessage {
         public SecureMessage invert(TrifidCipher parameter);
+        public TrifidKey getKey();
+        public String getOriginalCommand();
+        public void setOriginalCommand(String command);
     }
     
     public static class OpenedMessage implements SecureMessage {
         char[] openedChars;
         TrifidKey key;
+        String originalCommand;
 
         public OpenedMessage() {
         }
@@ -106,6 +125,7 @@ class Bezpecnost {
         public SecureMessage invert(TrifidCipher cipher) {
             char[] cipheredChars = cipher.cipher(openedChars, key);
             CipheredMessage cipheredMessage = new CipheredMessage(cipheredChars, key);
+            cipheredMessage.setOriginalCommand(originalCommand);
             return cipheredMessage;
         }
 
@@ -113,11 +133,28 @@ class Bezpecnost {
         public String toString() {
             return new String(openedChars);
         }
+
+        @Override
+        public TrifidKey getKey() {
+            return key;
+        }
+
+        @Override
+        public String getOriginalCommand() {
+            return this.originalCommand;
+        }
+
+        @Override
+        public void setOriginalCommand(String command) {
+            this.originalCommand = command;
+        }
+        
     }
 
     public static class CipheredMessage implements SecureMessage {
         char[] cipheredChars;
         TrifidKey key;
+        String originalCommand;
 
         public CipheredMessage() {
         }
@@ -127,11 +164,18 @@ class Bezpecnost {
             this.key = key;
         }
 
+        /**
+         * Please observe that the encyrpted message is split to groups of 5 which
+         * I forgot about and ended up 2 hours of hacking the submitting system.
+         * Originally I was splitting the message based on the clustering size.
+         * 
+         * @return 
+         */
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < cipheredChars.length; i++) {
-                if ((i > 0) && ((i % key.getClusterSize()) == 0)) {
+                if ((i > 0) && ((i % 5) == 0)) {
                     builder.append(" ");
                 }
                 builder.append(cipheredChars[i]);
@@ -143,21 +187,48 @@ class Bezpecnost {
         public SecureMessage invert(TrifidCipher cipher) {
             char[] openedChars = cipher.decipher(cipheredChars, key);
             OpenedMessage openedMessage = new OpenedMessage(openedChars, key);
+            openedMessage.setOriginalCommand(originalCommand);
             return openedMessage;
         }
+
+        @Override
+        public TrifidKey getKey() {
+            return key;
+        }
+        
+        @Override
+        public String getOriginalCommand() {
+            return this.originalCommand;
+        }
+
+        @Override
+        public void setOriginalCommand(String command) {
+            this.originalCommand = command;
+        }
+        
     }
     
+    /**
+     * This is the actual parser of the input from the stdin. It is very error-prone
+     * but as it was said before, the expectation is that the input is well-formatted.
+     */
     public static class SecureMessageFactory {
         public SecureMessage createMessage(String line) {
             String upperCase = line.toUpperCase();
+            SecureMessage message = null;
             switch (upperCase.charAt(0)) {
                 case 'E' :
-                    return parseEncryptInstruction(upperCase);
+                    message = parseEncryptInstruction(upperCase);
+                    break;
                 case 'D' :
-                    return parseDecryptInstruction(upperCase);
+                    message = parseDecryptInstruction(upperCase);
+                    break;
                 default :
                     throw new RuntimeException("Unexpected token!");
             }
+            
+            message.setOriginalCommand(line);
+            return message;
         }
 
         private SecureMessage parseEncryptInstruction(String line) {
@@ -180,6 +251,12 @@ class Bezpecnost {
             return new CipheredMessage(text.toCharArray(), key);
         }
 
+        /**
+         * Make sure that the key is cleared out of any invalid characters!
+         * 
+         * @param keySubString
+         * @return 
+         */
         private TrifidKey parseKey(String keySubString) {
             String[] keyAndClustering = keySubString.split("\\*\\*QQQ\\*\\*");
 
@@ -192,10 +269,26 @@ class Bezpecnost {
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-            return new TrifidKey(key.toCharArray(), clustering);
+            
+            char[] filteredKeyChars = new char[key.length()];
+            int keyCharsIdx = 0;
+            boolean[] used = new boolean[255];
+            for (char ch : key.toCharArray()) {
+                if (!used[ch] && (ch >= 'A') && (ch <= 'Z')) {
+                    filteredKeyChars[keyCharsIdx++] = ch;
+                    used[ch] = true;
+                }
+            }
+            
+            return new TrifidKey(Arrays.copyOf(filteredKeyChars, keyCharsIdx), clustering);
         }
     }
     
+    /**
+     * This is the class that represents the actual key for the trifid cipher.
+     * It is represented by the key itself (<b>it is assumed that the creator will
+     * ensure that we are given by a correct key</b>) and by the size of the clustering.
+     */
     public static class TrifidKey {
         private char[] key;
         private int clustering;
@@ -212,29 +305,81 @@ class Bezpecnost {
         public char[] getKey() {
             return key;
         }
+
+        @Override
+        public String toString() {
+            return "TrifidKey{" + "key=" + new String(key) + ", clustering=" + clustering + '}';
+        }
+        
     }
     
+    /**
+     * The trifid cipher algorithm itself.
+     */
     public static class TrifidCipher {
+        
+        /**
+         * The encryption process goes as follows:
+         *  - The 'Polybius cube' is built based on the key
+         *  - For optimalization purposes the mapping from actual letters to tripplets of cube coordinates is built
+         *  - The input open message is filtered from any non-encryptable characters
+         *  - "Then the coordinates are written out vertically beneath the message" - Wikipedia
+         *      - Moreovoer this 'table' is divided to clusters of the given size
+         *      - Therefore the resulting data structure is 3-dimensional array (clusters x coordinates x letters)
+         * - The 'table' is then read in row basis creating a tripplet of cube coordinates
+         * - These tripplets are then converted to actual letters
+         * - We are done
+         * 
+         * @param openedChars
+         * @param key
+         * @return 
+         */
         public char[] cipher(char[] openedChars, TrifidKey key) {
             char[][][] cube = buildCharCubeFromKey(key.getKey());
             Triplet[] mapping = buildCharToCoordinatesMapping(cube);
             char[] filteredOpenedChars = filterOpenedChars(openedChars);
-            char[][][] mappedOpenCharsClusters = mapOpenCharsClusters(filteredOpenedChars, mapping, key.getClusterSize());
-            List<Triplet> cipheredCharsCoordinates = getRowBasedTransposedTripplets(mappedOpenCharsClusters);
+            char[][][] trifidTable = buildTrifidEncryptionTable(filteredOpenedChars, mapping, key.getClusterSize());
+            List<Triplet> cipheredCharsCoordinates = getRowBasedTransposedTripplets(trifidTable);
             char[] cipheredChars = buildCharsFromTriplets(cipheredCharsCoordinates, cube);
             return cipheredChars;
         }
 
+        /**
+         * The decription process goes as follows:
+         *  - The 'Polybius cube' is built based on the key
+         *  - For optimalization purposes the mapping from actual letters to tripplets of cube coordinates is built
+         *  - The encrypted message is filtered out of any forbidden characters (tipically spaces)
+         *  - The encrypted message characters converted to their cube coordinate triplet 
+         *    representation are written down in a row-basis into the 'table' of expected size and divided into 
+         *    the expected number of clusters of given size
+         *  - The 'table' is read in a column-basis and corresponding cube coordinates triplets
+         *    are built per each column
+         *  - These tripplets are then converted to actual letters
+         *  - We are done
+         * 
+         * @param openedChars
+         * @param key
+         * @return 
+         */
         public char[] decipher(char[] closedChars, TrifidKey key) {
             char[][][] cube = buildCharCubeFromKey(key.getKey());
             Triplet[] mapping = buildCharToCoordinatesMapping(cube);
             char[] filteredClosedChars = filterClosedChars(closedChars);
-            char[][][] mappedClosedCharsClusters = mapCipheredCharsClusters(filteredClosedChars, mapping, key.getClusterSize());
-            List<Triplet> openedCharsCoordinates = getColumnBasedTransposedTripplets(mappedClosedCharsClusters);
+            char[][][] trifidTable = buildTrifidDecriptionTable(filteredClosedChars, mapping, key.getClusterSize());
+            List<Triplet> openedCharsCoordinates = getColumnBasedTransposedTripplets(trifidTable);
             char[] openedChars = buildCharsFromTriplets(openedCharsCoordinates, cube);
             return openedChars;
         }
 
+        /**
+         * Iterate the cube and write down
+         *  - Key characters
+         *  - # character
+         *  - remaining alphabet
+         * 
+         * @param key
+         * @return 
+         */
         private char[][][] buildCharCubeFromKey(char[] key) {
             char[][][] cube = new char[3][3][3];
 
@@ -265,6 +410,14 @@ class Bezpecnost {
             return cube;
         }
 
+        /**
+         * Go over the cube and create a map from the actual character to its
+         * coordinates. This will allow simpler lookup when encrypting/decrypting
+         * the message.
+         * 
+         * @param cube
+         * @return 
+         */
         private Triplet[] buildCharToCoordinatesMapping(char[][][] cube) {
             Triplet[] mapping = new Triplet[255];
 
@@ -280,6 +433,12 @@ class Bezpecnost {
             return mapping;
         }
 
+        /**
+         * In the opened message only actual letters are allowed.
+         * 
+         * @param openChars
+         * @return 
+         */
         private char[] filterOpenedChars(char[] openChars) {
             char[] filteredTmp = new char[openChars.length];
             int filteredTmpIdx = 0;
@@ -291,38 +450,55 @@ class Bezpecnost {
             return Arrays.copyOf(filteredTmp, filteredTmpIdx);
         }
 
-        private char[][][] mapOpenCharsClusters(char[] filteredOpenChars, Triplet[] mapping, int clusterSize) {
+        /**
+         * Builds the trifid table in column-basis. That means that for every
+         * letter in the open message a new column of coordinates will be writen down.
+         * 
+         * This whole thing is however divided into the clusters of given size.
+         * 
+         * @param filteredOpenChars
+         * @param mapping
+         * @param clusterSize
+         * @return 
+         */
+        private char[][][] buildTrifidEncryptionTable(char[] filteredOpenChars, Triplet[] mapping, int clusterSize) {
             int clusterCount = (int) Math.ceil(filteredOpenChars.length / (double) clusterSize);
-            char[][][] mappedClusters = new char[clusterCount][3][clusterSize];
+            char[][][] trifidTable = createTrifidTable(clusterSize, clusterCount, filteredOpenChars.length);
 
-            int orphanedColumns = filteredOpenChars.length % clusterSize;
-            if (orphanedColumns != 0) {
-                mappedClusters[clusterCount - 1] = new char[3][orphanedColumns];
-            }
-
+            // Go over all the letters in the open message, populate the table
+            // appropritaly and move to the next cluster every 'clusterSize' letter
             int clusterIdx = 0;
             for (int charsIdx = 0; charsIdx < filteredOpenChars.length; charsIdx++) {
                 if ((charsIdx > 0) && ((charsIdx % clusterSize) == 0)) {
                     clusterIdx++;
                 }
                 Triplet t = mapping[filteredOpenChars[charsIdx]];
-                mappedClusters[clusterIdx][0][charsIdx % clusterSize] = t.layer;
-                mappedClusters[clusterIdx][1][charsIdx % clusterSize] = t.row;
-                mappedClusters[clusterIdx][2][charsIdx % clusterSize] = t.column;
+                trifidTable[clusterIdx][0][charsIdx % clusterSize] = t.layer;
+                trifidTable[clusterIdx][1][charsIdx % clusterSize] = t.row;
+                trifidTable[clusterIdx][2][charsIdx % clusterSize] = t.column;
             }
-            return mappedClusters;
+            return trifidTable;
         }
 
-        private List<Triplet> getRowBasedTransposedTripplets(char[][][] mappedOpenCharsClusters) {
-            List<Triplet> cipheredCharsCoordinates = new ArrayList<Triplet>(mappedOpenCharsClusters.length * mappedOpenCharsClusters[0].length);
+        /**
+         * Reads the trifid table in a row-basis.
+         * 
+         * Important thing is to consider a cluster as a table. That means that
+         * the transposition from columns to rows will happen per each cluster.
+         * 
+         * @param trifidTable
+         * @return 
+         */
+        private List<Triplet> getRowBasedTransposedTripplets(char[][][] trifidTable) {
+            List<Triplet> cipheredCharsCoordinates = new ArrayList<Triplet>(trifidTable.length * trifidTable[0].length);
 
             int transposedCoordinate = 0;
             char transposedLayer = 0, transposedColumn = 0, transposedRow = 0;
-            for (int cluster = 0; cluster < mappedOpenCharsClusters.length; cluster++) {
-                for (int row = 0; row < mappedOpenCharsClusters[cluster].length; row++) {
-                    for (int column = 0; column < mappedOpenCharsClusters[cluster][row].length; column++) {
-                        char coordinate = mappedOpenCharsClusters[cluster][row][column];
-                        switch (transposedCoordinate++) {
+            for (int cluster = 0; cluster < trifidTable.length; cluster++) {
+                for (int row = 0; row < trifidTable[cluster].length; row++) {
+                    for (int column = 0; column < trifidTable[cluster][row].length; column++) {
+                        char coordinate = trifidTable[cluster][row][column];
+                        switch (transposedCoordinate++ % 3) {
                             case 0:
                                 transposedLayer = coordinate;
                                 break;
@@ -332,7 +508,6 @@ class Bezpecnost {
                             case 2:
                                 transposedColumn = coordinate;
                                 cipheredCharsCoordinates.add(new Triplet(transposedLayer, transposedRow, transposedColumn));
-                                transposedCoordinate = 0;
                         }
                     }
                 }
@@ -350,29 +525,34 @@ class Bezpecnost {
             return chars;
         }
 
-        private char[][][] mapCipheredCharsClusters(char[] cipheredChars, Triplet[] mapping, int clusterSize) {
-            int clusterCount = (int) Math.ceil(cipheredChars.length / (double) clusterSize);
-            char[][][] mappedClusters = new char[clusterCount][3][clusterSize];
-
-            int orphanedColumns = cipheredChars.length % clusterSize;
-            if (orphanedColumns != 0) {
-                mappedClusters[clusterCount - 1] = new char[3][orphanedColumns];
-            }
+        /**
+         * Builds the trifid table in row-basis. That means that for every
+         * letter in the closed message a row within a cluster will be extended by
+         * triple of coordinates.
+         * 
+         * @param filteredClosedChars
+         * @param mapping
+         * @param clusterSize
+         * @return 
+         */
+        private char[][][] buildTrifidDecriptionTable(char[] filteredClosedChars, Triplet[] mapping, int clusterSize) {
+            int clusterCount = (int) Math.ceil(filteredClosedChars.length / (double) clusterSize);
+            char[][][] trifidTable = createTrifidTable(clusterSize, clusterCount, filteredClosedChars.length);
 
             int charsIdx = 0;
             int transposedCoordinate = 0;
             for (int cluster = 0; cluster < clusterCount; cluster++) {
                 for (int row = 0; row < 3; row++) {
-                    for (int column = 0; column < mappedClusters[cluster][row].length; column++) {
+                    for (int column = 0; column < trifidTable[cluster][row].length; column++) {
                         switch (transposedCoordinate++ % 3) {
                             case 0:
-                                mappedClusters[cluster][row][column] = mapping[cipheredChars[charsIdx]].layer;
+                                trifidTable[cluster][row][column] = mapping[filteredClosedChars[charsIdx]].layer;
                                 break;
                             case 1:
-                                mappedClusters[cluster][row][column] = mapping[cipheredChars[charsIdx]].row;
+                                trifidTable[cluster][row][column] = mapping[filteredClosedChars[charsIdx]].row;
                                 break;
                             case 2:
-                                mappedClusters[cluster][row][column] = mapping[cipheredChars[charsIdx]].column;
+                                trifidTable[cluster][row][column] = mapping[filteredClosedChars[charsIdx]].column;
                                 charsIdx++;
                                 break;
                         }
@@ -380,22 +560,36 @@ class Bezpecnost {
                 }
             }
 
-            return mappedClusters;
+            return trifidTable;
         }
 
-        private List<Triplet> getColumnBasedTransposedTripplets(char[][][] mappedClosedCharsClusters) {
-            List<Triplet> triplets = new ArrayList<Triplet>(mappedClosedCharsClusters.length * mappedClosedCharsClusters[0][0].length);
-            for (int cluster = 0; cluster < mappedClosedCharsClusters.length; cluster++) {
-                for (int column = 0; column < mappedClosedCharsClusters[cluster][0].length; column++) {
-                    Triplet t = new Triplet(mappedClosedCharsClusters[cluster][0][column],
-                                            mappedClosedCharsClusters[cluster][1][column],
-                                            mappedClosedCharsClusters[cluster][2][column]);
+        /**
+         * Reads the trifid table in a column-basis.
+         * 
+         * @param mappedOpenCharsClusters
+         * @return 
+         */
+        private List<Triplet> getColumnBasedTransposedTripplets(char[][][] trifidTable) {
+            List<Triplet> triplets = new ArrayList<Triplet>(trifidTable.length * trifidTable[0][0].length);
+            for (int cluster = 0; cluster < trifidTable.length; cluster++) {
+                for (int column = 0; column < trifidTable[cluster][0].length; column++) {
+                    Triplet t = new Triplet(trifidTable[cluster][0][column],
+                                            trifidTable[cluster][1][column],
+                                            trifidTable[cluster][2][column]);
                     triplets.add(t);
                 }
             }
             return triplets;
         }
 
+        /**
+         * Only letters and pound sign ('#') are considered as a valid input.
+         * The pound sign is an alphabet extension to stuff the alphabet into the
+         * 3 x 3 x 3 cube
+         * 
+         * @param closedChars
+         * @return 
+         */
         private char[] filterClosedChars(char[] closedChars) {
             char[] filteredTmp = new char[closedChars.length];
             int filteredTmpIdx = 0;
@@ -405,6 +599,33 @@ class Bezpecnost {
                 }
             }
             return Arrays.copyOf(filteredTmp, filteredTmpIdx);
+        }
+
+        /**
+         * Creates something which I took the liberty and named Trifid Table.
+         * 
+         * This is triky, however. The thing is that when you build the whole table and
+         * divide it into clusters of a certain size, you will likely end up with
+         * the last cluster of not the full size (e.g. 10 letters, clustered by size 3,
+         * results in 3 clusters of size 3 and one tiny-tail-cluster of size 1)
+         * however the table would be created as 4 full size clusters
+         * let us therefore create a new, appropriately sized, tail and replace 
+         * the original oversized one
+         * 
+         * @param clusterSize
+         * @param clusterCount
+         * @param messageLength
+         * @return 
+         */
+        private char[][][] createTrifidTable(int clusterSize, int clusterCount, int messageLength) {
+            char [][][] trifidTable = new char[clusterCount][3][clusterSize];
+            
+            int orphanedColumns = messageLength % clusterSize;
+            if (orphanedColumns != 0) {
+                trifidTable[clusterCount - 1] = new char[3][orphanedColumns];
+            }
+
+            return trifidTable;
         }
 
         private class Triplet {
@@ -419,34 +640,3 @@ class Bezpecnost {
     }
     
 }
-
-/*
- * try {
-            boolean endEncountered = false;
-            while ((stream.available() > 0) && !endEncountered) {
-                char character = (char) stream.read();
-                switch (character) {
-                    case 'd':
-                        SecureMessage cipheredMessage = new CipheredMessage();
-                        if (cipheredMessage.parse(stream)) {
-                            messages.add(cipheredMessage);
-                        }
-                        break;
-                    case 'e':
-                        if (stream.available() > 2) {
-                            SecureMessage openedMessage = new OpenedMessage();
-                            if (openedMessage.parse(stream)) {
-                                messages.add(openedMessage);
-                            }
-                        } else {
-                            // assume that when after 'e' there are only 2 or less characters left
-                            // in the stream, it is the 'end' at the end of the input
-                            endEncountered = true;
-                        }
-                        break;
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
- */
