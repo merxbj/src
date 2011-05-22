@@ -26,5 +26,20 @@ import java.io.Serializable;
  * @author Jaroslav Merxbauer
  */
 public class Player implements Serializable {
-    
+    String name;
+    int score;
+
+    public Player(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
 }

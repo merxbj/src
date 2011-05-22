@@ -4,9 +4,11 @@
  */
 package ctrl;
 
+import model.PlayerValidationException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,15 +37,15 @@ public class Controller extends HttpServlet {
         
         HttpSession session = request.getSession();
         if (session != null) {
-            initSessionIfNew(session);
+            updateSession(session);
         }
         
         String nextView = handleRequest(request, session);
-
-        PrintWriter out = response.getWriter();
-        try {
-        } finally {            
-            out.close();
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextView);
+        if (dispatcher != null) {
+            dispatcher.forward(request, response);
+        } else {
+            throw new RuntimeException("Failed to forward to " + nextView);
         }
     }
 
@@ -83,8 +85,12 @@ public class Controller extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void initSessionIfNew(HttpSession session) {
+    private void updateSession(HttpSession session) {
         if (session.isNew()) {
+            session.setAttribute("PlayerList", new ArrayList<Player>());
+        }
+        
+        if (session.getAttribute("PlayerList") == null) {
             session.setAttribute("PlayerList", new ArrayList<Player>());
         }
     }
@@ -113,8 +119,11 @@ public class Controller extends HttpServlet {
                 nextView = "/AddPlayer";
                 request.setAttribute("ValidationResult", ex);
             }
+        } else {
+            nextView = "/error.jsp";
         }
         
+        return nextView;
     }
 
     private Player createPlayer(HttpServletRequest request) throws PlayerValidationException {
@@ -127,7 +136,20 @@ public class Controller extends HttpServlet {
         try {
             score = Integer.parseInt(request.getParameter("skore"));
         } catch (Exception ex) {
-            
+            throw new PlayerValidationException("Skore neni vyplneno nebo neni cele cislo!");
+        }
+        
+        return new Player(name, score);
+    }
+
+    private void addPlayerToSession(Player player, HttpSession session) {
+        if (player == null || session == null) {
+            return;
+        }
+        
+        List<Player> players = (List<Player>) session.getAttribute("PlayerList");
+        if (players != null) {
+            players.add(player);
         }
     }
 }

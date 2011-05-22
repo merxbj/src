@@ -1,7 +1,7 @@
 <%-- 
-    Document   : index
-    Created on : 22.5.2011, 19:36:24
-    Author     : eter
+    Document   : error
+    Created on : 22.5.2011, 20:39:09
+    Author     : eTeR
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -9,8 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Ooops - something wrong happened!</title>
     </head>
     <body>
+        <h1>Ooops - something wrong happened!</h1>
     </body>
 </html>

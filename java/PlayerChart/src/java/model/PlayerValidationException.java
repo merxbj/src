@@ -17,13 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package ctrl;
+package model;
 
 /**
  *
  * @author Jaroslav Merxbauer
  */
-class PlayerValidationException extends Exception {
+public class PlayerValidationException extends Exception {
 
     public PlayerValidationException(String message) {
         super(message);

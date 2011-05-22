@@ -8,6 +8,10 @@
         <servlet-name>FormView</servlet-name>
         <servlet-class>view.FormView</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HeaderView</servlet-name>
+        <servlet-class>view.HeaderView</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ListView</servlet-name>
         <url-pattern>/PlayerList</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>FormView</servlet-name>
         <url-pattern>/AddPlayer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HeaderView</servlet-name>
+        <url-pattern>/Header</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
