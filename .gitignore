@@ -24,3 +24,17 @@ java/.metadata
 genfiles.properties
 *.log
 csharp/*/_ReSharper*
+/java/StarcraftLite/StarcraftLite-war/nbproject/private/
+/java/StarcraftLite/StarcraftLite-ejb/nbproject/private/
+/java/KingdomsWeb/KingdomsWeb-war/nbproject/private/
+/java/KingdomsWeb/KingdomsWeb-ejb/nbproject/private/
+/java/KingdomsWeb/KingdomsWeb-war/build/
+/java/KingdomsWeb/KingdomsWeb-ejb/dist/
+/java/KingdomsWeb/KingdomsWeb-ejb/build/
+/java/KingdomsWeb/KingdomsWeb-war/dist/
+/java/Kingdoms4Web/Kingdoms4Web-war/nbproject/private/
+/java/Kingdoms4Web/Kingdoms4Web-ejb/nbproject/private/
+/java/Kingdoms4Web/Kingdoms4Web-war/build/
+/java/Kingdoms4Web/Kingdoms4Web-war/dist/
+/java/Kingdoms4Web/Kingdoms4Web-ejb/dist/
+/java/Kingdoms4Web/Kingdoms4Web-ejb/build/

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trees", "Trees\Trees.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestStl", "TestStl\TestStl.vcxproj", "{954E13DD-1C8F-4F21-B349-688520553CC1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Parser\Parser.vcxproj", "{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{954E13DD-1C8F-4F21-B349-688520553CC1}.Debug|Win32.Build.0 = Debug|Win32
 		{954E13DD-1C8F-4F21-B349-688520553CC1}.Release|Win32.ActiveCfg = Release|Win32
 		{954E13DD-1C8F-4F21-B349-688520553CC1}.Release|Win32.Build.0 = Release|Win32
+		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Debug|Win32.Build.0 = Debug|Win32
+		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Release|Win32.ActiveCfg = Release|Win32
+		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
