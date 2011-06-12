@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="register.xhtml" x="130" y="568" zoom="true"/>
+        <Node id="login.xhtml" x="408" y="347" zoom="true"/>
+        <Node id="index.xhtml" x="614" y="43" zoom="true"/>
+        <Node id="header.xhtml" x="75" y="89" zoom="true"/>
+        <Node id="layout.xhtml" x="1091" y="61" zoom="true"/>
+        <Node id="menu.xhtml" x="103" y="332" zoom="true"/>
+        <Node id="quests.xhtml" x="982" y="598" zoom="true"/>
+        <Node id="playersummary.xhtml" x="728" y="355" zoom="false"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>
