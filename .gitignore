@@ -38,3 +38,5 @@ csharp/*/_ReSharper*
 /java/Kingdoms4Web/Kingdoms4Web-war/dist/
 /java/Kingdoms4Web/Kingdoms4Web-ejb/dist/
 /java/Kingdoms4Web/Kingdoms4Web-ejb/build/
+*.sdf
+*.ipch
