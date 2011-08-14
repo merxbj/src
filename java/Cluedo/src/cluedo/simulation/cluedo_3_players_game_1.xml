@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : cluedo_3_players_game_1.xml
+    Created on : 13. srpen 2011, 17:39
+    Author     : eTeR
+    Description:
+        Cluedo game where solution is tripplet (Mustard, Ball Room, Wrench)
+-->
+
+<CluedoGame>
+
+    <Players>
+        <Player name="Jarda" suspect="White"/>
+        <Player name="Lenka" suspect="Scarlett"/>
+        <Player name="Peta" suspect="Plum"/>
+    </Players>
+    
+    <Turns order="implicit">
+        
+        <!-- Fake turn for player initialization -->
+        <Turn player="Jarda">
+            <Answer player="Jarda" weapon="Crank"/>
+            <Answer player="Jarda" weapon="Rope"/>
+            <Answer player="Jarda" suspect="Scarlett"/>
+            <Answer player="Jarda" suspect="Peacock"/>
+            <Answer player="Jarda" room="Hall"/>
+            <Answer player="Jarda" room="Kitchen"/>
+        </Turn>
+
+        <!-- Regular turns-->
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Green" room="Lounge" weapon="Rope"/>
+            <Answer player="Peta" suspect="Green"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Mustard" room="Greenhouse" weapon="Candlestick"/>
+            <Answer player=""/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="Mustard" room="Study" weapon="Candlestick"/>
+            <Answer player="Lenka" weapon="Candlestick"/>
+        </Turn>
+        <Turn player="Jarda">
+            <Solution type="proposal" suspect="Mustard" room="Kitchen" weapon="Candlestick"/>
+            <Answer player="Lenka" weapon="Candlestick"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Lounge" weapon="Dagger"/>
+            <Answer player="Peta" weapon="Dagger"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="Plum" room="Lounge" weapon="Dagger"/>
+            <Answer player="Lenka" suspect="Plum"/>
+        </Turn>
+        <Turn player="Jarda">
+            <Solution type="proposal" suspect="Peacock" room="Study" weapon="Crank"/>
+            <Answer player="Peta" room="Study"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Greenhouse" weapon="Revolver"/>
+            <Answer player="Peta" weapon="Revolver"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="White" room="Greenhouse" weapon="Rope"/>
+            <Answer player="Jarda" weapon="Rope"/>
+        </Turn>
+        <Turn player="Jarda">
+            <Solution type="proposal" suspect="Scarlett" room="Kitchen" weapon="Dagger"/>
+            <Answer player="Peta" weapon="Dagger"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Mustard" room="Kitchen" weapon="Rope"/>
+            <Answer player="Jarda" weapon="Rope"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="Mustard" room="Lounge" weapon="Crank"/>
+            <Answer player="Jarda" weapon="Crank"/>
+        </Turn>
+        <Turn player="Jarda">
+            <Solution type="proposal" suspect="Mustard" room="Study" weapon="Revolver"/>
+            <Answer player="Peta" weapon="Revolver"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Study" weapon="Crank"/>
+            <Answer player="Peta" room="Study"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="White" room="Study" weapon="Crank"/>
+            <Answer player="Jarda" weapon="Crank"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Kitchen" weapon="Crank"/>
+            <Answer player="Jarda" weapon="Crank"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="Mustard" room="Kitchen" weapon="Wrench"/>
+            <Answer player="Lenka" room="Kitchen"/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Kitchen" weapon="Candlestick"/>
+            <Answer player="Jarda" room="Kitchen"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="proposal" suspect="Mustard" room="Ball Room" weapon="Revolver"/>
+            <Answer player=""/>
+        </Turn>
+        <Turn player="Lenka">
+            <Solution type="proposal" suspect="Plum" room="Hall" weapon="Candlestick"/>
+            <Answer player="Jarda" room="Hall"/>
+        </Turn>
+        <Turn player="Peta">
+            <Solution type="accusation" suspect="Mustard" room="Ball Room" weapon="Wrench"/>
+        </Turn>
+    </Turns>
+
+</CluedoGame>
