@@ -19,6 +19,8 @@
  */
 package cluedo.engine;
 
+import cluedo.core.GameCard;
+import cluedo.core.SolutionTripplet;
 import java.util.Set;
 
 /**
@@ -26,9 +28,11 @@ import java.util.Set;
  * @author eTeR
  * @version %I% %G%
  */
-public class CluedoEngine implements InteractionProvider {
+public class CluedoEngine implements InteractionProvider, AnswerResultSink {
     private InteractionHandler interact;
     private boolean initialized;
+    private SolutionTripplet proposal;
+    private SolutionTripplet accusation;
 
     public CluedoEngine() {
         this.initialized = false;
@@ -74,6 +78,25 @@ public class CluedoEngine implements InteractionProvider {
             throw new RuntimeException("Called run() before init()!");
         }
         
+        while () {
+            
+        }
+        
+    }
+
+    @Override
+    public void cannotProvideAnswer() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void showHiddenCard() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void showCard(GameCard card) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

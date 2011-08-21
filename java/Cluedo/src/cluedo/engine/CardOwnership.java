@@ -1,5 +1,5 @@
 /*
- * AnswerResultSink
+ * CardOwnership
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -19,15 +19,11 @@
  */
 package cluedo.engine;
 
-import cluedo.core.*;
-
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-public interface AnswerResultSink {
-    public void cannotProvideAnswer();
-    public void showCard(GameCard card);
-    public void showHiddenCard();
+public class CardOwnership {
+    
 }

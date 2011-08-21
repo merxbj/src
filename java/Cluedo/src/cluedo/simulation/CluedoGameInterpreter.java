@@ -52,12 +52,10 @@ public class CluedoGameInterpreter implements InteractionHandler {
     public void onPlayerRequestForAnswer(String player, AnswerResultSink answerSink) {
         for (Answer answer : currentTurn.getAnswers()) {
             if (answer.getPlayer().equals(player)) {
-                if (answer.getRoom() != null) {
-                    answerSink.showRoom(answer.getRoom());
-                } else if (answer.getSuspect() != null) {
-                    answerSink.showSuspect(answer.getSuspect());
-                } else if (answer.getWeapon() != null) {
-                    answerSink.showWeapon(answer.getWeapon());
+                if (!answer.isHidden()) {
+                    answerSink.showCard(answer.getCard());
+                } else {
+                    answerSink.showHiddenCard();
                 }
             }
         }

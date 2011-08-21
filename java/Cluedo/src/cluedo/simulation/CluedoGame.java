@@ -219,15 +219,13 @@ public class CluedoGame {
     public class Answer implements Comparable<Answer> {
 
         private String player;
-        private Room room;
-        private Weapon weapon;
-        private Suspect suspect;
+        private GameCard card;
+        private boolean hidden;
 
         public Answer() {
             player = "unnamed";
-            room = null;
-            weapon = null;
-            suspect = null;
+            card = null;
+            hidden = false;
         }
         
         public void parse(Element answerElement) throws CluedoGameParseException {
@@ -236,14 +234,17 @@ public class CluedoGame {
             String suspectAttr = answerElement.getAttribute("suspect");
             
             if ((roomAttr != null) && !roomAttr.equals("")) {
-                room = RoomParser.parse(roomAttr);
+                card = new GameCard(RoomParser.parse(roomAttr));
             } else if ((weaponAttr != null) && !weaponAttr.equals("")) {
-                weapon = WeaponParser.parse(weaponAttr);
+                card = new GameCard(WeaponParser.parse(weaponAttr));
             } else if ((suspectAttr != null) && !suspectAttr.equals("")) {
-                suspect = SuspectParser.parse(suspectAttr);
+                card = new GameCard(SuspectParser.parse(suspectAttr));
             }
             
             player = answerElement.getAttribute("player");
+            
+            String attrHidden = answerElement.getAttribute("hidden");
+            hidden = ((attrHidden != null) && (attrHidden.equals("true")));
         }
 
         /**
@@ -256,7 +257,7 @@ public class CluedoGame {
         public int compareTo(Answer o) {
             if (o == null) {
                 return -1;
-            } else if ((room == o.room) && (weapon == o.weapon) && (suspect == o.suspect) && (player == o.player)) {
+            } else if (card.equals(o.getCard()) && (player == null ? o.player == null : player.equals(o.player))) {
                 return 0;
             } else {
                 return -1;
@@ -272,16 +273,10 @@ public class CluedoGame {
                 return false;
             }
             final Answer other = (Answer) obj;
-            if (this.room != other.room) {
+            if (this.card != other.card) {
                 return false;
             }
-            if (this.weapon != other.weapon) {
-                return false;
-            }
-            if (this.suspect != other.suspect) {
-                return false;
-            }
-            if (this.player != other.player) {
+            if (this.player == null ? other.player != null : !this.player.equals(other.player)) {
                 return false;
             }
             return true;
@@ -290,27 +285,21 @@ public class CluedoGame {
         @Override
         public int hashCode() {
             int hash = 3;
-            hash = 29 * hash + (this.room != null ? this.room.hashCode() : 0);
-            hash = 29 * hash + (this.weapon != null ? this.weapon.hashCode() : 0);
-            hash = 29 * hash + (this.suspect != null ? this.suspect.hashCode() : 0);
+            hash = 29 * hash + (this.card != null ? this.card.hashCode() : 0);
             hash = 29 * hash + (this.player != null ? this.player.hashCode() : 0);
             return hash;
         }
 
-        public Suspect getSuspect() {
-            return suspect;
-        }
-
-        public Room getRoom() {
-            return room;
-        }
-
-        public Weapon getWeapon() {
-            return weapon;
+        public GameCard getCard() {
+            return card;
         }
 
         public String getPlayer() {
             return player;
+        }
+
+        public boolean isHidden() {
+            return hidden;
         }
 
     }
