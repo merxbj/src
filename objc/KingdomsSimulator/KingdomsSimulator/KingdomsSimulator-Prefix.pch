@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'KingdomsSimulator' target in the 'KingdomsSimulator' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

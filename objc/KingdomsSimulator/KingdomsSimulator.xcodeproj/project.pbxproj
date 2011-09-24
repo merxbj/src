@@ -1,0 +1,250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4142EA94142E21DC000AD8A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4142EA93142E21DC000AD8A8 /* Foundation.framework */; };
+		4142EA97142E21DC000AD8A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EA96142E21DC000AD8A8 /* main.m */; };
+		4142EA9B142E21DC000AD8A8 /* KingdomsSimulator.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4142EA9A142E21DC000AD8A8 /* KingdomsSimulator.1 */; };
+		4142EAA3142E30D9000AD8A8 /* CommandLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAA2142E30D9000AD8A8 /* CommandLine.m */; };
+		4142EAAE142E5395000AD8A8 /* ConfigFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAAD142E5395000AD8A8 /* ConfigFile.m */; };
+		4142EAB2142E53BE000AD8A8 /* KingdomsSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4142EA8D142E21DC000AD8A8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				4142EA9B142E21DC000AD8A8 /* KingdomsSimulator.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4142EA8F142E21DC000AD8A8 /* KingdomsSimulator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KingdomsSimulator; sourceTree = BUILT_PRODUCTS_DIR; };
+		4142EA93142E21DC000AD8A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4142EA96142E21DC000AD8A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4142EA99142E21DC000AD8A8 /* KingdomsSimulator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KingdomsSimulator-Prefix.pch"; sourceTree = "<group>"; };
+		4142EA9A142E21DC000AD8A8 /* KingdomsSimulator.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = KingdomsSimulator.1; sourceTree = "<group>"; };
+		4142EAA1142E30D9000AD8A8 /* CommandLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLine.h; sourceTree = "<group>"; };
+		4142EAA2142E30D9000AD8A8 /* CommandLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandLine.m; sourceTree = "<group>"; };
+		4142EAAC142E5395000AD8A8 /* ConfigFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigFile.h; sourceTree = "<group>"; };
+		4142EAAD142E5395000AD8A8 /* ConfigFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigFile.m; sourceTree = "<group>"; };
+		4142EAB0142E53BE000AD8A8 /* KingdomsSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KingdomsSimulator.h; sourceTree = "<group>"; };
+		4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KingdomsSimulator.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4142EA8C142E21DC000AD8A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4142EA94142E21DC000AD8A8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4142EA84142E21DB000AD8A8 = {
+			isa = PBXGroup;
+			children = (
+				4142EA95142E21DC000AD8A8 /* KingdomsSimulator */,
+				4142EA92142E21DC000AD8A8 /* Frameworks */,
+				4142EA90142E21DC000AD8A8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4142EA90142E21DC000AD8A8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4142EA8F142E21DC000AD8A8 /* KingdomsSimulator */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4142EA92142E21DC000AD8A8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4142EA93142E21DC000AD8A8 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4142EA95142E21DC000AD8A8 /* KingdomsSimulator */ = {
+			isa = PBXGroup;
+			children = (
+				4142EA96142E21DC000AD8A8 /* main.m */,
+				4142EAAC142E5395000AD8A8 /* ConfigFile.h */,
+				4142EAB0142E53BE000AD8A8 /* KingdomsSimulator.h */,
+				4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */,
+				4142EAAD142E5395000AD8A8 /* ConfigFile.m */,
+				4142EAA1142E30D9000AD8A8 /* CommandLine.h */,
+				4142EAA2142E30D9000AD8A8 /* CommandLine.m */,
+				4142EA9A142E21DC000AD8A8 /* KingdomsSimulator.1 */,
+				4142EA98142E21DC000AD8A8 /* Supporting Files */,
+			);
+			path = KingdomsSimulator;
+			sourceTree = "<group>";
+		};
+		4142EA98142E21DC000AD8A8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4142EA99142E21DC000AD8A8 /* KingdomsSimulator-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4142EA8E142E21DC000AD8A8 /* KingdomsSimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4142EA9E142E21DC000AD8A8 /* Build configuration list for PBXNativeTarget "KingdomsSimulator" */;
+			buildPhases = (
+				4142EA8B142E21DC000AD8A8 /* Sources */,
+				4142EA8C142E21DC000AD8A8 /* Frameworks */,
+				4142EA8D142E21DC000AD8A8 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KingdomsSimulator;
+			productName = KingdomsSimulator;
+			productReference = 4142EA8F142E21DC000AD8A8 /* KingdomsSimulator */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4142EA86142E21DB000AD8A8 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4142EA89142E21DB000AD8A8 /* Build configuration list for PBXProject "KingdomsSimulator" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4142EA84142E21DB000AD8A8;
+			productRefGroup = 4142EA90142E21DC000AD8A8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4142EA8E142E21DC000AD8A8 /* KingdomsSimulator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4142EA8B142E21DC000AD8A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4142EA97142E21DC000AD8A8 /* main.m in Sources */,
+				4142EAA3142E30D9000AD8A8 /* CommandLine.m in Sources */,
+				4142EAAE142E5395000AD8A8 /* ConfigFile.m in Sources */,
+				4142EAB2142E53BE000AD8A8 /* KingdomsSimulator.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4142EA9C142E21DC000AD8A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4142EA9D142E21DC000AD8A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4142EA9F142E21DC000AD8A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KingdomsSimulator/KingdomsSimulator-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4142EAA0142E21DC000AD8A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KingdomsSimulator/KingdomsSimulator-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4142EA89142E21DB000AD8A8 /* Build configuration list for PBXProject "KingdomsSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4142EA9C142E21DC000AD8A8 /* Debug */,
+				4142EA9D142E21DC000AD8A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4142EA9E142E21DC000AD8A8 /* Build configuration list for PBXNativeTarget "KingdomsSimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4142EA9F142E21DC000AD8A8 /* Debug */,
+				4142EAA0142E21DC000AD8A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4142EA86142E21DB000AD8A8 /* Project object */;
+}
