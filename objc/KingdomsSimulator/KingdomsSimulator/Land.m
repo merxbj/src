@@ -59,4 +59,10 @@
     return (income * quantity);
 }
 
+- (NSComparisonResult) compareLandBasedOnIncomePerPrice:(Land *)other {
+    NSNumber* ipp1 = [NSNumber numberWithDouble:[self getIncomePerPrice]];
+    NSNumber* ipp2 = [NSNumber numberWithDouble:[other getIncomePerPrice]];
+    return [ipp1 compare:ipp2];
+}
+
 @end

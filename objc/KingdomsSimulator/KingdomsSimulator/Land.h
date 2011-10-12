@@ -41,5 +41,6 @@ typedef enum {
 - (double) getCurrentPrice;
 - (double) getIncomePerPrice;
 - (double) getTotalIncome;
+- (NSComparisonResult) compareLandBasedOnIncomePerPrice: (Land*) other;
 
 @end

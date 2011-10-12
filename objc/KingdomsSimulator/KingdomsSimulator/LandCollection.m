@@ -39,6 +39,35 @@
 }
 
 - (void) createLandCollectionFromArraySetup:(NSArray *)arraySetup {
+    for (int i = 0; i < [arraySetup count]; i++) {
+        [lands addObject:[factory newLandFromType:i quantity:(int) [arraySetup objectAtIndex:i]]];
+    }
+}
+
+- (void) printLandList {
+    for (Land* land in lands) {
+        NSLog(@"%@", [land description]);
+    }
+}
+
+- (Land*) getBestLand {
+    [lands sortUsingSelector:@selector(compareLandBasedOnIncomePerPrice:)];
+    return [lands objectAtIndex:0];
+}
+
+- (double) buyLand: (Land*) withAvailableBudget: (double) budget {
+    
+}
+
+- (double) getTotalIncome {
+    
+}
+
+- (Land*) getEffortableLandWithBudget: (double) budget {
+    
+}
+
+- (void) printRecentlBought {
     
 }
 
