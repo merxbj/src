@@ -11,12 +11,13 @@ import java.util.List;
  *
  * @author merxbj
  */
-public class Event implements EventTracer {
+public class Event {
     private List<Event> subsequentEvents;
     private String recipient;
     private int eventId;
     private long miliseconds;
     private int callDepth;
+    private Event parent;
 
     public Event(String recipient, int eventId, long miliseconds, int callDepth) {
         this.recipient = recipient;
@@ -24,6 +25,7 @@ public class Event implements EventTracer {
         this.miliseconds = miliseconds;
         this.callDepth = callDepth;
         this.subsequentEvents = new LinkedList<Event>();
+        this.parent = null;
     }
 
     public int getEventId() {
@@ -42,14 +44,13 @@ public class Event implements EventTracer {
         return callDepth;
     }
 
-    @Override
     public void addEvent(Event event) {
         subsequentEvents.add(event);
+        event.parent = this;
     }
-    
-    @Override
-    public int getAcceptedCallDepth() {
-        return getCallDepth() + 1;
+
+    public Event getParent() {
+        return parent;
     }
 
     @Override

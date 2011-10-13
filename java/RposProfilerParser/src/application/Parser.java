@@ -45,14 +45,16 @@ public class Parser {
      * @throws Exception 
      */
     private ProfilingResults parseFromReader(BufferedReader reader) throws Exception {
-        ArrayList<String> lines = new ArrayList<String>();
+        ProfilingResults results = new ProfilingResults();
+        Event currentEvent = results.getRootEvent();
         while (reader.ready()) {
             String line = reader.readLine();
-            lines.add(line);
+            Event event = eventParser.parseFromLine(line);
+            if (eventParser.isOpeningEvent(line)) {
+                
+            }
         }
 
-        ProfilingResults results = new ProfilingResults();
-        buildResults(lines, results);
         return results;
     }
 
@@ -70,31 +72,4 @@ public class Parser {
             }
         }
     }
-    
-    private class Indexer {
-        private int index;
-        private int maxIndex;
-        
-        public Indexer(Collection<?> col) {
-            maxIndex = col.size();
-            index = 0;
-        }
-        
-        public void moveNext() {
-            index++;
-        }
-        
-        public void movePrevious() {
-            index--;
-        }
-        
-        public int getIndex() {
-            return index;
-        }
-        
-        public boolean hasNext() {
-            return (index < maxIndex);
-        }
-    }
-    
 }

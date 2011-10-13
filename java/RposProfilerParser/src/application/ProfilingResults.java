@@ -11,28 +11,27 @@ import java.util.List;
  *
  * @author merxbj
  */
-public class ProfilingResults implements EventTracer {
+public class ProfilingResults {
 
-    private List<Event> eventTrace;
+    private Event rootEvent;
 
     public ProfilingResults() {
-        this.eventTrace = new LinkedList<Event>();
+        this.rootEvent = new Event("Root", 0, 0, 0);
     }
     
     void toXml(String string) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    
-    @Override
-    public void addEvent(Event event) {
-        this.eventTrace.add(event);
+
+    public Event getRootEvent() {
+        return rootEvent;
+    }
+
+    public void setRootEvent(Event rootEvent) {
+        this.rootEvent = rootEvent;
     }
 
     public int getCallDepth() {
-        return 0;
-    }
-    
-    public int getAcceptedCallDepth() {
-        return getCallDepth() + 1;
+        return rootEvent.getCallDepth();
     }
 }
