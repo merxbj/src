@@ -7,7 +7,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LandCollection.h"
 
-@interface KingdomsSimulator : NSObject
+typedef enum {
+    TARGET_INCOME, TOTAL_TIME, CYCLES_PASSED, FORCED
+} EndingConditionType;
+
+@interface KingdomsSimulator : NSObject {
+    LandCollection* lands;
+    double accountBalance;
+    long totalTimeElapsed;
+    int tickDuration;
+    int targetIncome;
+    NSMutableArray* endingConditions;
+    NSInteger targetCyclesCount;
+}
+
+@property int targetIncome;
+@property int startingAmount;
+@property int tickDuration;
+@property NSInteger targetCyclesCount;
+
+- (void) createCommonLandList;
+- (void) createLandListFromArraySetup: (NSArray*) arraySetup;
+- (void) addEndingConditionType: (EndingConditionType) endingConditionType;
+- (void) removeEndingConditionType: (EndingConditionType) endingConditionType;
+- (void) run;
 
 @end

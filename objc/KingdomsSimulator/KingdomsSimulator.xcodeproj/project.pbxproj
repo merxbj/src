@@ -13,6 +13,10 @@
 		4142EAA3142E30D9000AD8A8 /* CommandLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAA2142E30D9000AD8A8 /* CommandLine.m */; };
 		4142EAAE142E5395000AD8A8 /* ConfigFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAAD142E5395000AD8A8 /* ConfigFile.m */; };
 		4142EAB2142E53BE000AD8A8 /* KingdomsSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */; };
+		41D6CDF11438D07E0004130F /* LandCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 41D6CDF01438D07E0004130F /* LandCollection.m */; };
+		41D6CDF41438D0DB0004130F /* LandFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 41D6CDF31438D0DB0004130F /* LandFactory.m */; };
+		41D6CDF71438D12C0004130F /* PurchaseInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 41D6CDF61438D12C0004130F /* PurchaseInfo.m */; };
+		41D6CDFD1438D94B0004130F /* Land.m in Sources */ = {isa = PBXBuildFile; fileRef = 41D6CDFC1438D94B0004130F /* Land.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +44,14 @@
 		4142EAAD142E5395000AD8A8 /* ConfigFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigFile.m; sourceTree = "<group>"; };
 		4142EAB0142E53BE000AD8A8 /* KingdomsSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KingdomsSimulator.h; sourceTree = "<group>"; };
 		4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KingdomsSimulator.m; sourceTree = "<group>"; };
+		41D6CDEF1438D07E0004130F /* LandCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LandCollection.h; sourceTree = "<group>"; };
+		41D6CDF01438D07E0004130F /* LandCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LandCollection.m; sourceTree = "<group>"; };
+		41D6CDF21438D0DB0004130F /* LandFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LandFactory.h; sourceTree = "<group>"; };
+		41D6CDF31438D0DB0004130F /* LandFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LandFactory.m; sourceTree = "<group>"; };
+		41D6CDF51438D12C0004130F /* PurchaseInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseInfo.h; sourceTree = "<group>"; };
+		41D6CDF61438D12C0004130F /* PurchaseInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseInfo.m; sourceTree = "<group>"; };
+		41D6CDFB1438D94B0004130F /* Land.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Land.h; sourceTree = "<group>"; };
+		41D6CDFC1438D94B0004130F /* Land.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Land.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +97,14 @@
 				4142EA96142E21DC000AD8A8 /* main.m */,
 				4142EAAC142E5395000AD8A8 /* ConfigFile.h */,
 				4142EAB0142E53BE000AD8A8 /* KingdomsSimulator.h */,
+				41D6CDEF1438D07E0004130F /* LandCollection.h */,
+				41D6CDFB1438D94B0004130F /* Land.h */,
+				41D6CDFC1438D94B0004130F /* Land.m */,
+				41D6CDF21438D0DB0004130F /* LandFactory.h */,
+				41D6CDF51438D12C0004130F /* PurchaseInfo.h */,
+				41D6CDF61438D12C0004130F /* PurchaseInfo.m */,
+				41D6CDF31438D0DB0004130F /* LandFactory.m */,
+				41D6CDF01438D07E0004130F /* LandCollection.m */,
 				4142EAB1142E53BE000AD8A8 /* KingdomsSimulator.m */,
 				4142EAAD142E5395000AD8A8 /* ConfigFile.m */,
 				4142EAA1142E30D9000AD8A8 /* CommandLine.h */,
@@ -154,6 +174,10 @@
 				4142EAA3142E30D9000AD8A8 /* CommandLine.m in Sources */,
 				4142EAAE142E5395000AD8A8 /* ConfigFile.m in Sources */,
 				4142EAB2142E53BE000AD8A8 /* KingdomsSimulator.m in Sources */,
+				41D6CDF11438D07E0004130F /* LandCollection.m in Sources */,
+				41D6CDF41438D0DB0004130F /* LandFactory.m in Sources */,
+				41D6CDF71438D12C0004130F /* PurchaseInfo.m in Sources */,
+				41D6CDFD1438D94B0004130F /* Land.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

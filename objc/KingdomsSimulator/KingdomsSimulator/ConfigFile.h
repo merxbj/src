@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @interface ConfigFile : NSObject <NSXMLParserDelegate> {
-    NSDictionary* landCounts;
-    NSNumber* targetIncome;
-    NSNumber* startingAmount;
+    NSArray* landCounts;
+    double targetIncome;
+    double startingAmount;
 }
 
-@property(readonly) NSDictionary* landCounts;
-@property(readonly) NSNumber* targetIncome;
-@property(readonly) NSNumber* startingAmount;
+@property(readonly) NSArray* landCounts;
+@property(readonly) double targetIncome;
+@property(readonly) double startingAmount;
 
 - (id) initWithConfigFilePath: (NSString*) path;
 
