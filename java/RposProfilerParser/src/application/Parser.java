@@ -6,8 +6,6 @@ package application;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *
@@ -49,27 +47,15 @@ public class Parser {
         Event currentEvent = results.getRootEvent();
         while (reader.ready()) {
             String line = reader.readLine();
-            Event event = eventParser.parseFromLine(line);
             if (eventParser.isOpeningEvent(line)) {
-                
+                Event event = eventParser.parseEventFromOpeningLine(line);
+                currentEvent.addEvent(event);
+                currentEvent = event;
+            } else {
+                eventParser.updateEventFromEndingLine(currentEvent, line);
+                currentEvent = currentEvent.getParent();
             }
         }
-
-        return results;
-    }
-
-    private void buildResults(ArrayList<Event> events, Indexer indexer, EventTracer tracer) {
-        while (indexer.hasNext()) {
-            Event event = events.get(indexer.getIndex());
-            if (event.getCallDepth() == (tracer.getAcceptedCallDepth())) {
-                tracer.addEvent(event);
-                indexer.moveNext();
-                System.out.println(event);
-            } else if (event.getCallDepth() < tracer.getAcceptedCallDepth()) {
-                return;
-            } else if (event.getCallDepth() > tracer.getAcceptedCallDepth()) {
-                buildResults(events, indexer, events.get(indexer.getIndex() - 1));
-            }
-        }
+        return results;//.aggregate();
     }
 }
