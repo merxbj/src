@@ -62,7 +62,7 @@
         buyMore = false;
         
         if ([lands getTotalIncome] > 0) {
-            double balance = [lands buyLand:[lands getBestLand] :accountBalance];
+            double balance = [lands buyLand:[lands getBestLand] withAvailableBudget:accountBalance];
             if (balance > 0) {
                 accountBalance = balance;
                 buyMore = true;
@@ -70,7 +70,7 @@
         } else {
             Land* land = [lands getEffortableLandWithBudget:accountBalance];
             if (land != nil) {
-                accountBalance = [lands buyLand:land :accountBalance];
+                accountBalance = [lands buyLand:land withAvailableBudget:accountBalance];
             } else {
                 // ouch! we don't have enough money to buy a first land
                 [endingConditions addObject:[NSNumber numberWithInt:FORCED]];

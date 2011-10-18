@@ -21,9 +21,9 @@
 - (void) createLandCollectionFromArraySetup: (NSArray*) arraySetup;
 - (void) printLandList;
 - (Land*) getBestLand;
-- (double) buyLand: (Land*) withAvailableBudget: (double) budget;
+- (double) buyLand: (Land*) land withAvailableBudget: (double) budget;
 - (double) getTotalIncome;
 - (Land*) getEffortableLandWithBudget: (double) budget;
-- (void) printRecentlBought;
+- (void) printRecentlyBought;
 
 @end

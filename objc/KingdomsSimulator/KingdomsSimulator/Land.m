@@ -65,4 +65,10 @@
     return [ipp1 compare:ipp2];
 }
 
+- (NSComparisonResult) compareLandBasedOnCurrentPrice:(Land *)other {
+    NSNumber* ipp1 = [NSNumber numberWithDouble:[self getCurrentPrice]];
+    NSNumber* ipp2 = [NSNumber numberWithDouble:[other getCurrentPrice]];
+    return [ipp1 compare:ipp2];
+}
+
 @end

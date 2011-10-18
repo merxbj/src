@@ -55,20 +55,39 @@
     return [lands objectAtIndex:0];
 }
 
-- (double) buyLand: (Land*) withAvailableBudget: (double) budget {
-    
+- (double) buyLand: (Land*) land withAvailableBudget: (double) budget {
+    double balance = budget - [land getCurrentPrice];
+    if (balance > 0.0) {
+        [receipt purchaseLand: land];
+        [land incQuantity];
+    }
+    return balance;
 }
 
 - (double) getTotalIncome {
-    
+    double income = 0.0;
+    for (Land* land in lands) {
+        income += [land getTotalIncome];
+    }
+    return income;
 }
 
 - (Land*) getEffortableLandWithBudget: (double) budget {
-    
+    Land* effortableLand = nil;
+    [lands sortUsingSelector:@selector(compareLandBasedOnCurrentPrice:)];
+    for (Land* land in lands) {
+        if ([land getCurrentPrice] <= budget) {
+            effortableLand = land;
+            break;
+        }
+    }
+    return effortableLand;
 }
 
-- (void) printRecentlBought {
-    
+- (void) printRecentlyBought {
+    [receipt print];
+    [receipt clear];
+    NSLog(@"--------------------------------------------------------------------------------");
 }
 
 @end
