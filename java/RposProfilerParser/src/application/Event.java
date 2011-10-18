@@ -18,6 +18,7 @@ public class Event {
     private long miliseconds;
     private int callDepth;
     private Event parent;
+    private int timesDispatched;
 
     public Event(String recipient, int eventId, long miliseconds, int callDepth) {
         this.recipient = recipient;
@@ -26,6 +27,7 @@ public class Event {
         this.callDepth = callDepth;
         this.subsequentEvents = new LinkedList<Event>();
         this.parent = null;
+        this.timesDispatched = 1;
     }
 
     public int getEventId() {
@@ -51,6 +53,14 @@ public class Event {
 
     public Event getParent() {
         return parent;
+    }
+
+    public List<Event> getSubsequentEvents() {
+        return subsequentEvents;
+    }
+
+    public void setMiliseconds(long miliseconds) {
+        this.miliseconds = miliseconds;
     }
 
     @Override

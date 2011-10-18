@@ -11,12 +11,11 @@ package application;
 public class EventParser {
 
     boolean isOpeningEvent(String line) {
-        String[] tokens = line.split("\\|")[1].split("-");
-        return tokens[0].equals(" + ");
+        return line.startsWith("+");
     }
     
     Event parseEventFromOpeningLine(String line) {
-        String[] tokens = line.split("\\|")[1].split("-");
+        String[] tokens = line.split("\\|");
         for (int i = 0; i < tokens.length; i++) {
             tokens[i] = tokens[i].trim();
         }
@@ -27,8 +26,8 @@ public class EventParser {
         return new Event(recipient, eventId, 0, callDepth);
     }
     
-    void parseMilisecondsFromEndingLine(String line) {
-        String[] tokens = line.split("\\|")[1].split("-");
+    void updateEventFromEndingLine(Event event, String line) {
+        String[] tokens = line.split("\\|");
         for (int i = 0; i < tokens.length; i++) {
             tokens[i] = tokens[i].trim();
         }
@@ -38,8 +37,11 @@ public class EventParser {
         int eventId = Integer.parseInt(tokens[3]);
         long miliseconds = Long.parseLong(tokens[4].split(" ")[0].trim());
         
+        if ((event.getEventId() != eventId) || (!event.getRecipient().equals(recipient)) || (event.getCallDepth() != callDepth)) {
+            throw new RuntimeException("Unexpected event to update!");
+        }
         
-        return new Event(recipient, eventId, miliseconds, callDepth);
+        event.setMiliseconds(miliseconds);
     }
     
 }
