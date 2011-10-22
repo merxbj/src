@@ -16,9 +16,9 @@ int main (int argc, const char * argv[])
 
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-    CommandLine* cl = [[CommandLine alloc] initWithArgc:argc andArgv:argv];
-    ConfigFile* cf = [[ConfigFile alloc] initWithConfigFilePath:cl.configPath];
-    KingdomsSimulator* ks = [[KingdomsSimulator alloc] init];
+    CommandLine* cl = [[[CommandLine alloc] initWithArgc:argc andArgv:argv] autorelease];
+    ConfigFile* cf = [[[ConfigFile alloc] initWithConfigFilePath:cl.configPath] autorelease];
+    KingdomsSimulator* ks = [[[KingdomsSimulator alloc] init] autorelease];
     
     [ks createLandListFromArraySetup:cf.landCounts];
     [ks setTargetIncome:cf.targetIncome];

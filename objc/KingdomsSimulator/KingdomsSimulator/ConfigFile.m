@@ -13,13 +13,12 @@
     BOOL targetIncomeElementOccured;
     BOOL startingAmountElementOccured;
 }
-- (BOOL) parseConfigWithXmlParser: (NSXMLParser *) parser;
 - (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;
 - (void) parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName;
 - (void) parser:(NSXMLParser *)parser foundCharacters:(NSString *)string;
 - (void) parseLandCollectionSetupFromString: (NSString *) string;
 - (void) parseStartingAmountFromString: (NSString *) string;
-- (void) parseTargetIncome: (NSString *) string;
+- (void) parseTargetIncomeFromString: (NSString *) string;
 @end
 
 @implementation ConfigFile
@@ -28,7 +27,7 @@
 @synthesize targetIncome;
 @synthesize startingAmount;
 
-- (id)init
+- (id) init
 {
     self = [super init];
     if (self) {
@@ -38,6 +37,11 @@
     }
     
     return self;
+}
+
+- (void) dealloc {
+    [landCounts release];
+    [super dealloc];
 }
 
 - (id) initWithConfigFilePath:(NSString *)path {
@@ -59,10 +63,6 @@
         }
     }
     return nil;
-}
-
-- (BOOL) parseConfigWithXmlParser:(NSXMLParser*) parser {
-    return true;
 }
 
 - (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
@@ -91,7 +91,7 @@
     if (landCollectionSetupElementOccured) {
         [self parseLandCollectionSetupFromString:string];
     } else if (targetIncomeElementOccured) {
-        [self parseTargetIncome:string];
+        [self parseTargetIncomeFromString:string];
     } else if (startingAmountElementOccured) {
         [self parseStartingAmountFromString:string];
     }
@@ -99,13 +99,14 @@
 
 - (void) parseLandCollectionSetupFromString: (NSString *) string {
     landCounts = [string componentsSeparatedByString:@","];
+    [landCounts retain];
 }
 
 - (void) parseStartingAmountFromString: (NSString *) string {
     startingAmount = [string doubleValue];
 }
 
-- (void) parseTargetIncome: (NSString *) string {
+- (void) parseTargetIncomeFromString: (NSString *) string {
     targetIncome = [string doubleValue];
 }
 

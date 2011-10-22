@@ -10,11 +10,11 @@
 
 @interface CommandLine : NSObject
 {
-    NSInteger cyclesCount;
+    int cyclesCount;
     NSString* configPath;
 }
 
-@property(readonly) NSInteger cyclesCount;
+@property(readonly) int cyclesCount;
 @property(readonly) NSString* configPath;
 
 - (id) initWithArgc: (int) argc andArgv: (const char*[]) argv;

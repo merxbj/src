@@ -20,13 +20,13 @@ typedef enum {
     int tickDuration;
     int targetIncome;
     NSMutableArray* endingConditions;
-    NSInteger targetCyclesCount;
+    int targetCyclesCount;
 }
 
 @property int targetIncome;
 @property int startingAmount;
 @property int tickDuration;
-@property NSInteger targetCyclesCount;
+@property int targetCyclesCount;
 
 - (void) createCommonLandList;
 - (void) createLandListFromArraySetup: (NSArray*) arraySetup;

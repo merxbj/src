@@ -13,11 +13,15 @@
 - (id)init {
     self = [super init];
     if (self) {
-        cyclesCount = NSIntegerMax;
-        configPath = @"GASConfig.xml";
-        
+        cyclesCount = INT_MAX;
+        configPath = [[NSString alloc] initWithString:@"GASConfig.xml"];
     }
     return self;
+}
+
+- (void) dealloc {
+    [configPath release];
+    [super dealloc];
 }
 
 - (id) initWithArgc:(int)argc andArgv:(const char *[])argv {
@@ -29,7 +33,7 @@
                 configPath = [[NSString alloc] initWithUTF8String:argv[i + 1]]; 
             }
             else if ([arg isEqualToString:@"-c"]) {
-                cyclesCount = [[[NSString alloc] initWithUTF8String:argv[i + 1]] intValue];
+                cyclesCount = [[NSString stringWithUTF8String:argv[i + 1]] intValue];
             }
             [arg release];
         }

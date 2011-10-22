@@ -35,14 +35,16 @@
         targetIncome = 0;
         totalTimeElapsed = 0;
         tickDuration = 50;
-        targetCyclesCount = NSIntegerMax;
+        targetCyclesCount = INT_MAX;
     }
     
     return self;
 }
 
--(void) free {
-    
+- (void) dealloc {
+    [lands release];
+    [endingConditions release];
+    [super release];
 }
 
 - (void) run {
