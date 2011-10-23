@@ -84,6 +84,7 @@ public class SrtSubtitles implements Subtitles, FileRepresentable {
                 writer.write(line);
                 writer.write(System.getProperty("line.separator"));
             }
+            writer.flush();
         } catch (UnsupportedEncodingException uee) {
             throw new SubtitleFormatException("Unsupported output encoding!", uee);
         } catch (IOException ioex) {
@@ -142,7 +143,6 @@ public class SrtSubtitles implements Subtitles, FileRepresentable {
         List<String> lines = new ArrayList<String>();
         for (Subtitle sub : subtitles) {
             lines.addAll(sub.formatForFile());
-            lines.add("");
         }
         return lines;
     }

@@ -49,7 +49,7 @@ class Time implements FileRepresentable {
     }
 
     public int getMiliseconds() {
-        return miliseconds;
+        return this.miliseconds;
     }
 
     public void setMiliseconds(int miliseconds) {
@@ -59,7 +59,7 @@ class Time implements FileRepresentable {
     }
 
     public int getMinutes() {
-        return minutes;
+        return this.minutes;
     }
 
     public void setMinutes(int minutes) {
@@ -69,7 +69,7 @@ class Time implements FileRepresentable {
     }
 
     public int getSeconds() {
-        return seconds;
+        return this.seconds;
     }
 
     public void setSeconds(int seconds) {
@@ -96,29 +96,29 @@ class Time implements FileRepresentable {
     }
 
     public void clear() {
-        hours = 0;
-        minutes = 0;
-        seconds = 0;
-        miliseconds = 0;
+        this.hours = 0;
+        this.minutes = 0;
+        this.seconds = 0;
+        this.miliseconds = 0;
     }
 
     public long toMiliseconds() {
-        return (miliseconds + (seconds * 1000) + (minutes * 60000) + (hours * 3600000));
+        return (this.miliseconds + (this.seconds * 1000) + (this.minutes * 60000) + (this.hours * 3600000));
     }
 
     public void fromMiliseconds(long miliseconds) {
-        hours = (int)(miliseconds / 3600000);
-        minutes = (int)((miliseconds % 3600000) / 60000);
-        seconds = (int)(((miliseconds % 3600000) % 60000) / 1000);
-        miliseconds = (int)(((miliseconds % 3600000) % 60000) % 1000);
+        this.hours = (int)(miliseconds / 3600000);
+        this.minutes = (int)((miliseconds % 3600000) / 60000);
+        this.seconds = (int)(((miliseconds % 3600000) % 60000) / 1000);
+        this.miliseconds = (int)(((miliseconds % 3600000) % 60000) % 1000);
     }
 
-    public void substract(long miliseconds) {
-        fromMiliseconds(toMiliseconds() - miliseconds);
+    public void substractMilliseconds(long substraction) {
+        fromMiliseconds(toMiliseconds() - substraction);
     }
 
-    public void add(long miliseconds) {
-        fromMiliseconds(toMiliseconds() + miliseconds);
+    public void addMilliseconds(long addition) {
+        fromMiliseconds(toMiliseconds() + addition);
     }
 
     public List<String> formatForFile() {

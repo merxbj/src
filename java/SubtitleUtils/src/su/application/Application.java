@@ -8,9 +8,7 @@ package su.application;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +28,6 @@ public class Application {
     public static void main(String[] args) {
 
         CommandLine cl = CommandLine.parse(args);
-        List<String> lines = new ArrayList<String>();
 
         FileInputStream in = null;
         FileOutputStream out = null;

@@ -48,7 +48,7 @@ public class CommandLine {
         cl.setMilisecondsTimeShift(Integer.parseInt(args[2]));
         cl.setMilisecondsOffset(Integer.parseInt(args[3]));
         
-        if (args.length == 5) {
+        if (args.length >= 5) {
             cl.setInputEncoding(args[4]);
         }
         

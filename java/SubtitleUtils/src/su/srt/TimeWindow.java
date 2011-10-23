@@ -70,8 +70,8 @@ class TimeWindow implements FileRepresentable {
     }
 
     public void shift(long miliseconds) {
-        start.add(miliseconds);
-        end.add(miliseconds);
+        start.addMilliseconds(miliseconds);
+        end.addMilliseconds(miliseconds);
     }
 
     public List<String> formatForFile() {
