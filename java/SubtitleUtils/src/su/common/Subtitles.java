@@ -26,5 +26,5 @@ package su.common;
  * @authoer %I% %G%
  */
 public interface Subtitles extends StreamRepresentable {
-    public void timeShift(long miliseconds, long offset);
+    public void timeShift(long miliseconds, long startingSubtitle);
 }
