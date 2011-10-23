@@ -23,7 +23,6 @@ package su.srt;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import su.common.FileRepresentable;
 import su.common.SubtitleFormatException;
 
 /**

@@ -20,14 +20,16 @@
 
 package su.common;
 
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @authoer %I% %G%
  */
-public interface FileRepresentable {
-    public List<String> formatForFile();
-    public void parse(List<String> lines) throws SubtitleFormatException;
+public interface StreamRepresentable {
+    public void writeToStream(OutputStream stream, Map<String, Object> parameters) throws SubtitleFormatException;
+    public void parseFromStream(InputStream stream, Map<String, Object> parameters) throws SubtitleFormatException;
 }

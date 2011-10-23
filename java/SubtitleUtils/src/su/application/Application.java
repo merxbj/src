@@ -5,15 +5,16 @@
 
 package su.application;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import su.common.ParseParameters;
 import su.common.SubtitleFactory;
 import su.common.Subtitles;
 
@@ -31,39 +32,43 @@ public class Application {
         CommandLine cl = CommandLine.parse(args);
         List<String> lines = new ArrayList<String>();
 
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
+        FileInputStream in = null;
+        FileOutputStream out = null;
         try {
+            
             /**
-             * Read the input file lines
+             * Get the input stream from the file
              */
-            reader = new BufferedReader(new FileReader(new File(cl.getSource())));
-            while (reader.ready()) {
-                lines.add(reader.readLine());
-            }
-
+            Map<String, Object> parseParameters = new HashMap<String, Object>();
+            parseParameters.put(ParseParameters.INPUT_ENCODING, cl.getInputEncoding());
+            in = new FileInputStream(new File(cl.getSource()));
+            
             /**
              * Parse the subtitles and perform the time shift
              */
             Subtitles subs = SubtitleFactory.recognizeSubtitles(cl.getSource());
-            subs.parse(lines);
-            subs.timeShift(cl.getMilisecondsTimeShift());
+            subs.parseFromStream(in, parseParameters);
+            subs.timeShift(cl.getMilisecondsTimeShift(), cl.getMilisecondsOffset());
 
             /**
-             * Write the subtitles into the output file
+             * Get the output stream to the file
              */
-            writer = new BufferedWriter(new FileWriter(new File(cl.getDestination())));
-            for (String line : subs.formatForFile()) {
-                writer.write(line);
-                writer.newLine();
-            }
+            Map<String, Object> outputParameters = new HashMap<String, Object>();
+            outputParameters.put(ParseParameters.OUTPUT_ENCODING, cl.getOutputEncoding());
+            out = new FileOutputStream(new File(cl.getDestination()));
+            
+            /**
+             * Write the subtitles back to the file
+             */
+            subs.writeToStream(out, outputParameters);
+            
 
         } catch (Exception ex) {
             Logger.getLogger("SubtitleUtils").log(Level.SEVERE, "Error occured while processing the subtitles!", ex);
         } finally {
             try { 
-                reader.close();
-                writer.close();
+                in.close();
+                out.close();
             } catch (Exception ex) {}
         }
     }

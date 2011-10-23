@@ -29,6 +29,14 @@ public class CommandLine {
     private String source;
     private String destination;
     private long milisecondsTimeShift;
+    private long milisecondsOffset;
+    private String inputEncoding;
+    private String outputEncoding;
+    
+    public CommandLine() {
+        inputEncoding = "UTF-8";
+        outputEncoding = "UTF-8";
+    }
 
     public static CommandLine parse(String[] args) {
         if (args.length < 3)
@@ -38,7 +46,16 @@ public class CommandLine {
         cl.setSource(args[0]);
         cl.setDestination(args[1]);
         cl.setMilisecondsTimeShift(Integer.parseInt(args[2]));
-
+        cl.setMilisecondsOffset(Integer.parseInt(args[3]));
+        
+        if (args.length == 5) {
+            cl.setInputEncoding(args[4]);
+        }
+        
+        if (args.length == 6) {
+            cl.setOutputEncoding(args[5]);
+        }
+        
         return cl;
     }
 
@@ -68,5 +85,29 @@ public class CommandLine {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public long getMilisecondsOffset() {
+        return milisecondsOffset;
+    }
+
+    public void setMilisecondsOffset(long milisecondsOffset) {
+        this.milisecondsOffset = milisecondsOffset;
+    }
+
+    public String getInputEncoding() {
+        return inputEncoding;
+    }
+
+    public void setInputEncoding(String inputEncoding) {
+        this.inputEncoding = inputEncoding;
+    }
+
+    public String getOutputEncoding() {
+        return outputEncoding;
+    }
+
+    public void setOutputEncoding(String outputEncoding) {
+        this.outputEncoding = outputEncoding;
     }
 }

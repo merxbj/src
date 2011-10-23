@@ -25,6 +25,6 @@ package su.common;
  * @author Jaroslav Merxbauer
  * @authoer %I% %G%
  */
-public interface Subtitles extends FileRepresentable {
-    public void timeShift(long miliseconds);
+public interface Subtitles extends StreamRepresentable {
+    public void timeShift(long miliseconds, long offset);
 }
