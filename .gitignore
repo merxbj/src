@@ -40,3 +40,4 @@ csharp/*/_ReSharper*
 /java/Kingdoms4Web/Kingdoms4Web-ejb/build/
 *.sdf
 *.ipch
+*.svn
