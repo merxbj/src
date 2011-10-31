@@ -1,7 +1,11 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 20
+/svn/mrneo/!svn/act/
 K 25
 svn:wc:ra_dav:version-url
 V 40
-/svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer
 END
 build.xml
 K 25

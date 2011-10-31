@@ -8,7 +8,7 @@ package DSA.common;
  *
  * @author mrneo
  */
-public class SimpleFile implements SimpleObject {
+public class SimpleFile implements SimpleDirInterface {
     private String name;
     private long size;
 

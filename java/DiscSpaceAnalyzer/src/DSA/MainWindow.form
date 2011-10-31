@@ -21,7 +21,7 @@
                   <Component id="maxDepthComboBox" min="-2" pref="116" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                   <Component id="startButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="486" max="32767" attributes="0"/>
+                  <EmptySpace pref="530" max="32767" attributes="0"/>
               </Group>
               <Component id="canvasPanel" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -39,7 +39,7 @@
                           <Component id="startButton" alignment="3" max="32767" attributes="1"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="7" max="32767" attributes="0"/>
                   <Component id="canvasPanel" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -199,10 +199,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="statusPanelSeparator" alignment="0" pref="1126" max="32767" attributes="0"/>
+                      <Component id="statusPanelSeparator" alignment="0" pref="1128" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="966" max="32767" attributes="0"/>
+                          <EmptySpace pref="978" max="32767" attributes="0"/>
                           <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>

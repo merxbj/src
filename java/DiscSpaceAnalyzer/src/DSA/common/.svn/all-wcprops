@@ -7,23 +7,23 @@ SimpleFile.java
 K 25
 svn:wc:ra_dav:version-url
 V 71
-/svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/common/SimpleFile.java
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer/src/DSA/common/SimpleFile.java
+END
+SimpleDirInterface.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer/src/DSA/common/SimpleDirInterface.java
 END
 SimpleDir.java
 K 25
 svn:wc:ra_dav:version-url
 V 70
-/svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/common/SimpleDir.java
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer/src/DSA/common/SimpleDir.java
 END
 FileSystemViewExt.java
 K 25
 svn:wc:ra_dav:version-url
 V 78
 /svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/common/FileSystemViewExt.java
-END
-SimpleObject.java
-K 25
-svn:wc:ra_dav:version-url
-V 73
-/svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/common/SimpleObject.java
 END

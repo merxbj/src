@@ -1,7 +1,7 @@
 10
 
 dir
-44
+46
 https://integri-alpha:9950/svn/mrneo/DiscSpaceAnalyzer/src/DSA/common
 https://integri-alpha:9950/svn/mrneo
 
@@ -69,14 +69,14 @@ mrneo
 
 SimpleDir.java
 file
+47
 
 
 
-
-2011-10-31T07:28:03.015000Z
-9c167ff836f0da2081f39bfd12c0a057
-2011-10-31T07:36:48.377122Z
-44
+2011-10-31T09:28:16.125000Z
+41c15eb07fac9b11e13c9e337f7ebe10
+2011-10-31T09:46:15.849165Z
+47
 mrneo
 
 
@@ -99,18 +99,52 @@ mrneo
 
 
 
-1399
+1435
+
+SimpleDirInterface.java
+file
+47
+
+
+
+2011-10-31T09:28:16.137000Z
+9f4a20247596c640fb4f81264b51c5db
+2011-10-31T09:46:15.849165Z
+47
+mrneo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+273
 
 SimpleFile.java
 file
+47
 
 
 
-
-2011-10-31T07:28:03.024000Z
-1d2066c3cac7d27ac22c213e7f2f2700
-2011-10-31T07:36:48.377122Z
-44
+2011-10-31T09:28:16.145000Z
+f4a4f0beada87d5fe9ed45e995ffa5e6
+2011-10-31T09:46:15.849165Z
+47
 mrneo
 
 
@@ -133,19 +167,11 @@ mrneo
 
 
 
-534
+540
 
 SimpleObject.java
 file
-
-
-
-
-2011-10-31T07:28:02.994000Z
-a482b04acb6fbbc2f660551d32869f16
-2011-10-31T07:36:48.377122Z
-44
-mrneo
+47
 
 
 
@@ -165,7 +191,5 @@ mrneo
 
 
 
-
-
-267
+deleted
 

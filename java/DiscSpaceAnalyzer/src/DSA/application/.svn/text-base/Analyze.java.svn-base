@@ -7,8 +7,6 @@ package DSA.application;
 import DSA.common.SimpleDir;
 import DSA.common.SimpleFile;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
 
@@ -17,40 +15,39 @@ import org.jdesktop.application.Task;
  * @author mrneo
  */
 public class Analyze extends Task {
-    private File pathToAnalyze;
+    private File root;
     private boolean stop = false;
-    private SimpleDir structure;
+    private SimpleDir dirStructure;
 
     public Analyze(Application app) {
         super(app);
     }
 
-    public Analyze(Application app, SimpleDir structure) {
+    public Analyze(Application app, SimpleDir dirStructure) {
         super(app);
-        this.structure = structure;
+        this.dirStructure = dirStructure;
     }
 
     public void setPathToAnalyze(File root) {
-        this.pathToAnalyze = root;
+        this.root = root;
     }
     
     private void startAnalyze() {
-        File[] rootList = pathToAnalyze.listFiles();
-        this.analyzeFiles(rootList, structure);
+        File[] rootList = root.listFiles();
+        this.analyzeFiles(rootList, dirStructure);
     }
 
-    private void analyzeFiles(File[] rootList, SimpleDir content) {
+    private void analyzeFiles(File[] rootList, SimpleDir dirContent) {
         if (!stop) {
             for (File file : rootList) {
                 setMessage(file.getAbsolutePath());
-                //System.out.println(file.getAbsolutePath() + " " + file.length());
                 if (file.isDirectory() && file.canRead()) {
-                    SimpleDir folderStructure = newSimpleDir(file);
-                    analyzeFiles(file.listFiles(), folderStructure);
-                    content.add(folderStructure);
+                    SimpleDir subDirStructure = newSimpleDir(file);
+                    analyzeFiles(file.listFiles(), subDirStructure);
+                    dirContent.add(subDirStructure);
                 }
                 else if(file.isFile()) {
-                    content.add(this.newSimpleFile(file));
+                    dirContent.add(this.newSimpleFile(file));
                 }
             }
         }

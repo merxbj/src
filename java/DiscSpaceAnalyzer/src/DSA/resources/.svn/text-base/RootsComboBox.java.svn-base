@@ -11,6 +11,7 @@ import java.awt.Font;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
@@ -78,11 +79,13 @@ class ComboBoxRenderer extends JLabel implements ListCellRenderer {
     }
     
     private double convertToGigaBytes(long number) {
-        double numberForConvertion = number / (1024d * 1024d * 1024d);
-        DecimalFormat df = new DecimalFormat("00.00");
-        String formatedNumber = df.format(numberForConvertion);
-        double convertedNumber = Double.parseDouble(formatedNumber);
-        
-        return convertedNumber;
+            double numberForConvertion = number / (1024d * 1024d * 1024d);
+            DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+            dfs.setDecimalSeparator('.');
+            DecimalFormat df = new DecimalFormat("00.00", dfs);
+            String formatedNumber = df.format(numberForConvertion);
+            double convertedNumber = Double.parseDouble(formatedNumber);
+
+            return convertedNumber;
     }
 }

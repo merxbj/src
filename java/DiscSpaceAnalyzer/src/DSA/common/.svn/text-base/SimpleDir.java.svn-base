@@ -11,9 +11,9 @@ import java.util.List;
  *
  * @author mrneo
  */
-public class SimpleDir implements SimpleObject {
+public class SimpleDir implements SimpleDirInterface {
     private String name;
-    private List<SimpleObject> content = new ArrayList<SimpleObject>();
+    private List<SimpleDirInterface> content = new ArrayList<SimpleDirInterface>();
     private boolean isSizeCalculated = false;
     private long directorySize = 0;
     private long size = 0;
@@ -31,7 +31,7 @@ public class SimpleDir implements SimpleObject {
         this.name = name;
     }
     
-    public void add(SimpleObject so) {
+    public void add(SimpleDirInterface so) {
         this.content.add(so);
         this.resetCalculatedSize();
         
@@ -46,7 +46,7 @@ public class SimpleDir implements SimpleObject {
 
     public long getSize() {
         if (!isSizeCalculated) {
-            for (SimpleObject o : content) {
+            for (SimpleDirInterface o : content) {
                 size += o.getSize();
             }
             this.isSizeCalculated = true;
@@ -55,7 +55,7 @@ public class SimpleDir implements SimpleObject {
         return size + directorySize;
     }
     
-    public List<SimpleObject> getContent() {
+    public List<SimpleDirInterface> getContent() {
         return content;
     }
     

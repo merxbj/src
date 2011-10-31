@@ -7,13 +7,19 @@ RootsComboBox.java
 K 25
 svn:wc:ra_dav:version-url
 V 77
-/svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/resources/RootsComboBox.java
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer/src/DSA/resources/RootsComboBox.java
 END
 splash.png
 K 25
 svn:wc:ra_dav:version-url
 V 69
 /svn/mrneo/!svn/ver/44/DiscSpaceAnalyzer/src/DSA/resources/splash.png
+END
+MainClass.properties
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/mrneo/!svn/ver/47/DiscSpaceAnalyzer/src/DSA/resources/MainClass.properties
 END
 AboutBox.properties
 K 25

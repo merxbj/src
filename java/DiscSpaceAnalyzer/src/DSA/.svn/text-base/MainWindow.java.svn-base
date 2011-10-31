@@ -4,11 +4,9 @@
 
 package DSA;
 
-import DSA.application.MainClass;
 import DSA.application.Analyze;
 import DSA.common.FileSystemViewExt;
 import DSA.common.SimpleDir;
-import DSA.common.SimpleObject;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -35,7 +33,7 @@ public class MainWindow extends FrameView {
     TaskService taskService = appContext.getTaskService();
     TaskMonitor taskMonitor = appContext.getTaskMonitor();
     Analyze analyze = new Analyze(Application.getInstance());
-    SimpleDir rootStructure;
+    SimpleDir rootDir;
 
     public MainWindow(SingleFrameApplication app) {
         super(app);
@@ -153,7 +151,7 @@ public class MainWindow extends FrameView {
             }
         });
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(DSA.application.MainClass.class).getContext().getResourceMap(MainWindow.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(DSA.MainClass.class).getContext().getResourceMap(MainWindow.class);
         startButton.setText(resourceMap.getString("startButton.text")); // NOI18N
         startButton.setEnabled(false);
         startButton.setName("startButton"); // NOI18N
@@ -225,7 +223,7 @@ public class MainWindow extends FrameView {
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(DSA.application.MainClass.class).getContext().getActionMap(MainWindow.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(DSA.MainClass.class).getContext().getActionMap(MainWindow.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         fileMenu.add(exitMenuItem);
@@ -294,13 +292,13 @@ public class MainWindow extends FrameView {
         else {
             /*File root = (File)rootsComboBox.getSelectedItem();*/
             File root = new File("/home/mrneo/Programs/"); /* JUST FOR TESTING PURPOSES */
-            rootStructure = new SimpleDir();
-            rootStructure.setName(root.getAbsolutePath());
-            rootStructure.setDirectorySize(root.length());
+            rootDir = new SimpleDir();
+            rootDir.setName(root.getAbsolutePath());
+            rootDir.setDirectorySize(root.length());
 
             //mainCanvas.setStructureForMapping(rootStructure);
             
-            analyze = new Analyze(Application.getInstance(), rootStructure);
+            analyze = new Analyze(Application.getInstance(), rootDir);
             analyze.setPathToAnalyze(root);
 
             taskService.execute(analyze);
