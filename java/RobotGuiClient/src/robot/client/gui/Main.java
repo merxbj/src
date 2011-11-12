@@ -18,7 +18,11 @@
  *
  */
 
-package robot.server;
+package robot.client.gui;
+
+import robot.client.CommandLine;
+import robot.client.Robot;
+import robot.client.RobotServerConnection;
 
 /**
  *
@@ -28,11 +32,10 @@ package robot.server;
 public class Main {
 
     public static void main(String[] args) {
-
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
+        
+        CommandLine cl = CommandLine.parse(args);
+        RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
+        Robot robot = new Robot(connection);
 
     }
 

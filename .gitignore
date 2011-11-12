@@ -21,7 +21,6 @@ csharp/*/bin/
 csharp/*/obj/
 *.settings
 java/.metadata
-genfiles.properties
 *.log
 csharp/*/_ReSharper*
 /java/StarcraftLite/StarcraftLite-war/nbproject/private/

@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotCrashedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.server;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RobotCrashedException extends RobotException {
 
-    public static void main(String[] args) {
+    public RobotCrashedException(Throwable cause) {
+        super(cause);
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RobotCrashedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public RobotCrashedException(String message) {
+        super(message);
+    }
 
+    public RobotCrashedException() {
     }
 
 }

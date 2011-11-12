@@ -1,5 +1,5 @@
 /*
- * Main
+ * RequestTurnLet
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,37 @@
  *
  */
 
-package robot.server;
+package robot.common.request;
+
+import java.util.List;
+import robot.common.response.*;
+import java.util.Arrays;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RequestTurnLeft extends Request {
 
-    public static void main(String[] args) {
+    public RequestTurnLeft(String address) {
+        super(address);
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RequestTurnLeft() {
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public String formatForTcp() {
+        return new StringBuilder(getAdress()).append(" VLEVO").append("\r\n").toString();
+    }
 
+    public Response route(RequestProcessor processor) {
+        return processor.processTurnLeft();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
     }
 
 }

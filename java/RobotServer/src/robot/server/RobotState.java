@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,20 +20,19 @@
 
 package robot.server;
 
+import robot.common.exception.*;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public interface RobotState {
 
-    public static void main(String[] args) {
-
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
-    }
-
+    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException;
+    public void turnLeft(Robot robot) throws RobotBatteryEmptyException;
+    public String pickUp(Robot robot) throws RobotCannotPickUpException;
+    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException;
+    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException;
+    
 }

@@ -1,5 +1,5 @@
 /*
- * Main
+ * SecretMessageProvider
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,20 +20,26 @@
 
 package robot.server;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class SecretMessageProvider {
 
-    public static void main(String[] args) {
+    private static List<String> messages = Arrays.asList(new String[] {
+        "This is so secret that I would have to kill you if I tell it.",
+        "You really thought that this is secret, huh?",
+        "My secret is that I have no secrets!",
+        "Tell me your secret at first!",
+        "Edward dates Bella as well as Robert Pattison dates Christine Steward!"
+    });
 
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public static synchronized String getRandomSecretMessage() {
+        return messages.get((int) Math.floor(Math.random() * messages.size()));
     }
 
 }

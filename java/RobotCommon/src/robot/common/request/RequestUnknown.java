@@ -1,5 +1,5 @@
 /*
- * Main
+ * RequestUnknown
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,38 @@
  *
  */
 
-package robot.server;
+package robot.common.request;
+
+import java.util.Arrays;
+import java.util.List;
+import robot.common.response.Response;
+import robot.common.response.ResponseUnknownRequest;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RequestUnknown extends Request {
 
-    public static void main(String[] args) {
+    public RequestUnknown(String address) {
+        super(address);
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RequestUnknown() {
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public String formatForTcp() {
+        throw new UnsupportedOperationException("Does not make sense.");
+    }
 
+    public Response route(RequestProcessor processor) {
+        return processor.processUnknown();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseUnknownRequest()});
     }
 
 }

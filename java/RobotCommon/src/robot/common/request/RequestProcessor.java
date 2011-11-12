@@ -1,5 +1,5 @@
 /*
- * Main
+ * RequestProcessor
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,21 @@
  *
  */
 
-package robot.server;
+package robot.common.request;
+
+import robot.common.response.Response;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @version %I% %G%
+ * @authoer %I% %G%
  */
-public class Main {
-
-    public static void main(String[] args) {
-
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
-    }
-
+public interface RequestProcessor {
+    public Response processStep();
+    public Response processTurnLeft();
+    public Response processPickUp();
+    public Response processRepair(int blockToRepair);
+    public Response processRecharge();
+    public Response processUnknown();
+    public String getExpectedAddress();
 }
