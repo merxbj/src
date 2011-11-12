@@ -20,7 +20,6 @@
 
 package robot.client;
 
-import robot.common.Battery;
 import robot.common.Position;
 import robot.common.exception.*;
 import robot.common.response.ResponseHandler;
@@ -38,11 +37,6 @@ public class ServerResponseHandler implements ResponseHandler {
         this.robot = robot;
     }
 
-    public void handleBatteryEmpty() throws RobotBatteryEmptyException {
-        this.robot.getServer().disconnect();
-        throw new RobotBatteryEmptyException("The robot run out of battery!");
-    }
-
     public void handleCannotPickUp() throws RobotCannotPickUpException {
         throw new RobotCannotPickUpException("Pick up command issued without robot standing on 0,0!");
     }
@@ -55,20 +49,19 @@ public class ServerResponseHandler implements ResponseHandler {
         throw new RobotCrumbledException("The robot attempted to perform such operation which made him crumbled!");
     }
 
-    public void handleDamage(int damagedBlock) throws RobotDamagedException {
-        throw new RobotDamagedException("The robot has damaged block!", damagedBlock);
+    public void handleProcessorDamaged(int damagedProcessor) throws RobotProcessorDamagedException {
+        throw new RobotProcessorDamagedException("The robot has damaged processor!", damagedProcessor);
     }
 
     public void handleIdentification(String address) {
         this.robot.setName(address);
     }
 
-    public void handleNoDamage() throws RobotNoDamageException {
-        throw new RobotNoDamageException("Repair command issued on block that has no damage!");
+    public void handleProcessorOk() throws RobotProcessorOkException {
+        throw new RobotProcessorOkException("Repair command issued on processor that has no damage!");
     }
 
-    public void handleOk(int battery, int x, int y) {
-        this.robot.setBattery(new Battery(battery));
+    public void handleOk(int x, int y) {
         this.robot.setPos(new Position(x,y));
     }
 

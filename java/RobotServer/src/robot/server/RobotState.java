@@ -29,10 +29,8 @@ import robot.common.exception.*;
  */
 public interface RobotState {
 
-    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException;
-    public void turnLeft(Robot robot) throws RobotBatteryEmptyException;
+    public void doStep(Robot robot) throws RobotCrashedException, RobotCrumbledException, RobotProcessorDamagedException;
+    public void turnLeft(Robot robot);
     public String pickUp(Robot robot) throws RobotCannotPickUpException;
-    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException;
-    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException;
-    
+    public void repair(Robot robot, int processorToRepair) throws RobotProcessorOkException;
 }

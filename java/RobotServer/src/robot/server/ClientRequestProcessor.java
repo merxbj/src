@@ -46,48 +46,31 @@ public class ClientRequestProcessor implements RequestProcessor {
         }
     }
 
-    public Response processRecharge() {
+    public Response processProcessorRepair(int processorToRepair) {
         try {
-            RobotServerInfo info = robot.recharge();
-            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-        } catch (RobotCrumbledException ex) {
-            return new ResponseCrumbled();
-        } catch (RobotDamagedException ex) {
-            return new ResponseDamage(ex.getDamagedBlock());
-        }
-    }
-
-    public Response processRepair(int blockToRepair) {
-        try {
-            RobotServerInfo info = robot.repair(blockToRepair);
-            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-        } catch (RobotNoDamageException ex) {
-            return new ResponseNoDamage();
+            RobotServerInfo info = robot.repair(processorToRepair);
+            return new ResponseOk(info.getPosition().x, info.getPosition().y);
+        } catch (RobotProcessorOkException ex) {
+            return new ResponseProcessorOk();
         }
     }
 
     public Response processStep() {
         try {
             RobotServerInfo info = robot.doStep();
-            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
+            return new ResponseOk(info.getPosition().x, info.getPosition().y);
         } catch (RobotCrashedException ex) {
             return new ResponseCrash();
-        } catch (RobotBatteryEmptyException ex) {
-            return new ResponseBatteryEmpty();
         } catch (RobotCrumbledException ex) {
             return new ResponseCrumbled();
-        } catch (RobotDamagedException ex) {
-            return new ResponseDamage(ex.getDamagedBlock());
+        } catch (RobotProcessorDamagedException ex) {
+            return new ResponseProcessorDamaged(ex.getDamagedProcessor());
         }
     }
 
     public Response processTurnLeft() {
-        try {
-            RobotServerInfo info = robot.turnLeft();
-            return new ResponseOk(info.getBattery().level, info.getPosition().x, info.getPosition().y);
-        } catch (RobotBatteryEmptyException ex) {
-            return new ResponseBatteryEmpty();
-        }
+        RobotServerInfo info = robot.turnLeft();
+        return new ResponseOk(info.getPosition().x, info.getPosition().y);
     }
 
     public Response processUnknown() {

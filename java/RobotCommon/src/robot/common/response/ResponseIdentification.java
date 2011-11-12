@@ -46,7 +46,7 @@ public class ResponseIdentification extends Response {
     }
 
     public String formatForTcp() {
-        return new StringBuilder("220 ").append(String.format(idFormatString, getAddress())).append("\r\n").toString();
+        return new StringBuilder("200 ").append(String.format(idFormatString, getAddress())).append("\r\n").toString();
     }
 
     public String getAddress() {

@@ -36,15 +36,14 @@ public class ServerResponseFactory {
     private final static HashMap<String, Response> prototypes;
     static {
         prototypes = new HashMap<String, Response>();
-        prototypes.put("220", new ResponseIdentification());
-        prototypes.put("221", new ResponseSuccess());
+        prototypes.put("200", new ResponseIdentification());
+        prototypes.put("210", new ResponseSuccess());
         prototypes.put("250", new ResponseOk());
         prototypes.put("500", new ResponseUnknownRequest());
         prototypes.put("530", new ResponseCrash());
-        prototypes.put("540", new ResponseBatteryEmpty());
         prototypes.put("550", new ResponseCannotPickUp());
-        prototypes.put("570", new ResponseDamage());
-        prototypes.put("571", new ResponseNoDamage());
+        prototypes.put("570", new ResponseProcessorDamaged());
+        prototypes.put("571", new ResponseProcessorOk());
         prototypes.put("572", new ResponseCrumbled());
     }
 

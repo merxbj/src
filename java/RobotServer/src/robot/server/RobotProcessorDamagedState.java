@@ -1,5 +1,5 @@
 /*
- * RobotDamagedState
+ * RobotProcessorDamagedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -27,31 +27,26 @@ import robot.common.exception.*;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotDamagedState implements RobotState {
+public class RobotProcessorDamagedState implements RobotState {
 
-    private int damagedBlock;
+    private int damagedProcessor;
 
-    public RobotDamagedState(int damagedBlock) {
-        assert((damagedBlock > 0) && (damagedBlock < 10));
-        this.damagedBlock = damagedBlock;
+    public RobotProcessorDamagedState(int damagedProcessor) {
+        assert((damagedProcessor > 0) && (damagedProcessor < 10));
+        this.damagedProcessor = damagedProcessor;
     }
 
     public void doStep(Robot robot) throws RobotCrumbledException {
         throw new RobotCrumbledException();
     }
 
-    public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
+    public void turnLeft(Robot robot) {
         robot.getInfo().turn();
-
-        robot.getInfo().getBattery().level -= 10;
-        if (robot.getInfo().getBattery().level <= 0) {
-            throw new RobotBatteryEmptyException();
-        }
     }
 
-    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
-        if (damagedBlock != blockToRepair) {
-            throw new RobotNoDamageException();
+    public void repair(Robot robot, int processorToRepair) throws RobotProcessorOkException {
+        if (damagedProcessor != processorToRepair) {
+            throw new RobotProcessorOkException();
         }
         robot.getInfo().setStepsSoFar(0);
         robot.setCurrentState(new RobotOkState());
@@ -63,10 +58,6 @@ public class RobotDamagedState implements RobotState {
         }
 
         return robot.getSecretMessage();
-    }
-
-    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
-        throw new RobotCrumbledException();
     }
 
 }

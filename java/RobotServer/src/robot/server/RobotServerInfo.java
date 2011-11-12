@@ -35,10 +35,10 @@ public class RobotServerInfo extends RobotInfo {
 
     private int stepsSoFar;
 
-    private static final int MAX_X =  17;
-    private static final int MAX_Y =  17;
-    private static final int MIN_X = -17;
-    private static final int MIN_Y = -17;
+    public static final int MAX_X =  22;
+    public static final int MAX_Y =  22;
+    public static final int MIN_X = -22;
+    public static final int MIN_Y = -22;
 
     public RobotServerInfo(int battery, int x, int y, Direction direction) {
         super(battery, x, y, direction);

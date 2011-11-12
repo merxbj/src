@@ -21,11 +21,10 @@
 package robot.common.request;
 
 import java.util.List;
-import robot.common.response.ResponseBatteryEmpty;
 import robot.common.response.ResponseCrash;
 import robot.common.response.Response;
 import robot.common.response.ResponseOk;
-import robot.common.response.ResponseDamage;
+import robot.common.response.ResponseProcessorDamaged;
 import robot.common.response.ResponseCrumbled;
 import java.util.Arrays;
 
@@ -54,7 +53,7 @@ public class RequestStep extends Request {
     @Override
     protected List<Response> getSupportedResponses() {
         return Arrays.asList(new Response[] {new ResponseOk(), new ResponseCrash(),
-                                                new ResponseBatteryEmpty(), new ResponseDamage(), new ResponseCrumbled()});
+                                             new ResponseProcessorDamaged(), new ResponseCrumbled()});
     }
 
 }

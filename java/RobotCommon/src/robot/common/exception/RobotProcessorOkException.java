@@ -1,5 +1,5 @@
 /*
- * Battery
+ * RobotProcessorOkException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,18 +18,28 @@
  *
  */
 
-package robot.common;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Battery {
-    public int level;
+public class RobotProcessorOkException extends RobotException {
 
-    public Battery(int level) {
-        this.level = level;
+    public RobotProcessorOkException(Throwable cause) {
+        super(cause);
     }
-    
+
+    public RobotProcessorOkException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RobotProcessorOkException(String message) {
+        super(message);
+    }
+
+    public RobotProcessorOkException() {
+    }
+
 }

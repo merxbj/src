@@ -20,7 +20,7 @@
 
 package robot.common.request;
 
-import robot.common.response.ResponseNoDamage;
+import robot.common.response.ResponseProcessorOk;
 import robot.common.response.Response;
 import robot.common.response.ResponseOk;
 import java.util.Arrays;
@@ -33,15 +33,15 @@ import java.util.List;
  */
 public class RequestRepair extends Request {
 
-    private int blockToRepair;
+    private int processorToRepair;
 
-    public RequestRepair(String address, int blockToRepair) {
+    public RequestRepair(String address, int processorToRepair) {
         super(address);
-        this.blockToRepair = blockToRepair;
+        this.processorToRepair = processorToRepair;
     }
 
-    public RequestRepair(int blockToRepair) {
-        this("", blockToRepair);
+    public RequestRepair(int processorToRepair) {
+        this("", processorToRepair);
     }
 
     public RequestRepair() {
@@ -49,11 +49,11 @@ public class RequestRepair extends Request {
     }
 
     public String formatForTcp() {
-        return new StringBuilder(getAdress()).append(" OPRAVIT ").append(blockToRepair).append("\r\n").toString();
+        return new StringBuilder(getAdress()).append(" OPRAVIT ").append(processorToRepair).append("\r\n").toString();
     }
 
     public Response route(RequestProcessor processor) {
-        return processor.processRepair(blockToRepair);
+        return processor.processProcessorRepair(processorToRepair);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class RequestRepair extends Request {
         String[] tokens = params.split(" ");
         if (tokens.length == 1) {
             try {
-                this.blockToRepair = Integer.parseInt(tokens[0]);
+                this.processorToRepair = Integer.parseInt(tokens[0]);
                 return true;
             } catch (Exception ex) {
                 return false;
@@ -72,7 +72,7 @@ public class RequestRepair extends Request {
 
     @Override
     protected List<Response> getSupportedResponses() {
-        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseNoDamage()});
+        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseProcessorOk()});
     }
 
 }

@@ -48,7 +48,7 @@ public class RequestTurnLeft extends Request {
 
     @Override
     protected List<Response> getSupportedResponses() {
-        return Arrays.asList(new Response[] {new ResponseOk(), new ResponseBatteryEmpty()});
+        return Arrays.asList(new Response[] {new ResponseOk()});
     }
 
 }

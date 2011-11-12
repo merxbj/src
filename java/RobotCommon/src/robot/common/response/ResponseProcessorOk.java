@@ -1,5 +1,5 @@
 /*
- * RobotBateryLowException
+ * ResponseProcessorOk
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,28 +18,28 @@
  *
  */
 
-package robot.common.exception;
+package robot.common.response;
+
+import robot.common.exception.RobotException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotBatteryEmptyException extends RobotException {
+public class ResponseProcessorOk extends Response {
 
-    public RobotBatteryEmptyException(Throwable cause) {
-        super(cause);
+    public String formatForTcp() {
+        return new StringBuilder("571 ").append("PROCESOR FUNGUJE").append("\r\n").toString();
     }
 
-    public RobotBatteryEmptyException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public boolean isEndGame() {
+        return true;
     }
 
-    public RobotBatteryEmptyException(String message) {
-        super(message);
-    }
-
-    public RobotBatteryEmptyException() {
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleProcessorOk();
     }
 
 }

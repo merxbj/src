@@ -24,12 +24,11 @@ import robot.client.exception.UnexpectedException;
 import robot.common.Direction;
 import robot.common.Position;
 import robot.common.RobotInfo;
-import robot.common.exception.RobotBatteryEmptyException;
 import robot.common.exception.RobotCannotPickUpException;
 import robot.common.exception.RobotCrashedException;
 import robot.common.exception.RobotCrumbledException;
-import robot.common.exception.RobotDamagedException;
-import robot.common.exception.RobotNoDamageException;
+import robot.common.exception.RobotProcessorDamagedException;
+import robot.common.exception.RobotProcessorOkException;
 
 /**
  *
@@ -92,65 +91,34 @@ public class SmartRobot {
     }
 
     private void turn() {
-        RobotInfo info = null;
-        do {
-            try {
-                batteryCheck();
-                info = robot.turnLeft();
-            } catch (RobotBatteryEmptyException ex) {
-                throw new UnexpectedException("Robot run out of battery while trying to turn left! Connection lost!", ex);
-            }
-        } while (info == null);
+        robot.turnLeft();
     }
 
     private void step() {
         RobotInfo info = null;
         do {
             try {
-                batteryCheck();
                 info = robot.doStep();
-            } catch (RobotBatteryEmptyException ex) {
-                throw new UnexpectedException("Robot run out of batter while trying to do a step! Connection lost!", ex);
             } catch (RobotCrashedException ex) {
                 throw new UnexpectedException("Robot stepped out of the field! Connection lost!", ex);
             } catch (RobotCrumbledException ex) {
                 throw new UnexpectedException("Robot crumbled while trying to do a step! Connection lost!", ex);
-            } catch (RobotDamagedException ex) {
-                repair(ex.getDamagedBlock());
+            } catch (RobotProcessorDamagedException ex) {
+                repair(ex.getDamagedProcessor());
             }
         } while (info == null);
     }
 
-    private void recharge() {
-        boolean recharged = false;
-        do {
-            try {
-                robot.recharge();
-                recharged = true;
-            } catch (RobotDamagedException ex) {
-                repair(ex.getDamagedBlock());
-            } catch (RobotCrumbledException ex) {
-                throw new UnexpectedException("Robot crumbled during recharging! Connection lost!", ex);
-            }
-        } while (!recharged);
-    }
-
-    private void repair(int blockToRepair) {
+    private void repair(int processorToRepair) {
         boolean repaired = false;
         do {
             try {
-                robot.repair(blockToRepair);
+                robot.repair(processorToRepair);
                 repaired = true;
-            } catch (RobotNoDamageException ex) {
-                throw new UnexpectedException("Attempted to repair block, which is not damaged! Unable to recover!", ex);
+            } catch (RobotProcessorOkException ex) {
+                throw new UnexpectedException("Attempted to repair processor, which is not damaged! Unable to recover!", ex);
             }
         } while (!repaired);
-    }
-
-    private void batteryCheck() {
-        if (robot.getBattery().level <= 10) {
-            recharge();
-        }
     }
 
     private Direction determineDirection(Position from, Position to) {

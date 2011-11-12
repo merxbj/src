@@ -27,7 +27,6 @@ package robot.common;
  * @version %I% %G%
  */
 public class RobotInfo {
-    protected Battery battery;
     protected Position position;
     protected Direction direction;
 
@@ -36,13 +35,8 @@ public class RobotInfo {
     }
 
     public RobotInfo(int battery, int x, int y, Direction direction) {
-        this.battery = new Battery(battery);
         this.position = new Position(x, y);
         this.direction = direction;
-    }
-
-    public Battery getBattery() {
-        return this.battery;
     }
 
     public Position getPosition() {

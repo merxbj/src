@@ -38,8 +38,8 @@ public class CommandLine {
             throw new RuntimeException("The one and only argument must be the port number in closed interval <3500,3800>!", ex);
         }
 
-        if (cl.getPortNumber() < 3500 || cl.getPortNumber() > 3800) {
-            throw new RuntimeException("The port number must be in closed interval <3500,3800>!");
+        if (cl.getPortNumber() < 3000 || cl.getPortNumber() > 3999) {
+            throw new RuntimeException("The port number must be in closed interval <3000,3999>!");
         }
 
         return cl;

@@ -31,7 +31,7 @@ import robot.common.exception.RobotUnknownRequestException;
 public class ResponseUnknownRequest extends Response {
 
     public String formatForTcp() {
-        return new StringBuilder("500 ").append("NEZNAMY PRIKAZ ").append("\r\n").toString();
+        return new StringBuilder("500 ").append("NEZNAMY PRIKAZ").append("\r\n").toString();
     }
 
     @Override

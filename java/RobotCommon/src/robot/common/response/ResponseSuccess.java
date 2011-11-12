@@ -43,7 +43,7 @@ public class ResponseSuccess extends Response {
     }
 
     public String formatForTcp() {
-        return new StringBuilder("221 ").append("USPECH ").append(secretString).append("\r\n").toString();
+        return new StringBuilder("210 ").append("USPECH ").append(secretString).append("\r\n").toString();
     }
 
     public String getSecretString() {

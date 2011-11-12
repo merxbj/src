@@ -28,14 +28,13 @@ import robot.common.exception.*;
  * @authoer %I% %G%
  */
 public interface ResponseHandler {
-    public void handleOk(int battery, int x, int y);
+    public void handleOk(int x, int y);
     public void handleIdentification(String address);
     public void handleSuccess(String secretMessage);
     public void handleUnknownRequest() throws RobotUnknownRequestException;
     public void handleCrash() throws RobotCrashedException;
-    public void handleBatteryEmpty() throws RobotBatteryEmptyException;
     public void handleCannotPickUp() throws RobotCannotPickUpException;
-    public void handleDamage(int damagedBlock) throws RobotDamagedException;
-    public void handleNoDamage() throws RobotNoDamageException;
+    public void handleProcessorDamaged(int damagedProcessor) throws RobotProcessorDamagedException;
+    public void handleProcessorOk() throws RobotProcessorOkException;
     public void handleCrumbled() throws RobotCrumbledException;
 }

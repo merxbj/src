@@ -39,38 +39,34 @@ public class Robot {
         
         /**
          * Generate the robot starting position and direction
-         */
+         * TODO: Move this initialization inside the RobotServerInfo
+         */ 
         int bat = 100;
-        int x = (int) Math.floor(Math.random() * 32) - 16;
-        int y = (int) Math.floor(Math.random() * 32) - 16;
+        int x = (int) Math.floor(Math.random() * 43) - 21;
+        int y = (int) Math.floor(Math.random() * 43) - 21;
         Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
         
         this.info = new RobotServerInfo(bat, x, y, direction);
         this.currentState = new RobotOkState();
     }
 
-    public RobotServerInfo doStep() throws RobotCrashedException, RobotBatteryEmptyException, RobotCrumbledException, RobotDamagedException {
+    public RobotServerInfo doStep() throws RobotCrashedException, RobotCrumbledException, RobotProcessorDamagedException {
         currentState.doStep(this);
         return info;
     }
 
-    public RobotServerInfo turnLeft() throws RobotBatteryEmptyException {
+    public RobotServerInfo turnLeft() {
         currentState.turnLeft(this);
         return info;
     }
 
-    public RobotServerInfo repair(int blockToRepair) throws RobotNoDamageException {
-        currentState.repair(this, blockToRepair);
+    public RobotServerInfo repair(int processorToRepair) throws RobotProcessorOkException {
+        currentState.repair(this, processorToRepair);
         return info;
     }
 
     public String pickUp() throws RobotCannotPickUpException {
         return currentState.pickUp(this);
-    }
-
-    public RobotServerInfo recharge() throws RobotCrumbledException, RobotDamagedException {
-        currentState.recharge(this);
-        return info;
     }
 
     public String getName() {

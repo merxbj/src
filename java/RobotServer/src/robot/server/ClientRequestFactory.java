@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import robot.common.StringUtils;
-import robot.server.exception.InvalidAddressException;
 import robot.common.request.*;
 
 /**
@@ -44,7 +43,6 @@ public class ClientRequestFactory {
         prototypes.put("VLEVO", new RequestTurnLeft());
         prototypes.put("ZVEDNI", new RequestPickUp());
         prototypes.put("OPRAVIT", new RequestRepair());
-        prototypes.put("NABIT", new RequestRecharge());
 
         validRequestNames = Arrays.asList(new String[] {"KROK", "VLEVO", "ZVEDNI", "OPRAVIT", "NABIT"});
     }

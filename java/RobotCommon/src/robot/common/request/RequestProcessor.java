@@ -31,8 +31,7 @@ public interface RequestProcessor {
     public Response processStep();
     public Response processTurnLeft();
     public Response processPickUp();
-    public Response processRepair(int blockToRepair);
-    public Response processRecharge();
+    public Response processProcessorRepair(int processorToRepair);
     public Response processUnknown();
     public String getExpectedAddress();
 }

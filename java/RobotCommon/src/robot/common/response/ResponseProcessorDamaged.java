@@ -1,5 +1,5 @@
 /*
- * ResponseDamage
+ * ResponseProcessorDamaged
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -29,28 +29,28 @@ import robot.common.exception.RobotException;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class ResponseDamage extends Response {
+public class ResponseProcessorDamaged extends Response {
 
-    protected int damagedBlock;
+    protected int damagedProcessor;
 
-    public ResponseDamage(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
+    public ResponseProcessorDamaged(int damagedProcessor) {
+        this.damagedProcessor = damagedProcessor;
     }
 
-    public ResponseDamage() {
+    public ResponseProcessorDamaged() {
         this(-1);
     }
 
     public String formatForTcp() {
-        return new StringBuilder("570 ").append(String.format("PORUCHA BLOK %d", getDamagedBlock())).append("\r\n").toString();
+        return new StringBuilder("580 ").append(String.format("SELHANI PROCESORU %d", getDamagedProcessor())).append("\r\n").toString();
     }
 
-    public int getDamagedBlock() {
-        return damagedBlock;
+    public int getDamagedProcessor() {
+        return damagedProcessor;
     }
 
-    public void setDamagedBlock(int damagedBlock) {
-        this.damagedBlock = damagedBlock;
+    public void setDamagedProcessor(int damagedProcessor) {
+        this.damagedProcessor = damagedProcessor;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ResponseDamage extends Response {
         Matcher match = pattern.matcher(params);
         if (match.find()) {
             try {
-                this.damagedBlock = Integer.parseInt(match.group());
+                this.damagedProcessor = Integer.parseInt(match.group());
                 return true;
             } catch (Exception ex) {}
         }
@@ -72,7 +72,7 @@ public class ResponseDamage extends Response {
     }
 
     public void handle(ResponseHandler handler) throws RobotException {
-        handler.handleDamage(damagedBlock);
+        handler.handleProcessorDamaged(damagedProcessor);
     }
 
 }

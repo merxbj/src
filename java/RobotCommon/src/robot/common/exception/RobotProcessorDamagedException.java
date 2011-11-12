@@ -1,5 +1,5 @@
 /*
- * RobotNoDamageException
+ * RobotProcessorDamagedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,21 +25,34 @@ package robot.common.exception;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RobotNoDamageException extends RobotException {
+public class RobotProcessorDamagedException extends RobotException {
+    private int damagedProcessor;
 
-    public RobotNoDamageException(Throwable cause) {
+    public RobotProcessorDamagedException(Throwable cause, int damagedProcessor) {
         super(cause);
+        this.damagedProcessor = damagedProcessor;
     }
 
-    public RobotNoDamageException(String message, Throwable cause) {
+    public RobotProcessorDamagedException(String message, Throwable cause, int damagedProcessor) {
         super(message, cause);
+        this.damagedProcessor = damagedProcessor;
     }
 
-    public RobotNoDamageException(String message) {
+    public RobotProcessorDamagedException(String message, int damagedProcessor) {
         super(message);
+        this.damagedProcessor = damagedProcessor;
     }
 
-    public RobotNoDamageException() {
+    public RobotProcessorDamagedException(int damagedProcessor) {
+        this.damagedProcessor = damagedProcessor;
+    }
+
+    public int getDamagedProcessor() {
+        return damagedProcessor;
+    }
+
+    public void setDamagedProcessor(int damagedProcessor) {
+        this.damagedProcessor = damagedProcessor;
     }
 
 }

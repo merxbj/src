@@ -30,7 +30,7 @@ import robot.server.exception.*;
  */
 public class RobotOkState implements RobotState {
 
-    public void doStep(Robot robot) throws RobotCrashedException, RobotBatteryEmptyException, RobotDamagedException {
+    public void doStep(Robot robot) throws RobotCrashedException, RobotProcessorDamagedException {
         RobotServerInfo info = robot.getInfo();
 
         try {
@@ -40,29 +40,19 @@ public class RobotOkState implements RobotState {
             throw new RobotCrashedException(ex);
         }
 
-        info.getBattery().level -= 10;
-        if (info.getBattery().level <= 0) {
-            throw new RobotBatteryEmptyException();
-        }
-
         boolean robotDamaged = Math.ceil(Math.random() * 10) <= (info.getStepsSoFar() % 10);
         if (robotDamaged) {
-            int damagedBlock = damageRobot(robot);
-            throw new RobotDamagedException(damagedBlock);
+            int damagedProcessor = damageRobotProcessor(robot);
+            throw new RobotProcessorDamagedException(damagedProcessor);
         }
     }
 
-    public void turnLeft(Robot robot) throws RobotBatteryEmptyException {
+    public void turnLeft(Robot robot) {
         robot.getInfo().turn();
-
-        robot.getInfo().getBattery().level -= 10;
-        if (robot.getInfo().getBattery().level <= 0) {
-            throw new RobotBatteryEmptyException();
-        }
     }
 
-    public void repair(Robot robot, int blockToRepair) throws RobotNoDamageException {
-        throw new RobotNoDamageException();
+    public void repair(Robot robot, int processorToRepair) throws RobotProcessorOkException {
+        throw new RobotProcessorOkException();
     }
 
     public String pickUp(Robot robot) throws RobotCannotPickUpException {
@@ -73,20 +63,10 @@ public class RobotOkState implements RobotState {
         return robot.getSecretMessage();
     }
 
-    public void recharge(Robot robot) throws RobotCrumbledException, RobotDamagedException {
-        boolean robotDamaged = (Math.random() < 0.5);
-        if (robotDamaged) {
-            int damagedBlock = damageRobot(robot);
-            robot.getInfo().getBattery().level = 1;
-            throw new RobotDamagedException(damagedBlock);
-        }
-        robot.getInfo().getBattery().level = 100;
-    }
-
-    private int damageRobot(Robot robot) {
-        int damagedBlock = (int) Math.ceil(Math.random() * 8) + 1;
-        robot.setCurrentState(new RobotDamagedState(damagedBlock));
-        return damagedBlock;
+    private int damageRobotProcessor(Robot robot) {
+        int damagedProcessor = (int) Math.ceil(Math.random() * 8) + 1;
+        robot.setCurrentState(new RobotProcessorDamagedState(damagedProcessor));
+        return damagedProcessor;
     }
 
 }

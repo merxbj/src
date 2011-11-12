@@ -23,7 +23,6 @@ package robot.client;
 import java.io.IOException;
 import robot.client.exception.UnexpectedException;
 import robot.client.exception.UnexpectedResponseException;
-import robot.common.Battery;
 import robot.common.Direction;
 import robot.common.Position;
 import robot.common.RobotInfo;
@@ -61,7 +60,7 @@ public class Robot {
         }
     }
 
-    public RobotInfo doStep() throws RobotCrashedException, RobotCrumbledException, RobotBatteryEmptyException, RobotDamagedException {
+    public RobotInfo doStep() throws RobotCrashedException, RobotCrumbledException, RobotProcessorDamagedException {
         try {
             Response res = server.processRequest(new RequestStep(name));
             res.handle(handler);
@@ -70,9 +69,7 @@ public class Robot {
             throw ex;
         } catch (RobotCrashedException ex) {
             throw ex;
-        } catch (RobotBatteryEmptyException ex) {
-            throw ex;
-        } catch (RobotDamagedException ex) {
+        } catch (RobotProcessorDamagedException ex) {
             throw ex;
         } catch (RobotException ex) {
             throw new UnexpectedResponseException(ex);
@@ -81,13 +78,11 @@ public class Robot {
         }
     }
 
-    public RobotInfo turnLeft() throws RobotBatteryEmptyException {
+    public RobotInfo turnLeft() {
         try {
             Response res = server.processRequest(new RequestTurnLeft(name));
             res.handle(handler);
             return this.info;
-        } catch (RobotBatteryEmptyException ex) {
-            throw ex;
         } catch (RobotException ex) {
             throw new UnexpectedResponseException(ex);
         } catch (IOException ex) {
@@ -109,26 +104,11 @@ public class Robot {
         }
     }
     
-    public void repair(int blockToRepair) throws RobotNoDamageException {
+    public void repair(int processorToRepair) throws RobotProcessorOkException {
         try {
-            Response res = server.processRequest(new RequestRepair(name, blockToRepair));
+            Response res = server.processRequest(new RequestRepair(name, processorToRepair));
             res.handle(handler);
-        } catch (RobotNoDamageException ex) {
-            throw ex;
-        } catch (RobotException ex) {
-            throw new UnexpectedResponseException(ex);
-        } catch (IOException ex) {
-            throw new UnexpectedException(ex);
-        }
-    }
-    
-    public void recharge() throws RobotDamagedException, RobotCrumbledException {
-        try {
-            Response res = server.processRequest(new RequestRecharge(name));
-            res.handle(handler);
-        } catch (RobotDamagedException ex) {
-            throw ex;
-        } catch (RobotCrumbledException ex) {
+        } catch (RobotProcessorOkException ex) {
             throw ex;
         } catch (RobotException ex) {
             throw new UnexpectedResponseException(ex);
@@ -143,14 +123,6 @@ public class Robot {
 
     public void setSecretMessage(String secretMessage) {
         this.secretMessage = secretMessage;
-    }
-
-    public Battery getBattery() {
-        return new Battery(this.info.getBattery().level);
-    }
-
-    public void setBattery(Battery battery) {
-        this.info.getBattery().level = battery.level;
     }
 
     public Position getPos() {
