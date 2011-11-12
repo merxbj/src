@@ -24,6 +24,7 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import swarm.core.Hatchery;
 
 /**
@@ -107,6 +108,10 @@ public class MainCanvas extends Canvas implements Runnable {
 
     private void updateHatchery() {
         hatch.update();
+    }
+
+    void onClick(MouseEvent me) {
+        hatch.onClick(me.getX(), me.getY());
     }
 
 }

@@ -46,6 +46,7 @@ public class Worm implements Drawable {
     protected LinkedList<Worm> parents;
     protected long lifeTime;
     protected boolean isDieing;
+    boolean selected;
 
     public Worm() {
         this(null);
@@ -74,6 +75,7 @@ public class Worm implements Drawable {
         this.parents = new LinkedList<Worm>();
         this.lifeTime = 10000;
         this.isDieing = false;
+        this.selected = false;
         changeDirection(Direction.getRandom());
     }
 
@@ -82,20 +84,20 @@ public class Worm implements Drawable {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(getColor());
+        g.setColor(selected ? Color.YELLOW : getColor());
         g.fillRect(pos.x, pos.y, this.size.width, this.size.height);
 
         if (attacker != null) {
-            g.setColor(Color.YELLOW);
-            g.draw(new Ellipse2D.Double(pos.x - 3, pos.y - 3, 10, 10));
+            //g.setColor(Color.YELLOW);
+            //g.draw(new Ellipse2D.Double(pos.x - 3, pos.y - 3, 10, 10));
         } else if (victim != null) {
-            g.setColor(Color.red);
-            g.drawLine(pos.x, pos.y, victim.pos.x, victim.pos.y);
+            //g.setColor(Color.red);
+            //g.drawLine(pos.x, pos.y, victim.pos.x, victim.pos.y);
         }
 
         for (Worm parent : parents) {
-            g.setColor(Color.green);
-            g.drawLine(pos.x, pos.y, parent.pos.x, parent.pos.y);
+            //g.setColor(Color.green);
+            //g.drawLine(pos.x, pos.y, parent.pos.x, parent.pos.y);
         }
     }
 
@@ -164,9 +166,9 @@ public class Worm implements Drawable {
     private void changeDirection(Direction newDir) {
         this.dir = newDir;
         if (dir == Direction.East || dir == Direction.West) {
-            this.size = new Dimension(5, 3);
+            this.size = new Dimension(15, 9);
         } else {
-            this.size = new Dimension(3, 5);
+            this.size = new Dimension(9, 15);
         }
     }
 
@@ -219,7 +221,7 @@ public class Worm implements Drawable {
                     return false;
                 } else {
                     double lucky = Math.random();
-                    int childCount =  (lucky < 0.99) ? 1 : (lucky < 0.999) ? 2 : (lucky < 0.9999) ? 3 : 4;
+                    int childCount = (lucky < 0.99) ? 1 : (lucky < 0.999) ? 2 : (lucky < 0.9999) ? 3 : 4;
                     for (; --childCount >= 0;) {
                         Worm child = (Math.random() > 0.5) ? new FemaleWorm(hatch, pos) : new MaleWorm(hatch, pos);
                         this.children.add(child);
@@ -236,6 +238,7 @@ public class Worm implements Drawable {
                 Vector dirVect = victim.pos.substract(this.pos).toDirectionVector();
                 this.changeDirection(Direction.fromVector(dirVect));
                 victim.setAttacker(this);
+                this.speed = 1;
                 return true;
             }
         }

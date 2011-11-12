@@ -41,7 +41,8 @@ public class GASClient {
         } catch (Exception ex) {
             handleException(ex);
         }
-            return cl;
+        
+        return cl;
     }
 
     private static class CommandLine {

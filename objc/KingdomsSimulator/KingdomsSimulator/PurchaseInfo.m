@@ -20,7 +20,12 @@
     return self;
 }
 
-- (void) purchaseLand:(Land *)land {
+- (void) dealloc {
+    [purchases release];
+    [super release];
+}
+
+- (void) purchaseLand:(Land *) land {
     if ([purchases doesContain:land]) {
         LandPurchaseInfo* lpi = [purchases objectForKey:land];
         [lpi boughtOneMore];
@@ -31,8 +36,10 @@
 }
 
 - (void) print {
-    for (LandPurchaseInfo* lpi in purchases) {
-        NSLog(@"%@", [lpi description]);
+    NSEnumerator* lpiEnum = [purchases objectEnumerator];
+    LandPurchaseInfo* lpi;
+    while (lpi = (LandPurchaseInfo*) [lpiEnum nextObject]) {
+        printf("%s\n", [[lpi description] UTF8String]);
     }
 }
 
@@ -47,12 +54,17 @@
 - (id)initWithLand:(Land *)newLand {
     self = [super init];
     if (self) {
-        land = newLand;
+        land = [newLand retain];
         quantity = 1;
         totalPrice = [land getCurrentPrice];
         totalIncomeIncrease = [land income];
     }
     return self;
+}
+
+- (void) dealloc {
+    [land release];
+    [super dealloc];
 }
 
 - (void) boughtOneMore {
@@ -62,7 +74,7 @@
 }
 
 - (NSString*) description {
-    return [NSString stringWithFormat:@"Bought %3d %-17s for %9.0f gold! Income incrsd by %5.0f gold!", quantity, [land name], totalPrice, totalIncomeIncrease];
+    return [NSString stringWithFormat:@"Bought %3d %-17@ for %9.0f gold! Income incrsd by %5.0f gold!", quantity, land.name, totalPrice, totalIncomeIncrease];
 }
 
 @end

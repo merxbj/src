@@ -29,11 +29,12 @@ public class CommandLine {
     private String source;
     private String destination;
     private long milisecondsTimeShift;
-    private long milisecondsOffset;
+    private long startingSubtitle;
     private String inputEncoding;
     private String outputEncoding;
     
     public CommandLine() {
+        startingSubtitle = 1;
         inputEncoding = "UTF-8";
         outputEncoding = "UTF-8";
     }
@@ -46,7 +47,7 @@ public class CommandLine {
         cl.setSource(args[0]);
         cl.setDestination(args[1]);
         cl.setMilisecondsTimeShift(Integer.parseInt(args[2]));
-        cl.setMilisecondsOffset(Integer.parseInt(args[3]));
+        cl.setStartingSubtitle(Integer.parseInt(args[3]));
         
         if (args.length >= 5) {
             cl.setInputEncoding(args[4]);
@@ -87,12 +88,12 @@ public class CommandLine {
         this.source = source;
     }
 
-    public long getMilisecondsOffset() {
-        return milisecondsOffset;
+    public long getStartingSubtitle() {
+        return startingSubtitle;
     }
 
-    public void setMilisecondsOffset(long milisecondsOffset) {
-        this.milisecondsOffset = milisecondsOffset;
+    public void setStartingSubtitle(long milisecondsOffset) {
+        this.startingSubtitle = milisecondsOffset;
     }
 
     public String getInputEncoding() {

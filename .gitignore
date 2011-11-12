@@ -40,3 +40,9 @@ csharp/*/_ReSharper*
 /java/Kingdoms4Web/Kingdoms4Web-ejb/build/
 *.sdf
 *.ipch
+*.svn
+/objc/*/project.xcworkspace/
+/objc/*/xcuserdata/
+/objc/*/*.xcodeproj/xcuserdata/
+/objc/*/*.xcodeproj/project.xcworkspace/
+

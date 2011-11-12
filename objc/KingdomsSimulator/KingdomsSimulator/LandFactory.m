@@ -16,22 +16,12 @@
 
 @implementation LandFactory
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        // Initialization code here.
-    }
-    
-    return self;
-}
-
 - (Land*) newLandFromType:(LandType)type {
     return [self newLandFromType:type quantity:1];
 }
 
 - (Land*) newLandFromType:(LandType)type quantity:(int)quantity {
-    return [self createLandOfType:type withQuantity:quantity];
+    return [[self createLandOfType:type withQuantity:quantity] autorelease];
 }
 
 - (Land*) createLandOfType:(LandType)landType withQuantity:(int)quantity {

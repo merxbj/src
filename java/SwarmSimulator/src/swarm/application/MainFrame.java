@@ -2,6 +2,8 @@ package swarm.application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle;
@@ -15,8 +17,15 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void init() {
-        Hatchery hatch = new Hatchery();
+        final Hatchery hatch = new Hatchery();
         canvas.setHatch(hatch);
+        canvas.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                hatch.onClick(me.getX(), me.getY());
+            }
+ });
         hatch.init();
     }
 

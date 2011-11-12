@@ -115,13 +115,13 @@ public class SrtSubtitles implements Subtitles, FileRepresentable {
         }
     }
 
-    public void timeShift(long miliseconds, long offset) {
+    public void timeShift(long miliseconds, long startingSubtitle) {
         long adjustedShift = miliseconds;
         if (miliseconds < 0) {
             // if we are shifting to the left make sure that we don't start before
             // the begining of the movie (i.e. the first subtitles in negative time)
             for (Subtitle sub : subtitles) {
-                if (sub.getTimeWindow().getStart().toMiliseconds() >= offset) {
+                if (sub.getId() >= startingSubtitle) {
                     adjustedShift =  -1 * Math.min(Math.abs(miliseconds), sub.getTimeWindow().getStart().toMiliseconds());
                     if (adjustedShift != miliseconds) {
                         Logger.getLogger("SubtitleUtils").log(Level.SEVERE, 
@@ -133,7 +133,7 @@ public class SrtSubtitles implements Subtitles, FileRepresentable {
             }
         }
         for (Subtitle sub : subtitles) {
-            if (sub.getTimeWindow().getStart().toMiliseconds() >= offset) {
+            if (sub.getId() >= startingSubtitle) {
                 sub.timeShift(adjustedShift);
             }
         }
@@ -143,6 +143,7 @@ public class SrtSubtitles implements Subtitles, FileRepresentable {
         List<String> lines = new ArrayList<String>();
         for (Subtitle sub : subtitles) {
             lines.addAll(sub.formatForFile());
+            lines.add("");
         }
         return lines;
     }

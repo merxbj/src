@@ -45,7 +45,7 @@ public class Application {
              */
             Subtitles subs = SubtitleFactory.recognizeSubtitles(cl.getSource());
             subs.parseFromStream(in, parseParameters);
-            subs.timeShift(cl.getMilisecondsTimeShift(), cl.getMilisecondsOffset());
+            subs.timeShift(cl.getMilisecondsTimeShift(), cl.getStartingSubtitle());
 
             /**
              * Get the output stream to the file
