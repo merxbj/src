@@ -50,6 +50,9 @@ public class ConfigFile {
 
     private void parseTargetIncome(String ti) {
         targetIncome = Double.parseDouble(ti);
+        if (targetIncome == 0) {
+            targetIncome = Double.MAX_VALUE;
+        }
     }
 
     private void parseStartingAmount(String sa) {
