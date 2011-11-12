@@ -41,3 +41,8 @@ csharp/*/_ReSharper*
 *.sdf
 *.ipch
 *.svn
+/objc/*/project.xcworkspace/
+/objc/*/xcuserdata/
+/objc/*/*.xcodeproj/xcuserdata/
+/objc/*/*.xcodeproj/project.xcworkspace/
+
