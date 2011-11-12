@@ -6,6 +6,8 @@ package DSA;
 
 import DSA.common.Analyze;
 import DSA.common.FileSystemViewExt;
+import DSA.common.SimpleDir;
+import DSA.common.SimpleObject;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -32,6 +34,7 @@ public class MainWindow extends FrameView {
     TaskService taskService = appContext.getTaskService();
     TaskMonitor taskMonitor = appContext.getTaskMonitor();
     Analyze analyze = new Analyze(Application.getInstance());
+    SimpleDir rootStructure;
 
     public MainWindow(SingleFrameApplication app) {
         super(app);
@@ -80,6 +83,11 @@ public class MainWindow extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                     startButton.setText("Start scan");
+                    
+                    /*for (SimpleObject so : rootStructure.getContent()) {
+                        System.out.println( so.getName() + " " + so.getSize());
+                    }*/
+                    
                 } else if ("message".equals(propertyName)) {
                     String text = (String)(evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
@@ -283,8 +291,17 @@ public class MainWindow extends FrameView {
             analyze.cancel(true);           
         }
         else {
-            analyze = new Analyze(Application.getInstance());
-            analyze.setPathToAnalyze((File)rootsComboBox.getSelectedItem());
+            /*File root = (File)rootsComboBox.getSelectedItem();*/
+            File root = new File("/home/mrneo/Programs/"); /* JUST FOR TESTING PURPOSES */
+            rootStructure = new SimpleDir();
+            rootStructure.setName(root.getAbsolutePath());
+            rootStructure.setDirectorySize(root.length());
+
+            //mainCanvas.setStructureForMapping(rootStructure);
+            
+            analyze = new Analyze(Application.getInstance(), rootStructure);
+            analyze.setPathToAnalyze(root);
+
             taskService.execute(analyze);
         }
     }//GEN-LAST:event_startButtonActionPerformed
