@@ -25,6 +25,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -33,15 +35,18 @@ import java.util.List;
  */
 public class Hatchery implements Drawable {
 
-    private List<Worm> swarm;
+    private Queue<Worm> swarm;
     private List<Worm> cemetery;
     private List<Worm> hive;
     private Dimension size;
+    private Worm selected;
 
     public Hatchery() {
+        this.swarm = new ConcurrentLinkedQueue();
         this.swarm = new LinkedList<Worm>();
         this.cemetery = new LinkedList<Worm>();
         this.hive = new LinkedList<Worm>();
+        this.selected = null;
     }
 
     public void init() {
@@ -112,8 +117,23 @@ public class Hatchery implements Drawable {
         this.size = size;
     }
 
-    public List<Worm> getSwarm() {
+    public Queue<Worm> getSwarm() {
         return swarm;
+    }
+
+    public void onClick(int x, int y) {
+        for (Worm w : swarm) {
+            if (((x >= w.pos.x) && (x <= (w.pos.x + w.size.width))) &&
+                ((y >= w.pos.y) && (y <= (w.pos.y + w.size.height)))) {
+                if (w != selected) {
+                    w.selected = true;
+                    if (selected != null) {
+                        this.selected.selected = false;
+                    }
+                    this.selected = w;
+                }
+            }
+        }
     }
 
 }
