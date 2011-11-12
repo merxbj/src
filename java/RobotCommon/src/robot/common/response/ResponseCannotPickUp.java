@@ -1,5 +1,5 @@
 /*
- * Main
+ * ResponseCannotPickUp
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.server;
+package robot.common.response;
+
+import robot.common.exception.RobotException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class ResponseCannotPickUp extends Response {
 
-    public static void main(String[] args) {
+    public String formatForTcp() {
+        return new StringBuilder("550 ").append("NELZE ZVEDNOUT ZNACKU").append("\r\n").toString();
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public void handle(ResponseHandler handler) throws RobotException {
+        handler.handleCannotPickUp();
     }
 
 }

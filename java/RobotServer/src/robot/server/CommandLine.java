@@ -1,5 +1,5 @@
 /*
- * Main
+ * CommandLine
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -25,15 +25,32 @@ package robot.server;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class CommandLine {
 
-    public static void main(String[] args) {
+    private int portNumber;
 
-        CommandLine params = CommandLine.parse(args);
+    public static CommandLine parse(String[] args) {
+        CommandLine cl = new CommandLine();
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+        try {
+            cl.setPortNumber(Integer.parseInt(args[0]));
+        } catch (Exception ex) {
+            throw new RuntimeException("The one and only argument must be the port number in closed interval <3500,3800>!", ex);
+        }
 
+        if (cl.getPortNumber() < 3000 || cl.getPortNumber() > 3999) {
+            throw new RuntimeException("The port number must be in closed interval <3000,3999>!");
+        }
+
+        return cl;
+    }
+
+    public int getPortNumber() {
+        return portNumber;
+    }
+
+    public void setPortNumber(int portNumber) {
+        this.portNumber = portNumber;
     }
 
 }

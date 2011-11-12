@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotOutOfFieldException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.server;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RobotOutOfFieldException extends Exception {
+    private int x;
+    private int y;
 
-    public static void main(String[] args) {
+    public RobotOutOfFieldException(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public int getX() {
+        return x;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public int getY() {
+        return y;
     }
 
 }

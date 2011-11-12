@@ -1,5 +1,5 @@
 /*
- * Main
+ * ResponseCrumbled
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,28 @@
  *
  */
 
-package robot.server;
+package robot.common.response;
+
+import robot.common.exception.RobotCrumbledException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class ResponseCrumbled extends Response {
 
-    public static void main(String[] args) {
+    public String formatForTcp() {
+        return new StringBuilder("572 ").append("ROBOT SE ROZPADL").append("\r\n").toString();
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    @Override
+    public boolean isEndGame() {
+        return true;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public void handle(ResponseHandler handler) throws RobotCrumbledException {
+        handler.handleCrumbled();
     }
 
 }

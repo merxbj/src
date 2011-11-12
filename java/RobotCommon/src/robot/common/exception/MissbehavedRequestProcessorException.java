@@ -1,5 +1,5 @@
 /*
- * Main
+ * MissbehavedRequestProcessorException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,17 @@
  *
  */
 
-package robot.server;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class MissbehavedRequestProcessorException extends RuntimeException {
 
-    public static void main(String[] args) {
-
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public MissbehavedRequestProcessorException(String message) {
+        super(message);
     }
 
 }

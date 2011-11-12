@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotServer
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,20 +20,38 @@
 
 package robot.server;
 
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RobotServer {
 
-    public static void main(String[] args) {
+    private int listeiningPort;
 
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public RobotServer(CommandLine params) {
+        this.listeiningPort = params.getPortNumber();
     }
 
+    public void run() {
+        try {
+            boolean quit = false;
+            ServerSocket ss = new ServerSocket(listeiningPort);
+
+            while (!quit) {
+                final Socket sock = ss.accept();
+                Thread t = new Thread(new RobotClientProcess(sock));
+                t.start();
+            }
+
+            ss.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

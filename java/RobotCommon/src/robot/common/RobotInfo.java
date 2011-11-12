@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotInfo
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,37 @@
  *
  */
 
-package robot.server;
+package robot.common;
+
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RobotInfo {
+    protected Position position;
+    protected Direction direction;
 
-    public static void main(String[] args) {
+    public RobotInfo() {
+        this(100, 0, 0, Direction.Unknown); // a new robot comes fully charged
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RobotInfo(int battery, int x, int y, Direction direction) {
+        this.position = new Position(x, y);
+        this.direction = direction;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public Position getPosition() {
+        return this.position;
+    }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction newDirection) {
+        this.direction = newDirection;
     }
 
 }

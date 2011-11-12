@@ -1,5 +1,5 @@
 /*
- * Main
+ * RobotUnknownResponseException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,25 @@
  *
  */
 
-package robot.server;
+package robot.common.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RobotUnknownResponseException extends RobotException {
 
-    public static void main(String[] args) {
+    public RobotUnknownResponseException(Throwable cause) {
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RobotUnknownResponseException(String message, Throwable cause) {
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public RobotUnknownResponseException(String message) {
+    }
 
+    public RobotUnknownResponseException() {
     }
 
 }

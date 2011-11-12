@@ -1,5 +1,5 @@
 /*
- * Main
+ * UnexpectedException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,25 @@
  *
  */
 
-package robot.server;
+package robot.client.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class UnexpectedException extends RuntimeException {
 
-    public static void main(String[] args) {
+    public UnexpectedException(Throwable cause) {
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public UnexpectedException(String message, Throwable cause) {
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public UnexpectedException(String message) {
+    }
 
+    public UnexpectedException() {
     }
 
 }

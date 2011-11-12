@@ -1,5 +1,5 @@
 /*
- * Main
+ * RequestPickUp
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,39 @@
  *
  */
 
-package robot.server;
+package robot.common.request;
+
+import java.util.List;
+import robot.common.response.ResponseSuccess;
+import robot.common.response.Response;
+import robot.common.response.ResponseCannotPickUp;
+import java.util.Arrays;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class RequestPickUp extends Request {
 
-    public static void main(String[] args) {
+    public RequestPickUp() {
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public RequestPickUp(String address) {
+        super(address);
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public String formatForTcp() {
+        return new StringBuilder(getAdress()).append(" ZVEDNI").append("\r\n").toString();
+    }
 
+    public Response route(RequestProcessor processor) {
+        return processor.processPickUp();
+    }
+
+    @Override
+    protected List<Response> getSupportedResponses() {
+        return Arrays.asList(new Response[] {new ResponseSuccess(), new ResponseCannotPickUp()});
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Main
+ * Response
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,31 @@
  *
  */
 
-package robot.server;
+package robot.common.response;
+
+import robot.common.Handlable;
+import robot.common.TcpFormatable;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public abstract class Response implements TcpFormatable, Handlable, Cloneable {
 
-    public static void main(String[] args) {
+    public abstract boolean isEndGame();
 
-        CommandLine params = CommandLine.parse(args);
+    public boolean parseParamsFromTcp(String params) {
+        return true;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    @Override
+    public Response clone() {
+        Response clone = null;
+        try {
+            clone = (Response) super.clone();
+        } catch (CloneNotSupportedException ex) {}
+        return clone;
     }
 
 }

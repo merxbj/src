@@ -1,5 +1,5 @@
 /*
- * Main
+ * ResponseHandler
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,23 @@
  *
  */
 
-package robot.server;
+package robot.common.response;
+
+import robot.common.exception.*;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @version %I% %G%
+ * @authoer %I% %G%
  */
-public class Main {
-
-    public static void main(String[] args) {
-
-        CommandLine params = CommandLine.parse(args);
-
-        RobotServer server = new RobotServer(params);
-        server.run();
-
-    }
-
+public interface ResponseHandler {
+    public void handleOk(int x, int y);
+    public void handleIdentification(String address);
+    public void handleSuccess(String secretMessage);
+    public void handleUnknownRequest() throws RobotUnknownRequestException;
+    public void handleCrash() throws RobotCrashedException;
+    public void handleCannotPickUp() throws RobotCannotPickUpException;
+    public void handleProcessorDamaged(int damagedProcessor) throws RobotProcessorDamagedException;
+    public void handleProcessorOk() throws RobotProcessorOkException;
+    public void handleCrumbled() throws RobotCrumbledException;
 }

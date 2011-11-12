@@ -1,5 +1,5 @@
 /*
- * Main
+ * ResponseUnknown
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,29 @@
  *
  */
 
-package robot.server;
+package robot.common.response;
+
+import robot.common.exception.RobotException;
+import robot.common.exception.RobotUnknownResponseException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class ResponseUnknown extends Response {
 
-    public static void main(String[] args) {
+    @Override
+    public boolean isEndGame() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        CommandLine params = CommandLine.parse(args);
+    public String formatForTcp() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
-
+    public void handle(ResponseHandler handler) throws RobotException {
+        throw new RobotUnknownResponseException();
     }
 
 }

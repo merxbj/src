@@ -1,5 +1,5 @@
 /*
- * Main
+ * InvalidAddressException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,22 +18,35 @@
  *
  */
 
-package robot.server;
+package robot.server.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Main {
+public class InvalidAddressException extends Exception {
 
-    public static void main(String[] args) {
+    private String requestedAddress;
+    private String expectedAddress;
+    private String receivedRequest;
 
-        CommandLine params = CommandLine.parse(args);
+    public InvalidAddressException(String requested, String expected, String receivedRequest) {
+        this.requestedAddress = requested;
+        this.expectedAddress = expected;
+        this.receivedRequest = receivedRequest;
+    }
 
-        RobotServer server = new RobotServer(params);
-        server.run();
+    public String getRequestedAddress() {
+        return this.requestedAddress;
+    }
 
+    public String getExpectedAddress() {
+        return expectedAddress;
+    }
+
+    public String getReceivedRequest() {
+        return receivedRequest;
     }
 
 }
