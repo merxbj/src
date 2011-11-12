@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ConfigFile : NSObject <NSXMLParserDelegate> {
-    NSArray* landCounts;
+    NSMutableArray* landCounts;
     double targetIncome;
     double startingAmount;
 }

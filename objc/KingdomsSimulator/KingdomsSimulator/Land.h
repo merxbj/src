@@ -24,7 +24,7 @@ typedef enum {
     GOLD_MINE
 } LandType;
 
-@interface Land : NSObject {
+@interface Land : NSObject <NSCopying> {
     double startingPrice;
     int quantity;
     double income;
@@ -34,7 +34,7 @@ typedef enum {
 @property double startingPrice;
 @property int quantity;
 @property double income;
-@property NSString* name;
+@property (retain) NSString* name;
 
 - (id) initWithName:(NSString *)newName andStartingPrice:(double)newStartingPrice andQuantity:(int)newQuantity andIncome:(double)newIncome;
 - (void) incQuantity;
@@ -43,5 +43,6 @@ typedef enum {
 - (double) getTotalIncome;
 - (NSComparisonResult) compareLandBasedOnIncomePerPrice: (Land*) other;
 - (NSComparisonResult) compareLandBasedOnCurrentPrice: (Land*) other;
+- (id) copyWithZone: (NSZone *) zone;
 
 @end
