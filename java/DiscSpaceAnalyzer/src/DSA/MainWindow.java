@@ -7,6 +7,10 @@ package DSA;
 import DSA.application.Analyze;
 import DSA.common.FileSystemViewExt;
 import DSA.common.SimpleDir;
+<<<<<<< HEAD
+import DSA.common.SimpleObject;
+=======
+>>>>>>> bc580504e2bd86731baac9f9974c1a46c520ecf4
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -33,7 +37,11 @@ public class MainWindow extends FrameView {
     TaskService taskService = appContext.getTaskService();
     TaskMonitor taskMonitor = appContext.getTaskMonitor();
     Analyze analyze = new Analyze(Application.getInstance());
+<<<<<<< HEAD
+    SimpleDir rootStructure;
+=======
     SimpleDir rootDir;
+>>>>>>> bc580504e2bd86731baac9f9974c1a46c520ecf4
 
     public MainWindow(SingleFrameApplication app) {
         super(app);
@@ -292,6 +300,15 @@ public class MainWindow extends FrameView {
         else {
             /*File root = (File)rootsComboBox.getSelectedItem();*/
             File root = new File("/home/mrneo/Programs/"); /* JUST FOR TESTING PURPOSES */
+<<<<<<< HEAD
+            rootStructure = new SimpleDir();
+            rootStructure.setName(root.getAbsolutePath());
+            rootStructure.setDirectorySize(root.length());
+
+            //mainCanvas.setStructureForMapping(rootStructure);
+            
+            analyze = new Analyze(Application.getInstance(), rootStructure);
+=======
             rootDir = new SimpleDir();
             rootDir.setName(root.getAbsolutePath());
             rootDir.setDirectorySize(root.length());
@@ -299,6 +316,7 @@ public class MainWindow extends FrameView {
             //mainCanvas.setStructureForMapping(rootStructure);
             
             analyze = new Analyze(Application.getInstance(), rootDir);
+>>>>>>> bc580504e2bd86731baac9f9974c1a46c520ecf4
             analyze.setPathToAnalyze(root);
 
             taskService.execute(analyze);
