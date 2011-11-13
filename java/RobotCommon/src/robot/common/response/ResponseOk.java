@@ -78,8 +78,8 @@ public class ResponseOk extends Response {
             String[] tokens = status.split(",");
             if (tokens.length == 2) {
                 try {
-                    this.x = Integer.parseInt(tokens[1]);
-                    this.y = Integer.parseInt(tokens[2]);
+                    this.x = Integer.parseInt(tokens[0]);
+                    this.y = Integer.parseInt(tokens[1]);
                     return true;
                 } catch (Exception ex) {}
             }
