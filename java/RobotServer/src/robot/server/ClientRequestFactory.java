@@ -20,11 +20,11 @@
 
 package robot.server;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import robot.common.StringUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import robot.common.request.*;
+import robot.server.exception.InvalidAddressException;
 
 /**
  *
@@ -35,7 +35,7 @@ public class ClientRequestFactory {
 
     private String address;
     
-    private final static List<String> validRequestNames;
+    private final static Pattern validRequestPattern;
     private final static HashMap<String, Request> prototypes;
     static {
         prototypes = new HashMap<String, Request>();
@@ -44,32 +44,34 @@ public class ClientRequestFactory {
         prototypes.put("ZVEDNI", new RequestPickUp());
         prototypes.put("OPRAVIT", new RequestRepair());
 
-        validRequestNames = Arrays.asList(new String[] {"KROK", "VLEVO", "ZVEDNI", "OPRAVIT", "NABIT"});
+        validRequestPattern = Pattern.compile("(.+) (KROK|VLEVO|ZVEDNI|OPRAVIT|NABIT) ?(\\d)?");
     }
 
     public ClientRequestFactory(String address) {
         this.address = address;
     }
 
-    public Request parseRequest(String rawRequest) {
+    public Request parseRequest(String rawRequest) throws InvalidAddressException {
         
-        if (!rawRequest.startsWith(address)) {
+        Matcher match = validRequestPattern.matcher(rawRequest);
+        if (!match.find()) {
             return new RequestUnknown();
         }
 
         try {
 
-            String requestStringOnly = rawRequest.substring(address.length() + 1); // strip out the address
-            List<String> tokens = Arrays.asList(requestStringOnly.split(" "));
-
-            Request prototype = prototypes.get(tokens.get(0));
+            Request prototype = prototypes.get(match.group(2));
             if (prototype == null) {
                 return new RequestUnknown();
             }
 
+            if (!address.equals(match.group(1))) {
+                throw new InvalidAddressException(match.group(1), address, rawRequest);
+            }
+
             Request request = prototype.clone();
             request.setAdress(address);
-            if (request.parseParamsFromTcp(StringUtils.join(tokens.subList(1, tokens.size()), " "))) {
+            if (request.parseParamsFromTcp(match.groupCount() == 3 ? match.group(3) : "")) {
                 return request;
             } else {
                 return new RequestUnknown();

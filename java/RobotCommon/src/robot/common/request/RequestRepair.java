@@ -58,16 +58,12 @@ public class RequestRepair extends Request {
 
     @Override
     public boolean parseParamsFromTcp(String params) {
-        String[] tokens = params.split(" ");
-        if (tokens.length == 1) {
-            try {
-                this.processorToRepair = Integer.parseInt(tokens[0]);
-                return true;
-            } catch (Exception ex) {
-                return false;
-            }
+        try {
+            this.processorToRepair = Integer.parseInt(params);
+            return ((processorToRepair > 0) && (processorToRepair < 10));
+        } catch (Exception ex) {
+            return false;
         }
-        return false;
     }
 
     @Override

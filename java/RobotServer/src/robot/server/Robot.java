@@ -41,8 +41,8 @@ public class Robot implements Comparable<Robot> {
          * Generate the robot starting position and direction
          * TODO: Move this initialization inside the RobotServerInfo
          */ 
-        int x = (int) Math.ceil(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_X), Math.abs(RobotServerInfo.MIN_X) - 1));
-        int y = (int) Math.ceil(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_Y), Math.abs(RobotServerInfo.MIN_Y) - 1));
+        int x = (int) Math.floor(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_X), Math.abs(RobotServerInfo.MIN_X) - 1));
+        int y = (int) Math.floor(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_Y), Math.abs(RobotServerInfo.MIN_Y) - 1));
 
         Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
         

@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.*;
 import robot.common.networking.SocketUtils;
 import robot.common.response.ResponseIdentification;
+import robot.server.exception.InvalidAddressException;
 import robot.server.logging.Logger;
 
 /**
@@ -71,6 +72,8 @@ public class RobotClientProcess implements Runnable {
                     clientSocket.close();
                     log.logMessage("Connection lost.");
                     quit = true;
+                } catch (InvalidAddressException iaex) {
+                    log.logException(iaex);
                 }
             }
 
