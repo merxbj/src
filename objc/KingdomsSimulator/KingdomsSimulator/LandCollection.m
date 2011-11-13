@@ -22,6 +22,12 @@
     return self;
 }
 
+- (void) dealloc {
+    [factory release];
+    [lands release];
+    [receipt release];
+}
+
 - (void) createCommonLandCollection {
     [lands addObject:[factory newLandFromType:FARM]];
     [lands addObject:[factory newLandFromType:BARRAKS]];
@@ -40,13 +46,14 @@
 
 - (void) createLandCollectionFromArraySetup:(NSArray *)arraySetup {
     for (int i = 0; i < [arraySetup count]; i++) {
-        [lands addObject:[factory newLandFromType:i quantity:(int) [arraySetup objectAtIndex:i]]];
+        NSNumber* count = (NSNumber*) [arraySetup objectAtIndex:i];
+        [lands addObject:[factory newLandFromType:i quantity:[count intValue]]];
     }
 }
 
 - (void) printLandList {
     for (Land* land in lands) {
-        NSLog(@"%@", [land description]);
+        printf("%s", [[land description] UTF8String]);
     }
 }
 
@@ -87,7 +94,7 @@
 - (void) printRecentlyBought {
     [receipt print];
     [receipt clear];
-    NSLog(@"--------------------------------------------------------------------------------");
+    printf("--------------------------------------------------------------------------------\n");
 }
 
 @end

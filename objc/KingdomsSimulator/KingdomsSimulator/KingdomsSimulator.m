@@ -48,9 +48,11 @@
 }
 
 - (void) run {
-    printf("Simulation started ...");
+    printf("Simulation started ...\n");
     while (![self passedEndingCondition]) {
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
         [self updateAccount];
+        [pool drain];
     }
     [self printResults];
 }
@@ -79,11 +81,15 @@
             }
         }
     }
+    
+    [lands printRecentlyBought];
+    totalTimeElapsed += tickDuration;
+    accountBalance += [lands getTotalIncome];
 }
 
 - (void) printResults {
-    printf("Simulation ended ...");
-    printf("Total time elapsed: %ld days %ld hours %ld minutes", totalTimeElapsed / 1440, (totalTimeElapsed % 1440) / 60, (totalTimeElapsed % 1440) % 60);
+    printf("Simulation ended ...\n");
+    printf("Total time elapsed: %ld days %ld hours %ld minutes\n", totalTimeElapsed / 1440, (totalTimeElapsed % 1440) / 60, (totalTimeElapsed % 1440) % 60);
 }
 
 - (bool) passedEndingCondition {
@@ -93,7 +99,7 @@
         EndingConditionType type = (EndingConditionType) [num intValue];
         switch (type) {
             case TARGET_INCOME:
-                passedEndingCondition = targetIncome <= lands.getTotalIncome;
+                passedEndingCondition = targetIncome <= [lands getTotalIncome];
                 break;
             case CYCLES_PASSED:
                 passedEndingCondition = (totalTimeElapsed / tickDuration) == targetCyclesCount;

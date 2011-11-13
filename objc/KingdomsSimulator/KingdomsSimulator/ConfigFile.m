@@ -31,6 +31,7 @@
 {
     self = [super init];
     if (self) {
+        landCounts = [[NSMutableArray alloc] init];
         landCollectionSetupElementOccured = FALSE;
         targetIncomeElementOccured = FALSE;
         startingAmountElementOccured = FALSE;
@@ -48,6 +49,7 @@
     self = [self init];
     if (self) {
         NSInputStream* configXmlInputStream = [[NSInputStream alloc] initWithFileAtPath:path];
+        
         if (configXmlInputStream) {
             NSXMLParser* configXmlParser = [[NSXMLParser alloc] initWithStream:configXmlInputStream];
             if (configXmlParser) {
@@ -98,8 +100,11 @@
 }
 
 - (void) parseLandCollectionSetupFromString: (NSString *) string {
-    landCounts = [string componentsSeparatedByString:@","];
-    [landCounts retain];
+    [landCounts removeAllObjects];
+    NSArray* components = [string componentsSeparatedByString:@","];
+    for (NSString* component in components) {
+        [landCounts addObject:[NSNumber numberWithInt:[component intValue]]];
+    }
 }
 
 - (void) parseStartingAmountFromString: (NSString *) string {
