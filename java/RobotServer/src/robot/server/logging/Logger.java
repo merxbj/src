@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import robot.common.request.*;
 import robot.common.response.*;
+import robot.server.Robot;
 
 /**
  *
@@ -33,14 +34,14 @@ import robot.common.response.*;
  */
 public class Logger {
 
-    private String name;
+    protected Robot robot;
 
-    private static HashMap<String, Logger> loggers;
+    protected static HashMap<Robot, Logger> loggers;
     static {
-        loggers = new HashMap<String, Logger>();
+        loggers = new HashMap<Robot, Logger>();
     }
 
-    public static synchronized Logger getLogger(String robot) {
+    public static synchronized Logger getLogger(Robot robot) {
         if (loggers.containsKey(robot)) {
             return loggers.get(robot);
         } else {
@@ -50,16 +51,16 @@ public class Logger {
         }
     }
 
-    private Logger(String name) {
-        this.name = name;
+    private Logger(Robot robot) {
+        this.robot = robot;
     }
 
     public void logRequest(Request request) {
-        log(String.format("Received request %s addressed to %s!", request.getClass().getName(), request.getAdress()));
+        log(String.format("Received request %s addressed to %s!", request.getClass().getSimpleName(), request.getAdress()));
     }
 
     public void logResponse(Response response) {
-        log(String.format("Sent response %s. This %s close the connection!", response.getClass().getName(), response.isEndGame() ? "will" : "will not"));
+        log(String.format("Sent response %s. This %s close the connection!", response.getClass().getSimpleName(), response.isEndGame() ? "will" : "will not"));
     }
 
     public void logException(Throwable exception) {
@@ -71,8 +72,7 @@ public class Logger {
     }
 
     private void log(String message) {
-        Date date = Calendar.getInstance().getTime();
-        System.out.println(String.format("%25s | [%s] | %s", date, name, message));
+        System.out.println(String.format("[%s] | %s | %s | %s", robot.getName(), robot.getInfo().getPosition(), robot.getInfo().getDirection(), message));
     }
 
     /**

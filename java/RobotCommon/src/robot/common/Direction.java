@@ -41,8 +41,8 @@ public enum Direction {
         dirToVec = new EnumMap<Direction, Vector>(Direction.class);
         dirToVec.put(Direction.North,     new Vector( 0, 1));
         dirToVec.put(Direction.East,      new Vector( 1, 0));
-        dirToVec.put(Direction.South,     new Vector(-1, 0));
-        dirToVec.put(Direction.West,      new Vector( 1, 0));
+        dirToVec.put(Direction.South,     new Vector( 0,-1));
+        dirToVec.put(Direction.West,      new Vector(-1, 0));
         dirToVec.put(Direction.Unknown,   new Vector( 0, 0));
     }
 

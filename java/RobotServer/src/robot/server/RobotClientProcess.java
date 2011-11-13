@@ -26,7 +26,6 @@ import java.io.*;
 import java.net.*;
 import robot.common.networking.SocketUtils;
 import robot.common.response.ResponseIdentification;
-import robot.server.exception.InvalidAddressException;
 import robot.server.logging.Logger;
 
 /**
@@ -96,7 +95,7 @@ public class RobotClientProcess implements Runnable {
         this.robot = new Robot(RobotNameProvider.provideName());
         this.requestFactory = new ClientRequestFactory(robot.getName());
         this.requestProcessor = new ClientRequestProcessor(robot);
-        this.log = Logger.getLogger(this.robot.getName());
+        this.log = Logger.getLogger(this.robot);
     }
 
     private String readRequestFromSocket() throws IOException {

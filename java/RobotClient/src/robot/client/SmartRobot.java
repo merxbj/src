@@ -88,6 +88,7 @@ public class SmartRobot {
             turn();
             currentDir = Direction.getNextDirection(currentDir);
         }
+        robot.setDirection(currentDir);
     }
 
     private void turn() {

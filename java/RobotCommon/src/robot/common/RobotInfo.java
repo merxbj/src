@@ -31,10 +31,10 @@ public class RobotInfo {
     protected Direction direction;
 
     public RobotInfo() {
-        this(100, 0, 0, Direction.Unknown); // a new robot comes fully charged
+        this(0, 0, Direction.Unknown);
     }
 
-    public RobotInfo(int battery, int x, int y, Direction direction) {
+    public RobotInfo(int x, int y, Direction direction) {
         this.position = new Position(x, y);
         this.direction = direction;
     }

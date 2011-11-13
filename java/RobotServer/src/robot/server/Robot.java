@@ -28,7 +28,7 @@ import robot.common.exception.*;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Robot {
+public class Robot implements Comparable<Robot> {
 
     private String name;
     private RobotServerInfo info;
@@ -41,12 +41,12 @@ public class Robot {
          * Generate the robot starting position and direction
          * TODO: Move this initialization inside the RobotServerInfo
          */ 
-        int bat = 100;
-        int x = (int) Math.floor(Math.random() * 43) - 21;
-        int y = (int) Math.floor(Math.random() * 43) - 21;
+        int x = (int) Math.ceil(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_X), Math.abs(RobotServerInfo.MIN_X) - 1));
+        int y = (int) Math.ceil(Math.random() * 43) - (Math.min(Math.abs(RobotServerInfo.MAX_Y), Math.abs(RobotServerInfo.MIN_Y) - 1));
+
         Direction direction = Direction.values()[(int) Math.floor(Math.random() * 4)];
         
-        this.info = new RobotServerInfo(bat, x, y, direction);
+        this.info = new RobotServerInfo(x, y, direction);
         this.currentState = new RobotOkState();
     }
 
@@ -87,6 +87,32 @@ public class Robot {
 
     public RobotServerInfo getInfo() {
         return this.info;
+    }
+
+    public int compareTo(Robot t) {
+        return this.name.compareTo(t.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Robot other = (Robot) obj;
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.name != null ? this.name.hashCode() : 0);
+        return hash;
     }
 
 }

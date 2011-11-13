@@ -37,14 +37,9 @@ public class Main {
         CommandLine cl = CommandLine.parse(args);
         RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
         AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));
-        
-        try {
-            String secret = robot.findSecret();
-            log.log(Level.FINE, "Secret message found: {0}", secret);
-        } catch (Exception ex) {
-            log.log(Level.WARNING, "Failed to retrieve the secret message :-(");
-            log.log(Level.SEVERE, "Exception occured!", ex);
-        }
+
+        String secret = robot.findSecret();        
+        System.out.println(secret);
     }
 
 }

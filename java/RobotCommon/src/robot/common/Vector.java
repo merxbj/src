@@ -64,4 +64,8 @@ public class Vector {
         return hash;
     }
 
+    @Override
+    public String toString() {
+        return String.format("(%3d,%3d)", x, y);
+    }
 }

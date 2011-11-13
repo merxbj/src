@@ -40,8 +40,8 @@ public class RobotServerInfo extends RobotInfo {
     public static final int MIN_X = -22;
     public static final int MIN_Y = -22;
 
-    public RobotServerInfo(int battery, int x, int y, Direction direction) {
-        super(battery, x, y, direction);
+    public RobotServerInfo(int x, int y, Direction direction) {
+        super(x, y, direction);
         this.stepsSoFar = 0;
     }
 

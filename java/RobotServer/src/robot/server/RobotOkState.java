@@ -33,17 +33,17 @@ public class RobotOkState implements RobotState {
     public void doStep(Robot robot) throws RobotCrashedException, RobotProcessorDamagedException {
         RobotServerInfo info = robot.getInfo();
 
+        boolean robotDamaged = Math.ceil(Math.random() * 10) <= (info.getStepsSoFar() % 10);
+        if (robotDamaged) {
+            int damagedProcessor = damageRobotProcessor(robot);
+            throw new RobotProcessorDamagedException(damagedProcessor);
+        }
+
         try {
             info.move();
             info.setStepsSoFar(info.getStepsSoFar() + 1);
         } catch (RobotOutOfFieldException ex) {
             throw new RobotCrashedException(ex);
-        }
-
-        boolean robotDamaged = Math.ceil(Math.random() * 10) <= (info.getStepsSoFar() % 10);
-        if (robotDamaged) {
-            int damagedProcessor = damageRobotProcessor(robot);
-            throw new RobotProcessorDamagedException(damagedProcessor);
         }
     }
 
