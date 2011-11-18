@@ -23,7 +23,6 @@ package swarm.core;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,8 +72,9 @@ public class Worm implements Drawable {
         this.cooldown = 0;
         this.children = new LinkedList<Worm>();
         this.parents = new LinkedList<Worm>();
-        this.lifeTime = 10000;
+        this.lifeTime = 1000;
         this.isDieing = false;
+        
         this.selected = false;
         changeDirection(Direction.getRandom());
     }
@@ -84,7 +84,12 @@ public class Worm implements Drawable {
     }
 
     public void draw(Graphics2D g) {
-        g.setColor(selected ? Color.YELLOW : getColor());
+        if (selected) {
+            g.setColor(Color.yellow);
+            g.drawRect(pos.x -1, pos.y - 1, this.size.width + 1, this.size.height + 1);
+        }
+        
+        g.setColor(getColor());
         g.fillRect(pos.x, pos.y, this.size.width, this.size.height);
 
         if (attacker != null) {
@@ -129,8 +134,11 @@ public class Worm implements Drawable {
 
         }
 
-        if (--lifeTime == 0) {
+        lifeTime--;
+        if (lifeTime == 0) {
             hatch.died(this);
+        } else if (lifeTime <= 100) {
+            isDieing = true;
         }
 
     }
@@ -210,7 +218,7 @@ public class Worm implements Drawable {
             victim = lookForVictim();
         }
 
-        if (victim != null && !victim.isDieing) {
+        if (victim != null) {
             Vector dist = this.pos.substract(victim.pos).abs();
             if (dist.x < 3 && dist.y < 3) {
                 if (this.getClass().equals(victim.getClass())) {

@@ -43,17 +43,13 @@ public class Hatchery implements Drawable {
 
     public Hatchery() {
         this.swarm = new ConcurrentLinkedQueue();
-        this.swarm = new LinkedList<Worm>();
         this.cemetery = new LinkedList<Worm>();
         this.hive = new LinkedList<Worm>();
         this.selected = null;
     }
 
     public void init() {
-        this.swarm.clear();
-        this.cemetery.clear();
-        this.hive.clear();
-
+        this.clear();
         int initialWormCount = 20; // TODO: Configurable!
         for (; initialWormCount-- > 0;) {
             Worm w = (Math.random() > 0.5) ? new FemaleWorm(this) : new MaleWorm(this); // breed worm at random pos
@@ -63,6 +59,9 @@ public class Hatchery implements Drawable {
 
     public void clear() {
         swarm.clear();
+        cemetery.clear();
+        hive.clear();
+        this.selected = null;
     }
 
     public void breed(Worm w) {
@@ -89,6 +88,7 @@ public class Hatchery implements Drawable {
 
         g.setColor(Color.white);
         g.drawString(String.format("Worms: %d", swarm.size()), 10, 10);
+        g.drawString(selected != null ? String.format("%d", selected.lifeTime) : "", 10, 20);
     }
 
     public void update() {

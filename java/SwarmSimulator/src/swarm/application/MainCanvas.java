@@ -23,7 +23,6 @@ package swarm.application;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import swarm.core.Hatchery;
 
@@ -39,24 +38,23 @@ public class MainCanvas extends Canvas implements Runnable {
 
     private Hatchery hatch;
     private boolean quit;
-    private Image offscreen;
-    private Graphics2D backBuffer;
+    private boolean paused;
+    private final Object exitEvent;
 
     public MainCanvas() {
         this.quit = true;
-        this.offscreen = null;
-        this.backBuffer = null;
+        this.paused = true;
+        this.exitEvent = new Object();
     }
 
     @Override
     public void paint(Graphics g) {
 
-        if (this.hatch == null || this.backBuffer == null) {
+        if (this.hatch == null) {
             return;
         }
 
-        this.hatch.draw(backBuffer);
-        g.drawImage(offscreen, 0, 0, this);
+        this.hatch.draw((Graphics2D) getGraphics());
     }
 
     @Override
@@ -79,8 +77,6 @@ public class MainCanvas extends Canvas implements Runnable {
 
     public void run() {
 
-        this.offscreen = createImage(getSize().width, getSize().height);
-        this.backBuffer = (Graphics2D) offscreen.getGraphics();
         this.hatch.init();
 
         long beginTime;
@@ -91,7 +87,10 @@ public class MainCanvas extends Canvas implements Runnable {
 
             beginTime = System.nanoTime();
 
-            updateHatchery();
+            if (!isPaused()) {
+                updateHatchery();
+            }
+            
             repaint();
 
             timeTaken = System.nanoTime() - beginTime;
@@ -103,7 +102,13 @@ public class MainCanvas extends Canvas implements Runnable {
                 Thread.sleep(timeLeft);
             } catch (InterruptedException ex) {}
         }
-
+        
+        hatch.clear();
+        repaint();
+        
+        synchronized (exitEvent) {
+            exitEvent.notifyAll();
+        }
     }
 
     private void updateHatchery() {
@@ -114,4 +119,15 @@ public class MainCanvas extends Canvas implements Runnable {
         hatch.onClick(me.getX(), me.getY());
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean pause) {
+        this.paused = pause;
+    }
+    
+    public synchronized Object getExitEvent() {
+        return exitEvent;
+    }
 }
