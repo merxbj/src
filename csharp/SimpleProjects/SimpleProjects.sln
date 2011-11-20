@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiday13", "Fiday13\Fiday13.csproj", "{708B1C07-098D-453D-A831-1CEAB88267B7}"
 EndProject
 Global
