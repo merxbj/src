@@ -28,6 +28,10 @@ import java.awt.Color;
  * @version %I% %G%
  */
 public class MaleWorm extends Worm {
+    
+    protected static final int BLINK_RATE = 20;
+    
+    protected int drawCount = 0;
 
     public MaleWorm(Hatchery hatch) {
         super(hatch);
@@ -39,7 +43,12 @@ public class MaleWorm extends Worm {
     
     @Override
     protected Color getColor() {
-        return Color.BLUE;
+        Color color = Color.BLUE;
+        if (isDieing) {
+            color = (drawCount < BLINK_RATE ? Color.RED : Color.BLUE);
+            drawCount = (drawCount + 1) % (BLINK_RATE * 2);
+        }
+        return color;
     }
 
 }
