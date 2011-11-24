@@ -8,7 +8,7 @@ package hamurabi.core;
  *
  * @author merxbj
  */
-class YearSummary {
+class Summary {
     private int populationStarved;
     private int populationNew;
     private boolean plagueStruck;
@@ -66,5 +66,9 @@ class YearSummary {
         System.out.printf("RATS ATE %d BUSHELS.\n", eatenByRates);
         System.out.printf("YOU NOW HAVE %d BUSHELS IN STORE.\n", bushelsInStock);
         System.out.println("");
+    }
+    
+    public void add(Summary summary) {
+        
     }
 }
