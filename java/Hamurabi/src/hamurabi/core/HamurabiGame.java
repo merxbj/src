@@ -17,22 +17,31 @@ public class HamurabiGame {
     private int bushelsInSilo;
     private int acresOwned;
     private int bushelsPerAcreRate;
-    private Summary gameTotalSummary;
+    private GameTotalSummary gameTotalSummary;
     
     public HamurabiGame() {
-        gameTotalSummary = new Summary();
+        gameTotalSummary = new GameTotalSummary();
     }
     
     public void play() {
-        printWelcomeMessage();
-        Summary yearSummary = initGame();
-        while (!gameOver() && (yearSummary != null)) {
-            yearSummary.print();
-            Plan plan = requestUserInteraction();
-            yearSummary = updateGame(plan);
-            gameTotalSummary.add(yearSummary);
+        try {
+            printWelcomeMessage();
+            Summary yearSummary = initGame();
+            while (!gameOver() && (yearSummary != null)) {
+                yearSummary.print();
+                Plan plan = requestUserInteraction();
+                yearSummary = updateGame(plan);
+                gameTotalSummary.add(yearSummary);
+            }
+            gameTotalSummary.print();
+            printGoodByeMessage();
+        } catch (TooManyPeopleStarvedException ex) {
+            printStarvedImpeachmentMessage(ex.getPeopleStarved());
+        } catch (HamurabiMismanagementException ex) {
+            printImpeachmentMessage();
+        } catch (InvalidInputException ex) {
+            printStewardComplaint();
         }
-        printResults();
     }
 
     private void printWelcomeMessage() {
@@ -43,7 +52,7 @@ public class HamurabiGame {
 
     private Summary initGame() {
         currentYear = 1;
-        bushelsPerAcreRate = ((int) Math.round(10 * Math.random())) + 17;
+        bushelsPerAcreRate = (int)(10 * Math.random()) + 17;
         bushelsInSilo = 2800;
         acresOwned = 1000;
         Summary summary = new Summary();
@@ -68,28 +77,20 @@ public class HamurabiGame {
         int bushelsAvailable = bushelsInSilo;
         int acresAvailable = acresOwned;
         
-        try {
-            int acresToBuy = requestAcresToBuy(sc, bushelsPerAcreRate, bushelsAvailable);
-            acresAvailable += acresToBuy;
-            bushelsAvailable -= acresToBuy * bushelsPerAcreRate;
+        int acresToBuy = requestAcresToBuy(sc, bushelsPerAcreRate, bushelsAvailable);
+        acresAvailable += acresToBuy;
+        bushelsAvailable -= acresToBuy * bushelsPerAcreRate;
 
-            int acresToSell = requestAcresToSell(sc, acresAvailable);
-            acresAvailable -= acresToSell;
-            bushelsAvailable += acresToSell * bushelsPerAcreRate;
+        int acresToSell = requestAcresToSell(sc, acresAvailable);
+        acresAvailable -= acresToSell;
+        bushelsAvailable += acresToSell * bushelsPerAcreRate;
 
-            int bushelsToFeed = requestBushelsToFeed(sc, bushelsAvailable);
-            bushelsAvailable -= bushelsToFeed;
+        int bushelsToFeed = requestBushelsToFeed(sc, bushelsAvailable);
+        bushelsAvailable -= bushelsToFeed;
 
-            int acresToSeed = requestAcresToSeed(sc, bushelsAvailable, acresAvailable, population);
+        int acresToSeed = requestAcresToSeed(sc, bushelsAvailable, acresAvailable, population);
 
-            return new Plan(acresToBuy, acresToSell, bushelsToFeed, acresToSeed);
-
-        } catch (InvalidInputException ex) {
-            System.out.println("\n\nHAMURABI:  I CANNOT DO WHAT YOU WISH.");
-            System.out.println("GET YOURSELF ANOTHER STEWARD!!!!!");
-        }
-        
-        return null;
+        return new Plan(acresToBuy, acresToSell, bushelsToFeed, acresToSeed);
     }
     
     private int requestAcresToBuy(Scanner sc, int rate, int budget) {
@@ -167,14 +168,71 @@ public class HamurabiGame {
         if (plan == null) {
             return null;
         }
-        Summary summary = new Summary();
         
         currentYear++;
+        
+        acresOwned += (plan.getAcresToBuy() - plan.getAcresToSell());
+        bushelsInSilo += ((plan.getAcresToSell() * bushelsPerAcreRate) - (plan.getAcresToBuy() * bushelsPerAcreRate));
+        bushelsInSilo -= (plan.getBushelsToFeed() + (plan.getAcresToSeed() / 2));
+        
+        int harvestRate = (int) (5 * Math.random()) + 1;
+        int harvested = harvestRate * plan.getAcresToSeed();
+        
+        int consumedByRats = 0;
+        int ratsConsumptionFactor = (int) (5 * Math.random()) + 1;
+        if ((ratsConsumptionFactor % 2) == 0) {
+            consumedByRats = bushelsInSilo / ratsConsumptionFactor;
+        }
+
+        bushelsInSilo += harvested - consumedByRats;
+        
+        int newPopulationFactor = (int) (5 * Math.random()) + 1;
+        int newPopulation = (int) (newPopulationFactor * (20 * acresOwned + bushelsInSilo) / population / 100 + 1);
+        
+        int peopleFeeded = plan.getBushelsToFeed() / 20;
+        int peopleStarved = population - peopleFeeded;
+        if (peopleStarved > (0.45 * population)) {
+            throw new TooManyPeopleStarvedException(peopleStarved);
+        }
+
+        boolean plagueStruck = ((int) 10 * (2 * Math.random()- 0.3)) <= 0;
+
+        population += newPopulation;
+        if (plagueStruck) {
+            population /= 2;
+        }
+
+        Summary summary = new Summary();
+        summary.setPlagueStruck(plagueStruck);
+        summary.setPopulationNew(newPopulation);
+        summary.setPopulationStarved(peopleStarved);
+        summary.setYear(currentYear);
+        summary.setAcresOwned(acresOwned);
+        summary.setBushelsInStock(bushelsInSilo);
+        summary.setEatenByRates(consumedByRats);
+        summary.setHarvested(harvested);
+        summary.setPopulationTotal(population);
+
         return summary;
     }
 
-    private void printResults() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void printStarvedImpeachmentMessage(int peopleStarved) {
+        System.out.printf("\n\nYOU STARVED %d PEOPLE IN ONE YEAR!!!\n", peopleStarved);
+        printImpeachmentMessage();
     }
-    
+
+    private void printImpeachmentMessage() {
+        System.out.println("DUE TO THIS EXTREME MISMANAGEMENT YOU HAVE NOT ONLY");
+        System.out.println("BEEN IMPEACHED AND THROWN OUT OF OFFICE BUT YOU HAVE");
+        System.out.println("ALSO BEEN DECLARED 'NATIONAL FINK' !!");
+    }
+
+    private void printGoodByeMessage() {
+        System.out.println("SO LONG FOR NOW.\n");
+    }
+
+    private void printStewardComplaint() {
+        System.out.println("\n\nHAMURABI:  I CANNOT DO WHAT YOU WISH.");
+        System.out.println("GET YOURSELF ANOTHER STEWARD!!!!!");
+    }
 }

@@ -8,16 +8,16 @@ package hamurabi.core;
  *
  * @author merxbj
  */
-class Summary {
-    private int populationStarved;
-    private int populationNew;
-    private boolean plagueStruck;
-    private int year;
-    private int populationTotal;
-    private int acresOwned;
-    private int harvested;
-    private int eatenByRates;
-    private int bushelsInStock;
+public class Summary {
+    protected int populationStarved;
+    protected int populationNew;
+    protected boolean plagueStruck;
+    protected int year;
+    protected int populationTotal;
+    protected int acresOwned;
+    protected int harvested;
+    protected int eatenByRates;
+    protected int bushelsInStock;
 
     public boolean isPlagueStruck() {
         return plagueStruck;
@@ -52,10 +52,7 @@ class Summary {
     }
     
     public void print() {
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("HAMURABI:  I BEG TO REPORT TO YOU,");
+        System.out.println("\n\n\nHAMURABI:  I BEG TO REPORT TO YOU,");
         System.out.printf("IN YEAR %d, %d PEOPLE STARVED, %d CAME TO THE CITY.\n", year, populationStarved, populationNew);
         if (isPlagueStruck()) {
             System.out.println("A HORRIBLE PLAGUE STRUCK!  HALF THE PEOPLE DIED.");
@@ -67,8 +64,44 @@ class Summary {
         System.out.printf("YOU NOW HAVE %d BUSHELS IN STORE.\n", bushelsInStock);
         System.out.println("");
     }
-    
-    public void add(Summary summary) {
-        
+
+    public int getAcresOwned() {
+        return acresOwned;
+    }
+
+    public void setAcresOwned(int acresOwned) {
+        this.acresOwned = acresOwned;
+    }
+
+    public int getBushelsInStock() {
+        return bushelsInStock;
+    }
+
+    public void setBushelsInStock(int bushelsInStock) {
+        this.bushelsInStock = bushelsInStock;
+    }
+
+    public int getEatenByRates() {
+        return eatenByRates;
+    }
+
+    public void setEatenByRates(int eatenByRates) {
+        this.eatenByRates = eatenByRates;
+    }
+
+    public int getHarvested() {
+        return harvested;
+    }
+
+    public void setHarvested(int harvested) {
+        this.harvested = harvested;
+    }
+
+    public int getPopulationTotal() {
+        return populationTotal;
+    }
+
+    public void setPopulationTotal(int populationTotal) {
+        this.populationTotal = populationTotal;
     }
 }
