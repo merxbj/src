@@ -15,9 +15,9 @@ public class Summary {
     protected int year;
     protected int populationTotal;
     protected int acresOwned;
-    protected int harvested;
+    protected int harvestedPerAcre;
     protected int eatenByRates;
-    protected int bushelsInStock;
+    protected int bushelsInSilo;
 
     public boolean isPlagueStruck() {
         return plagueStruck;
@@ -59,9 +59,9 @@ public class Summary {
         }
         System.out.printf("POPULATION IS NOW %d\n", populationTotal);
         System.out.printf("THE CITY NOW OWNS %d ACRES.\n", acresOwned);
-        System.out.printf("YOU HARVESTED %d BUSHELS PER ACRE.\n", harvested);
+        System.out.printf("YOU HARVESTED %d BUSHELS PER ACRE.\n", harvestedPerAcre);
         System.out.printf("RATS ATE %d BUSHELS.\n", eatenByRates);
-        System.out.printf("YOU NOW HAVE %d BUSHELS IN STORE.\n", bushelsInStock);
+        System.out.printf("YOU NOW HAVE %d BUSHELS IN STORE.\n", bushelsInSilo);
         System.out.println("");
     }
 
@@ -74,11 +74,11 @@ public class Summary {
     }
 
     public int getBushelsInStock() {
-        return bushelsInStock;
+        return bushelsInSilo;
     }
 
-    public void setBushelsInStock(int bushelsInStock) {
-        this.bushelsInStock = bushelsInStock;
+    public void setBushelsInSilo(int bushelsInSilo) {
+        this.bushelsInSilo = bushelsInSilo;
     }
 
     public int getEatenByRates() {
@@ -90,11 +90,11 @@ public class Summary {
     }
 
     public int getHarvested() {
-        return harvested;
+        return harvestedPerAcre;
     }
 
-    public void setHarvested(int harvested) {
-        this.harvested = harvested;
+    public void setHarvestedPerAcre(int harvestedPerAcre) {
+        this.harvestedPerAcre = harvestedPerAcre;
     }
 
     public int getPopulationTotal() {

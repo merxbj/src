@@ -55,11 +55,18 @@ public class HamurabiGame {
         bushelsPerAcreRate = (int)(10 * Math.random()) + 17;
         bushelsInSilo = 2800;
         acresOwned = 1000;
+        population = 100;
         Summary summary = new Summary();
         summary.setPlagueStruck(false);
         summary.setPopulationNew(5);
         summary.setPopulationStarved(0);
         summary.setYear(currentYear);
+        summary.setPopulationTotal(population);
+        summary.setAcresOwned(acresOwned);
+        summary.setHarvestedPerAcre(3);
+        summary.setEatenByRates(200);
+        summary.setBushelsInSilo(bushelsInSilo);
+        
         return summary;
     }
 
@@ -175,8 +182,8 @@ public class HamurabiGame {
         bushelsInSilo += ((plan.getAcresToSell() * bushelsPerAcreRate) - (plan.getAcresToBuy() * bushelsPerAcreRate));
         bushelsInSilo -= (plan.getBushelsToFeed() + (plan.getAcresToSeed() / 2));
         
-        int harvestRate = (int) (5 * Math.random()) + 1;
-        int harvested = harvestRate * plan.getAcresToSeed();
+        int harvestPerAcre = (int) (5 * Math.random()) + 1;
+        int harvested = harvestPerAcre * plan.getAcresToSeed();
         
         int consumedByRats = 0;
         int ratsConsumptionFactor = (int) (5 * Math.random()) + 1;
@@ -208,9 +215,9 @@ public class HamurabiGame {
         summary.setPopulationStarved(peopleStarved);
         summary.setYear(currentYear);
         summary.setAcresOwned(acresOwned);
-        summary.setBushelsInStock(bushelsInSilo);
+        summary.setBushelsInSilo(bushelsInSilo);
         summary.setEatenByRates(consumedByRats);
-        summary.setHarvested(harvested);
+        summary.setHarvestedPerAcre(harvestPerAcre);
         summary.setPopulationTotal(population);
 
         return summary;
