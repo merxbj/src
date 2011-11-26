@@ -23,6 +23,7 @@ package swarm.application;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import swarm.core.Hatchery;
 
@@ -40,21 +41,26 @@ public class MainCanvas extends Canvas implements Runnable {
     private boolean quit;
     private boolean paused;
     private final Object exitEvent;
+    private Image offscreen;
+    private Graphics2D backBuffer;
 
     public MainCanvas() {
         this.quit = true;
         this.paused = true;
+        this.offscreen = null;
+        this.backBuffer = null;
         this.exitEvent = new Object();
     }
 
     @Override
     public void paint(Graphics g) {
 
-        if (this.hatch == null) {
+        if (this.hatch == null || this.backBuffer == null) {
             return;
         }
 
-        this.hatch.draw((Graphics2D) getGraphics());
+        this.hatch.draw(backBuffer);
+        g.drawImage(offscreen, 0, 0, this);
     }
 
     @Override
@@ -78,6 +84,8 @@ public class MainCanvas extends Canvas implements Runnable {
     public void run() {
 
         this.hatch.init();
+        this.offscreen = this.createImage(getSize().width, getSize().height);
+        this.backBuffer = (Graphics2D) this.offscreen.getGraphics();
 
         long beginTime;
         long timeTaken;
