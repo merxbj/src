@@ -59,7 +59,7 @@ public class SwarmSimulator extends Game {
     @Override
     public void uninit() {
         this.hatchery.clear();
-        
+        System.exit(0);
     }
 
     @Override
@@ -76,7 +76,14 @@ public class SwarmSimulator extends Game {
             case KeyEvent.VK_Q:
                 over = true;
                 break;
+            case KeyEvent.VK_R:
+                restart();
+                break;
         }
     }
-
+    
+    private void restart() {
+        hatchery.clear();
+        hatchery.init();
+    }
 }
