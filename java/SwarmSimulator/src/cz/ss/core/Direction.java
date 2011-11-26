@@ -18,7 +18,7 @@
  *
  */
 
-package swarm.core;
+package cz.ss.core;
 
 import java.util.EnumMap;
 import java.util.Map.Entry;

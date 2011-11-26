@@ -18,7 +18,7 @@
  *
  */
 
-package swarm.core;
+package cz.ss.core;
 
 import java.awt.Color;
 import java.awt.Dimension;

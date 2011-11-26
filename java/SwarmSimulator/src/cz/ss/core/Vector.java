@@ -18,7 +18,7 @@
  *
  */
 
-package swarm.core;
+package cz.ss.core;
 
 /**
  *

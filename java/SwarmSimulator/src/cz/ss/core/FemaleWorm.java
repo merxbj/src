@@ -1,5 +1,5 @@
 /*
- * Application
+ * FemaleWorm
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,25 +18,38 @@
  *
  */
 
-package swarm.application;
+package cz.ss.core;
+
+import java.awt.Color;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class Application {
+public class FemaleWorm extends Worm {
+    
+    protected static final int BLINK_RATE = 20;
+    
+    protected int drawCount = 0;
 
-    public static void main(String[] args) {
+    public FemaleWorm(Hatchery hatch) {
+        super(hatch);
+    }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MainFrame frame = new MainFrame();
-                frame.init();
-                frame.setVisible(true);
-            }
-        });
+    public FemaleWorm(Hatchery hatch, Vector pos) {
+        super(hatch, pos);
+    }
 
+
+    @Override
+    protected Color getColor() {
+        Color color = Color.MAGENTA;
+        if (isDieing) {
+            color = (drawCount < BLINK_RATE ? Color.RED : Color.MAGENTA);
+            drawCount = (drawCount + 1) % (BLINK_RATE * 2);
+        }
+        return color;
     }
 
 }

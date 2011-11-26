@@ -1,5 +1,5 @@
 /*
- * FemaleWorm
+ * Application
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,38 +18,21 @@
  *
  */
 
-package swarm.core;
+package cz.ss.application;
 
-import java.awt.Color;
+import cz.ss.core.SwarmSimulator;
+import cz.sge.GameApplication;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class FemaleWorm extends Worm {
-    
-    protected static final int BLINK_RATE = 20;
-    
-    protected int drawCount = 0;
+public class Application {
 
-    public FemaleWorm(Hatchery hatch) {
-        super(hatch);
-    }
-
-    public FemaleWorm(Hatchery hatch, Vector pos) {
-        super(hatch, pos);
-    }
-
-
-    @Override
-    protected Color getColor() {
-        Color color = Color.MAGENTA;
-        if (isDieing) {
-            color = (drawCount < BLINK_RATE ? Color.RED : Color.MAGENTA);
-            drawCount = (drawCount + 1) % (BLINK_RATE * 2);
-        }
-        return color;
+    public static void main(String[] args) {
+        SwarmSimulator simulator = new SwarmSimulator();
+        GameApplication.start(simulator);
     }
 
 }

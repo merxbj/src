@@ -1,5 +1,5 @@
 /*
- * MaleWorm
+ * GameCanvas
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,38 +17,33 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package cz.sge;
 
-package swarm.core;
-
-import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JComponent;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
  * @version %I% %G%
  */
-public class MaleWorm extends Worm {
+public class GameCanvas extends JComponent {
     
-    protected static final int BLINK_RATE = 20;
-    
-    protected int drawCount = 0;
+    private Game game;
 
-    public MaleWorm(Hatchery hatch) {
-        super(hatch);
+    public GameCanvas(Game game) {
+        this.game = game;
+        this.setSize(game.getWidth(), game.getHeight());
+        this.addKeyListener(game);
+        this.addMouseListener(game);
+        this.addMouseMotionListener(game);
+        this.setFocusable(true);
     }
 
-    public MaleWorm(Hatchery hatch, Vector pos) {
-        super(hatch, pos);
-    }
-    
     @Override
-    protected Color getColor() {
-        Color color = Color.BLUE;
-        if (isDieing) {
-            color = (drawCount < BLINK_RATE ? Color.RED : Color.BLUE);
-            drawCount = (drawCount + 1) % (BLINK_RATE * 2);
-        }
-        return color;
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        game.draw(g);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Drawable
+ * MaleWorm
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,17 +18,37 @@
  *
  */
 
-package swarm.core;
+package cz.ss.core;
 
-import java.awt.Graphics2D;
+import java.awt.Color;
 
 /**
  *
  * @author Jaroslav Merxbauer
- * @authoer %I% %G%
+ * @version %I% %G%
  */
-public interface Drawable {
+public class MaleWorm extends Worm {
+    
+    protected static final int BLINK_RATE = 20;
+    
+    protected int drawCount = 0;
 
-    public void draw(Graphics2D g);
+    public MaleWorm(Hatchery hatch) {
+        super(hatch);
+    }
+
+    public MaleWorm(Hatchery hatch, Vector pos) {
+        super(hatch, pos);
+    }
+    
+    @Override
+    protected Color getColor() {
+        Color color = Color.BLUE;
+        if (isDieing) {
+            color = (drawCount < BLINK_RATE ? Color.RED : Color.BLUE);
+            drawCount = (drawCount + 1) % (BLINK_RATE * 2);
+        }
+        return color;
+    }
 
 }
