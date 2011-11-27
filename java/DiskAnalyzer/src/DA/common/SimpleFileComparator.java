@@ -19,7 +19,6 @@ public enum SimpleFileComparator implements Comparator<SimpleFile> {
         public int compare(SimpleFile file1, SimpleFile file2) {
             Long size1 = file1.getSize();
             Long size2 = file2.getSize();
-
             return size2.compareTo(size1);
         }
     },

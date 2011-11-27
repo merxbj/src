@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -28,7 +29,6 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
 
     private TreeMapViewHistory history = TreeMapViewHistory.getInstance();
     private MainTask task;
-    private Insets insets;
     private SimpleFile rootDir;
     private SimpleFile selectedRoot;
     private SimpleFile selected;
@@ -65,23 +65,16 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
 
     @Override
     public void paintComponent(Graphics g) {
-        if (insets == null) {
-            insets = getInsets();
-        }
-
-        int x = insets.left;
-        int y = insets.top;
-        int width = getWidth() - insets.left - insets.right;
-        int height = getHeight() - insets.top - insets.bottom;
-
+        
+        Rectangle ib = getDrawableBounds();
         g.setFont(TreeMapViewStatics.DEFAULT_VIEW_FONT);
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, ib.width, ib.height);
         g.setColor(Color.BLACK);
 
         if (selectedRoot != null) {
-            selectedRoot.setBounds(new Rect(x, y, width, height));
-            selectedRoot.draw((Graphics2D) g, x, y, width, height);
+            selectedRoot.setBounds(new Rect(ib.x, ib.y, ib.width, ib.height));
+            selectedRoot.draw((Graphics2D) g, ib.x, ib.y, ib.width, ib.height);
         }
     }
 
@@ -98,7 +91,8 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
                 toolTipText = "<html>"
                         + "<b>Name</b> : " + file.getName() + "<br />"
                         + "<b>Path</b> : " + file.getPath() + "<br />"
-                        + "<b>Size</b> : " + file.getSizeForPaint()
+                        + "<b>Size</b> : " + file.getSizeForPaint() + "<br />"
+                        + "<b>Rect Size</b> : " + file.getBounds()
                         + "</html>";
             }
         }
@@ -117,6 +111,7 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
             depth++;
             for (File file : rootList) {
                 if (file.canRead() && !isSymlink(file)) {
+                    long filePaintTreshold = getFileSizePaintTreshold(getDrawableBounds(), selectedRoot.getSize());
                     if (file.isDirectory()) {
                         task.setStatusMessage("Scanning : " + file.getAbsolutePath());
 
@@ -133,8 +128,11 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
                     } else if (file.isFile() && file.length() > 0) {
                         SimpleFile contentFile = new SimpleFile(file, depth);
                         contentFile.setParent(parent);
-                        parent.add(contentFile);
+                        parent.add(contentFile, filePaintTreshold);
                         this.repaint();
+                    }
+                    if (depth < 3) {
+                        selectedRoot.forceAggregation(filePaintTreshold);
                     }
                 }
             }
@@ -176,6 +174,7 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
             if (file != null) {
                 selectedRoot = file;
                 history.addToHistory(file);
+                selectedRoot.relaxAggregation(getFileSizePaintTreshold(getDrawableBounds(), selectedRoot.getSize()));
                 this.repaint();
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -220,5 +219,26 @@ public class TreeMapView extends JComponent implements MouseListener, MouseMotio
                 this.repaint();
             }
         }
+    }
+    
+    // TODO: Rename?
+    public Rectangle getDrawableBounds() {
+        Insets insets = getInsets();
+        if (insets != null) {
+            int x = insets.left;
+            int y = insets.top;
+            int width = getWidth() - insets.left - insets.right;
+            int height = getHeight() - insets.top - insets.bottom;
+            return new Rectangle(x, y, width, height);
+        }
+
+        return getBounds(); // fallback if insets are not available
+    }
+    
+    public long getFileSizePaintTreshold(Rectangle maxBounds, long totalSize) {
+        long squarePixels = maxBounds.width * maxBounds.height;
+        double squarePixelsTreshold = 100;
+        long tresholdSize = (long) Math.ceil((squarePixelsTreshold * totalSize) / squarePixels );
+        return  tresholdSize;
     }
 }
