@@ -4,8 +4,7 @@
  */
 package DA.application;
 
-import DA.DiskAnalyzerView;
-import DA.common.SimpleFile;
+import DA.TreeMap.TreeMapView;
 import java.io.File;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
@@ -17,32 +16,31 @@ import org.jdesktop.application.Task;
  */
 public class MainTask extends Task {
     private File root;
-    private boolean stop = false;
-    private DiskAnalyzerView view;
+    private TreeMapView canvasPanel;
 
     public MainTask(Application app) {
         super(app);
     }
     
-    public void setRoot(File root) {
+    public void initializeTask(File root, TreeMapView canvasPanel) {
         this.root = root;
-    }
-    
-    public void registerView(DiskAnalyzerView dav) {
-        this.view = dav;
+        this.canvasPanel = canvasPanel;
     }
     
     public synchronized void fireStop() {
-        stop = true;
+        canvasPanel.fireStop();
         setMessage("Scanning stopped by user ...");
     }
 
     @Override
     protected Object doInBackground() throws Exception {
-        TreeView tv = new TreeView();
-        view.setComponent(tv);
-        tv.start(root);
-        
-        return null;
+        canvasPanel.setTask(this);
+        canvasPanel.start(root);
+
+        return true;
+    }
+
+    public void setStatusMessage(String message) {
+        this.setMessage(message);
     }
 }
