@@ -27,11 +27,13 @@ package psitp4.core;
  */
 public class OpenConnectionPacket extends PsiTP4Packet {
 
-    public OpenConnectionPacket() {
+    private PsiTP4ConnectionType type;
+    
+    public OpenConnectionPacket(PsiTP4ConnectionType type) {
         this.setCon(0);
-        this.setSeq((short) Math.ceil(Math.random() * Short.MAX_VALUE));
+        this.setSeq((short) 0);
         this.setAck((short) 0);
         this.setFlag(PsiTP4Flag.SYN);
+        this.setData(type.toDataArray());
     }
-
 }

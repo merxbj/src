@@ -22,7 +22,8 @@ package psitp4.statemachine;
 
 import psitp4.application.CommandLine;
 import psitp4.core.PsiTP4Connection;
-import psitp4.core.PsiTP4Exception;
+import psitp4.core.exception.ProtocolException;
+import psitp4.core.exception.PsiTP4Exception;
 
 /**
  *
@@ -32,15 +33,21 @@ import psitp4.core.PsiTP4Exception;
 public class WaitingForConnectionState implements TransmissionState {
 
     public TransmissionState process(StateMachine machine) {
+        PsiTP4Connection connection = machine.getConnection();
         try {
-            PsiTP4Connection connection = machine.getConnection();
             if (connection != null) {
                 connection.open();
-                return new CommandState();
+                return machine.getFileTransmissionState();
             }
+        } catch (ProtocolException pe) {
+            System.out.println(CommandLine.formatException(pe));
+            try {
+                connection.reset();
+            } catch (PsiTP4Exception ex) {}
         } catch (PsiTP4Exception ex) {
             System.out.println(CommandLine.formatException(ex));
         }
+        
         return new TransmissionFailedState(this);
     }
 

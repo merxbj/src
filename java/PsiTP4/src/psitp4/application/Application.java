@@ -28,10 +28,19 @@ import psitp4.core.FileTransporter;
  */
 public class Application {
     
+    private static final int SERVER_PORT = 3999;
+    private static final String LOCAL_FILE_NAME = "foto.png";
+    
     public static void main(String[] args) {
+        
         CommandLine cl = CommandLine.parse(args);
-
         FileTransporter transporter = new FileTransporter(new SimpleProgressSink());
-        transporter.transfer(cl.getHostname(), cl.getPort(), cl.getRemoteFileName(), cl.getLocalFileName());        
+        
+        if (cl.getFirmwareFileName().equals("")) {
+            transporter.download(cl.getHostname(), SERVER_PORT, LOCAL_FILE_NAME);
+        } else {
+            transporter.upload(cl.getHostname(), SERVER_PORT, cl.getFirmwareFileName());
+        }
+                
     }  
 }

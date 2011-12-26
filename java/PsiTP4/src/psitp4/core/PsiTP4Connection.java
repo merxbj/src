@@ -20,13 +20,17 @@
 
 package psitp4.core;
 
+import psitp4.core.exception.PsiTP4Exception;
+import psitp4.core.exception.DeserializationException;
+import psitp4.core.exception.SerializationException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Stack;
+import java.net.SocketTimeoutException;
 import psitp4.application.ProgressSink;
+import psitp4.core.exception.ProtocolException;
 
 /**
  *
@@ -35,19 +39,24 @@ import psitp4.application.ProgressSink;
  */
 public class PsiTP4Connection {
 
+    private static final int OPEN_CONNECTION_TIMEOUT = 100;
+    private static final int OPEN_CONNECTION_ATTEMPTS = 20;
+    
     private InetAddress hostname;
     private int port;
     private DatagramSocket socket;
     private int id;
     private ProgressSink sink;
-    private Stack<PsiTP4Packet> history;
+    private short sequence;
+    private PsiTP4ConnectionType type;
 
-    public PsiTP4Connection(InetAddress hostname, int port, ProgressSink sink) {
+    public PsiTP4Connection(InetAddress hostname, int port, ProgressSink sink, PsiTP4ConnectionType type) {
         this.hostname = hostname;
         this.port = port;
         this.id = 0;
         this.sink = sink;
-        this.history = new Stack<PsiTP4Packet>();
+        this.sequence = 0;
+        this.type = type;
     }
 
     public void open() throws PsiTP4Exception {
@@ -55,30 +64,29 @@ public class PsiTP4Connection {
         try {
 
             this.socket = new DatagramSocket();
+            OpenConnectionPacket openRequest = new OpenConnectionPacket(type);
+            PsiTP4Packet openResponse = null;
 
-            OpenConnectionPacket openRequest = new OpenConnectionPacket();
-
-            byte[] snd = openRequest.serialize();
-            DatagramPacket request = new DatagramPacket(snd, snd.length, hostname, port);
-            socket.send(request);
-            sink.onDataGramSent(openRequest);
-            history.push(openRequest);
-
-            byte[] rcv = new byte[PsiTP4Packet.MAX_SIZE];
-            DatagramPacket response = new DatagramPacket(rcv, rcv.length);
-            socket.receive(response);
-
-            PsiTP4Packet openResponse = new PsiTP4Packet();
-            openResponse.deserialize(response.getData(), response.getLength());
-            sink.onDataGramReceived(openResponse);
-            history.push(openResponse);
-
-            if (!openResponse.getFlag().equals(PsiTP4Flag.SYN)) {
-                throw new PsiTP4Exception("Server responded with invalid flags! Expected SYN, got " + openResponse.getFlag().toString());
+            int connectionAttempts = OPEN_CONNECTION_ATTEMPTS;
+            while ((openResponse == null) && (connectionAttempts-- > 0)) {
+                this.send(openRequest);
+                openResponse = this.receive(OPEN_CONNECTION_TIMEOUT);
             }
 
-            if (openResponse.getAck() != openRequest.getSeq() + 1) {
-                throw new PsiTP4Exception(String.format("Server responded with invalid ACK value! Expected %d, got %d", openRequest.getSeq() + 1, openResponse.getAck()));
+            if (!openResponse.getFlag().equals(PsiTP4Flag.SYN)) {
+                throw new ProtocolException("Server responded with invalid flags! Expected SYN, got " + openResponse.getFlag().toString());
+            }
+
+            if (openResponse.getAck() != 0 || openResponse.getSeq() != 0) {
+                throw new ProtocolException(String.format("Server responded with invalid ACK value! Expected %d, got %d", openRequest.getSeq() + 1, openResponse.getAck()));
+            }
+            
+            if (!PsiTP4ConnectionType.fromDataArray(openResponse.getData()).equals(type)) {
+                throw new ProtocolException("Server responded with SYN packet with command that does not match the requested command.");
+            }
+            
+            if (openResponse.getCon() == 0) {
+                throw new ProtocolException("Server responded with SYN packet with zero connection id.");
             }
 
             this.id = openResponse.getCon();
@@ -87,10 +95,6 @@ public class PsiTP4Connection {
 
         } catch (SocketException ex) {
             throw new PsiTP4Exception("Unable to bind the socket!", ex);
-        } catch (SerializationException ex) {
-            throw new PsiTP4Exception("Invalid packet format - cannot serialize.", ex);
-        } catch (DeserializationException ex) {
-            throw new PsiTP4Exception("Invalid binary data - cannot deserialize.", ex);
         } catch (IOException ex) {
             throw new PsiTP4Exception("IOException occured - rcv/snd failed on socket.", ex);
         } catch (Exception ex) {
@@ -106,6 +110,14 @@ public class PsiTP4Connection {
 
         sink.onConnectionClose(this);
     }
+    
+    public void reset() throws PsiTP4Exception {
+        
+        ResetPacket resetPacket = new ResetPacket(this.id);
+        this.send(resetPacket);
+        
+        sink.onConnectionReset(this);
+    }
 
     public void send(PsiTP4Packet packet) throws PsiTP4Exception {
         if (isConnected()) {
@@ -115,7 +127,7 @@ public class PsiTP4Connection {
                 DatagramPacket toSend = new DatagramPacket(snd, snd.length, hostname, port);
                 socket.send(toSend);
                 sink.onDataGramSent(packet);
-                history.push(packet);
+                sequence = packet.getSeq();
             } catch (IOException ex) {
                 throw new PsiTP4Exception("IOException occured - send failed on socket.", ex);
             } catch (SerializationException ex) {
@@ -127,18 +139,30 @@ public class PsiTP4Connection {
     }
 
     public PsiTP4Packet receive() throws PsiTP4Exception {
+        return receive(0);
+    }
+    
+    public PsiTP4Packet receive(int timeout) throws PsiTP4Exception {
         if (isConnected()) {
             try {
                 byte[] rcv = new byte[PsiTP4Packet.MAX_SIZE];
                 DatagramPacket response = new DatagramPacket(rcv, rcv.length);
+                socket.setSoTimeout(timeout);
                 socket.receive(response);
 
                 PsiTP4Packet received = new PsiTP4Packet();
                 received.deserialize(response.getData(), response.getLength());
 
                 sink.onDataGramReceived(received);
-                history.push(received);
+                
+                if ((id != 0) && (received.getCon() != id)) {
+                    throw new ProtocolException("Received packet addressed to different connection id.");
+                }
+                
+                sequence = received.getSeq();
                 return received;
+            } catch (SocketTimeoutException ste) {
+                return null;
             } catch (IOException ex) {
                 throw new PsiTP4Exception("IOException occured - send failed on socket.", ex);
             } catch (DeserializationException ex) {
@@ -157,8 +181,7 @@ public class PsiTP4Connection {
         return id;
     }
 
-    public Stack<PsiTP4Packet> getHistory() {
-        return history;
+    public short getSequence() {
+        return sequence;
     }
-
 }

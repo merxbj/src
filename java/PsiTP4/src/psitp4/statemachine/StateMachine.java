@@ -21,7 +21,7 @@
 package psitp4.statemachine;
 
 import psitp4.application.ProgressSink;
-import psitp4.core.ConnectionResetException;
+import psitp4.core.exception.ConnectionResetException;
 import psitp4.core.PsiTP4Connection;
 
 /**
@@ -32,19 +32,32 @@ import psitp4.core.PsiTP4Connection;
 public class StateMachine {
 
     private PsiTP4Connection connection;
-    private String remoteFileName;
     private String localFileName;
     private ProgressSink sink;
+    private TransmissionState fileTransmissionState;
 
     public StateMachine(PsiTP4Connection connection, ProgressSink sink) {
         this.connection = connection;
         this.sink = sink;
+        this.fileTransmissionState = null;
+        this.localFileName = null;
     }
 
-    public void transfer(String remoteFileName, String localFileName) {
-        this.remoteFileName = remoteFileName;
+    public void download(String localFileName) {
         this.localFileName = localFileName;
+        this.fileTransmissionState = new FileDownloadState();
 
+        run();
+    }
+    
+    public void upload(String firmwareFileName) {
+        this.localFileName = firmwareFileName;
+        this.fileTransmissionState = new FileUploadState();
+
+        run();
+    }
+    
+    public void run() {
         try {
             TransmissionState currentState = new WaitingForConnectionState();
             while (currentState != null) {
@@ -64,12 +77,12 @@ public class StateMachine {
         return localFileName;
     }
 
-    public String getRemoteFileName() {
-        return remoteFileName;
-    }
-
     public ProgressSink getSink() {
         return sink;
+    }
+
+    public TransmissionState getFileTransmissionState() {
+        return fileTransmissionState;
     }
 
 }

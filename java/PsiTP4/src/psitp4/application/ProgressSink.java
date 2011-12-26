@@ -38,4 +38,5 @@ public interface ProgressSink {
     public void onConnectionClose(PsiTP4Connection con);
     public void onTransferCompleted(long fileSize);
     public void onChangedState(TransmissionState state);
+    public void onConnectionReset(PsiTP4Connection con);
 }

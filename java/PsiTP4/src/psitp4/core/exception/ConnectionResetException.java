@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * ConnectionResetException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,27 +18,25 @@
  *
  */
 
-package psitp4.core;
+package psitp4.core.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class SerializationException extends Exception {
+public class ConnectionResetException extends PsiTP4Exception {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
+    public ConnectionResetException() {
     }
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
+    public ConnectionResetException(String message) {
     }
 
-    public SerializationException(String message) {
-        super(message);
+    public ConnectionResetException(String message, Throwable cause) {
     }
 
-    public SerializationException() {
+    public ConnectionResetException(Throwable cause) {
     }
 
 }

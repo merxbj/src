@@ -72,4 +72,8 @@ public class SimpleProgressSink implements ProgressSink {
         System.out.println(String.format("Changed current transmission state to %s", stateName));
     }
 
+    public void onConnectionReset(PsiTP4Connection con) {
+        System.out.println(String.format("Reset connection (%d) with the server ...", con.getId()));
+    }
+
 }

@@ -22,7 +22,7 @@ package psitp4.statemachine;
 
 import psitp4.application.CommandLine;
 import psitp4.core.PsiTP4Connection;
-import psitp4.core.PsiTP4Exception;
+import psitp4.core.exception.PsiTP4Exception;
 
 /**
  *

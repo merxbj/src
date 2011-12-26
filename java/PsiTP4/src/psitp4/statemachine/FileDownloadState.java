@@ -24,28 +24,29 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import psitp4.application.CommandLine;
-import psitp4.core.ConnectionResetException;
+import psitp4.core.exception.ConnectionResetException;
 import psitp4.core.PsiTP4Connection;
-import psitp4.core.PsiTP4Exception;
+import psitp4.core.exception.PsiTP4Exception;
 import psitp4.core.PsiTP4Flag;
 import psitp4.core.PsiTP4Packet;
 import psitp4.core.ResponsePacket;
 import psitp4.core.SlidingWindow;
+import psitp4.core.exception.ProtocolException;
 
 /**
  *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class FileTransmissionState implements TransmissionState {
+public class FileDownloadState implements TransmissionState {
 
     public static final short SLIDING_WINDOW_SIZE = 2048;
 
     public TransmissionState process(StateMachine machine) throws ConnectionResetException {
+        PsiTP4Connection connection = machine.getConnection();
         try {
-            PsiTP4Connection connection = machine.getConnection();
             if (connection != null) {
-                SlidingWindow window = new SlidingWindow(connection.getHistory().pop().getSeq(), SLIDING_WINDOW_SIZE, machine.getSink());
+                SlidingWindow window = new SlidingWindow(connection.getSequence(), SLIDING_WINDOW_SIZE, machine.getSink());
 
                 PsiTP4Packet received = connection.receive();
                 while (received.getFlag() != PsiTP4Flag.FIN) {
@@ -67,9 +68,16 @@ public class FileTransmissionState implements TransmissionState {
 
         } catch (ConnectionResetException ex) {
             throw ex;
-        } catch (PsiTP4Exception ex) {
+        } catch (ProtocolException pex) {
+            System.out.println(CommandLine.formatException(pex));
+            try {
+                connection.reset();
+            } catch (PsiTP4Exception ex) {}
+        } 
+        catch (PsiTP4Exception ex) {
             System.out.println(CommandLine.formatException(ex));
         }
+
         return new TransmissionFailedState(this);
     }
 

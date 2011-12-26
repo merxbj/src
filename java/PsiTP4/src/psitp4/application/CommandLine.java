@@ -28,19 +28,15 @@ import java.net.InetAddress;
  */
 public class CommandLine {
 
-    private int port;
     private InetAddress hostname;
-    private String remoteFileName;
-    private String localFileName;
+    private String firmwareFileName;
 
     public static CommandLine parse(String[] args) {
         CommandLine cl = new CommandLine();
 
         try {
             cl.setHostname(InetAddress.getByName(args[0]));
-            cl.setPort(Integer.parseInt(args[1]));
-            cl.setRemoteFileName(args[2]);
-            cl.setLocalFileName(args[3]);
+            cl.setFirmwareFileName(args[1]);
         } catch (Exception ex) {
             throw new RuntimeException("Client parameters are valid ip adress (DNS name), port number, remote file name and local file name!", ex);
         }
@@ -56,28 +52,12 @@ public class CommandLine {
         this.hostname = hostname;
     }
 
-    public String getLocalFileName() {
-        return localFileName;
+    public String getFirmwareFileName() {
+        return firmwareFileName;
     }
 
-    public void setLocalFileName(String localFileName) {
-        this.localFileName = localFileName;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getRemoteFileName() {
-        return remoteFileName;
-    }
-
-    public void setRemoteFileName(String remoteFileName) {
-        this.remoteFileName = remoteFileName;
+    public void setFirmwareFileName(String remoteFileName) {
+        this.firmwareFileName = remoteFileName;
     }
 
     /**

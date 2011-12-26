@@ -38,10 +38,15 @@ public class FileTransporter {
         this.sink = sink;
     }
 
-    public void transfer(InetAddress hostname, int port, String remoteFileName, String localFileName) {
-        PsiTP4Connection connection =  new PsiTP4Connection(hostname, port, sink);
+    public void download(InetAddress hostname, int port, String localFileName) {
+        PsiTP4Connection connection =  new PsiTP4Connection(hostname, port, sink, PsiTP4ConnectionType.DOWNLOAD);
         StateMachine machine = new StateMachine(connection, sink);
-        machine.transfer(remoteFileName, localFileName);
+        machine.download(localFileName);
     }
-
+    
+    public void upload(InetAddress hostname, int port, String firmwareFileName) {
+        PsiTP4Connection connection =  new PsiTP4Connection(hostname, port, sink, PsiTP4ConnectionType.UPLOAD);
+        StateMachine machine = new StateMachine(connection, sink);
+        machine.upload(firmwareFileName);
+    }
 }

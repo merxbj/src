@@ -20,7 +20,7 @@
 
 package psitp4.statemachine;
 
-import psitp4.core.ConnectionResetException;
+import psitp4.core.exception.ConnectionResetException;
 
 /**
  *

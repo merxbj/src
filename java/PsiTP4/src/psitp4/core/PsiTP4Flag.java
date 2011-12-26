@@ -20,6 +20,8 @@
 
 package psitp4.core;
 
+import psitp4.core.exception.DeserializationException;
+import psitp4.core.exception.SerializationException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

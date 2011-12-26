@@ -1,5 +1,5 @@
 /*
- * DeserializationException
+ * PsiTP4Exception
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -18,27 +18,28 @@
  *
  */
 
-package psitp4.core;
+package psitp4.core.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class DeserializationException extends Exception {
+public class PsiTP4Exception extends Exception {
 
-    public DeserializationException(Throwable cause) {
+    public PsiTP4Exception(Throwable cause) {
         super(cause);
     }
 
-    public DeserializationException(String message, Throwable cause) {
+    public PsiTP4Exception(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DeserializationException(String message) {
+    public PsiTP4Exception(String message) {
         super(message);
     }
 
-    public DeserializationException() {
+    public PsiTP4Exception() {
     }
 
 }
