@@ -36,7 +36,7 @@ public class CommandLine {
 
         try {
             cl.setHostname(InetAddress.getByName(args[0]));
-            cl.setFirmwareFileName(args[1]);
+            cl.setFirmwareFileName(args.length > 1 ? args[1] : "");
         } catch (Exception ex) {
             throw new RuntimeException("Client parameters are valid ip adress (DNS name), port number, remote file name and local file name!", ex);
         }

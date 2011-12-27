@@ -49,6 +49,7 @@ public class PsiTP4Connection {
     private ProgressSink sink;
     private short sequence;
     private PsiTP4ConnectionType type;
+    private boolean connecting;
 
     public PsiTP4Connection(InetAddress hostname, int port, ProgressSink sink, PsiTP4ConnectionType type) {
         this.hostname = hostname;
@@ -61,6 +62,12 @@ public class PsiTP4Connection {
 
     public void open() throws PsiTP4Exception {
         
+        if (isConnected()) {
+            return; // TODO: Add logging here
+        }
+
+        setConnecting(true);
+        
         try {
 
             this.socket = new DatagramSocket();
@@ -68,44 +75,36 @@ public class PsiTP4Connection {
             PsiTP4Packet openResponse = null;
 
             int connectionAttempts = OPEN_CONNECTION_ATTEMPTS;
-            while ((openResponse == null) && (connectionAttempts-- > 0)) {
+            boolean connectionEstablished = false;
+            while (!connectionEstablished && (connectionAttempts-- > 0)) {
                 this.send(openRequest);
                 openResponse = this.receive(OPEN_CONNECTION_TIMEOUT);
-            }
-
-            if (!openResponse.getFlag().equals(PsiTP4Flag.SYN)) {
-                throw new ProtocolException("Server responded with invalid flags! Expected SYN, got " + openResponse.getFlag().toString());
-            }
-
-            if (openResponse.getAck() != 0 || openResponse.getSeq() != 0) {
-                throw new ProtocolException(String.format("Server responded with invalid ACK value! Expected %d, got %d", openRequest.getSeq() + 1, openResponse.getAck()));
-            }
-            
-            if (!PsiTP4ConnectionType.fromDataArray(openResponse.getData()).equals(type)) {
-                throw new ProtocolException("Server responded with SYN packet with command that does not match the requested command.");
-            }
-            
-            if (openResponse.getCon() == 0) {
-                throw new ProtocolException("Server responded with SYN packet with zero connection id.");
+                if (gotValidOpenResponse(openRequest, openResponse)) {
+                    connectionEstablished = true;
+                }
             }
 
             this.id = openResponse.getCon();
 
             sink.onConnectionOpen(this);
 
+        } catch (ProtocolException pex) {
+            throw pex;
         } catch (SocketException ex) {
             throw new PsiTP4Exception("Unable to bind the socket!", ex);
         } catch (IOException ex) {
             throw new PsiTP4Exception("IOException occured - rcv/snd failed on socket.", ex);
         } catch (Exception ex) {
             throw new PsiTP4Exception("Unexpected exception occured!", ex);
+        } finally {
+            setConnecting(false);
         }
 
     }
 
     public void close() throws PsiTP4Exception {
 
-        FinishedPacket closeRequest = new FinishedPacket();
+        FinishedPacket closeRequest = new FinishedPacket(sequence);
         this.send(closeRequest);
 
         sink.onConnectionClose(this);
@@ -174,7 +173,7 @@ public class PsiTP4Connection {
     }
 
     private boolean isConnected() {
-        return (this.id != 0);
+        return (isConnecting() || (this.id != 0));
     }
 
     public int getId() {
@@ -183,5 +182,51 @@ public class PsiTP4Connection {
 
     public short getSequence() {
         return sequence;
+    }
+
+    public boolean isConnecting() {
+        return connecting;
+    }
+
+    public void setConnecting(boolean connectiong) {
+        this.connecting = connectiong;
+    }
+
+    /**
+     * TODO: Improve logging, Improve everything!
+     * @param openRequest
+     * @param openResponse
+     * @return 
+     */
+    private boolean gotValidOpenResponse(OpenConnectionPacket openRequest, PsiTP4Packet openResponse) {
+        if ((openRequest != null) && (openResponse != null)) {
+            try {
+                if (!openResponse.getFlag().equals(PsiTP4Flag.SYN)) {
+                    return false;
+                    // throw new ProtocolException("Server responded with invalid flags! Expected SYN, got " + openResponse.getFlag().toString());
+                }
+
+                if (openResponse.getAck() != 0 || openResponse.getSeq() != 0) {
+                    return false;
+                    // throw new ProtocolException(String.format("Server responded with invalid ACK value! Expected %d, got %d", openRequest.getSeq() + 1, openResponse.getAck()));
+                }
+
+                if (!PsiTP4ConnectionType.fromDataArray(openResponse.getData()).equals(type)) {
+                    return false;
+                    // throw new ProtocolException("Server responded with SYN packet with command that does not match the requested command.");
+                }
+
+                if (openResponse.getCon() == 0) {
+                    return false;
+                    // throw new ProtocolException("Server responded with SYN packet with zero connection id.");
+                }
+                
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+        
+        return false;
     }
 }

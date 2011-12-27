@@ -29,7 +29,6 @@ public class ResponsePacket extends PsiTP4Packet {
 
     public ResponsePacket(short ack) {
         setAck(ack);
-        setFlag(PsiTP4Flag.FIN);
     }
 
 }

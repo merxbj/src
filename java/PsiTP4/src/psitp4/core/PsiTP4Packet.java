@@ -34,7 +34,7 @@ import java.io.IOException;
  */
 public class PsiTP4Packet {
 
-    public static int MAX_SIZE = 264; // header + data
+    public static int MAX_SIZE = 265; // header + data
 
     private int con;
     private short seq;

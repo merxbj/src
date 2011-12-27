@@ -21,14 +21,15 @@
 package psitp4.core;
 
 /**
- *
+ * TODO: Understand the FIN + SEQ - apparently not documented well!
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
 public class FinishedPacket extends PsiTP4Packet {
 
-    public FinishedPacket() {
+    public FinishedPacket(short seq) {
         setFlag(PsiTP4Flag.FIN);
+        setSeq(seq);
     }
 
 }

@@ -28,7 +28,7 @@ import psitp4.core.FileTransporter;
  */
 public class Application {
     
-    private static final int SERVER_PORT = 3999;
+    private static final int SERVER_PORT = 4000;
     private static final String LOCAL_FILE_NAME = "foto.png";
     
     public static void main(String[] args) {
