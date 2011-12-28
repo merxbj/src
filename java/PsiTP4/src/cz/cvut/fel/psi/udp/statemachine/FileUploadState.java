@@ -24,39 +24,27 @@ public class FileUploadState implements TransmissionState {
 
     private static final int SLIDING_ACK_RECEIVE_TIMEOUT_MILI = 100;
     private static final long SLIDING_ACK_RECEIVE_TIMEOUT_NANO = 100 * 1000000L;
+    private static final long SAME_ACK_RECEIVED_MAX_COUNT = 3;
     //private static final int OPEN_CONNECTION_ATTEMPTS = 20;
     
+    private int lastReceivedAck = 0;
+    private int sameAckReceivedCount = 0;
+
     public TransmissionState process(StateMachine machine) throws ConnectionResetException {
-        
+
         PsiTP4Connection connection = machine.getConnection();
         if (connection == null) {
             return new TransmissionFailedState(this);
         }
 
         try {
-            
+
             SlidingOutboundWindow window = new SlidingOutboundWindow(openFileStream(machine.getTransmissionFileName()), machine.getSink());
             window.init();
-            
-            while (!window.isEmpty()) {
 
-                // let's fill up the pipeline first
-                for (PsiTP4Packet dataPacket : window) {
-                    connection.send(dataPacket);
-                }
-                
-                long waitingForSlideBeginTime = System.nanoTime();
-                
-                boolean windowSlided = false;
-                boolean timeoutExpired = false;
-                while (!windowSlided && !timeoutExpired) {
-                    PsiTP4Packet ackPacket = connection.receive(SLIDING_ACK_RECEIVE_TIMEOUT_MILI);
-                    if (ackPacket != null) {
-                        checkFlags(ackPacket.getFlag());
-                        windowSlided = window.acknowledged(ackPacket.getAck());
-                    }
-                    timeoutExpired = (System.nanoTime() - waitingForSlideBeginTime) >= SLIDING_ACK_RECEIVE_TIMEOUT_NANO;
-                }
+            while (!window.isEmpty()) {
+                sendCurrentWindow(window, connection);
+                acceptAcknoledgements(window, connection);
             }
 
             machine.getSink().onTransferCompleted(0); // TODO: Fix the size here!
@@ -67,9 +55,9 @@ public class FileUploadState implements TransmissionState {
             System.out.println(CommandLine.formatException(pex));
             try {
                 connection.reset();
-            } catch (PsiTP4Exception ex) {}
-        } 
-        catch (PsiTP4Exception ex) {
+            } catch (PsiTP4Exception ex) {
+            }
+        } catch (PsiTP4Exception ex) {
             System.out.println(CommandLine.formatException(ex));
         }
 
@@ -91,5 +79,48 @@ public class FileUploadState implements TransmissionState {
             throw new PsiTP4Exception("Unable to open the firmware file!", ex);
         }
     }
-    
+
+    private void sendCurrentWindow(SlidingOutboundWindow window, PsiTP4Connection connection) throws PsiTP4Exception {
+        // let's fill up the pipeline
+        for (PsiTP4Packet dataPacket : window) {
+            connection.send(dataPacket);
+        }
+    }
+
+    private void acceptAcknoledgements(SlidingOutboundWindow window, PsiTP4Connection connection) throws PsiTP4Exception {
+        long waitingForSlideBeginTime = System.nanoTime();
+
+        boolean windowSlided = false;
+        boolean timeoutExpired = false;
+        while (!windowSlided && !timeoutExpired) {
+            windowSlided = acceptIncomingPacket(window, connection);
+            timeoutExpired = (System.nanoTime() - waitingForSlideBeginTime) >= SLIDING_ACK_RECEIVE_TIMEOUT_NANO;
+        }
+    }
+
+    private boolean sameAckReceivedTooManyTimes(short ack, long maxTimes) {
+        if (lastReceivedAck != ack) {
+            lastReceivedAck = ack;
+            sameAckReceivedCount = 0;
+            return false;
+        } else {
+            return (++sameAckReceivedCount == maxTimes);
+        }
+    }
+
+    private boolean acceptIncomingPacket(SlidingOutboundWindow window, PsiTP4Connection connection) throws PsiTP4Exception {
+        PsiTP4Packet ackPacket = connection.receive(SLIDING_ACK_RECEIVE_TIMEOUT_MILI);
+        if (ackPacket != null) {
+            checkFlags(ackPacket.getFlag());
+            if (sameAckReceivedTooManyTimes(ackPacket.getAck(), SAME_ACK_RECEIVED_MAX_COUNT)) {
+                sendNextPacket(ackPacket.getAck(), window, connection);
+            }
+            return window.acknowledged(ackPacket.getAck());
+        }
+        return false;
+    }
+
+    private void sendNextPacket(short ack, SlidingOutboundWindow window, PsiTP4Connection connection) {
+        connection
+    }
 }
