@@ -17,7 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package cz.cvut.fel.psi.udp.core;
 
 import cz.cvut.fel.psi.udp.core.exception.DeserializationException;
@@ -34,7 +33,9 @@ import java.io.IOException;
  */
 public class PsiTP4Packet {
 
-    public static int MAX_SIZE = 265; // header + data
+    public static final int HEADER_SIZE = 9;
+    public static final int MAX_DATA_SIZE = 256;
+    public static final int MAX_SIZE = HEADER_SIZE + MAX_DATA_SIZE;
 
     private int con;
     private short seq;
@@ -53,7 +54,7 @@ public class PsiTP4Packet {
     public void deserialize(byte[] data, int length) throws DeserializationException {
 
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data, 0, length));
-        
+
         try {
             this.con = stream.readInt();
             this.seq = stream.readShort();
@@ -66,14 +67,15 @@ public class PsiTP4Packet {
         } finally {
             try {
                 stream.close();
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+            }
         }
     }
 
     public byte[] serialize() throws SerializationException {
-        
+
         byte[] bytes = new byte[9 + this.data.length];
-        ByteArrayOutputStream bytesStream  = new ByteArrayOutputStream(bytes.length);
+        ByteArrayOutputStream bytesStream = new ByteArrayOutputStream(bytes.length);
         DataOutputStream stream = new DataOutputStream(bytesStream);
 
         try {
@@ -88,7 +90,8 @@ public class PsiTP4Packet {
         } finally {
             try {
                 stream.close();
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+            }
         }
 
         return bytes;
@@ -131,7 +134,10 @@ public class PsiTP4Packet {
     }
 
     public void setData(byte[] data) {
+        if (data.length > MAX_DATA_SIZE) {
+            throw new RuntimeException("Unexpected data size exceeding the MAX_DATA_SIZE!");
+        }
+
         this.data = data;
     }
-
 }

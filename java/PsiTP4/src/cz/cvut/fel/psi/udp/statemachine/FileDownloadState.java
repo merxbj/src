@@ -30,7 +30,7 @@ import cz.cvut.fel.psi.udp.core.exception.PsiTP4Exception;
 import cz.cvut.fel.psi.udp.core.PsiTP4Flag;
 import cz.cvut.fel.psi.udp.core.PsiTP4Packet;
 import cz.cvut.fel.psi.udp.core.ResponsePacket;
-import cz.cvut.fel.psi.udp.core.SlidingWindow;
+import cz.cvut.fel.psi.udp.core.SlidingInboundWindow;
 import cz.cvut.fel.psi.udp.core.exception.ProtocolException;
 
 /**
@@ -40,28 +40,29 @@ import cz.cvut.fel.psi.udp.core.exception.ProtocolException;
  */
 public class FileDownloadState implements TransmissionState {
 
-    public static final short SLIDING_WINDOW_SIZE = 2048;
-
     public TransmissionState process(StateMachine machine) throws ConnectionResetException {
         PsiTP4Connection connection = machine.getConnection();
         try {
             if (connection != null) {
-                SlidingWindow window = new SlidingWindow(connection.getSequence(), SLIDING_WINDOW_SIZE, machine.getSink());
+                SlidingInboundWindow window = new SlidingInboundWindow(connection.getSequence(), machine.getSink());
 
                 PsiTP4Packet received = connection.receive();
                 while (received.getFlag() != PsiTP4Flag.FIN) {
 
                     checkFlags(received.getFlag());
 
-                    short ack = window.push(received.getData(), received.getSeq());
-                    PsiTP4Packet response = new ResponsePacket(ack);
+                    if (window.accept(received.getData(), received.getSeq())) {
+                        window.slideWindow();
+                    }
+                    
+                    PsiTP4Packet response = new ResponsePacket(window.getBegin());
                     response.setSeq(received.getAck());
                     connection.send(response);
 
                     received = connection.receive();
                 }
 
-                long size = saveFile(window.pull(), machine.getLocalFileName());
+                long size = saveFile(window.getData(), machine.getTransmissionFileName());
                 machine.getSink().onTransferCompleted(size);
                 return new RemoteSideDisconnectedState();
             }

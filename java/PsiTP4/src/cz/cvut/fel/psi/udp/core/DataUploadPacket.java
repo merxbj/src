@@ -1,5 +1,5 @@
 /*
- * GetPacket
+ * DataUploadPacket
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,18 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package cz.cvut.fel.psi.udp.core;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
  * @version %I% %G%
  */
-public class GetPacket extends PsiTP4Packet {
+public class DataUploadPacket extends PsiTP4Packet {
 
-    public GetPacket(String fileName) {
-        setData(("GET" + fileName).getBytes());
+    public DataUploadPacket(short seq, byte[] data) {
+        setSeq(seq);
+        setData(data);
     }
 
 }

@@ -32,7 +32,7 @@ import cz.cvut.fel.psi.udp.core.PsiTP4Connection;
 public class StateMachine {
 
     private PsiTP4Connection connection;
-    private String localFileName;
+    private String transmissionFileName;
     private ProgressSink sink;
     private TransmissionState fileTransmissionState;
 
@@ -40,18 +40,18 @@ public class StateMachine {
         this.connection = connection;
         this.sink = sink;
         this.fileTransmissionState = null;
-        this.localFileName = null;
+        this.transmissionFileName = null;
     }
 
     public void download(String localFileName) {
-        this.localFileName = localFileName;
+        this.transmissionFileName = localFileName;
         this.fileTransmissionState = new FileDownloadState();
 
         run();
     }
     
     public void upload(String firmwareFileName) {
-        this.localFileName = firmwareFileName;
+        this.transmissionFileName = firmwareFileName;
         this.fileTransmissionState = new FileUploadState();
 
         run();
@@ -75,8 +75,8 @@ public class StateMachine {
         return connection;
     }
 
-    public String getLocalFileName() {
-        return localFileName;
+    public String getTransmissionFileName() {
+        return transmissionFileName;
     }
 
     public ProgressSink getSink() {

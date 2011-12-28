@@ -48,7 +48,7 @@ public class VerbooseProgressSink implements ProgressSink {
 
     public void onWindowSlide(long bytes) {
         this.transferredBytes += bytes;
-        System.out.println(String.format("Window slide: Just transfered %d bytes. Transfered %d in total.", bytes, transferredBytes));
+        System.out.println(String.format("Sliding window: Just slided %d bytes. Slided %d in total.", bytes, transferredBytes));
     }
 
     public void onDataGramReceived(final PsiTP4Packet packet) {
