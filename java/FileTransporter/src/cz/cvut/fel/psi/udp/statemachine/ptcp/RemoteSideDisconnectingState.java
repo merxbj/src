@@ -22,7 +22,6 @@ package cz.cvut.fel.psi.udp.statemachine.ptcp;
 import cz.cvut.fel.psi.udp.application.CommandLine;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPPacket;
-import cz.cvut.fel.psi.udp.core.ptcp.PTCPResponsePacket;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.statemachine.Context;
 import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;

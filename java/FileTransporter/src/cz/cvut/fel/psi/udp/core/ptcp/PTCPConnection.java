@@ -128,8 +128,10 @@ public class PTCPConnection implements Connection<PTCPPacket> {
     public void send(PTCPPacket packet) throws PTCPException {
         if (isConnected()) {
 
-            if ((type == PTCPConnectionType.UPLOAD) && sameSeqSentTooManyTimes(packet.getSeq())) {
-                throw new PTCPProtocolException("Tried to send the same sequence number too many times! Thats enough!");
+            if (isConnecting() || (type == PTCPConnectionType.UPLOAD)) {
+                if (sameSeqSentTooManyTimes(packet.getSeq())) {
+                    throw new PTCPProtocolException("Tried to send the same sequence number too many times! Thats enough!");
+                }
             }
 
             try {

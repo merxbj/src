@@ -20,7 +20,6 @@
 package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import cz.cvut.fel.psi.udp.application.CommandLine;
-import cz.cvut.fel.psi.udp.core.exception.TransmissionException;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPProtocolException;
 import cz.cvut.fel.psi.udp.statemachine.State;
