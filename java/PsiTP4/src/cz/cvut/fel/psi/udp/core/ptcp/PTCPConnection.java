@@ -65,7 +65,8 @@ public class PTCPConnection implements Connection<PTCPPacket> {
     public void open() throws PTCPException {
 
         if (isConnected()) {
-            return; // TODO: Add logging here
+            System.out.println("Attempted to open already opened connection. Nothing has been done.");
+            return;
         }
 
         setConnecting(true);
@@ -240,6 +241,6 @@ public class PTCPConnection implements Connection<PTCPPacket> {
 
     @Override
     public String toString() {
-        return String.format("%d", ((int) id) & 0xffff);
+        return String.format("0x%8X", id);
     }
 }

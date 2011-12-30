@@ -32,6 +32,7 @@ import cz.cvut.fel.psi.udp.core.ptcp.PTCPInboundSlidingWindow;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPProtocolException;
 import cz.cvut.fel.psi.udp.statemachine.Context;
 import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
+import java.io.OutputStream;
 
 /**
  *
@@ -41,15 +42,17 @@ import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
 public class FileDownloadState extends PTCPState {
 
     private String localFileName;
+    private PTCPInboundSlidingWindow window;
 
     public FileDownloadState(String localFileName) {
         this.localFileName = localFileName;
+        this.window = new PTCPInboundSlidingWindow();
     }
 
     public StateTransitionStatus process(Context context) {
         try {
 
-            PTCPInboundSlidingWindow window = new PTCPInboundSlidingWindow(connection.getSequence());
+            window.init(connection.getSequence(), openFileStream());
 
             PTCPPacket received = connection.receive();
             while (received.getFlag() != PTCPFlag.FIN) {
@@ -67,7 +70,6 @@ public class FileDownloadState extends PTCPState {
                 received = connection.receive();
             }
 
-            long size = saveFile(window.getData(), localFileName);
             return context.doStateTransition(new RemoteSideDisconnectedState());
 
         } catch (PTCPProtocolException pex) {
@@ -75,9 +77,12 @@ public class FileDownloadState extends PTCPState {
             try {
                 connection.reset();
             } catch (PTCPException ex) {
+                System.out.println(CommandLine.formatException(ex));
             }
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
+        } finally {
+            window.finish();
         }
 
         return context.doStateTransition(new TransmissionFailedState(this));
@@ -91,15 +96,12 @@ public class FileDownloadState extends PTCPState {
         }
     }
 
-    private long saveFile(byte[] data, String fileName) throws PTCPException {
+    private OutputStream openFileStream() throws PTCPException {
         try {
-            FileOutputStream stream = new FileOutputStream(fileName);
-            stream.write(data);
-            return data.length;
+            FileOutputStream stream = new FileOutputStream(localFileName);
+            return stream;
         } catch (FileNotFoundException ex) {
-            throw new PTCPException("Unable to save the file!", ex);
-        } catch (IOException ex) {
-            throw new PTCPException("Unable to write data to the file!", ex);
+            throw new PTCPException("Unable to open the download file for writing!", ex);
         }
     }
 }

@@ -28,7 +28,6 @@ import cz.cvut.fel.psi.udp.statemachine.TransmissionStateMachine;
  */
 public class FileTransporter {
 
-    public static final short SLIDING_WINDOW_SIZE = 2048;
     private TransmissionFactory transmissionFactory;
 
     public FileTransporter() {

@@ -144,6 +144,6 @@ public class PTCPPacket implements Packet {
 
     @Override
     public String toString() {
-        return String.format("con=%d, seq=%s, ack=%s, flg=%s, sze=%d", con, seq, ack, flag, data.length);
+        return String.format("con=0x%8X, seq=%s, ack=%s, flg=%s, sze=%d", con, seq, ack, flag, data.length);
     }
 }

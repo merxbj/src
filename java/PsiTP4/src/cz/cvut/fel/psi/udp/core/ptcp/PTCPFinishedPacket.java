@@ -22,7 +22,7 @@ package cz.cvut.fel.psi.udp.core.ptcp;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
 
 /**
- * TODO: Understand the FIN + SEQ - apparently not documented well!
+ *
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */

@@ -27,25 +27,24 @@ public class FileUploadState extends PTCPState {
     private static final int SLIDING_ACK_RECEIVE_TIMEOUT_MILI = 100;
     private static final long SLIDING_ACK_RECEIVE_TIMEOUT_NANO = 100 * 1000000L;
     private static final long SAME_ACK_RECEIVED_MAX_COUNT = 3;
-    //private static final int OPEN_CONNECTION_ATTEMPTS = 20;
     private String firmwareFileName;
     private UnsignedShort lastReceivedAck = new UnsignedShort(0);
     private int sameAckReceivedCount = 0;
+    private PTCPOutboundSlidingWindow window;
 
     public FileUploadState(String firmwareFileName) {
         this.firmwareFileName = firmwareFileName;
+        this.window = new PTCPOutboundSlidingWindow();
     }
 
     public StateTransitionStatus process(Context context) {
 
         try {
-
-            PTCPOutboundSlidingWindow window = new PTCPOutboundSlidingWindow(openFileStream());
-            window.init();
+            window.init(openFileStream());
 
             while (!window.isEmpty()) {
-                sendCurrentWindow(window);
-                acceptAcknoledgements(window);
+                sendCurrentWindow();
+                acceptAcknoledgements();
             }
 
             return context.doStateTransition(new RemoteSideDisconnectedState());
@@ -54,9 +53,12 @@ public class FileUploadState extends PTCPState {
             try {
                 connection.reset();
             } catch (PTCPException ex) {
+                System.out.println(CommandLine.formatException(ex));
             }
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
+        } finally {
+            window.finish();
         }
 
         return context.doStateTransition(new TransmissionFailedState(this));
@@ -78,20 +80,20 @@ public class FileUploadState extends PTCPState {
         }
     }
 
-    private void sendCurrentWindow(PTCPOutboundSlidingWindow window) throws PTCPException {
+    private void sendCurrentWindow() throws PTCPException {
         // let's fill up the pipeline
         for (PTCPPacket dataPacket : window) {
             connection.send(dataPacket);
         }
     }
 
-    private void acceptAcknoledgements(PTCPOutboundSlidingWindow window) throws PTCPException {
+    private void acceptAcknoledgements() throws PTCPException {
         long waitingForSlideBeginTime = System.nanoTime();
 
         boolean windowSlided = false;
         boolean timeoutExpired = false;
         while (!windowSlided && !timeoutExpired) {
-            windowSlided = acceptIncomingPacket(window);
+            windowSlided = acceptIncomingPacket();
             timeoutExpired = (System.nanoTime() - waitingForSlideBeginTime) >= SLIDING_ACK_RECEIVE_TIMEOUT_NANO;
         }
     }
@@ -106,18 +108,22 @@ public class FileUploadState extends PTCPState {
         }
     }
 
-    private boolean acceptIncomingPacket(PTCPOutboundSlidingWindow window) throws PTCPException {
+    private boolean acceptIncomingPacket() throws PTCPException {
         PTCPPacket ackPacket = connection.receive(SLIDING_ACK_RECEIVE_TIMEOUT_MILI);
         if (ackPacket != null) {
             checkFlags(ackPacket.getFlag());
             if (sameAckReceivedTooManyTimes(ackPacket.getAck(), SAME_ACK_RECEIVED_MAX_COUNT)) {
-                sendNextPacket(ackPacket.getAck(), window);
+                sendNextPacket(ackPacket.getAck());
             }
             return window.acknowledged(ackPacket.getAck());
         }
         return false;
     }
 
-    private void sendNextPacket(UnsignedShort ack, PTCPOutboundSlidingWindow window) {
+    private void sendNextPacket(UnsignedShort ack) throws PTCPException {
+        PTCPPacket packet = window.getPacketBySequence(ack);
+        if (packet != null) {
+            connection.send(packet);
+        }
     }
 }

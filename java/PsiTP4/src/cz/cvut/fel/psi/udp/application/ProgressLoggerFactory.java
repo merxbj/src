@@ -54,7 +54,7 @@ public final class ProgressLoggerFactory {
                 newLogger = new VerbooseProgressLogger();
                 break;
             case Normal:
-                newLogger = new NormalProgressSink();
+                newLogger = new NormalProgressLogger();
                 break;
             case Simple:
                 newLogger = new SimpleProgressLogger();

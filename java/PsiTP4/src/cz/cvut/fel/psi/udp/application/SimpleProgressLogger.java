@@ -24,7 +24,7 @@ package cz.cvut.fel.psi.udp.application;
  * @author eTeR
  * @version %I% %G%
  */
-public class SimpleProgressLogger extends NormalProgressSink {
+public class SimpleProgressLogger extends NormalProgressLogger {
 
     @Override
     public void onWindowSlide(final long bytes) {

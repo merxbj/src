@@ -21,6 +21,7 @@ package cz.cvut.fel.psi.udp.core.ptcp;
 
 import cz.cvut.fel.psi.udp.core.SlidingWindow;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,18 +40,18 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
     private TreeMap<UnsignedShort, PTCPPacket> currentWindowCache;
     private InputStream data;
 
-    public PTCPOutboundSlidingWindow(InputStream data) {
+    public PTCPOutboundSlidingWindow() {
         super(new UnsignedShort(0));
         currentWindowAckStatus = new TreeMap<UnsignedShort, Boolean>();
         currentWindowCache = new TreeMap<UnsignedShort, PTCPPacket>();
-        this.data = data;
     }
 
-    public void init() {
+    public void init(InputStream data) throws PTCPException {
+        this.data = data;
         refill();
     }
 
-    public boolean acknowledged(UnsignedShort ack) {
+    public boolean acknowledged(UnsignedShort ack) throws PTCPException {
         if (currentWindowAckStatus.containsKey(ack)) {
             currentWindowAckStatus.put(ack, Boolean.TRUE);
             if (slideWindow()) {
@@ -92,7 +93,7 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         return false;
     }
 
-    private void refill() {
+    private void refill() throws PTCPException {
         try {
             while ((data.available() > 0) && !isWindowFilled()) {
                 byte[] chunk = new byte[PTCPPacket.MAX_DATA_SIZE];
@@ -104,11 +105,16 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
                 end = end.add(len);
             }
         } catch (IOException ex) {
+            throw new PTCPException("Unable to read an additional data from the given stream!", ex);
         }
     }
 
     public Iterator<PTCPPacket> iterator() {
         return currentWindowCache.values().iterator();
+    }
+    
+    public PTCPPacket getPacketBySequence(UnsignedShort seq) {
+        return currentWindowCache.get(seq);
     }
 
     public void close() {
@@ -127,10 +133,6 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         return isEmpty;
     }
 
-    /**
-     * TODO: Make this somehow shared (c&p from base class wtf????), maybe by new Class?
-     * @return 
-     */
     private boolean isWindowFilled() {
         /*
          * The following cast ensures unsigned comparsion of signed numbers.
@@ -142,5 +144,13 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         UnsignedShort _end = end.add(offset);
 
         return ((_end.substract(_begin)).equals(size));
+    }
+    
+    public void finish() {
+        try {
+            data.close();
+        } catch (IOException ex) {
+            
+        }
     }
 }

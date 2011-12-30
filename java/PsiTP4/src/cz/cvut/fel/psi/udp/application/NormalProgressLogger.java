@@ -26,7 +26,7 @@ import cz.cvut.fel.psi.udp.core.Packet;
  * @author eTeR
  * @version %I% %G%
  */
-public class NormalProgressSink extends VerbooseProgressLogger {
+public class NormalProgressLogger extends VerbooseProgressLogger {
 
     @Override
     public void onDataGramReceived(final Packet packet) {

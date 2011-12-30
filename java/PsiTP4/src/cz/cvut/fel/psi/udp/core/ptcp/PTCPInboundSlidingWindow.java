@@ -19,10 +19,11 @@
  */
 package cz.cvut.fel.psi.udp.core.ptcp;
 
-import java.util.ArrayList;
-import java.util.List;
 import cz.cvut.fel.psi.udp.core.SlidingWindow;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -34,14 +35,18 @@ import java.util.TreeMap;
 public class PTCPInboundSlidingWindow extends SlidingWindow {
 
     protected SortedMap<UnsignedShort, byte[]> currentWindow;
-    protected List<Byte> data;
-    
+    protected OutputStream data;
 
-    public PTCPInboundSlidingWindow(UnsignedShort begin) {
-        super(begin);
+    public PTCPInboundSlidingWindow() {
+        super(new UnsignedShort(0));
         this.end = begin.add(size);
         this.currentWindow = new TreeMap<UnsignedShort, byte[]>();
-        this.data = new ArrayList<Byte>();
+        this.data = null;
+    }
+    
+    public void init(UnsignedShort begin, OutputStream data) {
+        this.begin = begin;
+        this.data = data;
     }
 
     public boolean accept(byte[] chunk, UnsignedShort seq) {
@@ -52,34 +57,27 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
         return false;
     }
 
-    public boolean slideWindow() {
-        long slided = 0;
-
-        while (currentWindow.containsKey(this.begin)) {
-            byte[] chunk = currentWindow.remove(this.begin);
-            for (byte b : chunk) {
-                data.add(b);
+    public boolean slideWindow() throws PTCPException {
+        try {
+            long slided = 0;
+            
+            while (currentWindow.containsKey(this.begin)) {
+                byte[] chunk = currentWindow.remove(this.begin);
+                data.write(chunk);
+                begin = begin.add(chunk.length);
+                end = end.add(chunk.length);
+                slided += chunk.length;
             }
-            begin = begin.add(chunk.length);
-            end = end.add(chunk.length);
-            slided += chunk.length;
-        }
 
-        if (slided > 0) {
-            progressLogger.onWindowSlide(slided);
-            return true;
+            if (slided > 0) {
+                progressLogger.onWindowSlide(slided);
+                return true;
+            }
+        } catch (IOException ex) {
+            throw new PTCPException("Unable to write the confirmed data to the given stream!", ex);
         }
 
         return false;
-    }
-
-    public byte[] getData() {
-        byte[] d = new byte[data.size()];
-        int i = 0;
-        for (byte b : this.data) {
-            d[i++] = b;
-        }
-        return d;
     }
 
     public UnsignedShort getBegin() {
@@ -97,5 +95,14 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
         UnsignedShort _seq = seq.add(offset);
 
         return (_seq.greaterThanOrEquals(_begin) && _seq.lessThanOrEquals(_end));
+    }
+    
+    public void finish() {
+        try {
+            data.flush();
+            data.close();
+        } catch (IOException ex) {
+            
+        }
     }
 }
