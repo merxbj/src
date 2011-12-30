@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * BaseTransmissionState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.statemachine;
+
+import cz.cvut.fel.psi.udp.core.Connection;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public abstract class State<C extends Connection> {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
+    protected C connection;
+
+    public C getConnection() {
+        return connection;
     }
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
+    public void setConnection(C connection) {
+        this.connection = connection;
     }
+    
+    public abstract StateTransitionStatus process(Context context);
 
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
     }
 }

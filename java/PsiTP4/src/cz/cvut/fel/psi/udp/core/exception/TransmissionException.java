@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * TransmissionException
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -21,22 +21,23 @@ package cz.cvut.fel.psi.udp.core.exception;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public class TransmissionException extends Exception {
 
-    public SerializationException(Throwable cause) {
+    public TransmissionException() {
+    }
+
+    public TransmissionException(String msg) {
+        super(msg);
+    }
+
+    public TransmissionException(Throwable cause) {
         super(cause);
     }
 
-    public SerializationException(String message, Throwable cause) {
+    public TransmissionException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
     }
 }

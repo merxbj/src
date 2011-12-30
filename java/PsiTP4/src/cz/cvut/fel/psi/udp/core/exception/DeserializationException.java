@@ -17,14 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package cz.cvut.fel.psi.udp.core.exception;
 
 /**
  *
  * @author Jaroslav Merxbauer
  */
-public class DeserializationException extends PsiTP4Exception {
+public class DeserializationException extends TransmissionException {
 
     public DeserializationException(Throwable cause) {
         super(cause);
@@ -40,5 +39,4 @@ public class DeserializationException extends PsiTP4Exception {
 
     public DeserializationException() {
     }
-
 }

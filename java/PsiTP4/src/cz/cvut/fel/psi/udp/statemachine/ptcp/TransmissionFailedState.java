@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * TransmissionFailedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.statemachine.ptcp;
+
+import cz.cvut.fel.psi.udp.statemachine.Context;
+import cz.cvut.fel.psi.udp.statemachine.State;
+import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public class TransmissionFailedState extends PTCPState {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
+    private State failedState;
+
+    public TransmissionFailedState(State failedState) {
+        this.failedState = failedState;
     }
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
+    public StateTransitionStatus process(Context context) {
+        return StateTransitionStatus.Aborted;
     }
 
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
+    public State getFailedState() {
+        return failedState;
     }
 }

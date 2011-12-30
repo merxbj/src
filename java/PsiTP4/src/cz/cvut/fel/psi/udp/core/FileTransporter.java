@@ -17,12 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package cz.cvut.fel.psi.udp.core;
 
 import java.net.InetAddress;
-import cz.cvut.fel.psi.udp.application.ProgressSink;
-import cz.cvut.fel.psi.udp.statemachine.StateMachine;
+import cz.cvut.fel.psi.udp.statemachine.TransmissionStateMachine;
 
 /**
  *
@@ -31,22 +29,21 @@ import cz.cvut.fel.psi.udp.statemachine.StateMachine;
 public class FileTransporter {
 
     public static final short SLIDING_WINDOW_SIZE = 2048;
+    private TransmissionFactory transmissionFactory;
 
-    private ProgressSink sink;
-
-    public FileTransporter(ProgressSink sink) {
-        this.sink = sink;
+    public FileTransporter() {
+        this.transmissionFactory = TransmissionFactoryFactory.newTransmissionFactory();
     }
 
     public void download(InetAddress hostname, int port, String localFileName) {
-        PsiTP4Connection connection =  new PsiTP4Connection(hostname, port, sink, PsiTP4ConnectionType.DOWNLOAD);
-        StateMachine machine = new StateMachine(connection, sink);
+        Connection connection = transmissionFactory.newConnection(hostname, port);
+        TransmissionStateMachine machine = transmissionFactory.newTransmissionStateMachine(connection);
         machine.download(localFileName);
     }
-    
+
     public void upload(InetAddress hostname, int port, String firmwareFileName) {
-        PsiTP4Connection connection =  new PsiTP4Connection(hostname, port, sink, PsiTP4ConnectionType.UPLOAD);
-        StateMachine machine = new StateMachine(connection, sink);
+        Connection connection = transmissionFactory.newConnection(hostname, port);
+        TransmissionStateMachine machine = transmissionFactory.newTransmissionStateMachine(connection);
         machine.upload(firmwareFileName);
     }
 }

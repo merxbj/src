@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * StateTransitionStatus
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.statemachine;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public enum StateTransitionStatus {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
-
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
-    }
+    Continue,
+    Finished,
+    Aborted
 }

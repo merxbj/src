@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * ProgressSink
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.application;
+
+import cz.cvut.fel.psi.udp.core.Connection;
+import cz.cvut.fel.psi.udp.core.Packet;
+import cz.cvut.fel.psi.udp.statemachine.State;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @authoer %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public interface ProgressLogger {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
+    void onWindowSlide(long bytes);
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    void onDataGramReceived(final Packet packet);
 
-    public SerializationException(String message) {
-        super(message);
-    }
+    void onDataGramSent(final Packet packet);
 
-    public SerializationException() {
-    }
+    void onConnectionOpen(final Connection con);
+
+    void onConnectionClose(final Connection con);
+
+    void onStateEntered(final State entered);
+    
+    void onStateExited(final State exited);
+
+    void onConnectionReset(final Connection con);
 }

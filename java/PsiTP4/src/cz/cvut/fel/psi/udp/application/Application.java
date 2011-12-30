@@ -33,8 +33,10 @@ public final class Application {
             CommandLine.printUsage();
             return;
         }
+        
+        ProgressLoggerFactory.setLogLevel(cl.getLogLevel());
 
-        FileTransporter transporter = new FileTransporter(ProgressSinkFactory.newSinkFactory(cl.getLogLevel()));
+        FileTransporter transporter = new FileTransporter();
 
         if (cl.getFirmwareFileName().equals("")) {
             transporter.download(cl.getHostname(), cl.getPort(), cl.getDownloadFileName());

@@ -1,5 +1,5 @@
 /*
- * NormalProgressSink
+ * Context
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,22 +17,40 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.application;
+package cz.cvut.fel.psi.udp.statemachine;
 
-import cz.cvut.fel.psi.udp.core.Packet;
+import cz.cvut.fel.psi.udp.core.Connection;
 
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-public class NormalProgressSink extends VerbooseProgressLogger {
+public class Context {
 
-    @Override
-    public void onDataGramReceived(final Packet packet) {
+    private State currentState;
+    private Connection connection;
+
+    public Context(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override
-    public void onDataGramSent(final Packet packet) {
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public StateTransitionStatus doStateTransition(State newState) {
+        if (newState == null) {
+            throw new RuntimeException("Attempted to transition to a null state!");
+        }
+
+        currentState = newState;
+        currentState.setConnection(connection);
+
+        return StateTransitionStatus.Continue;
     }
 }

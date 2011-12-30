@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * Packet
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.core;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public interface Packet {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
+    void deserialize(byte[] data, int length) throws Exception;
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
-    }
+    byte[] serialize() throws Exception;
 }

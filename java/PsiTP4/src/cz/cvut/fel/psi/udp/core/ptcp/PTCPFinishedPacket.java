@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * FinishedPacket
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.core.ptcp;
+
+import cz.cvut.fel.psi.udp.core.UnsignedShort;
 
 /**
- *
+ * TODO: Understand the FIN + SEQ - apparently not documented well!
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public class PTCPFinishedPacket extends PTCPPacket {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
-
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
+    public PTCPFinishedPacket(UnsignedShort seq) {
+        setFlag(PTCPFlag.FIN);
+        setSeq(seq);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * SerializationException
+ * OpenConnectionPacket
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -17,26 +17,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package cz.cvut.fel.psi.udp.core.exception;
+package cz.cvut.fel.psi.udp.core.ptcp;
+
+import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.exception.SerializationException;
 
 /**
  *
  * @author Jaroslav Merxbauer
+ * @version %I% %G%
  */
-public class SerializationException extends TransmissionException {
+public class PTCPOpenConnectionPacket extends PTCPPacket {
 
-    public SerializationException(Throwable cause) {
-        super(cause);
-    }
+    private PTCPConnectionType type;
 
-    public SerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public SerializationException(String message) {
-        super(message);
-    }
-
-    public SerializationException() {
+    public PTCPOpenConnectionPacket(PTCPConnectionType type) throws SerializationException {
+        this.setCon(0);
+        this.setSeq(new UnsignedShort(0));
+        this.setAck(new UnsignedShort(0));
+        this.setFlag(PTCPFlag.SYN);
+        this.setData(type.toDataArray());
     }
 }
