@@ -36,13 +36,11 @@ import java.util.TreeMap;
  */
 public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable<PTCPPacket> {
 
-    private TreeMap<UnsignedShort, Boolean> currentWindowAckStatus;
     private TreeMap<UnsignedShort, PTCPPacket> currentWindowCache;
     private InputStream data;
 
     public PTCPOutboundSlidingWindow() {
         super(new UnsignedShort(0));
-        currentWindowAckStatus = new TreeMap<UnsignedShort, Boolean>();
         currentWindowCache = new TreeMap<UnsignedShort, PTCPPacket>();
     }
 
@@ -52,9 +50,8 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
     }
 
     public boolean acknowledged(UnsignedShort ack) throws PTCPException {
-        if (currentWindowAckStatus.containsKey(ack)) {
-            currentWindowAckStatus.put(ack, Boolean.TRUE);
-            if (slideWindow()) {
+        if (fitsToWindow(ack)) {
+            if (slideWindow(ack)) {
                 refill();
                 return true;
             }
@@ -63,28 +60,21 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         return false;
     }
 
-    private boolean slideWindow() {
-        List<PTCPPacket> ackedPackets = new ArrayList<PTCPPacket>(SLIDING_WINDOW_MAX_SIZE / PTCPPacket.MAX_DATA_SIZE);
+    private boolean slideWindow(UnsignedShort ack) {
+        List<PTCPPacket> ackedPackets = new ArrayList<PTCPPacket>(SLIDING_WINDOW_MAX_SIZE / PTCPConstants.PACKET_MAX_DATA_SIZE);
 
-        boolean acked = true;
-        Iterator<Boolean> it = currentWindowAckStatus.values().iterator();
-        while (it.hasNext() && acked) {
-            acked = it.next();
-            if (acked) {
-                PTCPPacket ackedPacket = currentWindowCache.remove(begin);
-                begin = begin.add(ackedPacket.getData().length);
-                ackedPackets.add(ackedPacket);
-            }
+        Boundraies boundaries = new Boundraies(begin, end).normalize();
+        while (boundaries.getBegin().lessThan(ack.add(boundaries.getOffset()))) {
+            PTCPPacket ackedPacket = currentWindowCache.remove(begin);
+            begin = begin.add(ackedPacket.getData().length);
+            ackedPackets.add(ackedPacket);
+            boundaries = new Boundraies(begin, end).normalize();
         }
 
         if (ackedPackets.size() > 0) {
             long totalAckedSize = 0;
             for (PTCPPacket ackedPacket : ackedPackets) {
                 totalAckedSize += ackedPacket.getData().length;
-                if (!currentWindowAckStatus.firstKey().equals(ackedPacket.getSeq().add(ackedPacket.getData().length))) {
-                    throw new RuntimeException("This should have never happened! There is something wrong with the sequencing!");
-                }
-                currentWindowAckStatus.remove(currentWindowAckStatus.firstKey());
             }
             progressLogger.onWindowSlide(totalAckedSize);
             return true;
@@ -96,12 +86,11 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
     private void refill() throws PTCPException {
         try {
             while ((data.available() > 0) && !isWindowFilled()) {
-                byte[] chunk = new byte[PTCPPacket.MAX_DATA_SIZE];
+                byte[] chunk = new byte[PTCPConstants.PACKET_MAX_DATA_SIZE];
                 int len = data.read(chunk);
-                UnsignedShort seq = end.add(1);
-                PTCPDataUploadPacket packet = new PTCPDataUploadPacket(seq, chunk);
+                UnsignedShort seq = end;
+                PTCPDataUploadPacket packet = new PTCPDataUploadPacket(seq, chunk, len);
                 currentWindowCache.put(seq, packet);
-                currentWindowAckStatus.put(seq.add(len + 1), Boolean.FALSE);
                 end = end.add(len);
             }
         } catch (IOException ex) {
@@ -117,13 +106,6 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         return currentWindowCache.get(seq);
     }
 
-    public void close() {
-        try {
-            data.close();
-        } catch (IOException ex) {
-        }
-    }
-
     public boolean isEmpty() {
         boolean isEmpty = true;
         try {
@@ -131,6 +113,19 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
         } catch (IOException ex) {
         }
         return isEmpty;
+    }
+
+    protected boolean fitsToWindow(UnsignedShort ack) {
+        /*
+         * The additive constant will move the renge round the overflow-circle
+         * to ensure the invariant that begin < end
+         */
+        UnsignedShort offset = begin.lessThan(end) ? new UnsignedShort(0) : size;
+        UnsignedShort _begin = begin.add(offset);
+        UnsignedShort _end = end.add(offset);
+        UnsignedShort _ack = ack.add(offset);
+
+        return (_ack.greaterThan(_begin) && _ack.lessThanOrEquals(_end));
     }
 
     private boolean isWindowFilled() {
@@ -148,9 +143,12 @@ public class PTCPOutboundSlidingWindow extends SlidingWindow implements Iterable
     
     public void finish() {
         try {
-            data.close();
+            if (data != null) {
+                data.close();
+            }
         } catch (IOException ex) {
             
         }
     }
+
 }

@@ -28,5 +28,4 @@ import cz.cvut.fel.psi.udp.statemachine.State;
  * @version %I% %G%
  */
 public abstract class PTCPState extends State<PTCPConnection> {
-    
 }

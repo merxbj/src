@@ -38,7 +38,5 @@ public interface Connection<P extends Packet> {
 
     P receive() throws TransmissionException;
 
-    P receive(int timeout) throws TransmissionException;
-
     boolean isConnected();
 }

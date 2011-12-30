@@ -43,7 +43,7 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
         this.currentWindow = new TreeMap<UnsignedShort, byte[]>();
         this.data = null;
     }
-    
+
     public void init(UnsignedShort begin, OutputStream data) {
         this.begin = begin;
         this.data = data;
@@ -60,7 +60,7 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
     public boolean slideWindow() throws PTCPException {
         try {
             long slided = 0;
-            
+
             while (currentWindow.containsKey(this.begin)) {
                 byte[] chunk = currentWindow.remove(this.begin);
                 data.write(chunk);
@@ -80,10 +80,6 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
         return false;
     }
 
-    public UnsignedShort getBegin() {
-        return begin;
-    }
-
     protected boolean fitsToWindow(UnsignedShort seq) {
         /*
          * The additive constant will move the renge round the overflow-circle
@@ -94,15 +90,16 @@ public class PTCPInboundSlidingWindow extends SlidingWindow {
         UnsignedShort _end = end.add(offset);
         UnsignedShort _seq = seq.add(offset);
 
-        return (_seq.greaterThanOrEquals(_begin) && _seq.lessThanOrEquals(_end));
+        return (_seq.greaterThanOrEquals(_begin) && _seq.lessThan(_end));
     }
-    
+
     public void finish() {
         try {
-            data.flush();
-            data.close();
+            if (data != null) {
+                data.flush();
+                data.close();
+            }
         } catch (IOException ex) {
-            
         }
     }
 }

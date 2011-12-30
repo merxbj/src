@@ -1,5 +1,5 @@
 /*
- * DataUploadPacket
+ * PTCPConstants
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -19,18 +19,18 @@
  */
 package cz.cvut.fel.psi.udp.core.ptcp;
 
-import cz.cvut.fel.psi.udp.core.UnsignedShort;
-import java.util.Arrays;
-
 /**
  *
  * @author eTeR
  * @version %I% %G%
  */
-public class PTCPDataUploadPacket extends PTCPPacket {
+public class PTCPConstants {
 
-    public PTCPDataUploadPacket(UnsignedShort seq, byte[] data, int len) {
-        setSeq(seq);
-        setData(Arrays.copyOf(data, len));
-    }
+    public static final int RECEIVE_TIMEOUT_MILI = 100;
+    public static final long UPLOAD_WINDOW_SLIDE_TIMEOUT_NANO = 100 * 1000000L;
+    public static final long SAME_ACK_RECEIVED_MAX_COUNT = 3;
+    public static final int SAME_SEQ_SENT_MAX_COUNT = 20;
+    public static final int PACKET_HEADER_SIZE = 9;
+    public static final int PACKET_MAX_DATA_SIZE = 256;
+    public static final int PACKET_MAX_SIZE = PACKET_HEADER_SIZE + PACKET_MAX_DATA_SIZE;
 }

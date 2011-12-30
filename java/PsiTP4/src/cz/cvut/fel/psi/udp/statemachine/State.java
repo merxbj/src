@@ -37,7 +37,7 @@ public abstract class State<C extends Connection> {
     public void setConnection(C connection) {
         this.connection = connection;
     }
-    
+
     public abstract StateTransitionStatus process(Context context);
 
     @Override

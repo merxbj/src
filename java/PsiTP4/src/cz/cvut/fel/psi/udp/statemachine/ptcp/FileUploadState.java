@@ -6,6 +6,7 @@ package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import cz.cvut.fel.psi.udp.application.CommandLine;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPConstants;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPFlag;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPPacket;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPOutboundSlidingWindow;
@@ -24,9 +25,6 @@ import java.io.InputStream;
  */
 public class FileUploadState extends PTCPState {
 
-    private static final int SLIDING_ACK_RECEIVE_TIMEOUT_MILI = 100;
-    private static final long SLIDING_ACK_RECEIVE_TIMEOUT_NANO = 100 * 1000000L;
-    private static final long SAME_ACK_RECEIVED_MAX_COUNT = 3;
     private String firmwareFileName;
     private UnsignedShort lastReceivedAck = new UnsignedShort(0);
     private int sameAckReceivedCount = 0;
@@ -47,7 +45,7 @@ public class FileUploadState extends PTCPState {
                 acceptAcknoledgements();
             }
 
-            return context.doStateTransition(new RemoteSideDisconnectedState());
+            return context.doStateTransition(new FileUploadFinishedState(window.getEnd()));
         } catch (PTCPProtocolException pex) {
             System.out.println(CommandLine.formatException(pex));
             try {
@@ -94,7 +92,7 @@ public class FileUploadState extends PTCPState {
         boolean timeoutExpired = false;
         while (!windowSlided && !timeoutExpired) {
             windowSlided = acceptIncomingPacket();
-            timeoutExpired = (System.nanoTime() - waitingForSlideBeginTime) >= SLIDING_ACK_RECEIVE_TIMEOUT_NANO;
+            timeoutExpired = (System.nanoTime() - waitingForSlideBeginTime) >= PTCPConstants.UPLOAD_WINDOW_SLIDE_TIMEOUT_NANO;
         }
     }
 
@@ -109,10 +107,10 @@ public class FileUploadState extends PTCPState {
     }
 
     private boolean acceptIncomingPacket() throws PTCPException {
-        PTCPPacket ackPacket = connection.receive(SLIDING_ACK_RECEIVE_TIMEOUT_MILI);
+        PTCPPacket ackPacket = connection.receive();
         if (ackPacket != null) {
             checkFlags(ackPacket.getFlag());
-            if (sameAckReceivedTooManyTimes(ackPacket.getAck(), SAME_ACK_RECEIVED_MAX_COUNT)) {
+            if (sameAckReceivedTooManyTimes(ackPacket.getAck(), PTCPConstants.SAME_ACK_RECEIVED_MAX_COUNT)) {
                 sendNextPacket(ackPacket.getAck());
             }
             return window.acknowledged(ackPacket.getAck());

@@ -29,8 +29,6 @@ import cz.cvut.fel.psi.udp.core.exception.SerializationException;
  */
 public class PTCPOpenConnectionPacket extends PTCPPacket {
 
-    private PTCPConnectionType type;
-
     public PTCPOpenConnectionPacket(PTCPConnectionType type) throws SerializationException {
         this.setCon(0);
         this.setSeq(new UnsignedShort(0));

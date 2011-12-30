@@ -21,8 +21,8 @@ package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import cz.cvut.fel.psi.udp.application.CommandLine;
+import cz.cvut.fel.psi.udp.core.UnsignedShort;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPConnectionResetException;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPFlag;
@@ -52,25 +52,27 @@ public class FileDownloadState extends PTCPState {
     public StateTransitionStatus process(Context context) {
         try {
 
-            window.init(connection.getSequence(), openFileStream());
+            window.init(new UnsignedShort(0), openFileStream());
 
             PTCPPacket received = connection.receive();
-            while (received.getFlag() != PTCPFlag.FIN) {
+            while ((received == null) || (received.getFlag() != PTCPFlag.FIN)) {
 
-                checkFlags(received.getFlag());
+                if (received != null) {
+                    checkFlags(received.getFlag());
 
-                if (window.accept(received.getData(), received.getSeq())) {
-                    window.slideWindow();
+                    if (window.accept(received.getData(), received.getSeq())) {
+                        window.slideWindow();
+                    }
+
+                    PTCPPacket response = new PTCPResponsePacket(window.getBegin());
+                    response.setSeq(received.getAck());
+                    connection.send(response);
                 }
-
-                PTCPPacket response = new PTCPResponsePacket(window.getBegin());
-                response.setSeq(received.getAck());
-                connection.send(response);
 
                 received = connection.receive();
             }
 
-            return context.doStateTransition(new RemoteSideDisconnectedState());
+            return context.doStateTransition(new RemoteSideDisconnectingState(received, window.getBegin()));
 
         } catch (PTCPProtocolException pex) {
             System.out.println(CommandLine.formatException(pex));

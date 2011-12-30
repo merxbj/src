@@ -42,24 +42,26 @@ import cz.cvut.fel.psi.udp.core.exception.SerializationException;
  */
 public class PTCPConnection implements Connection<PTCPPacket> {
 
-    private static final int OPEN_CONNECTION_TIMEOUT = 100;
-    private static final int OPEN_CONNECTION_ATTEMPTS = 20;
     private InetAddress hostname;
     private int port;
     private DatagramSocket socket;
     private int id;
-    private UnsignedShort sequence;
+    private UnsignedShort closingSequence;
     private PTCPConnectionType type;
     private boolean connecting;
     private ProgressLogger progressLogger;
+    private UnsignedShort lastSentSeq;
+    private int sameSeqSentCount;
 
     public PTCPConnection(InetAddress hostname, int port) {
         this.hostname = hostname;
         this.port = port;
         this.id = 0;
-        this.sequence = new UnsignedShort(0);
+        this.closingSequence = new UnsignedShort(0);
         this.type = PTCPConnectionType.UNDETERMINED;
         this.progressLogger = ProgressLoggerFactory.getLogger();
+        this.lastSentSeq = new UnsignedShort(0);
+        this.sameSeqSentCount = 0;
     }
 
     public void open() throws PTCPException {
@@ -77,11 +79,10 @@ public class PTCPConnection implements Connection<PTCPPacket> {
             PTCPOpenConnectionPacket openRequest = new PTCPOpenConnectionPacket(type);
             PTCPPacket openResponse = null;
 
-            int connectionAttempts = OPEN_CONNECTION_ATTEMPTS;
             boolean connectionEstablished = false;
-            while (!connectionEstablished && (connectionAttempts-- > 0)) {
+            while (!connectionEstablished) {
                 this.send(openRequest);
-                openResponse = this.receive(OPEN_CONNECTION_TIMEOUT);
+                openResponse = this.receive();
                 if (gotValidOpenResponse(openRequest, openResponse)) {
                     connectionEstablished = true;
                 }
@@ -90,12 +91,12 @@ public class PTCPConnection implements Connection<PTCPPacket> {
             if (!connectionEstablished) {
                 throw new PTCPException("Failed to establish a new connection!");
             }
-            
+
             this.id = openResponse.getCon();
             progressLogger.onConnectionOpen(this);
 
-        } catch (PTCPProtocolException pex) {
-            throw pex;
+        } catch (PTCPException ex) {
+            throw ex;
         } catch (SocketException ex) {
             throw new PTCPException("Unable to bind the socket!", ex);
         } catch (IOException ex) {
@@ -110,7 +111,7 @@ public class PTCPConnection implements Connection<PTCPPacket> {
 
     public void close() throws PTCPException {
 
-        PTCPFinishedPacket closeRequest = new PTCPFinishedPacket(sequence);
+        PTCPFinishedPacket closeRequest = new PTCPFinishedPacket(closingSequence);
         this.send(closeRequest);
 
         progressLogger.onConnectionClose(this);
@@ -126,6 +127,11 @@ public class PTCPConnection implements Connection<PTCPPacket> {
 
     public void send(PTCPPacket packet) throws PTCPException {
         if (isConnected()) {
+
+            if ((type == PTCPConnectionType.UPLOAD) && sameSeqSentTooManyTimes(packet.getSeq())) {
+                throw new PTCPProtocolException("Tried to send the same sequence number too many times! Thats enough!");
+            }
+
             try {
                 packet.setCon(this.id);
                 byte[] snd = packet.serialize();
@@ -143,15 +149,11 @@ public class PTCPConnection implements Connection<PTCPPacket> {
     }
 
     public PTCPPacket receive() throws PTCPException {
-        return receive(0);
-    }
-
-    public PTCPPacket receive(int timeout) throws PTCPException {
         if (isConnected()) {
             try {
-                byte[] rcv = new byte[PTCPPacket.MAX_SIZE];
+                byte[] rcv = new byte[PTCPConstants.PACKET_MAX_SIZE];
                 DatagramPacket response = new DatagramPacket(rcv, rcv.length);
-                socket.setSoTimeout(timeout);
+                socket.setSoTimeout(PTCPConstants.RECEIVE_TIMEOUT_MILI);
                 socket.receive(response);
 
                 PTCPPacket received = new PTCPPacket();
@@ -162,8 +164,6 @@ public class PTCPConnection implements Connection<PTCPPacket> {
                 if ((id != 0) && (received.getCon() != id)) {
                     throw new PTCPProtocolException("Received packet addressed to different connection id.");
                 }
-
-                sequence = received.getSeq();
                 return received;
             } catch (SocketTimeoutException ste) {
                 return null;
@@ -189,8 +189,8 @@ public class PTCPConnection implements Connection<PTCPPacket> {
         return id;
     }
 
-    public UnsignedShort getSequence() {
-        return sequence;
+    public void setClosingSequence(UnsignedShort closingSequence) {
+        this.closingSequence = closingSequence;
     }
 
     public boolean isConnecting() {
@@ -241,6 +241,16 @@ public class PTCPConnection implements Connection<PTCPPacket> {
 
     @Override
     public String toString() {
-        return String.format("0x%8X", id);
+        return String.format("0x%08X", id);
+    }
+
+    private boolean sameSeqSentTooManyTimes(UnsignedShort seq) {
+        if (!lastSentSeq.equals(seq)) {
+            lastSentSeq = new UnsignedShort(seq);
+            sameSeqSentCount = 0;
+            return false;
+        } else {
+            return (++sameSeqSentCount == PTCPConstants.SAME_SEQ_SENT_MAX_COUNT);
+        }
     }
 }

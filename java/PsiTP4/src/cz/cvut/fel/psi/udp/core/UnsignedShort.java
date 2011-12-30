@@ -39,6 +39,10 @@ public class UnsignedShort implements Comparable<UnsignedShort> {
     public UnsignedShort(int number) {
         this.value = (short) number;
     }
+    
+    public UnsignedShort(final UnsignedShort copy) {
+        this.value = copy.value;
+    }
 
     public int compareTo(UnsignedShort other) {
         Integer t = this.normalizeToInteger();

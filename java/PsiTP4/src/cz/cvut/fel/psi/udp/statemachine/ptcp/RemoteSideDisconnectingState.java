@@ -20,6 +20,9 @@
 package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import cz.cvut.fel.psi.udp.application.CommandLine;
+import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPPacket;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPResponsePacket;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.statemachine.Context;
 import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
@@ -29,15 +32,34 @@ import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class RemoteSideDisconnectedState extends PTCPState {
+public class RemoteSideDisconnectingState extends PTCPState {
+
+    private PTCPPacket finishedPacket;
+    private UnsignedShort expectedFinSeq;
+
+    public RemoteSideDisconnectingState(PTCPPacket finishedPacket, UnsignedShort expectedFinSeq) {
+        this.finishedPacket = finishedPacket;
+        this.expectedFinSeq = new UnsignedShort(expectedFinSeq);
+    }
 
     public StateTransitionStatus process(Context context) {
         try {
+            if (!haveValidFinishPacket()) {
+                connection.reset();
+            }
+
+            connection.setClosingSequence(finishedPacket.getSeq());
             connection.close();
+
             return context.doStateTransition(new TransmissionSuccessfulState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         }
         return context.doStateTransition(new TransmissionFailedState(this));
+    }
+
+    private boolean haveValidFinishPacket() {
+        return ((finishedPacket.getSeq().equals(expectedFinSeq))
+                && (finishedPacket.getAck().equals(new UnsignedShort(0))));
     }
 }

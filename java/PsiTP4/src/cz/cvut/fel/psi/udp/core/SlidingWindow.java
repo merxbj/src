@@ -38,7 +38,68 @@ public abstract class SlidingWindow {
     public SlidingWindow(UnsignedShort begin) {
         this.size = new UnsignedShort(SLIDING_WINDOW_MAX_SIZE);
         this.begin = begin;
-        this.end = begin; // the abstract window is by default closed
+        this.end = begin;  // the abstract window is by default closed
         this.progressLogger = ProgressLoggerFactory.getLogger();
+    }
+
+    public UnsignedShort getBegin() {
+        return new UnsignedShort(begin);
+    }
+
+    public UnsignedShort getEnd() {
+        return new UnsignedShort(end);
+    }
+
+    public UnsignedShort getSize() {
+        return new UnsignedShort(size);
+    }
+
+    public final class Boundraies {
+
+        private UnsignedShort begin;
+        private UnsignedShort end;
+        private UnsignedShort offset;
+        
+        public Boundraies(UnsignedShort begin, UnsignedShort end) {
+            this(begin, end, new UnsignedShort(0));
+        }
+        
+        public Boundraies(UnsignedShort begin, UnsignedShort end, UnsignedShort offset) {
+            this.begin = new UnsignedShort(begin);
+            this.end = new UnsignedShort(end);
+            this.offset = new UnsignedShort(offset);
+        }
+
+        public Boundraies normalize() {
+            UnsignedShort _offset = begin.lessThanOrEquals(end) ? new UnsignedShort(0) : size;
+            UnsignedShort _begin = begin.add(_offset);
+            UnsignedShort _end = end.add(_offset);
+            return new Boundraies(_begin, _end, _offset);
+        }
+
+        public UnsignedShort getBegin() {
+            return new UnsignedShort(begin);
+        }
+
+        public void setBegin(UnsignedShort begin) {
+            this.begin = new UnsignedShort(begin);
+        }
+
+        public UnsignedShort getEnd() {
+            return new UnsignedShort(end);
+        }
+
+        public void setEnd(UnsignedShort end) {
+            this.end = new UnsignedShort(end);
+        }
+
+        public UnsignedShort getOffset() {
+            return new UnsignedShort(offset);
+        }
+
+        public void setOffset(UnsignedShort offset) {
+            this.offset = new UnsignedShort(offset);
+        }
+
     }
 }

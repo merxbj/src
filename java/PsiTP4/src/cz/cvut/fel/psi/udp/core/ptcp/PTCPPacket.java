@@ -35,9 +35,6 @@ import java.io.IOException;
  */
 public class PTCPPacket implements Packet {
 
-    public static final int HEADER_SIZE = 9;
-    public static final int MAX_DATA_SIZE = 256;
-    public static final int MAX_SIZE = HEADER_SIZE + MAX_DATA_SIZE;
     private int con;
     private UnsignedShort seq;
     private UnsignedShort ack;
@@ -135,7 +132,7 @@ public class PTCPPacket implements Packet {
     }
 
     public void setData(byte[] data) {
-        if (data.length > MAX_DATA_SIZE) {
+        if (data.length > PTCPConstants.PACKET_MAX_DATA_SIZE) {
             throw new RuntimeException("Unexpected data size exceeding the MAX_DATA_SIZE!");
         }
 
@@ -144,6 +141,6 @@ public class PTCPPacket implements Packet {
 
     @Override
     public String toString() {
-        return String.format("con=0x%8X, seq=%s, ack=%s, flg=%s, sze=%d", con, seq, ack, flag, data.length);
+        return String.format("con=0x%08X, seq=%s, ack=%s, flg=%s, sze=%d", con, seq, ack, flag, data.length);
     }
 }

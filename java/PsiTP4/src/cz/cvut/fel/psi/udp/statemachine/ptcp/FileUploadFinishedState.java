@@ -1,5 +1,5 @@
 /*
- * WaitingForConnectionState
+ * FileUploadFinishedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -20,32 +20,43 @@
 package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import cz.cvut.fel.psi.udp.application.CommandLine;
-import cz.cvut.fel.psi.udp.core.exception.TransmissionException;
+import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPFinishedPacket;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPFlag;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPPacket;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPProtocolException;
-import cz.cvut.fel.psi.udp.statemachine.State;
 import cz.cvut.fel.psi.udp.statemachine.Context;
 import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
 
 /**
  *
- * @author Jaroslav Merxbauer
+ * @author eTeR
  * @version %I% %G%
  */
-public class WaitingForConnectionState extends PTCPState {
+public class FileUploadFinishedState extends PTCPState {
 
-    private State transmissionState;
+    UnsignedShort finishingSequence;
 
-    public WaitingForConnectionState(State transmissionState) {
-        this.transmissionState = transmissionState;
+    public FileUploadFinishedState(UnsignedShort finishingSequence) {
+        this.finishingSequence = finishingSequence;
     }
 
+    @Override
     public StateTransitionStatus process(Context context) {
+
         try {
-            connection.open();
-            return context.doStateTransition(transmissionState);
-        } catch (PTCPProtocolException pe) {
-            System.out.println(CommandLine.formatException(pe));
+
+            boolean remoteSideFinished = false;
+            while (!remoteSideFinished) {
+                connection.send(new PTCPFinishedPacket(finishingSequence));
+                PTCPPacket packet = connection.receive();
+                remoteSideFinished = isValidFinishPacket(packet);
+            }
+            return context.doStateTransition(new TransmissionSuccessfulState());
+
+        } catch (PTCPProtocolException pex) {
+            System.out.println(CommandLine.formatException(pex));
             try {
                 connection.reset();
             } catch (PTCPException ex) {
@@ -55,5 +66,14 @@ public class WaitingForConnectionState extends PTCPState {
         }
 
         return context.doStateTransition(new TransmissionFailedState(this));
+
+    }
+
+    private boolean isValidFinishPacket(PTCPPacket packet) {
+        return ((packet != null)
+                && (packet.getSeq().equals(finishingSequence))
+                && (packet.getAck().equals(new UnsignedShort(0)))
+                && (packet.getFlag().equals(PTCPFlag.FIN)
+                && (packet.getData().length == 0)));
     }
 }
