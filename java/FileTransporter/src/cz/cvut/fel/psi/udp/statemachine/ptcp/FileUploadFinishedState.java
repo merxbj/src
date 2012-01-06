@@ -49,7 +49,7 @@ public class FileUploadFinishedState extends PTCPState {
 
             boolean remoteSideFinished = false;
             while (!remoteSideFinished) {
-                connection.send(new PTCPFinishedPacket(finishingSequence));
+                connection.send(new PTCPFinishedPacket(finishingSequence, new UnsignedShort(0)));
                 PTCPPacket packet = connection.receive();
                 remoteSideFinished = isValidFinishPacket(packet);
             }
@@ -57,22 +57,19 @@ public class FileUploadFinishedState extends PTCPState {
 
         } catch (PTCPProtocolException pex) {
             System.out.println(CommandLine.formatException(pex));
-            try {
-                connection.reset();
-            } catch (PTCPException ex) {
-            }
+            return context.doStateTransition(new TransmissionAbortedState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         }
 
-        return context.doStateTransition(new TransmissionFailedState(this));
+        return context.doStateTransition(new TransmissionFailedState());
 
     }
 
     private boolean isValidFinishPacket(PTCPPacket packet) {
         return ((packet != null)
-                && (packet.getSeq().equals(finishingSequence))
-                && (packet.getAck().equals(new UnsignedShort(0)))
+                && (packet.getSeq().equals(new UnsignedShort(0)))
+                && (packet.getAck().equals(finishingSequence))
                 && (packet.getFlag().equals(PTCPFlag.FIN)
                 && (packet.getData().length == 0)));
     }

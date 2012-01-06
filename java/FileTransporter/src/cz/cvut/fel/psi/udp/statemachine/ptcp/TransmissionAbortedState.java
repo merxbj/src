@@ -1,5 +1,5 @@
 /*
- * TransmissionSuccessfulState
+ * TransmissionFailedState
  *
  * Copyright (C) 2010  Jaroslav Merxbauer
  *
@@ -29,14 +29,20 @@ import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
  * @author Jaroslav Merxbauer
  * @version %I% %G%
  */
-public class TransmissionSuccessfulState extends PTCPState {
+public class TransmissionAbortedState extends PTCPState {
 
     public StateTransitionStatus process(Context context) {
         try {
-            connection.close();
+            connection.reset();
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
+        } finally {
+            try {
+                connection.close();
+            } catch (PTCPException pex) {
+                System.out.println(CommandLine.formatException(pex));
+            }
         }
-        return StateTransitionStatus.Finished;
+        return context.doStateTransition(new TransmissionFailedState());
     }
 }

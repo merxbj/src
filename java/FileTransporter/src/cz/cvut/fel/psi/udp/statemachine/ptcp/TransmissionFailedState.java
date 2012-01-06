@@ -19,8 +19,9 @@
  */
 package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
+import cz.cvut.fel.psi.udp.application.CommandLine;
+import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.statemachine.Context;
-import cz.cvut.fel.psi.udp.statemachine.State;
 import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
 
 /**
@@ -30,17 +31,18 @@ import cz.cvut.fel.psi.udp.statemachine.StateTransitionStatus;
  */
 public class TransmissionFailedState extends PTCPState {
 
-    private State failedState;
-
-    public TransmissionFailedState(State failedState) {
-        this.failedState = failedState;
-    }
-
     public StateTransitionStatus process(Context context) {
+        try {
+            connection.reset();
+        } catch (PTCPException ex) {
+            System.out.println(CommandLine.formatException(ex));
+        } finally {
+            try {
+                connection.close();
+            } catch (PTCPException pex) {
+                System.out.println(CommandLine.formatException(pex));
+            }
+        }
         return StateTransitionStatus.Aborted;
-    }
-
-    public State getFailedState() {
-        return failedState;
     }
 }

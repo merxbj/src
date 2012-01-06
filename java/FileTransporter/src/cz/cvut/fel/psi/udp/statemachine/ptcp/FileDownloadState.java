@@ -76,24 +76,20 @@ public class FileDownloadState extends PTCPState {
 
         } catch (PTCPProtocolException pex) {
             System.out.println(CommandLine.formatException(pex));
-            try {
-                connection.reset();
-            } catch (PTCPException ex) {
-                System.out.println(CommandLine.formatException(ex));
-            }
+            return context.doStateTransition(new TransmissionAbortedState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         } finally {
             window.finish();
         }
 
-        return context.doStateTransition(new TransmissionFailedState(this));
+        return context.doStateTransition(new TransmissionFailedState());
     }
 
-    private void checkFlags(PTCPFlag psiTP4Flag) throws PTCPException {
-        if (psiTP4Flag.equals(PTCPFlag.RST)) {
+    private void checkFlags(PTCPFlag ptcpFlag) throws PTCPException {
+        if (ptcpFlag.equals(PTCPFlag.RST)) {
             throw new PTCPConnectionResetException();
-        } else if (!psiTP4Flag.equals(PTCPFlag.NONE)) {
+        } else if (!ptcpFlag.equals(PTCPFlag.NONE)) {
             throw new PTCPProtocolException("Protocol failure! Got unepxected flag during transmission...");
         }
     }

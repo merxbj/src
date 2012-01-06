@@ -46,7 +46,6 @@ public class PTCPConnection implements Connection<PTCPPacket> {
     private int port;
     private DatagramSocket socket;
     private int id;
-    private UnsignedShort closingSequence;
     private PTCPConnectionType type;
     private boolean connecting;
     private ProgressLogger progressLogger;
@@ -57,7 +56,6 @@ public class PTCPConnection implements Connection<PTCPPacket> {
         this.hostname = hostname;
         this.port = port;
         this.id = 0;
-        this.closingSequence = new UnsignedShort(0);
         this.type = PTCPConnectionType.UNDETERMINED;
         this.progressLogger = ProgressLoggerFactory.getLogger();
         this.lastSentSeq = new UnsignedShort(0);
@@ -110,10 +108,7 @@ public class PTCPConnection implements Connection<PTCPPacket> {
     }
 
     public void close() throws PTCPException {
-
-        PTCPFinishedPacket closeRequest = new PTCPFinishedPacket(closingSequence);
-        this.send(closeRequest);
-
+        socket.close();
         progressLogger.onConnectionClose(this);
     }
 
@@ -189,10 +184,6 @@ public class PTCPConnection implements Connection<PTCPPacket> {
 
     public int getId() {
         return id;
-    }
-
-    public void setClosingSequence(UnsignedShort closingSequence) {
-        this.closingSequence = closingSequence;
     }
 
     public boolean isConnecting() {

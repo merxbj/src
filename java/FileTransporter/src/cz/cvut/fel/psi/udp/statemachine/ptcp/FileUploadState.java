@@ -48,18 +48,14 @@ public class FileUploadState extends PTCPState {
             return context.doStateTransition(new FileUploadFinishedState(window.getEnd()));
         } catch (PTCPProtocolException pex) {
             System.out.println(CommandLine.formatException(pex));
-            try {
-                connection.reset();
-            } catch (PTCPException ex) {
-                System.out.println(CommandLine.formatException(ex));
-            }
+            return context.doStateTransition(new TransmissionAbortedState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         } finally {
             window.finish();
         }
 
-        return context.doStateTransition(new TransmissionFailedState(this));
+        return context.doStateTransition(new TransmissionFailedState());
     }
 
     private void checkFlags(PTCPFlag psiTP4Flag) throws PTCPException {

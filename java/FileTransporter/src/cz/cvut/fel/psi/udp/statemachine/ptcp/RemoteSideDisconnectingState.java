@@ -21,6 +21,7 @@ package cz.cvut.fel.psi.udp.statemachine.ptcp;
 
 import cz.cvut.fel.psi.udp.application.CommandLine;
 import cz.cvut.fel.psi.udp.core.UnsignedShort;
+import cz.cvut.fel.psi.udp.core.ptcp.PTCPFinishedPacket;
 import cz.cvut.fel.psi.udp.core.ptcp.PTCPPacket;
 import cz.cvut.fel.psi.udp.core.ptcp.exception.PTCPException;
 import cz.cvut.fel.psi.udp.statemachine.Context;
@@ -44,17 +45,16 @@ public class RemoteSideDisconnectingState extends PTCPState {
     public StateTransitionStatus process(Context context) {
         try {
             if (!haveValidFinishPacket()) {
-                connection.reset();
+                return context.doStateTransition(new TransmissionAbortedState());
             }
 
-            connection.setClosingSequence(finishedPacket.getSeq());
-            connection.close();
-
+            connection.send(new PTCPFinishedPacket(finishedPacket.getAck(), finishedPacket.getSeq()));
             return context.doStateTransition(new TransmissionSuccessfulState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         }
-        return context.doStateTransition(new TransmissionFailedState(this));
+
+        return context.doStateTransition(new TransmissionFailedState());
     }
 
     private boolean haveValidFinishPacket() {

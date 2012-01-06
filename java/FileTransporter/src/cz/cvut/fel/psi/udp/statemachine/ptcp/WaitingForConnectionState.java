@@ -45,14 +45,11 @@ public class WaitingForConnectionState extends PTCPState {
             return context.doStateTransition(transmissionState);
         } catch (PTCPProtocolException pe) {
             System.out.println(CommandLine.formatException(pe));
-            try {
-                connection.reset();
-            } catch (PTCPException ex) {
-            }
+            return context.doStateTransition(new TransmissionAbortedState());
         } catch (PTCPException ex) {
             System.out.println(CommandLine.formatException(ex));
         }
 
-        return context.doStateTransition(new TransmissionFailedState(this));
+        return context.doStateTransition(new TransmissionFailedState());
     }
 }

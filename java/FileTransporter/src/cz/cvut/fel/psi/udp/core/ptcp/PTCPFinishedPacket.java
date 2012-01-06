@@ -28,8 +28,9 @@ import cz.cvut.fel.psi.udp.core.UnsignedShort;
  */
 public class PTCPFinishedPacket extends PTCPPacket {
 
-    public PTCPFinishedPacket(UnsignedShort seq) {
+    public PTCPFinishedPacket(UnsignedShort seq, UnsignedShort ack) {
         setFlag(PTCPFlag.FIN);
         setSeq(seq);
+        setAck(ack);
     }
 }

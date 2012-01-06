@@ -33,7 +33,7 @@ public class CommandLine {
 
     public static void printUsage() {
         System.out.println("\n\nUSAGE:");
-        System.out.println("\n\tPsiTP4 [OPTION]... HOSTNAME [FIRMWARE]");
+        System.out.println("\n\tFileTransporter [OPTION]... HOSTNAME [FIRMWARE]");
         System.out.println("\nDESCRIPTION:");
         System.out.println("\tPsiTP4 initiates an UDP based connection with a robot");
         System.out.println("\tlocated on a distant planet in order to download a nice");
