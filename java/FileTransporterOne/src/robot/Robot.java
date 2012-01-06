@@ -80,7 +80,7 @@ public class Robot {
 
         public static void printUsage() {
             System.out.println("\n\nUSAGE:");
-            System.out.println("\n\tPsiTP4 [OPTION]... HOSTNAME [FIRMWARE]");
+            System.out.println("\n\tRobot [OPTION]... HOSTNAME [FIRMWARE]");
             System.out.println("\nDESCRIPTION:");
             System.out.println("\tPsiTP4 initiates an UDP based connection with a robot");
             System.out.println("\tlocated on a distant planet in order to download a nice");
@@ -642,7 +642,6 @@ public class Robot {
         private int port;
         private DatagramSocket socket;
         private int id;
-        private UnsignedShort closingSequence;
         private PTCPConnectionType type;
         private boolean connecting;
         private ProgressLogger progressLogger;
@@ -653,7 +652,6 @@ public class Robot {
             this.hostname = hostname;
             this.port = port;
             this.id = 0;
-            this.closingSequence = new UnsignedShort(0);
             this.type = PTCPConnectionType.UNDETERMINED;
             this.progressLogger = ProgressLoggerFactory.getLogger();
             this.lastSentSeq = new UnsignedShort(0);
@@ -708,10 +706,7 @@ public class Robot {
 
         @Override
         public void close() throws PTCPException {
-
-            PTCPFinishedPacket closeRequest = new PTCPFinishedPacket(closingSequence);
-            this.send(closeRequest);
-
+            socket.close();
             progressLogger.onConnectionClose(this);
         }
 
@@ -791,10 +786,6 @@ public class Robot {
 
         public int getId() {
             return id;
-        }
-
-        public void setClosingSequence(UnsignedShort closingSequence) {
-            this.closingSequence = closingSequence;
         }
 
         public boolean isConnecting() {
@@ -917,9 +908,10 @@ public class Robot {
 
     public static class PTCPFinishedPacket extends PTCPPacket {
 
-        public PTCPFinishedPacket(UnsignedShort seq) {
+        public PTCPFinishedPacket(UnsignedShort seq, UnsignedShort ack) {
             setFlag(PTCPFlag.FIN);
             setSeq(seq);
+            setAck(ack);
         }
     }
 
@@ -1490,24 +1482,20 @@ public class Robot {
 
             } catch (PTCPProtocolException pex) {
                 System.out.println(CommandLine.formatException(pex));
-                try {
-                    connection.reset();
-                } catch (PTCPException ex) {
-                    System.out.println(CommandLine.formatException(ex));
-                }
+                return context.doStateTransition(new TransmissionAbortedState());
             } catch (PTCPException ex) {
                 System.out.println(CommandLine.formatException(ex));
             } finally {
                 window.finish();
             }
 
-            return context.doStateTransition(new TransmissionFailedState(this));
+            return context.doStateTransition(new TransmissionFailedState());
         }
 
-        private void checkFlags(PTCPFlag psiTP4Flag) throws PTCPException {
-            if (psiTP4Flag.equals(PTCPFlag.RST)) {
+        private void checkFlags(PTCPFlag ptcpFlag) throws PTCPException {
+            if (ptcpFlag.equals(PTCPFlag.RST)) {
                 throw new PTCPConnectionResetException();
-            } else if (!psiTP4Flag.equals(PTCPFlag.NONE)) {
+            } else if (!ptcpFlag.equals(PTCPFlag.NONE)) {
                 throw new PTCPProtocolException("Protocol failure! Got unepxected flag during transmission...");
             }
         }
@@ -1537,7 +1525,7 @@ public class Robot {
 
                 boolean remoteSideFinished = false;
                 while (!remoteSideFinished) {
-                    connection.send(new PTCPFinishedPacket(finishingSequence));
+                    connection.send(new PTCPFinishedPacket(finishingSequence, new UnsignedShort(0)));
                     PTCPPacket packet = connection.receive();
                     remoteSideFinished = isValidFinishPacket(packet);
                 }
@@ -1545,22 +1533,19 @@ public class Robot {
 
             } catch (PTCPProtocolException pex) {
                 System.out.println(CommandLine.formatException(pex));
-                try {
-                    connection.reset();
-                } catch (PTCPException ex) {
-                }
+                return context.doStateTransition(new TransmissionAbortedState());
             } catch (PTCPException ex) {
                 System.out.println(CommandLine.formatException(ex));
             }
 
-            return context.doStateTransition(new TransmissionFailedState(this));
+            return context.doStateTransition(new TransmissionFailedState());
 
         }
 
         private boolean isValidFinishPacket(PTCPPacket packet) {
             return ((packet != null)
-                    && (packet.getSeq().equals(finishingSequence))
-                    && (packet.getAck().equals(new UnsignedShort(0)))
+                    && (packet.getSeq().equals(new UnsignedShort(0)))
+                    && (packet.getAck().equals(finishingSequence))
                     && (packet.getFlag().equals(PTCPFlag.FIN)
                     && (packet.getData().length == 0)));
         }
@@ -1592,24 +1577,20 @@ public class Robot {
                 return context.doStateTransition(new FileUploadFinishedState(window.getEnd()));
             } catch (PTCPProtocolException pex) {
                 System.out.println(CommandLine.formatException(pex));
-                try {
-                    connection.reset();
-                } catch (PTCPException ex) {
-                    System.out.println(CommandLine.formatException(ex));
-                }
+                return context.doStateTransition(new TransmissionAbortedState());
             } catch (PTCPException ex) {
                 System.out.println(CommandLine.formatException(ex));
             } finally {
                 window.finish();
             }
 
-            return context.doStateTransition(new TransmissionFailedState(this));
+            return context.doStateTransition(new TransmissionFailedState());
         }
 
-        private void checkFlags(PTCPFlag psiTP4Flag) throws PTCPException {
-            if (psiTP4Flag.equals(PTCPFlag.RST)) {
+        private void checkFlags(PTCPFlag ptcpFlag) throws PTCPException {
+            if (ptcpFlag.equals(PTCPFlag.RST)) {
                 throw new PTCPConnectionResetException();
-            } else if (!psiTP4Flag.equals(PTCPFlag.NONE)) {
+            } else if (!ptcpFlag.equals(PTCPFlag.NONE)) {
                 throw new PTCPException("Protocol failure! Got unepxected flag during transmission...");
             }
         }
@@ -1716,14 +1697,13 @@ public class Robot {
                     connection.reset();
                 }
 
-                connection.setClosingSequence(finishedPacket.getSeq());
-                connection.close();
-
+                connection.send(new PTCPFinishedPacket(finishedPacket.getAck(), finishedPacket.getSeq()));
                 return context.doStateTransition(new TransmissionSuccessfulState());
             } catch (PTCPException ex) {
                 System.out.println(CommandLine.formatException(ex));
             }
-            return context.doStateTransition(new TransmissionFailedState(this));
+
+            return context.doStateTransition(new TransmissionFailedState());
         }
 
         private boolean haveValidFinishPacket() {
@@ -1734,19 +1714,20 @@ public class Robot {
 
     public static class TransmissionFailedState extends PTCPState {
 
-        private State failedState;
-
-        public TransmissionFailedState(State failedState) {
-            this.failedState = failedState;
-        }
-
         @Override
         public StateTransitionStatus process(Context context) {
+            try {
+                connection.reset();
+            } catch (PTCPException ex) {
+                System.out.println(CommandLine.formatException(ex));
+            } finally {
+                try {
+                    connection.close();
+                } catch (PTCPException pex) {
+                    System.out.println(CommandLine.formatException(pex));
+                }
+            }
             return StateTransitionStatus.Aborted;
-        }
-
-        public State getFailedState() {
-            return failedState;
         }
     }
 
@@ -1754,6 +1735,11 @@ public class Robot {
 
         @Override
         public StateTransitionStatus process(Context context) {
+            try {
+                connection.close();
+            } catch (PTCPException ex) {
+                System.out.println(CommandLine.formatException(ex));
+            }
             return StateTransitionStatus.Finished;
         }
     }
@@ -1773,15 +1759,31 @@ public class Robot {
                 return context.doStateTransition(transmissionState);
             } catch (PTCPProtocolException pe) {
                 System.out.println(CommandLine.formatException(pe));
-                try {
-                    connection.reset();
-                } catch (PTCPException ex) {
-                }
+                return context.doStateTransition(new TransmissionAbortedState());
             } catch (PTCPException ex) {
                 System.out.println(CommandLine.formatException(ex));
             }
 
-            return context.doStateTransition(new TransmissionFailedState(this));
+            return context.doStateTransition(new TransmissionFailedState());
+        }
+    }
+
+    public static class TransmissionAbortedState extends PTCPState {
+
+        @Override
+        public StateTransitionStatus process(Context context) {
+            try {
+                connection.reset();
+            } catch (PTCPException ex) {
+                System.out.println(CommandLine.formatException(ex));
+            } finally {
+                try {
+                    connection.close();
+                } catch (PTCPException pex) {
+                    System.out.println(CommandLine.formatException(pex));
+                }
+            }
+            return context.doStateTransition(new TransmissionFailedState());
         }
     }
 }
