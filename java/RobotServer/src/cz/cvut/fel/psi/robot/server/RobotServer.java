@@ -22,8 +22,6 @@ package cz.cvut.fel.psi.robot.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 /**
  *

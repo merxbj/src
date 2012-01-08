@@ -31,8 +31,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Logger log = Logger.getAnonymousLogger();
-
         CommandLine cl = CommandLine.parse(args);
         RobotServerConnection connection = new RobotServerConnection(cl.getAddress(), cl.getPortNumber());
         AutomaticRobot robot = new AutomaticRobot(new SmartRobot(new Robot(connection)));

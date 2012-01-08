@@ -37,12 +37,11 @@ public class SocketUtils {
 
         InputStreamReader in = new InputStreamReader(stream, "US-ASCII");
         StringBuilder builder = new StringBuilder();
-
         try {
             while (true) {
                 int i = in.read();
                 if (i == -1) {
-                    throw new IOException("Unexpected end of stram reached!");
+                    throw new IOException("Unexpected end of stream reached!");
                 }
 
                 char ch = (char) i;

@@ -20,8 +20,6 @@
 
 package cz.cvut.fel.psi.robot.server.logging;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import cz.cvut.fel.psi.robot.common.request.*;
 import cz.cvut.fel.psi.robot.common.response.*;
