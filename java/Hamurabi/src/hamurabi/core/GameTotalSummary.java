@@ -16,7 +16,7 @@ public class GameTotalSummary extends Summary {
     public void print() {
         
         int acresPerPerson = acresOwned / populationTotal;
-        System.out.printf("IN YOUR 10-YEAR TERM OF OFFICE, %d PERCENT OF THE", populationStarvedAvarage);
+        System.out.printf("IN YOUR 10-YEAR TERM OF OFFICE, %d PERCENT OF THE\n", populationStarvedAvarage);
         System.out.println("POPULATION STARVED PER YEAR ON AVERAGE, I.E., A TOTAL OF");
         System.out.printf("%d PEOPLE DIED!!", populationStarved);
         System.out.println("YOU STARTED WITH 10 ACRES PER PERSON AND ENDED WITH");
