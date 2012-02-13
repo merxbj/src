@@ -29,10 +29,12 @@ import java.util.regex.Pattern;
  */
 public class Main {
     public static void main(String[] args) {
-        Pattern pat = Pattern.compile("Oslovuj mne [^ .\n\r$]+[.\n\r$]");
-        Matcher match = pat.matcher("Ahoj! Oslovuj mne Lenko.");
+        Pattern pat = Pattern.compile("Temp([0-9]+)([a-zA-Z]+)([0-9]{8})-([0-9]{20})-([0-9]{10})(?:-([0-9]{3})|)$");
+        Matcher match = pat.matcher("Temp56HEADER20111113-00000000990000000016-0000000001");
         if (match.find()) {
             System.out.println(match.group());
+        } else {
+            System.out.println("Nothing");
         }
     }
 }
