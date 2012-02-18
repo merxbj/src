@@ -15,11 +15,11 @@ import java.awt.event.KeyEvent;
 public class SnakeGame extends Game {
 
     private Snake snake;
-    private Field field;
+    private GameField field;
 
     public SnakeGame() {
         snake = new Snake();
-        field = new Field();
+        field = new GameField(20, 20);
     }
     
     @Override
@@ -31,6 +31,8 @@ public class SnakeGame extends Game {
     public void init() {
         snake.init();
         field.assignSnake(snake);
+        field.setGraphicHeight(height);
+        field.setGraphicWidth(width);
         field.init();
     }
 
@@ -42,7 +44,14 @@ public class SnakeGame extends Game {
 
     @Override
     public void update() {
-        field.update();
+        GameField.UpdateResult result = field.update();
+        switch (result) {
+            case Continue:
+                break;
+            case GameOver:
+                this.over = true;
+                break;
+        }
     }
 
     @Override
