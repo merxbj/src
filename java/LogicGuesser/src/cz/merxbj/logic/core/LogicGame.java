@@ -4,10 +4,7 @@
  */
 package cz.merxbj.logic.core;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -35,7 +32,7 @@ public class LogicGame {
 
     private void generateRandomSolution() {
         Random random = new Random(Calendar.getInstance().getTimeInMillis());
-        List<Marble> availableMarbles = Arrays.asList(Marble.values());
+        List<Marble> availableMarbles = new LinkedList<>(Arrays.asList(Marble.values()));
         for (int pos = 0; pos < positions; pos++) {
             Marble m = availableMarbles.get(random.nextInt(availableMarbles.size()));
             if (!repetitions) {

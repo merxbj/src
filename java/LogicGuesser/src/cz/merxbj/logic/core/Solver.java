@@ -28,6 +28,12 @@ public class Solver {
         
         Solution correctSolution = null;
         while (correctSolution == null) {
+            
+            System.out.printf("List of all possible solutions is now %d large.\n", solutions.size());
+            
+            if (solutions.size() == 0) {
+                break;
+            }
             Solution guess = solutions.getFirst(); // random - hehe
             Evaluation eval = game.evaluate(guess);
             if (eval.getWellplaced() == positions) {
@@ -50,12 +56,13 @@ public class Solver {
 
     private void fillSolutions(Deque<Solution> solutions, List<Marble> marbles, Solution currentSolution, int currentPosition) {
         
-        if (currentPosition == 0) {
+        if (currentSolution == null) {
             currentSolution = new Solution();
         }
         
         if (currentPosition == positions) {
-            solutions.add(currentSolution);
+            Solution solution = new Solution(currentSolution);
+            solutions.add(solution);
             return;
         }
 
@@ -84,7 +91,7 @@ public class Solver {
             }
         }
         solutions.removeAll(impossible);
-        System.out.println(solutions);
+        System.out.printf("Discarded %d impossible solutions. ", impossible.size());
     }
     
 }
