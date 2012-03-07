@@ -50,5 +50,7 @@ public class GameApplication {
 
         GameLoop loop = new GameLoop(game, canvas);
         loop.start();
+
+        System.exit(0);
     }
 }

@@ -58,7 +58,7 @@ public class GameLoop extends Thread {
             } catch (InterruptedException ex) {
             }
         }
-        
+
         game.uninit();
     }
 }
