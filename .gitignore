@@ -41,6 +41,7 @@ csharp/*/_ReSharper*
 *.ipch
 <<<<<<< HEAD
 .svn
+*.opensdf
 =======
 *.svn
 /objc/*/project.xcworkspace/
