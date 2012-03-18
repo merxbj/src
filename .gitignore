@@ -17,10 +17,15 @@ java/*/build/
 java/*/dist/
 java/*/nbproject/private/
 java/*/bin/
+scala/*/build/
+scala/*/dist/
+scala/*/nbproject/private/
+scala/*/bin/
 csharp/*/bin/
 csharp/*/obj/
 *.settings
 java/.metadata
+scala/.metadata
 *.log
 csharp/*/_ReSharper*
 /java/StarcraftLite/StarcraftLite-war/nbproject/private/

@@ -44,7 +44,7 @@ public class ClientRequestFactory {
         prototypes.put("ZVEDNI", new RequestPickUp());
         prototypes.put("OPRAVIT", new RequestRepair());
 
-        validRequestPattern = Pattern.compile("(.+) (KROK|VLEVO|ZVEDNI|OPRAVIT|NABIT) ?(\\d)?");
+        validRequestPattern = Pattern.compile("(.+) (KROK|VLEVO|ZVEDNI|OPRAVIT) ?(\\d*)?");
     }
 
     public ClientRequestFactory(String address) {

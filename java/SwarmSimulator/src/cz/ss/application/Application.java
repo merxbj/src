@@ -20,8 +20,8 @@
 
 package cz.ss.application;
 
-import cz.ss.core.SwarmSimulator;
 import cz.sge.GameApplication;
+import cz.ss.core.SwarmSimulator;
 
 /**
  *

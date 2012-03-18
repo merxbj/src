@@ -1340,8 +1340,8 @@ public class Robot {
             names = Arrays.asList(new String[]{
                         "Jardo", "Pepo", "Miso", "Roberte", "Karle",
                         "Lojzo", "Vaclave", "Tomasi", "Robocope", "Optime",
-                        "Iron Mane", "Bumblebee", "Martinku", "Chlupatoure Obecny",
-                        "Edwarde", "Bello", "Jacobe", "Jaspere"});
+                        "Iron Mane", "Bumblebee", "Nicemo", "Neschopny robote",
+                        "Fando", "Lubosi", "Stando", "Pepiku"});
 
             reservations = new HashMap<String, Boolean>();
         }
@@ -1527,7 +1527,7 @@ public class Robot {
                     "You really thought that this is secret, huh?",
                     "My secret is that I have no secrets!",
                     "Tell me your secret at first!",
-                    "Edward dates Bella as well as Robert Pattison dates Christine Steward!"
+                    "This is really secret."
                 });
 
         public static synchronized String getRandomSecretMessage() {

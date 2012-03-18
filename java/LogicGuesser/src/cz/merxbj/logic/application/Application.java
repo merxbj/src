@@ -16,8 +16,8 @@ public class Application {
 
     public static void main(String[] args) {
         
-        int positions = 4;
-        boolean repetitions = true;
+        int positions = 5;
+        boolean repetitions = false;
         
         LogicGame game = new LogicGame(positions, repetitions);
         game.init();
@@ -25,6 +25,10 @@ public class Application {
         Solver solver = game.createSolver();
         Solution solution = solver.solve(game);
         
-        System.out.println(solution);
+        if (solution != null) {
+            System.out.println(solution);
+        } else {
+            System.out.println("It is not possible to find the solution :-(");
+        }
     }
 }

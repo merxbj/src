@@ -18,6 +18,10 @@ public class Solution implements Evaluable {
         this.solution = new HashMap<>();
     }
     
+    public Solution(Solution copy) {
+        this.solution = (HashMap<Integer, Marble>) copy.solution.clone();
+    }
+    
     void set(int position, Marble marble) {
         solution.put(position, marble);
     }

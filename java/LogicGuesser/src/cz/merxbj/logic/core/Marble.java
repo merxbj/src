@@ -6,8 +6,8 @@ package cz.merxbj.logic.core;
 
 /**
  *
- * @author jmerxbauer
+ * @author merxbj
  */
 public enum Marble {
-    Red, Green, Blue, Black, White, Gray
+    Silver, Yellow, Orange, Magenta, Red, Purple, Blue, Green
 }
