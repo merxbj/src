@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hello_gl", "hello_gl_s\hello_gl.vcxproj", "{A330F28B-B55F-4798-8535-5E52B667FC08}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "primitives_skeleton", "primitives\primitives_skeleton.vcxproj", "{6B53A4A9-A459-43C5-950D-C49AF207EBE8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssignmentOne", "primitives\primitives_skeleton.vcxproj", "{6B53A4A9-A459-43C5-950D-C49AF207EBE8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "transforms_skeleton", "transforms\transforms_skeleton.vcxproj", "{22C18D1E-9BF4-4C2D-B39E-C7ADDD6371BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,10 @@ Global
 		{6B53A4A9-A459-43C5-950D-C49AF207EBE8}.Debug|Win32.Build.0 = Debug|Win32
 		{6B53A4A9-A459-43C5-950D-C49AF207EBE8}.Release|Win32.ActiveCfg = Release|Win32
 		{6B53A4A9-A459-43C5-950D-C49AF207EBE8}.Release|Win32.Build.0 = Release|Win32
+		{22C18D1E-9BF4-4C2D-B39E-C7ADDD6371BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22C18D1E-9BF4-4C2D-B39E-C7ADDD6371BE}.Debug|Win32.Build.0 = Debug|Win32
+		{22C18D1E-9BF4-4C2D-B39E-C7ADDD6371BE}.Release|Win32.ActiveCfg = Release|Win32
+		{22C18D1E-9BF4-4C2D-B39E-C7ADDD6371BE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
