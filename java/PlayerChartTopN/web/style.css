@@ -1,0 +1,42 @@
+/* 
+    Document   : style.css
+    Created on : 11.3.2009, 7:52:54
+    Author     : tomas
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+input[type=text] {
+  display: block;
+  width: 20em;
+  margin-left: 7em;
+}
+
+label {
+  display: block;
+  float: left;
+  width: 6em;
+}
+
+div.msgerr {
+  width: 100%;
+  background-color: red;
+}
+
+div.msgack {
+  width: 100%;
+  background-color: #86E879;
+}
+
+.even {
+    color: blue
+}
+
+.odd {
+    color: black
+}
