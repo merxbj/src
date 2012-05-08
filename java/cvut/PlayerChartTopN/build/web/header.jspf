@@ -1,0 +1,26 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>Top N</title>
+    </head>
+    <body>
+        <%-- zobrazeni hlaseni - je v nejakem scope --%>
+        <div class="msgerr">${msgerr}</div>
+        <div class="msgack">${msgack}</div>
+
+        <h1>Top N</h1>
+        <ul>
+            <%-- vyrobeni odkazu pres implicitni objekty --%>
+            <li><a href="${pageContext.request.contextPath}/start?akce=seznam">Zobraz seznam</a></li>
+            <li><a href="${pageContext.request.contextPath}/start?akce=formular">Přidej hráče</a></li>
+        </ul>
+
+
+        
+                

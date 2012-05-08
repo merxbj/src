@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.prime.com.tr/ui"
+    template="/WEB-INF/resources/layout/main.xhtml">
+
+    <!-- kompozice, pouziva se sablona (vizte vyse), do ktere se vlozi pojmenovane casti -->
+
+    <!-- seznam telefonu -->
+    <ui:define name="list">
+        <ui:include src="/WEB-INF/resources/forms/list.xhtml"/>
+    </ui:define>
+
+    <!-- formular pro pridani noveho telefonu -->
+    <ui:define name="form">
+        <ui:include src="/WEB-INF/resources/forms/form.xhtml"/>
+    </ui:define>
+
+    <!-- detail telefonu -->
+    <ui:define name="detail">
+        <ui:include src="/WEB-INF/resources/forms/detail.xhtml"/>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Kingdoms4Web # Login</title>
+    </h:head>
+    <h:body>
+        <ui:composition>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="User Name:" />
+                    <p:inputText value="#{playerSecurityServices.login}" label="User Name" />
+
+                    <h:outputText value="Password:" />
+                    <p:password value="#{playerSecurityServices.password}" feedback="false" />
+                </h:panelGrid>
+                <p:commandButton action="#{playerSecurityServices.signIn}" value="Sign In "/>
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.prime.com.tr/ui">
+
+    <h:form id="cellDetail">
+        <h:panelGrid columns="2">
+            <h:outputLabel>Weight: </h:outputLabel>
+            <h:outputText value="#{cellPhone.selectedPhone.weight}"/>
+            
+            <h:outputLabel>Stand-by (h): </h:outputLabel>
+            <h:outputText value="#{cellPhone.selectedPhone.batteryLifeStandby}" />
+
+            <h:outputLabel>Call (h): </h:outputLabel>
+            <h:outputText value="#{cellPhone.selectedPhone.batteryLifeCall}" />
+        </h:panelGrid>
+    </h:form>
+
+</ui:composition>

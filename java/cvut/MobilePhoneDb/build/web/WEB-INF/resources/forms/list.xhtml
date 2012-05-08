@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.prime.com.tr/ui">
+
+    <h:form id="cellList">
+        <!-- zakladni data table - ocekava data jako kolekci -->
+        <p:dataTable id="table" var="phone" value="#{cellPhone.phones}"
+                     selection="#{cellPhone.selectedPhone}" selectionMode="single"
+                     dynamic="true" update="cellList, cellDetail" paginator="true" rows="3"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="1,2,3,4,5">
+            <p:column sortBy="#{phone.manufacturer}"
+                      sortFunction="#{cellPhoneComparator.cmpManufacturer}"
+                      filterBy="#{phone.manufacturer.name}"
+                      filterMatchMode="startsWith">
+                <f:facet name="header">
+                    Manufacturer
+                </f:facet>
+                <h:outputText value="#{phone.manufacturer}" />
+            </p:column>
+            <p:column sortBy="#{phone.type}" 
+                      sortFunction="#{cellPhoneComparator.cmpType}"
+                      filterBy="#{phone.type}"
+                      filterMatchMode="startsWith">
+                <f:facet name="header">
+                    Type
+                </f:facet>
+                <h:outputText value="#{phone.type}" />
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+</ui:composition>
