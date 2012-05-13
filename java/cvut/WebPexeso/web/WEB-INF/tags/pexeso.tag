@@ -4,21 +4,20 @@
     Author     : eTeR
 --%>
 
-<%@tag import="cz.cvut.fef.ad7b39wpa.model.Card"%>
+<%@tag import="cz.cvut.fef.ad7b39wpa.model.game.core.Card"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@tag description="Draws the pexeso field." pageEncoding="UTF-8"%>
 
 <%-- The list of normal or fragment attributes can be specified here: --%>
-<%@attribute name="game" type="cz.cvut.fef.ad7b39wpa.model.Game"%>
+<%@attribute name="field" type="cz.cvut.fef.ad7b39wpa.model.game.core.Field"%>
 
-<%-- any content can be specified here e.g.: --%>
 <table>
-    <c:forEach items="${game.field}" var="row">
+    <c:forEach items="${field.xyfield}" var="row">
         <tr>
             <c:forEach items="${row}" var="card">
                 <td>
-                    <img src="resources/img/card_bottom.jpg" onclick="onCardClick(${card.x},${card.y})" id="(${card.x},${card.y})" />
+                    <img src="resources/img/card_bottom.jpg" height="${(768 - 100)*0.95 / field.size}" width="auto" onclick="onCardClick(${card.x},${card.y})" id="(${card.x},${card.y})" />
                 </td>
             </c:forEach>
         </tr>

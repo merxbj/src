@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
-        <servlet-name>MainPageController</servlet-name>
-        <servlet-class>cz.cvut.fef.ad7b39wpa.ctrl.MainPageController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>GameController</servlet-name>
         <servlet-class>cz.cvut.fef.ad7b39wpa.ctrl.GameController</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>MainPageController</servlet-name>
-        <url-pattern>/Start</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>ScoreBoardController</servlet-name>
+        <servlet-class>cz.cvut.fef.ad7b39wpa.ctrl.ScoreBoardController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NewGameController</servlet-name>
+        <servlet-class>cz.cvut.fef.ad7b39wpa.ctrl.NewGameController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>GameController</servlet-name>
         <url-pattern>/Game</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NewGameController</servlet-name>
+        <url-pattern>/NewGame</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ScoreBoardController</servlet-name>
+        <url-pattern>/ScoreBoard</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -22,6 +30,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>/Start</welcome-file>
+        <welcome-file>/index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
