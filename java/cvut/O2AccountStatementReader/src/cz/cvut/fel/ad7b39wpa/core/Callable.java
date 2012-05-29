@@ -40,11 +40,11 @@ public interface Callable extends Serializable {
      * Gets the subscriber number part of this callable phone number.
      * @return the phone number
      */
-    public int getSubscriberNumber();
+    public long getSubscriberNumber();
 
     /**
      * Sets the subscriber number part of this callable phone number.
      * @param subscriberNumber the phone number
      */
-    public void setSubscriberNumber(int subscriberNumber);
+    public void setSubscriberNumber(long subscriberNumber);
 }

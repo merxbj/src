@@ -1,12 +1,13 @@
 package cz.cvut.fel.ad7b39wpa.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Time interval represented by its start date and end date.
  * @author jmerxbauer
  */
-public interface Interval {
+public interface Interval extends Comparable<Interval>, Serializable {
     
     /**
      * Gets the start date part of this interval.

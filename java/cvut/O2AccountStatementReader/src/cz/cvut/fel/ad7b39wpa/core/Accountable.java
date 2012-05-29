@@ -1,40 +1,26 @@
 package cz.cvut.fel.ad7b39wpa.core;
 
-import java.math.BigInteger;
-import java.sql.Time;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Represents a single accountable unit that is a part of the account statement.
  * @author jmerxbauer
  */
-public interface Accountable {
+public interface Accountable extends Comparable<Accountable>, Serializable {
     
     /**
-     * Gets the date when the accountable event occurred.
+     * Gets the timestamp when the accountable event occurred.
      * @return the date
      */
     public Date getDate();
     
     /**
-     * Sets the date when the accountable event occurred.
+     * Sets the timestamp when the accountable event occurred.
      * @param date the date
      */
     public void setDate(Date date);
-    
-    /**
-     * Gets the time when the accountable event occurred within the boundaries of
-     * the date.
-     * @return the time
-     */
-    public Time getTime();
-    
-    /**
-     * Sets the time when the accountable event occurred within the boundaries of
-     * the date.
-     * @param time the time
-     */
-    public void setTime(Time time);
     
     /**
      * Gets the service by which means the accountable event occurred.
@@ -107,13 +93,13 @@ public interface Accountable {
      * Gets the money accounted for this accountable event.
      * @return the money
      */
-    public BigInteger getAccountedMoney();
+    public BigDecimal getAccountedMoney();
 
     /**
      * Sets the money accounted for this accountable event.
      * @param accountedMoney the money
      */
-    public void setAccountedMoney(BigInteger accountedMoney);
+    public void setAccountedMoney(BigDecimal accountedMoney);
     
     /**
      * Indicates the free units application on this accountable event.

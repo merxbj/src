@@ -4,11 +4,13 @@
  */
 package cz.cvut.fel.ad7b39wpa.core;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jmerxbauer
  */
-public enum ServiceType {
+public enum ServiceType implements Serializable {
     TEL,
     TEXT,
     GPRS

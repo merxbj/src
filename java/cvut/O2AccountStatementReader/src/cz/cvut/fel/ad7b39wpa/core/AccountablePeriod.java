@@ -1,11 +1,13 @@
 package cz.cvut.fel.ad7b39wpa.core;
 
+import java.io.Serializable;
+
 /**
  * Represents a special accountable period according to which the prices might be
  * adjusted.
  * @author jmerxbauer
  */
-public enum AccountablePeriod {
+public enum AccountablePeriod implements Serializable {
 
     /**
      * This feature is not applicable to the service being accounted.
