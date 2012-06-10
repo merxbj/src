@@ -9,62 +9,62 @@ import java.util.Date;
  * @author jmerxbauer
  */
 public interface Accountable extends Comparable<Accountable>, Serializable {
-    
+
     /**
      * Gets the timestamp when the accountable event occurred.
      * @return the date
      */
     public Date getDate();
-    
+
     /**
      * Sets the timestamp when the accountable event occurred.
      * @param date the date
      */
     public void setDate(Date date);
-    
+
     /**
      * Gets the service by which means the accountable event occurred.
      * @return the service
      */
     public ServiceType getService();
-    
+
     /**
      * Sets the service by which means the accountable event occurred.
      * @param serviceType the service
      */
     public void setService(ServiceType serviceType);
-    
+
     /**
      * Gets the not-structured destination of the accountable event.
      * @return the destination
      */
     public String getDestination();
-    
+
     /**
      * Sets the not-structured destination of the accountable event.
      * @param destination the destination
      */
     public void setDestination(String destination);
-    
+
     /**
      * Gets the callee (if applicable) of this accountable event. Otherwise
      * returns null.
      * @return the callee
      */
     public Callable getCallee();
-    
+
     /**
      * Sets the callee (if applicable) of this accountable event.
      * @param callable the callee
      */
     public void setCallee(Callable callable);
-    
+
     /**
      * Gets the accountable period the accountable event falls into.
      * @return the accountable period
      */
     public AccountablePeriod getAccountablePeriod();
-    
+
     /**
      * Sets the accountable period the accountable event falls into.
      * @param accountablePeriod the accountable period

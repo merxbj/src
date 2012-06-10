@@ -7,14 +7,17 @@ import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class AccountableMock implements Accountable {
 
     private static Random random = new Random(Calendar.getInstance().getTimeInMillis());
     private static String[] knownDestinations = {"GSM O2 72", "Vodafone 77", "T-Mobile 73", "T-Mobile 605"};
+    private static final List<Callable> knownCallables;
 
     private Date date;
     private ServiceType service;
@@ -25,12 +28,19 @@ public class AccountableMock implements Accountable {
     private BigDecimal accountedMoney;
     private boolean freeUnitsApplied;
 
+    static {
+        knownCallables = new ArrayList<Callable>(10);
+        for (int i = 0; i < 10; i++) {
+            knownCallables.add(CallableMock.createRandomCallable());
+        }
+    }
+
     public static Accountable createRandomAccountable(final Interval withinInterval) {
         Accountable acc = new AccountableMock();
         acc.setAccountablePeriod(AccountablePeriod.values()[random.nextInt(AccountablePeriod.values().length)]);
         acc.setAccountedMoney(BigDecimal.valueOf(random.nextDouble() * 255).round(new MathContext(5)));
         acc.setAccountedUnits(Math.abs(random.nextLong()) % 255);
-        acc.setCallee(CallableMock.createRandomCallable());
+        acc.setCallee(knownCallables.get(random.nextInt(knownCallables.size())));
         acc.setDate(new Date(withinInterval.getStartDate().getTime() + (Math.abs(random.nextLong()) % (withinInterval.getEndDate().getTime() - withinInterval.getStartDate().getTime()))));
         acc.setDestination(knownDestinations[random.nextInt(knownDestinations.length)]);
         acc.setFreeUnitsApplied(random.nextBoolean());

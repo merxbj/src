@@ -39,5 +39,5 @@ public enum AccountablePeriod implements Serializable {
      * The error condition where the accountable service is a subject of period
      * categorization but the period could not be determined.
      */
-    UNKNOWN
+    //UNKNOWN
 }
