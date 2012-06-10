@@ -4,17 +4,11 @@
  */
 package cz.cvut.fel.ad7b39wpa.test;
 
-import cz.cvut.fel.ad7b39wpa.xls.XLSAccountStatementReaderBuilder;
 import cz.cvut.fel.ad7b39wpa.core.*;
 import cz.cvut.fel.ad7b39wpa.mock.AccountStatementReaderBuilderMock;
 import cz.cvut.fel.ad7b39wpa.mock.CallableMock;
 import cz.cvut.fel.ad7b39wpa.mock.IntervalMock;
-import cz.cvut.fel.ad7b39wpa.xls.XLSInterval;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  *
@@ -27,30 +21,24 @@ public class O2ASR {
      */
     public static void main(String[] args) throws Exception {
         
-        /* TODO: change this
+        /**
+         * Lets create an mock builder here that returns a mocj reader.
+         * It is on the actual implementor discretion to supply a valid and working implementation.
          */
-        String filename = args[0];
-        File xlsFile = new File(filename);
-        if (!xlsFile.exists()) {
-            throw new Exception("File not exists!");
-        }
-        
-        XLSAccountStatementReaderBuilder builder = new XLSAccountStatementReaderBuilder();
-        InputStream is = new FileInputStream(xlsFile);
+        AccountStatementReaderBuilder builder = new AccountStatementReaderBuilderMock();
 
         /**
          * Use the builder interface to build a reader.
          * It is on the actual implementor discretion to supply a valid and working implementation.
          */
         Callable owner = CallableMock.createRandomCallable();
-        //Interval period = IntervalMock.createRandomInterval(360, 30);
-        Interval period = new XLSInterval(new Date(112,03,01), new Date(112,04,01)); // For testing purposes, have to be removed after!!!
+        Interval period = IntervalMock.createRandomInterval(360, 30);
         AccountStatementReader reader = builder.build(owner, period);
 
         /**
          * Let's read the collection of accountable events.
          */
-        Collection<Accountable> accountables = reader.read(is);
+        Collection<Accountable> accountables = reader.read(null);
 
         /**
          * And finally print our collection to verify we've read everything.
