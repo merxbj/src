@@ -1,3 +1,7 @@
 * {
     font-family: Verdana, Arial, sans-serif;
 }
+
+*.free {
+    background-color: lightgreen;
+}

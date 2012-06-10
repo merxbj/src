@@ -7,13 +7,15 @@ package model.control;
 
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReader;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
-import cz.cvut.fel.ad7b39wpa.mock.AccountStatementReaderBuilderMock;
 import cz.cvut.fel.ad7b39wpa.mock.CallableMock;
-import cz.cvut.fel.ad7b39wpa.mock.IntervalMock;
+import cz.cvut.fel.ad7b39wpa.xls.XLSAccountStatementReaderBuilder;
+import cz.cvut.fel.ad7b39wpa.xls.XLSInterval;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,14 +40,14 @@ public class AccountableControl {
 
     public void importFromFile(InputStream file, User user) {
         try {
-            AccountStatementReader reader = new AccountStatementReaderBuilderMock().build(CallableMock.createRandomCallable(), IntervalMock.createRandomInterval(100, 30));
+            AccountStatementReader reader = new XLSAccountStatementReaderBuilder().build(CallableMock.createRandomCallable(), new XLSInterval(new Date(0), new Date(Calendar.getInstance().getTimeInMillis())));
             Collection<Accountable> accountables = reader.read(file);
             EntityManager em = emf.createEntityManager();
             for (Accountable acc : accountables) {
                 model.Accountable accountable = new model.Accountable();
                 accountable.setAccountedMoney(acc.getAccountedMoney().longValue());
                 accountable.setAccountedUnits(acc.getAccountedUnits());
-                accountable.setCalee(acc.getCallee().toString());
+                accountable.setCalee((acc.getCallee() != null) ? acc.getCallee().toString() : null);
                 accountable.setDate(acc.getDate());
                 accountable.setDestination(acc.getDestination());
                 accountable.setFreeUnitsApplied(acc.getFreeUnitsApplied() ? (short) 1 : (short) 0);
@@ -67,16 +69,34 @@ public class AccountableControl {
         return (List<model.Accountable>) q.getResultList();
     }
 
-    public Map<String, BigDecimal> getAccountedPerCalee(User user) {
+    public Map<String, BigDecimal> getAccountedMoneyPerCalee(User user) {
         Map<String, BigDecimal> accountedPerCalee = new HashMap<String, BigDecimal>();
         List<model.Accountable> allAccountables = getAllAccountables(user);
         for (model.Accountable acc : allAccountables) {
-            BigDecimal total = accountedPerCalee.get(acc.getCalee());
-            if (total == null) {
-                total = new BigDecimal(BigInteger.ZERO);
+            if ((acc.getCalee() != null) && !acc.getCalee().isEmpty()) {
+                BigDecimal total = accountedPerCalee.get(acc.getCalee());
+                if (total == null) {
+                    total = new BigDecimal(BigInteger.ZERO);
+                }
+                total = total.add(new BigDecimal(acc.getAccountedMoney()));
+                accountedPerCalee.put(acc.getCalee(), total);
             }
-            total = total.add(new BigDecimal(acc.getAccountedMoney()));
-            accountedPerCalee.put(acc.getCalee(), total);
+        }
+        return accountedPerCalee;
+    }
+
+    public Map<String, Long> getAccountedUnitsPerCalee(User user) {
+        Map<String, Long> accountedPerCalee = new HashMap<String, Long>();
+        List<model.Accountable> allAccountables = getAllAccountables(user);
+        for (model.Accountable acc : allAccountables) {
+            if ((acc.getCalee() != null) && !acc.getCalee().isEmpty()) {
+                Long total = accountedPerCalee.get(acc.getCalee());
+                if (total == null) {
+                    total = new Long(0);
+                }
+                total += acc.getAccountedUnits();
+                accountedPerCalee.put(acc.getCalee(), total);
+            }
         }
         return accountedPerCalee;
     }

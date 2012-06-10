@@ -100,7 +100,7 @@ public class XLSAccountStatementReader implements AccountStatementReader {
                 long value = 0;
                 if (isTime(cellValue)) {
                     Date unitTime = (Date) unitTimeFormatter.parse((cellValue + " GMT"));
-                    value = unitTime.getTime();
+                    value = unitTime.getTime() / 1000;
                 }
                 else {
                     value = Integer.parseInt(cellValue);
@@ -151,12 +151,13 @@ public class XLSAccountStatementReader implements AccountStatementReader {
         if (startDate.getTime() == 0 && endDate.getTime() == 0) {
             return accountables;
         }
+
         for (Accountable accountable : accountables) {
             if (accountable.getDate().after(startDate) && accountable.getDate().before(endDate)) {
                 validatedAccountables.add(accountable);
             }
         }
-        
+
         return validatedAccountables;
     }
 }

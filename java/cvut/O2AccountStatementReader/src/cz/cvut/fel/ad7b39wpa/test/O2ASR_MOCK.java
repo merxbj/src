@@ -14,7 +14,7 @@ import java.util.Collection;
  *
  * @author jmerxbauer
  */
-public class O2ASR {
+public class O2ASR_MOCK {
 
     /**
      * @param args the command line arguments

@@ -7,6 +7,8 @@ package bean;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,9 +18,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import model.Accountable;
 import model.control.AccountableControl;
-import org.primefaces.component.chart.series.ChartSeries;
-import org.primefaces.model.chart.CartesianChartModel;
-import org.primefaces.model.chart.ChartModel;
+import model.utility.AccountableAscendingComparer;
 
 /**
  *
@@ -39,15 +39,14 @@ public class SummaryBean {
     }
 
     public List<Accountable> getAccountables() {
-        return accountables.getAllAccountables(security.getLoggedInUser());
+        List<Accountable> sortedAccountables = new ArrayList<Accountable>(accountables.getAllAccountables(security.getLoggedInUser()));
+        Collections.sort(sortedAccountables, new AccountableAscendingComparer());
+        return sortedAccountables;
     }
 
-    public CartesianChartModel getMostExpensiveModel() {
-        Map<String, BigDecimal> accountedPerCalee = accountables.getAccountedPerCalee(security.getLoggedInUser());
-        CartesianChartModel chartModel = new CartesianChartModel();
-        ChartSeries money = new ChartSeries();
-        money.setLabel("Accounted Money");
-        chartModel.addSeries(money);
+    public List<CaleeAgregatedData> getMostExpensiveCallees() {
+        Map<String, BigDecimal> accountedPerCalee = accountables.getAccountedMoneyPerCalee(security.getLoggedInUser());
+        List<CaleeAgregatedData> mostExpensiveCallees = new ArrayList<CaleeAgregatedData>();
 
         BigDecimal totalAccounted = new BigDecimal(BigInteger.ZERO);
         for (BigDecimal accounted : accountedPerCalee.values()) {
@@ -55,12 +54,73 @@ public class SummaryBean {
         }
         for (Entry<String, BigDecimal> entry : accountedPerCalee.entrySet()) {
             double ratio = entry.getValue().doubleValue() / totalAccounted.doubleValue();
-            if (ratio > 0.01) {
-                money.set(entry.getKey(), entry.getValue().longValue());
+            if (ratio > 0.05) {
+                CaleeAgregatedData data = new CaleeAgregatedData();
+                data.setCallee(entry.getKey());
+                data.setMoney(entry.getValue().doubleValue());
+                mostExpensiveCallees.add(data);
             }
         }
 
-        return chartModel;
+        Collections.sort(mostExpensiveCallees);
+        return mostExpensiveCallees;
+    }
+
+    public List<CaleeAgregatedData> getCalleesAggregatedData() {
+        Map<String, Long> accountedUnitsPerCalee = accountables.getAccountedUnitsPerCalee(security.getLoggedInUser());
+        Map<String, BigDecimal> accountedMoneyPerCalee = accountables.getAccountedMoneyPerCalee(security.getLoggedInUser());
+        List<CaleeAgregatedData> calleesAggregatedData = new ArrayList<CaleeAgregatedData>();
+
+        for (String accounted : accountedMoneyPerCalee.keySet()) {
+            CaleeAgregatedData data = new CaleeAgregatedData();
+            data.setCallee(accounted);
+            data.setMoney(accountedMoneyPerCalee.get(accounted).doubleValue());
+            data.setUnits(accountedUnitsPerCalee.get(accounted));
+            calleesAggregatedData.add(data);
+        }
+
+        Collections.sort(calleesAggregatedData);
+        return calleesAggregatedData;
+    }
+
+    public static class CaleeAgregatedData implements Comparable<CaleeAgregatedData> {
+        private String callee;
+        private double money;
+        private long units;
+
+        public String getCallee() {
+            return callee;
+        }
+
+        public void setCallee(String callee) {
+            this.callee = callee;
+        }
+
+        public double getMoney() {
+            return money;
+        }
+
+        public void setMoney(double money) {
+            this.money = money;
+        }
+
+        public long getUnits() {
+            return units;
+        }
+
+        public void setUnits(long units) {
+            this.units = units;
+        }
+
+        @Override
+        public int compareTo(CaleeAgregatedData o) {
+            int compare = new Double(o.getMoney()).compareTo(money);
+            if (compare == 0) {
+                compare = new Long(o.getUnits()).compareTo(units);
+            }
+            return compare;
+        }
+
     }
 
 }

@@ -20,16 +20,22 @@ public class XLSCallable implements Callable {
         if (isInternationalNumber(nonParsedCallable)) {
             offset += 3;
             this.setInternationalDialingCode(Integer.parseInt(nonParsedCallable.substring(0, offset)));
+        } else if (!isNormalNumber(nonParsedCallable)) {
+            this.setSubscriberNumber(Integer.parseInt(nonParsedCallable)); // leave it as it is if we are unsure
+            return;
         }
-        else {
-            this.setInternationalDialingCode(420);
-        }
+
+        this.setInternationalDialingCode(420);
         this.setDialingCode(Integer.parseInt(nonParsedCallable.substring(offset, offset+3)));
         this.setSubscriberNumber(Integer.parseInt(nonParsedCallable.substring(offset+3, offset+9)));
     }
 
     private boolean isInternationalNumber(String nonParsedCallable) {
         return nonParsedCallable.length() == 12;
+    }
+
+    private boolean isNormalNumber(String nonParsedCallable) {
+        return nonParsedCallable.length() == 9;
     }
     
     @Override
