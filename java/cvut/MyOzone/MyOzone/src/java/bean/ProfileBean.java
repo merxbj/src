@@ -39,7 +39,7 @@ public class ProfileBean {
 
     public String updateUser() {
         users.update(currentUser);
-        return "profile";
+        return "success";
     }
 
 }

@@ -22,8 +22,7 @@ import java.util.Map;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import model.User;
 
@@ -35,14 +34,13 @@ import model.User;
 @Stateless
 public class AccountableControl {
 
-    @PersistenceUnit
-    public EntityManagerFactory emf;
+    @PersistenceContext
+    public EntityManager em;
 
     public void importFromFile(InputStream file, User user) {
         try {
             AccountStatementReader reader = new XLSAccountStatementReaderBuilder().build(CallableMock.createRandomCallable(), new XLSInterval(new Date(0), new Date(Calendar.getInstance().getTimeInMillis())));
             Collection<Accountable> accountables = reader.read(file);
-            EntityManager em = emf.createEntityManager();
             for (Accountable acc : accountables) {
                 model.Accountable accountable = new model.Accountable();
                 accountable.setAccountedMoney(acc.getAccountedMoney().longValue());
@@ -58,12 +56,11 @@ public class AccountableControl {
                 em.persist(accountable);
             }
         } catch (Exception ex) {
-            
+            throw new RuntimeException(ex);
         }
     }
 
     public List<model.Accountable> getAllAccountables(User user) {
-        EntityManager em = emf.createEntityManager();
         Query q = em.createQuery("SELECT a FROM Accountable a WHERE a.user.userId = :userId");
         q.setParameter("userId", user.getUserId());
         return (List<model.Accountable>) q.getResultList();

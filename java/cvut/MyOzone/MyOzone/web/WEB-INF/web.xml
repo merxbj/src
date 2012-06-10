@@ -35,4 +35,47 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <display-name>RegisteredUserOnly</display-name>
+        <web-resource-collection>
+            <web-resource-name>Charts</web-resource-name>
+            <description/>
+            <url-pattern>/faces/charts.xhtml</url-pattern>
+            <url-pattern>/charts.xhtml</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Summary</web-resource-name>
+            <description/>
+            <url-pattern>/faces/summary.xhtml</url-pattern>
+            <url-pattern>/summary.xhtml</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Profile</web-resource-name>
+            <description/>
+            <url-pattern>/faces/profile.xhtml</url-pattern>
+            <url-pattern>/profile.xhtml</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Upload</web-resource-name>
+            <description/>
+            <url-pattern>/faces/upload.xhtml</url-pattern>
+            <url-pattern>/upload.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Access for registered users only</description>
+            <role-name>Users</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>MyOzoneJdbcRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/faces/login.xhtml</form-login-page>
+            <form-error-page>/faces/login.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <description>Registered User</description>
+        <role-name>Users</role-name>
+    </security-role>
 </web-app>

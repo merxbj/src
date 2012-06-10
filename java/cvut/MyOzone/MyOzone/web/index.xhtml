@@ -4,13 +4,30 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
     <body>
         
         <ui:composition template="./WEB-INF/layout/template.xhtml">
             
             <ui:define name="content">
-                
+                <h2>Summary:</h2>
+                <h3>Purpose:</h3>
+                <p>
+                    The purpose of this very simple JavaEE application is to
+                    provide a extensible environment to analyze cell phone service
+                    company account statements to get a better overview of how
+                    exactly are the money and time spent.
+                </p>
+                <h3>Reason:</h3>
+                <p>
+                    I personally find the native application developed by the company
+                    as very nice, although I'm missing some very interesting features
+                    such as per-phone-number analysis. Forutnatelly, it is possible
+                    to download a XLS sheet with the account statement data and
+                    therefore this is the open door to develop a new application to
+                    process this file and calculate all the interesting statistics.
+                </p>
             </ui:define>
 
         </ui:composition>
