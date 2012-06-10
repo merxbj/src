@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:body>
+
+        <ui:composition template="./WEB-INF/layout/template.xhtml">
+            <ui:define name="content">
+                <p:tabView id="tabView">
+
+                    <p:tab id="tabAllAcountables" title="Complete List">
+                        <h:form id="cellList">
+                            <p:dataTable id="accountables" var="accountable" value="#{summaryBean.accountables}" paginator="true" rows="20"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,20,50,1000">
+                                <p:column>
+                                    <f:facet name="header">Date</f:facet>
+                                    <h:outputText value="#{accountable.date}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">Calee</f:facet>
+                                    <h:outputText value="#{accountable.calee}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">Accounted Money</f:facet>
+                                    <h:outputText value="#{accountable.accountedMoney}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </p:tab>
+
+                    <p:tab id="mostExpensive" title="Most Expensive">
+                        
+                    </p:tab>
+
+                </p:tabView>
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+</html>
+

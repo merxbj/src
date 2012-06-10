@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+    <body>
+        
+        <ui:composition template="./WEB-INF/layout/template.xhtml">
+            <ui:define name="content">
+
+                <h:form id="profileForm">
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="username">Username: </h:outputLabel>
+                        <h:outputText id="username" value="#{profileBean.currentUser.username}"/>
+                        <h:outputLabel for="username"></h:outputLabel>
+
+                        <h:outputLabel for="firstName" value="First Name" />
+                        <p:inputText id="firstName" value="#{profileBean.currentUser.firstName}" required="true"/>
+                        <p:message for="firstName" />
+
+                        <h:outputLabel for="lastName" value="Last Name:" />
+                        <p:inputText id="lastName" value="#{profileBean.currentUser.lastName}" required="true"/>
+                        <p:message for="lastName" />
+                    </h:panelGrid>
+
+                    <p:commandButton value="Update Profile"
+                                     actionListener="#{profileBean.updateUser}"
+                                     update="profileForm"/>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+        
+    </body>
+</html>

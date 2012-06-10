@@ -21,6 +21,10 @@ java/cvut/*/build/
 java/cvut/*/dist/
 java/cvut/*/nbproject/private/
 java/cvut/*/bin/
+java/cvut/MyOzone/*/build/
+java/cvut/MyOzone/*/dist/
+java/cvut/MyOzone/*/nbproject/private/
+java/cvut/MyOzone/*/bin/
 scala/*/build/
 scala/*/dist/
 scala/*/nbproject/private/
