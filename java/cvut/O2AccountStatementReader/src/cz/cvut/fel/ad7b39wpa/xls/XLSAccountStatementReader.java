@@ -43,10 +43,6 @@ public class XLSAccountStatementReader implements AccountStatementReader {
             }
         } catch (Exception e) {
             throw new DataFormatException("Something is wrong with XLS file", e);
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
         }
 
         return filterOutUndesiredAccountables(accountables);
