@@ -6,20 +6,21 @@ package cz.cvut.fel.ad7b39wpa.core;
  */
 public class DataFormatException extends Exception {
 
-    /**
-     * Creates a new instance of
-     * <code>DataFormatException</code> without detail message.
-     */
     public DataFormatException() {
+        super();
     }
 
-    /**
-     * Constructs an instance of
-     * <code>DataFormatException</code> with the specified detail message.
-     *
-     * @param msg the detail message.
-     */
     public DataFormatException(String msg) {
         super(msg);
     }
+
+    public DataFormatException(Throwable thrwbl) {
+        super(thrwbl);
+    }
+
+    public DataFormatException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
+    }
+
+
 }
