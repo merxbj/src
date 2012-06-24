@@ -10,41 +10,57 @@ import java.io.Serializable;
  *      456789 is the actual subscriber number
  * @author jmerxbauer
  */
-public interface Callable extends Serializable {
+public class Callable implements Serializable {
     
+    protected int internationalDialingCode;
+    protected int dialingCode;
+    protected long subscriberNumber;
+
     /**
      * Gets the international dialing code part of this callable phone number.
      * @return the international dialing code
      */
-    public int getInternationalDialingCode();
+    public int getInternationalDialingCode() {
+        return internationalDialingCode;
+    }
 
     /**
      * Sets the international dialing code part of this callable phone number.
      * @param internationalDialingCode the international dialing code
      */
-    public void setInternationalDialingCode(int internationalDialingCode);
+    public void setInternationalDialingCode(int internationalDialingCode) {
+        this.internationalDialingCode = internationalDialingCode;
+    }
 
     /**
      * Gets the local dialing code part of this callable phone number.
      * @return the local dialing code
      */
-    public int getDialingCode();
+    public int getDialingCode() {
+        return this.dialingCode;
+    }
 
     /**
      * Sets the local dialing code part of this callable phone number.
      * @param dialingCode the local dialing code
      */
-    public void setDialingCode(int dialingCode);
+    public void setDialingCode(int dialingCode) {
+        this.dialingCode = dialingCode;
+    }
 
     /**
      * Gets the subscriber number part of this callable phone number.
      * @return the phone number
      */
-    public long getSubscriberNumber();
+    public long getSubscriberNumber() {
+        return this.subscriberNumber;
+    }
 
     /**
      * Sets the subscriber number part of this callable phone number.
      * @param subscriberNumber the phone number
      */
-    public void setSubscriberNumber(long subscriberNumber);
+    public void setSubscriberNumber(long subscriberNumber) {
+        this.subscriberNumber = subscriberNumber;
+    }
 }

@@ -5,6 +5,8 @@
 
 package cz.cvut.fel.ad7b39wpa.test;
 
+import java.util.TimeZone;
+import java.util.Calendar;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReaderBuilder;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
 import cz.cvut.fel.ad7b39wpa.core.DataFormatException;
@@ -14,6 +16,7 @@ import cz.cvut.fel.ad7b39wpa.core.Callable;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import java.util.Collection;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReader;
+import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
 import cz.cvut.fel.ad7b39wpa.xls.XLSInterval;
 import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
@@ -98,8 +101,14 @@ public class RealDataUnitTest {
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[0];
 
-            assertEquals(acc.getService(), ServiceType.GPRS);
-            
+            assertEquals(AccountablePeriod.NOT_APPLICABLE, acc.getAccountablePeriod());
+            assertEquals(new BigDecimal(0), acc.getAccountedMoney());
+            assertEquals(2, acc.getAccountedUnits());
+            assertNull(acc.getCallee());
+            assertEquals(new Date(112, 3, 8, 0, 0, 0), acc.getDate());
+            assertEquals("Mobilní data, Internet (čas)", acc.getDestination());
+            assertFalse(acc.getFreeUnitsApplied());
+            assertEquals(ServiceType.GPRS, acc.getService());
 
         } finally {
             try {
@@ -117,6 +126,13 @@ public class RealDataUnitTest {
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[3];
 
+            assertEquals(AccountablePeriod.WEEKEND, acc.getAccountablePeriod());
+            assertEquals(new BigDecimal(0), acc.getAccountedMoney());
+            assertEquals(60, acc.getAccountedUnits());
+            assertEquals(new CallableMock(420, 605, 550012), acc.getCallee());
+            assertEquals(new Date(112, 3, 8, 17, 50, 0), acc.getDate());
+            assertEquals("Vodafone", acc.getDestination());
+            assertTrue(acc.getFreeUnitsApplied());
             assertEquals(acc.getService(), ServiceType.TEL);
 
 

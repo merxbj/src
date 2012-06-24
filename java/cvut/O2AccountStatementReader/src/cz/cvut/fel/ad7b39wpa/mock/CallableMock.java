@@ -4,14 +4,10 @@ import cz.cvut.fel.ad7b39wpa.core.Callable;
 import java.util.Calendar;
 import java.util.Random;
 
-public class CallableMock implements Callable {
+public class CallableMock extends Callable {
 
     private static Random random = new Random(Calendar.getInstance().getTimeInMillis());
     private static int[] knownDialingCodes = {602, 728, 724, 728, 603, 608, 723};
-
-    private int internationalDialingCode;
-    private int dialingCode;
-    private long subscriberNumber;
 
     public static Callable createRandomCallable() {
         Callable cal = new CallableMock();
@@ -21,8 +17,14 @@ public class CallableMock implements Callable {
         return cal;
     }
 
-    private CallableMock() {
+    public CallableMock() {
+        this(0, 0, 0);
+    }
 
+    public CallableMock(int internationalDialingCode, int dialingCode, long subscriberNumber) {
+        this.internationalDialingCode = internationalDialingCode;
+        this.dialingCode = dialingCode;
+        this.subscriberNumber = subscriberNumber;
     }
 
     public int getDialingCode() {
