@@ -448,11 +448,9 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" name="library-inclusion-in-archive">
-        <copyfiles files="${libs.MySQLDriver.classpath}" todir="${build.classes.dir}"/>
         <copyfiles files="${reference.O2AccountStatementReader.jar}" todir="${build.classes.dir}"/>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
-        <copyfiles files="${libs.MySQLDriver.classpath}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.O2AccountStatementReader.jar}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>

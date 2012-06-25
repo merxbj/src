@@ -5,7 +5,6 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>DataAccess</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <included-library dirs="200">libs.MySQLDriver.classpath</included-library>
             <included-library dirs="200">reference.O2AccountStatementReader.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
