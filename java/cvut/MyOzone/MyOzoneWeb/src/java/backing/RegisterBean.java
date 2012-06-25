@@ -31,7 +31,18 @@ public class RegisterBean {
 
     /** Creates a new instance of RegisterBean */
     public RegisterBean() {
+        init();
+    }
+
+    private void init() {
         newUser = new User();
+        clear();
+    }
+
+    private void clear() {
+        newUser.setFirstName("");
+        newUser.setLastName("");
+        newUser.setPassword("");
     }
 
     public User getNewUser() {
@@ -57,14 +68,20 @@ public class RegisterBean {
     }
 
     public String register() {
+        FacesContext fc = FacesContext.getCurrentInstance();
         try {
-            users.registerNewUser(newUser);
-            newUser = new User();
+            if (users.getUserByUsername(newUser.getUsername()) == null) {
+                users.registerNewUser(newUser);
+            } else {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username not available.", "Requested username already taken by someone else.");
+                fc.addMessage("registerForm:username", msg);
+                clear();
+                return "failed";
+            }
         } catch (Exception ex) {
-            FacesContext fc = FacesContext.getCurrentInstance();
             fc.addMessage("registerForm", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to register the user.", "An error occured while registering a new user."));
-            newUser.setPassword(null);
-            return "failed";
+            clear();
+            return "error";
         }
 
         return "success";

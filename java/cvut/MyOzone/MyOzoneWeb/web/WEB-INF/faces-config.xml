@@ -45,9 +45,10 @@
             <to-view-id>/login.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/error.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
-    <validator>
-        <validator-id>UsernameAvailabilityValidator</validator-id>
-        <validator-class>validating.UsernameAvailabilityValidator</validator-class>
-    </validator>
 </faces-config>

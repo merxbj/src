@@ -6,6 +6,7 @@
 package model.control;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,7 +37,8 @@ public class UserControlBean implements UserControl {
     public User getUserByUsername(String username) {
         Query q = em.createNamedQuery("User.findByUsername");
         q.setParameter("username", username);
-        return (User) q.getSingleResult();
+        List<User> users = q.getResultList();
+        return (users.size() > 0) ? users.get(0) : null;
     }
 
     @Override
