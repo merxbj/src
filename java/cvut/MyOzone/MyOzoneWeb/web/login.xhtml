@@ -19,7 +19,7 @@
                         <p:message for="password" showDetail="true"/>
                     </h:panelGrid>
 
-                    <p:commandButton value="Log In" action="#{securityBean.login}"/>
+                    <p:commandButton value="Log In" action="#{securityBean.login}" update="loginForm"/>
                 </h:form>
 
             </ui:define>

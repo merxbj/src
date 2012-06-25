@@ -18,12 +18,29 @@
                         <h:outputLabel for="username"></h:outputLabel>
 
                         <h:outputLabel for="firstName" value="First Name" />
-                        <p:inputText id="firstName" value="#{profileBean.currentUser.firstName}" required="true"/>
+                        <p:inputText id="firstName" value="#{profileBean.currentUser.firstName}" required="true">
+                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
+                        </p:inputText>
                         <p:message for="firstName" />
 
                         <h:outputLabel for="lastName" value="Last Name:" />
-                        <p:inputText id="lastName" value="#{profileBean.currentUser.lastName}" required="true"/>
+                        <p:inputText id="lastName" value="#{profileBean.currentUser.lastName}" required="true">
+                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
+                        </p:inputText>
                         <p:message for="lastName" />
+
+                        <h:outputLabel for="oldPassword" value="Old Password:" />
+                        <p:password id="oldPassword" value="#{profileBean.oldPassword}" feedback="false" minLength="6"/>
+                        <p:message for="oldPassword" />
+
+                        <h:outputLabel for="newPassword" value="New Password:" />
+                        <p:password id="newPassword" value="#{profileBean.newPassword}" feedback="true" minLength="6"/>
+                        <p:message for="newPassword" />
+
+                        <h:outputLabel for="newPasswordAgain" value="New Password Again:" />
+                        <p:password id="newPasswordAgain" feedback="false" minLength="6" validator="#{profileBean.validateSamePasswords}"/>
+                        <p:message for="newPasswordAgain" />
+
                     </h:panelGrid>
 
                     <p:commandButton value="Update Profile"

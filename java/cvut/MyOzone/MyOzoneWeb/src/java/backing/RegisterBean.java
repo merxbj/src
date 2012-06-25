@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import model.User;
@@ -41,9 +42,15 @@ public class RegisterBean {
         this.newUser = newUser;
     }
 
-    public void validateSamePassword(FacesContext context, UIComponent toValidate, Object value) {
+    public void validateSamePasswords(FacesContext context, UIComponent toValidate, Object value) {
+        UIInput passwordField = (UIInput) context.getViewRoot().findComponent("registerForm:password");
+        if (passwordField == null) {
+            throw new IllegalArgumentException(String.format("Unable to find component."));
+        }
+        String password = (String) passwordField.getValue();
         String confirmPassword = (String) value;
-        if (!confirmPassword.equals(newUser.getPassword())) {
+
+        if (!confirmPassword.equals(password)) {
           FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Passwords do not match!", "Passwords do not match!");
           throw new ValidatorException(message);
         }
@@ -54,7 +61,10 @@ public class RegisterBean {
             users.registerNewUser(newUser);
             newUser = new User();
         } catch (Exception ex) {
-            return "error";
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.addMessage("registerForm", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to register the user.", "An error occured while registering a new user."));
+            newUser.setPassword(null);
+            return "failed";
         }
 
         return "success";

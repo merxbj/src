@@ -63,9 +63,9 @@ public class SecurityBean {
         try {
             request.login(loggingUser.getUsername(), loggingUser.getPassword());
         } catch (ServletException ex) {
-            fc.addMessage("loginForm:password", new FacesMessage("Login failed."));
+            fc.addMessage(null, new FacesMessage("Login failed."));
             loggingUser.setPassword("");
-            return "error";
+            return "failed";
         }
         loggingUser = new User();
         return "success";

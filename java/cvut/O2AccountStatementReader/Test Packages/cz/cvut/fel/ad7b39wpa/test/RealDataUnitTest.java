@@ -5,13 +5,9 @@
 
 package cz.cvut.fel.ad7b39wpa.test;
 
-import java.util.TimeZone;
-import java.util.Calendar;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReaderBuilder;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
 import cz.cvut.fel.ad7b39wpa.core.DataFormatException;
-import org.junit.Before;
-import org.junit.After;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import java.util.Collection;
@@ -129,7 +125,7 @@ public class RealDataUnitTest {
             assertEquals(AccountablePeriod.WEEKEND, acc.getAccountablePeriod());
             assertEquals(new BigDecimal(0), acc.getAccountedMoney());
             assertEquals(60, acc.getAccountedUnits());
-            assertEquals(new CallableMock(420, 605, 550012), acc.getCallee());
+            assertEquals(new Callable(420, 605, 550012), acc.getCallee());
             assertEquals(new Date(112, 3, 8, 17, 50, 0), acc.getDate());
             assertEquals("Vodafone", acc.getDestination());
             assertTrue(acc.getFreeUnitsApplied());
@@ -152,8 +148,14 @@ public class RealDataUnitTest {
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[4];
 
+            assertEquals(AccountablePeriod.ALWAYS, acc.getAccountablePeriod());
+            assertEquals(new BigDecimal("1.33"), acc.getAccountedMoney());
+            assertEquals(1, acc.getAccountedUnits());
+            assertEquals(new Callable(420, 731, 108199), acc.getCallee());
+            assertEquals(new Date(112, 3, 8, 17, 56, 0), acc.getDate());
+            assertEquals("T-Mobile 73", acc.getDestination());
+            assertFalse(acc.getFreeUnitsApplied());
             assertEquals(acc.getService(), ServiceType.TEXT);
-
 
         } finally {
             try {

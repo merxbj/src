@@ -13,7 +13,8 @@
                     <h:panelGrid columns="3">
                         <h:outputLabel for="username" value="Username:" />
                         <p:inputText id="username" value="#{registerBean.newUser.username}" required="true">
-                            <f:validateRegex pattern="^[A-Z][a-zěščřžýáíéúů]+"/>
+                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
+                            <f:validator validatorId="UsernameAvailabilityValidator"/>
                         </p:inputText>
                         <p:message for="username" />
 
@@ -21,24 +22,26 @@
                         <p:password id="password" value="#{registerBean.newUser.password}" required="true" feedback="true" minLength="6"/>
                         <p:message for="password" />
                         
-                        <h:outputLabel for="passwordAgain" value="Password:" />
+                        <h:outputLabel for="passwordAgain" value="Password Again:" />
                         <p:password id="passwordAgain" required="true" feedback="false" minLength="6" validator="#{registerBean.validateSamePasswords}"/>
                         <p:message for="passwordAgain" />
 
                         <h:outputLabel for="firstName" value="First Name" />
                         <p:inputText id="firstName" value="#{registerBean.newUser.firstName}" required="true">
-                            <f:validateRegex pattern="^[A-Z][a-zěščřžýáíéúů]+"/>
+                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
                         </p:inputText>
                         <p:message for="firstName" />
 
                         <h:outputLabel for="lastName" value="Last Name:" />
                         <p:inputText id="lastName" value="#{registerBean.newUser.lastName}" required="true">
-                            <f:validateRegex pattern="^[A-Z][a-zěščřžýáíéúů]+"/>
+                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
                         </p:inputText>
                         <p:message for="lastName" />
                     </h:panelGrid>
 
-                    <p:commandButton value="Register new user" action="#{registerBean.register}"/>
+                    <p:commandButton value="Register new user" action="#{registerBean.register}" update="registerForm"/>
+
+                    <p:message for="registerForm" />
                 </h:form>
 
             </ui:define>

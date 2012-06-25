@@ -50,7 +50,7 @@ public class XLSAccountable implements Accountable {
                 break;
             case CALLEE:
                 if (!cellValue.isEmpty()) {
-                    this.setCallee(new XLSCallable(cellValue));
+                    this.setCallee(XLSCallableParser.parse(cellValue));
                 }
                 break;
             case PERIOD:

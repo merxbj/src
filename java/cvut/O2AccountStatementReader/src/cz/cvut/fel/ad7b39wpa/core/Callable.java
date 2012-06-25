@@ -16,6 +16,16 @@ public class Callable implements Serializable {
     protected int dialingCode;
     protected long subscriberNumber;
 
+    public Callable() {
+        this(0,0,0l);
+    }
+
+    public Callable(int internationalDialingCode, int dialingCode, long subscriberNumber) {
+        this.internationalDialingCode = internationalDialingCode;
+        this.dialingCode = dialingCode;
+        this.subscriberNumber = subscriberNumber;
+    }
+
     /**
      * Gets the international dialing code part of this callable phone number.
      * @return the international dialing code
@@ -62,5 +72,40 @@ public class Callable implements Serializable {
      */
     public void setSubscriberNumber(long subscriberNumber) {
         this.subscriberNumber = subscriberNumber;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Callable other = (Callable) obj;
+        if (this.internationalDialingCode != other.internationalDialingCode) {
+            return false;
+        }
+        if (this.dialingCode != other.dialingCode) {
+            return false;
+        }
+        if (this.subscriberNumber != other.subscriberNumber) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + this.internationalDialingCode;
+        hash = 83 * hash + this.dialingCode;
+        hash = 83 * hash + (int) (this.subscriberNumber ^ (this.subscriberNumber >>> 32));
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "+" + internationalDialingCode + " " + dialingCode + " " + subscriberNumber;
     }
 }
