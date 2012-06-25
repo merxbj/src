@@ -23,6 +23,14 @@
         <navigation-case>
             <from-outcome>success</from-outcome>
             <to-view-id>/profile.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/profile.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/error.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

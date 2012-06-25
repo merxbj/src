@@ -22,4 +22,6 @@ public interface UserControl {
     public void update(User user, boolean updatePassword);
 
     public void registerNewUser(User newUser);
+
+    public boolean validatePassword(User user, String password);
 }

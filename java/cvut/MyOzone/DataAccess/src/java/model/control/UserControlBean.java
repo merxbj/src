@@ -46,7 +46,8 @@ public class UserControlBean implements UserControl {
 
     @Override
     public void update(User user, boolean updatePassword) {
-        
+        user.setPassword(md5.secureString(user.getPassword()));
+        update(user);
     }
 
     @Override
@@ -72,6 +73,11 @@ public class UserControlBean implements UserControl {
          * And persist
          */
         em.persist(newUser);
+    }
+
+    @Override
+    public boolean validatePassword(User user, String password) {
+        return user.getPassword().equals(md5.secureString(password));
     }
 
 }

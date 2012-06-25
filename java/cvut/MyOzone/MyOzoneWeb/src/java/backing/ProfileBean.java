@@ -45,7 +45,27 @@ public class ProfileBean {
     }
 
     public String updateUser() {
-        users.update(currentUser);
+        try {
+            if ((oldPassword != null) && !oldPassword.equals("")) {
+                if (users.validatePassword(currentUser, oldPassword)) {
+                    currentUser.setPassword(newPassword);
+                    users.update(currentUser, true);
+                } else {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Old password incorrect", "You must input the old password correctly to change it to new one.");
+                    FacesContext.getCurrentInstance().addMessage("profileForm:oldPassword", msg);
+                    oldPassword = "";
+                    newPassword = "";
+                    return "failed";
+                }
+            } else {
+                users.update(currentUser);
+            }
+        } catch (Exception ex) {
+            return "error";
+        }
+
+        FacesMessage msg = new FacesMessage("Profile update successfully.");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
         return "success";
     }
 

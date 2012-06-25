@@ -31,7 +31,7 @@
 
                         <h:outputLabel for="oldPassword" value="Old Password:" />
                         <p:password id="oldPassword" value="#{profileBean.oldPassword}" feedback="false" minLength="6"/>
-                        <p:message for="oldPassword" />
+                        <p:message for="oldPassword" showDetail="false" showSummary="true"/>
 
                         <h:outputLabel for="newPassword" value="New Password:" />
                         <p:password id="newPassword" value="#{profileBean.newPassword}" feedback="true" minLength="6"/>
@@ -41,11 +41,13 @@
                         <p:password id="newPasswordAgain" feedback="false" minLength="6" validator="#{profileBean.validateSamePasswords}"/>
                         <p:message for="newPasswordAgain" />
 
+                        <p:growl id="messages" showDetail="true"/>
+
                     </h:panelGrid>
 
                     <p:commandButton value="Update Profile"
                                      action="#{profileBean.updateUser}"
-                                     update="profileForm"/>
+                                     update="profileForm messages"/>
                 </h:form>
 
             </ui:define>
