@@ -2,14 +2,13 @@ package cz.cvut.fel.ad7b39wpa.core;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * Reader of the O2 account statement provided as an XLS sheet.
  * @author jmerxbauer
  */
-public interface AccountStatementReader extends Serializable {
+public interface AccountStatementReader {
     /**
      * Reads the O2 account statement provided as an XLS sheet.
      * @param accountStatement the XLS account statement to be read.

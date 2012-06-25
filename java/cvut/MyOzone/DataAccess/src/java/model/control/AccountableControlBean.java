@@ -5,6 +5,7 @@
 
 package model.control;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import model.control.remote.AccountableControl;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReader;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
@@ -37,8 +38,9 @@ public class AccountableControlBean implements AccountableControl {
     public EntityManager em;
 
     @Override
-    public void importFromFile(InputStream file, User user) {
+    public void importFromFile(byte[] contents, User user) {
         try {
+            ByteInputStream file = new ByteInputStream(contents, contents.length);
             AccountStatementReader reader = new XLSAccountStatementReaderBuilder().build(CallableMock.createRandomCallable(), new XLSInterval(new Date(0), new Date(Calendar.getInstance().getTimeInMillis())));
             Collection<Accountable> accountables = reader.read(file);
             for (Accountable acc : accountables) {

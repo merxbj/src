@@ -5,7 +5,6 @@
 
 package model.control.remote;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,6 @@ public interface AccountableControl {
 
     List<Accountable> getAllAccountables(User user);
 
-    void importFromFile(InputStream file, User user);
+    void importFromFile(byte[] contents, User user);
 
 }

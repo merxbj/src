@@ -5,7 +5,6 @@
 
 package backing;
 
-import java.io.IOException;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,13 +34,14 @@ public class UploadBean {
     }
 
     public void handleFileUpload(FileUploadEvent event) {
+        UploadedFile uploadedFile = event.getFile();
         try {
-            UploadedFile uploadedFile = event.getFile();
+            accountables.importFromFile(uploadedFile.getContents(), security.getLoggedInUser());
             FacesMessage msg = new FacesMessage("Succesful", uploadedFile.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, msg);
-            accountables.importFromFile(uploadedFile.getInputstream(), security.getLoggedInUser());
-        } catch (IOException ex) {
-            
+        } catch (Exception ex) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed", uploadedFile.getFileName() + " was not uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 
