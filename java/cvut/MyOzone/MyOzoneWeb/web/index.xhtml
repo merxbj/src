@@ -2,62 +2,42 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
     <body>
         
         <ui:composition template="./WEB-INF/layout/template.xhtml">
-            
             <ui:define name="content">
-                <h2>Summary:</h2>
-                <h3>Purpose:</h3>
-                <p>
-                    The purpose of this very simple JavaEE application is to
-                    provide a extensible environment to analyze cell phone service
-                    company account statements to get a better overview of how
-                    exactly are the money and time spent.
-                </p>
-                <h3>Reason:</h3>
-                <p>
-                    I personally find the native application developed by the company
-                    as very nice, although I'm missing some very interesting features
-                    such as per-phone-number analysis. Forutnatelly, it is possible
-                    to download a XLS sheet with the account statement data and
-                    therefore this is the open door to develop a new application to
-                    process this file and calculate all the interesting statistics.
-                </p>
-                <p>
-                    <strong>For more details please log in.</strong>
-                </p>
+                <p:tabView id="tabIndexView">
+                    <p:tab id="tabSummary" title="Summary">
+                        <ui:include src="./WEB-INF/content/summary.xhtml"/>
+                        <p>
+                            <c:if test="#{!securityBean.loggedIn}">
+                                <strong>For more details please log in.</strong>
+                            </c:if>
+                        </p>
+                    </p:tab>
 
-                <c:if test="#{securityBean.loggedIn}">
+                    <c:if test="#{securityBean.loggedIn}">
+                        <p:tab id="tabGuiDesign" title="GUI">
+                            <ui:include src="./WEB-INF/content/gui.xhtml"/>
+                        </p:tab>
+                        <p:tab id="tabArchitecture" title="Architecture">
+                            <ui:include src="./WEB-INF/content/architecture.xhtml"/>
+                        </p:tab>
+                        <p:tab id="tabTesting" title="Testing">
+                            <ui:include src="./WEB-INF/content/testing.xhtml"/>
+                        </p:tab>
+                        <p:tab id="tabInstallDoc" title="Install Doc">
+                            <ui:include src="./WEB-INF/content/installDoc.xhtml"/>
+                        </p:tab>
+                        <p:tab id="tabUserDoc" title="User Doc">
+                            <ui:include src="./WEB-INF/content/userDoc.xhtml"/>
+                        </p:tab>
 
-                    <h2>GUI Design</h2>
-                    <p>
-                        The following image is just a simple scatch of the GUI
-                        as it was originally designed.
-                    </p>
-
-                    <h:graphicImage name="../resources/img/gui_design.png"
-                                    longdesc="This image depicts the GUI design."
-                                    alt="GUI design scatch."/>
-
-                    <h1>Testing approach</h1>
-                    <p>
-                        This application is going to be mostly a subject of
-                        usability testing. It is necessary that the application
-                        will be easy to use by the clients.
-                    </p>
-                    <p>
-                        
-                    </p>
-
-                </c:if>
-
+                    </c:if>
+                </p:tabView>
             </ui:define>
-
         </ui:composition>
         
     </body>

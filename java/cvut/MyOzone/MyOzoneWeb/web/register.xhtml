@@ -2,35 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.prime.com.tr/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     <h:body>
         <ui:composition template="./WEB-INF/layout/template.xhtml">
             <ui:define name="content">
-
-                <h:form id="registerForm">
-                    <h:panelGrid columns="3">
-                        <h:outputLabel for="username" value="Username:" />
-                        <p:inputText id="username" value="#{registerBean.newUser.username}" required="true">
-                            <f:validateRegex pattern="^[a-zěščřžýáíéúůó,A-ZĚŠČŘŽÝÁÍÉÚŮÓ]+"/>
-                        </p:inputText>
-                        <p:message for="username" />
-
-                        <h:outputLabel for="password" value="Password:" />
-                        <p:password id="password" value="#{registerBean.newUser.password}" required="true" feedback="true" minLength="6"/>
-                        <p:message for="password" />
-                        
-                        <h:outputLabel for="passwordAgain" value="Password Again:" />
-                        <p:password id="passwordAgain" required="true" feedback="false" minLength="6" validator="#{registerBean.validateSamePasswords}"/>
-                        <p:message for="passwordAgain" />
-                    </h:panelGrid>
-
-                    <p:commandButton value="Register new user" action="#{registerBean.register}" update="registerForm"/>
-
-                    <p:message for="registerForm" />
-                </h:form>
-
+                <ui:include src="./WEB-INF/forms/register.xhtml"/>
             </ui:define>
         </ui:composition>
     </h:body>
