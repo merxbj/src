@@ -9,6 +9,16 @@
         <ui:composition template="./WEB-INF/layout/template.xhtml">
             <ui:define name="content">
                 <p:tabView id="tabIndexView">
+                    <p:tab id="tabTodo" title="ToDo:">
+                        <ul>
+                            <li>Introduce code doc</li>
+                            <li>Finalize testing section</li>
+                            <li>Introduce architecture section</li>
+                            <li>Introduce installation guide</li>
+                            <li>Introduce user guide</li>
+                            <li>Remove this ToDo List :-)</li>
+                        </ul>
+                    </p:tab>
                     <p:tab id="tabSummary" title="Summary">
                         <ui:include src="./WEB-INF/content/summary.xhtml"/>
                         <p>
