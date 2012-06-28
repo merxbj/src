@@ -17,7 +17,7 @@ import model.User;
 import model.control.remote.UserControl;
 
 /**
- *
+ * Backing bean for the registratio form
  * @author eTeR
  */
 @ManagedBean
@@ -29,7 +29,6 @@ public class RegisterBean {
 
     private User newUser;
 
-    /** Creates a new instance of RegisterBean */
     public RegisterBean() {
         init();
     }
@@ -45,14 +44,29 @@ public class RegisterBean {
         newUser.setPassword("");
     }
 
+    /**
+     * Gets the entity instance of a new user that is about to be registered
+     * @return the user instance
+     */
     public User getNewUser() {
         return newUser;
     }
 
+    /**
+     * Sets the entity instance of a new user that is about to be registered
+     * @param newUser the new user instance
+     */
     public void setNewUser(User newUser) {
         this.newUser = newUser;
     }
 
+    /**
+     * Validates that the new password matches it's "again" field to make sure the
+     * user has not made any typo.
+     * @param context
+     * @param toValidate
+     * @param value
+     */
     public void validateSamePasswords(FacesContext context, UIComponent toValidate, Object value) {
         UIInput passwordField = (UIInput) context.getViewRoot().findComponent("registerForm:password");
         if (passwordField == null) {
@@ -67,6 +81,13 @@ public class RegisterBean {
         }
     }
 
+    /**
+     * Registers the new user with the application
+     * @return the JSF page flow control string:
+     *         success - if the user registration wen't successfully
+     *         failed - if the user registration failed due to a supposedly validation error
+     *         error - if the user registeration failed for unknown reason
+     */
     public String register() {
         FacesContext fc = FacesContext.getCurrentInstance();
         try {

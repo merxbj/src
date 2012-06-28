@@ -16,7 +16,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
- *
+ * Backing bean for the file upload form.
  * @author eTeR
  */
 @ManagedBean
@@ -29,10 +29,19 @@ public class UploadBean {
     @EJB
     AccountableControl accountables;
 
+    /**
+     * This is required by the @ManagedProperty to set the actual instance.
+     * @param security
+     */
     public void setSecurity(SecurityBean security) {
         this.security = security;
     }
 
+    /**
+     * Performs the actual file upload handling where at the end the file data
+     * gets passed to the EJB to get processed and imported to the database.
+     * @param event
+     */
     public void handleFileUpload(FileUploadEvent event) {
         UploadedFile uploadedFile = event.getFile();
         try {

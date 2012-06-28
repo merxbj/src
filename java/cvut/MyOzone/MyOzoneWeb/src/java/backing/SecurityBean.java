@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import model.User;
 
 /**
- *
+ * Not only a backing bean for the login applet but also an utility bean to
+ * provide a convenient interface to security means of the application
  * @author eTeR
  */
 @ManagedBean
@@ -33,13 +34,21 @@ public class SecurityBean {
         loggingUser = new User();
     }
 
-    /** Creates a new instance of SecurityBean */
+    /**
+     * Finds out if there is an user currently logged in to the application.
+     * @return true, if there is an user logged in, false otherwise
+     */
     public boolean getLoggedIn() {
         FacesContext fc = FacesContext.getCurrentInstance();
         Principal p = fc.getExternalContext().getUserPrincipal();
         return (p != null);
     }
 
+    /**
+     * Gets the user entity instance of the user that is currently logged in
+     * (if any), null otherwise
+     * @return
+     */
     public User getLoggedInUser() {
         if (getLoggedIn()) {
             FacesContext fc = FacesContext.getCurrentInstance();
@@ -49,14 +58,31 @@ public class SecurityBean {
         return null;
     }
 
+    /**
+     * Backing support for the login applet. Gets the user entity instance of
+     * the user that is currently in the login process
+     * @return a user that is currently logging in
+     */
     public User getLoggingUser() {
         return loggingUser;
     }
 
+    /**
+     * Backing support for the login applet. Sets the user entity instance of
+     * the user that is currently in the login process
+     * @param loggingUser a user that is currently logging in
+     */
     public void setLoggingUser(User loggingUser) {
         this.loggingUser = loggingUser;
     }
 
+    /**
+     * Performs the actual login operation (programmatic login - security managed
+     * by the container)
+     * @return the JSF page flow control string:
+     *         success - if the user log in wen't successfully
+     *         failed - if the user log in failed (invalid username/password)
+     */
     public String login() {
         FacesContext fc = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest();

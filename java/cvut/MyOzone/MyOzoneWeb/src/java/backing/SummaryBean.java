@@ -21,7 +21,7 @@ import model.control.remote.AccountableControl;
 import model.utility.AccountableAscendingComparer;
 
 /**
- *
+ * Backing bean for the account summary page.
  * @author eTeR
  */
 @ManagedBean
@@ -34,16 +34,31 @@ public class SummaryBean {
     @ManagedProperty(value="#{securityBean}")
     SecurityBean security;
 
+    /**
+     * This is required by the @ManagedProperty to set the actual instance.
+     * @param security
+     */
     public void setSecurity(SecurityBean security) {
         this.security = security;
     }
 
+    /**
+     * Gets all accountables of the currently logged in user.
+     * @return all accountables
+     */
     public List<Accountable> getAccountables() {
         List<Accountable> sortedAccountables = new ArrayList<Accountable>(accountables.getAllAccountables(security.getLoggedInUser()));
         Collections.sort(sortedAccountables, new AccountableAscendingComparer());
         return sortedAccountables;
     }
 
+    /**
+     * Gets the aggregated data of the most expensive callees.
+     * What that means is that we get aggregated data per callee from the
+     * appropriate EJB and get those calees which total of accounted money is over
+     * 5% of the grand total of all accounted money across the board
+     * @return the aggregated data
+     */
     public List<CaleeAgregatedData> getMostExpensiveCallees() {
         Map<String, BigDecimal> accountedPerCalee = accountables.getAccountedMoneyPerCalee(security.getLoggedInUser());
         List<CaleeAgregatedData> mostExpensiveCallees = new ArrayList<CaleeAgregatedData>();
@@ -66,6 +81,11 @@ public class SummaryBean {
         return mostExpensiveCallees;
     }
 
+    /**
+     * Gets the aggregated data of all callees.
+     * @return aggregate data of all callees
+     */
+
     public List<CaleeAgregatedData> getCalleesAggregatedData() {
         Map<String, Long> accountedUnitsPerCalee = accountables.getAccountedUnitsPerCalee(security.getLoggedInUser());
         Map<String, BigDecimal> accountedMoneyPerCalee = accountables.getAccountedMoneyPerCalee(security.getLoggedInUser());
@@ -83,6 +103,9 @@ public class SummaryBean {
         return calleesAggregatedData;
     }
 
+    /**
+     * Helper class to hold the aggregated data per callee (units and money)
+     */
     public static class CaleeAgregatedData implements Comparable<CaleeAgregatedData> {
         private String callee;
         private double money;

@@ -18,7 +18,7 @@ import model.User;
 import model.control.remote.UserControl;
 
 /**
- *
+ * Backing bean to support the profile editing page.
  * @author eTeR
  */
 @ManagedBean
@@ -35,15 +35,30 @@ public class ProfileBean {
     private String oldPassword;
     private String newPassword;
 
+    /**
+     * This is required by the @ManagedProperty to set the actual instance.
+     * @param security
+     */
     public void setSecurity(SecurityBean security) {
         this.security = security;
         this.currentUser = security.getLoggedInUser();
     }
 
+    /**
+     * Gets the current user that is being edited in the profile page.
+     * @return the user entity instance.
+     */
     public User getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Updates the user based on the profile form content.
+     * @return the JSF page flow control string:
+     *         success - if the user update wen't successfully
+     *         failed - if the user update failed due to a supposedly validation error
+     *         error - if the user update failed for unknown reason
+     */
     public String updateUser() {
         try {
             if ((oldPassword != null) && !oldPassword.equals("")) {
@@ -69,22 +84,51 @@ public class ProfileBean {
         return "success";
     }
 
+    /**
+     * Gets the new password (the password to replace the old password) of the
+     * current user.
+     * @return the new password
+     */
     public String getNewPassword() {
         return newPassword;
     }
 
+    /**
+     * Sets the new password (the password to replace the old password) of the
+     * current user.
+     * @param password the new password
+     */
     public void setNewPassword(String password) {
         this.newPassword = password;
     }
 
+    /**
+     * Gets the old password (the password to be replaced by the new password) of
+     * the current user. This password is going to be verified and must match the
+     * current password upon the updateUser call.
+     * @return the old password
+     */
     public String getOldPassword() {
         return oldPassword;
     }
 
+    /**
+     * Sets the old password (the password to be replaced by the new password) of
+     * the current user. This password is going to be verified and must match the
+     * current password upon the updateUser call.
+     * @param oldPassword the old password
+     */
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
     }
 
+    /**
+     * Validates that the new password matches it's "again" field to make sure the
+     * user has not made any typo.
+     * @param context
+     * @param toValidate
+     * @param value
+     */
     public void validateSamePasswords(FacesContext context, UIComponent toValidate, Object value) {
         
         UIInput oldPasswordField = (UIInput) context.getViewRoot().findComponent("profileForm:oldPassword");
