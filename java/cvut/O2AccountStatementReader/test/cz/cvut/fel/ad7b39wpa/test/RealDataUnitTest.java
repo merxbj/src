@@ -5,6 +5,7 @@
 
 package cz.cvut.fel.ad7b39wpa.test;
 
+import org.joda.time.Interval;
 import org.joda.time.DateTime;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReaderBuilder;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
@@ -14,8 +15,6 @@ import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import java.util.Collection;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReader;
 import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
-import cz.cvut.fel.ad7b39wpa.xls.XLSInterval;
-import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
 import cz.cvut.fel.ad7b39wpa.mock.CallableMock;
 import java.io.InputStream;
@@ -47,7 +46,7 @@ public class RealDataUnitTest {
     public void basicTest() throws Exception {
 
         try {
-            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
+            Interval period = new Interval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
 
             /**
@@ -72,7 +71,7 @@ public class RealDataUnitTest {
     @Test
     public void intervalTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new DateTime(2012, 04, 01, 0, 0), new DateTime(2012, 05, 01, 0, 0));
+            Interval period = new Interval(new DateTime(2012, 04, 01, 0, 0), new DateTime(2012, 05, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
 
             BigDecimal total = new BigDecimal(BigInteger.ZERO);
@@ -97,7 +96,7 @@ public class RealDataUnitTest {
     @Test
     public void gprsMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
+            Interval period = new Interval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[0];
 
@@ -126,7 +125,7 @@ public class RealDataUnitTest {
     @Test
     public void gsmMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
+            Interval period = new Interval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[3];
 
@@ -156,7 +155,7 @@ public class RealDataUnitTest {
     @Test
     public void textMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
+            Interval period = new Interval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[4];
 

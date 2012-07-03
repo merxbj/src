@@ -3,7 +3,6 @@ package cz.cvut.fel.ad7b39wpa.mock;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
-import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -12,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 public class AccountableMock implements Accountable {
 
@@ -41,7 +41,7 @@ public class AccountableMock implements Accountable {
         acc.setAccountedMoney(BigDecimal.valueOf(random.nextDouble() * 255).round(new MathContext(5)));
         acc.setAccountedUnits(Math.abs(random.nextLong()) % 255);
         acc.setCallee(knownCallables.get(random.nextInt(knownCallables.size())));
-        acc.setDate(new DateTime(withinInterval.getStartDate().getMillis() + (Math.abs(random.nextLong()) % (withinInterval.getEndDate().getMillis() - withinInterval.getStartDate().getMillis()))));
+        acc.setDate(new DateTime(withinInterval.getStart().getMillis() + (Math.abs(random.nextLong()) % (withinInterval.getEnd().getMillis() - withinInterval.getStart().getMillis()))));
         acc.setDestination(knownDestinations[random.nextInt(knownDestinations.length)]);
         acc.setFreeUnitsApplied(random.nextBoolean());
         acc.setService(ServiceType.values()[random.nextInt(ServiceType.values().length)]);

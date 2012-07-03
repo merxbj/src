@@ -1,5 +1,7 @@
 package cz.cvut.fel.ad7b39wpa.core;
 
+import org.joda.time.Interval;
+
 /**
  * Builds an AccountStatementReader based on the given parameters.
  * The account statement format depends on the Callable owner (recipient of the

@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.util.Collection;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReader;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
-import cz.cvut.fel.ad7b39wpa.core.Interval;
-import cz.cvut.fel.ad7b39wpa.mock.IntervalMock;
 import cz.cvut.fel.ad7b39wpa.mock.CallableMock;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
 import cz.cvut.fel.ad7b39wpa.mock.AccountStatementReaderBuilderMock;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReaderBuilder;
+import java.util.Random;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,6 +29,9 @@ import org.junit.Test;
  * @author merxbj
  */
 public class MockUnitTest {
+
+    private final static long ONE_DAY_AS_MILLISECONDS = 24L * 60L * 60L * 1000L;
+    private final static Random random = new Random(DateTime.now().getMillis());
 
     public MockUnitTest() {
     }
@@ -61,7 +65,7 @@ public class MockUnitTest {
          * It is on the actual implementor discretion to supply a valid and working implementation.
          */
         Callable owner = CallableMock.createRandomCallable();
-        Interval period = IntervalMock.createRandomInterval(360, 30);
+        Interval period = createRandomInterval(360, 30);
         AccountStatementReader reader = builder.build(owner, period);
 
         /**
@@ -75,6 +79,17 @@ public class MockUnitTest {
         for (Accountable acc : accountables) {
             System.out.println(acc);
         }
+    }
+
+    private static Interval createRandomInterval(int maxDaysBack, int daysDuration) {
+        if (maxDaysBack < daysDuration) {
+            throw new RuntimeException(String.format("maxDaysBack(%d) < daysDuration(%d)", maxDaysBack, daysDuration));
+        }
+
+        int daysBack = random.nextInt(maxDaysBack);
+        long startMilis = DateTime.now().getMillis() - (daysBack * ONE_DAY_AS_MILLISECONDS);
+
+        return new Interval(startMilis, startMilis + (daysDuration * ONE_DAY_AS_MILLISECONDS));
     }
 
 }
