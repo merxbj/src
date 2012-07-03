@@ -5,6 +5,7 @@
 
 package cz.cvut.fel.ad7b39wpa.test;
 
+import org.joda.time.DateTime;
 import cz.cvut.fel.ad7b39wpa.core.AccountStatementReaderBuilder;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
 import cz.cvut.fel.ad7b39wpa.core.DataFormatException;
@@ -16,7 +17,6 @@ import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
 import cz.cvut.fel.ad7b39wpa.xls.XLSInterval;
 import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
-import java.util.Date;
 import cz.cvut.fel.ad7b39wpa.mock.CallableMock;
 import java.io.InputStream;
 import cz.cvut.fel.ad7b39wpa.xls.XLSAccountStatementReaderBuilder;
@@ -47,7 +47,7 @@ public class RealDataUnitTest {
     public void basicTest() throws Exception {
 
         try {
-            Interval period = new XLSInterval(new Date(112, 01, 01), new Date(112, 11, 01));
+            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
 
             /**
@@ -72,7 +72,7 @@ public class RealDataUnitTest {
     @Test
     public void intervalTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new Date(112, 03, 01), new Date(112, 04, 01));
+            Interval period = new XLSInterval(new DateTime(2012, 04, 01, 0, 0), new DateTime(2012, 05, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
 
             BigDecimal total = new BigDecimal(BigInteger.ZERO);
@@ -81,9 +81,13 @@ public class RealDataUnitTest {
             }
 
             assertEquals(new BigDecimal("367.33"), total);
+        } catch (Exception ex) {
+            fail(ex.toString());
         } finally {
             try {
-                testData.close();
+                if (testData != null) {
+                    testData.close();
+                }
             } catch (IOException ex) {
 
             }
@@ -93,7 +97,7 @@ public class RealDataUnitTest {
     @Test
     public void gprsMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new Date(112, 00, 01), new Date(112, 11, 01));
+            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[0];
 
@@ -101,16 +105,20 @@ public class RealDataUnitTest {
             assertEquals(new BigDecimal(0), acc.getAccountedMoney());
             assertEquals(2, acc.getAccountedUnits());
             assertNull(acc.getCallee());
-            assertEquals(new Date(112, 3, 8, 0, 0, 0), acc.getDate());
+            assertEquals(new DateTime(2012, 4, 8, 0, 0, 0), acc.getDate());
             assertEquals("Mobilní data, Internet (čas)", acc.getDestination());
             assertFalse(acc.getFreeUnitsApplied());
             assertEquals(ServiceType.GPRS, acc.getService());
 
+        } catch (Exception ex) {
+            fail(ex.toString());
         } finally {
-            try {
-                testData.close();
-            } catch (IOException ex) {
+            if (testData != null) {
+                try {
+                    testData.close();
+                } catch (IOException ex) {
 
+                }
             }
         }
     }
@@ -118,7 +126,7 @@ public class RealDataUnitTest {
     @Test
     public void gsmMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new Date(112, 00, 01), new Date(112, 11, 01));
+            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[3];
 
@@ -126,17 +134,21 @@ public class RealDataUnitTest {
             assertEquals(new BigDecimal(0), acc.getAccountedMoney());
             assertEquals(60, acc.getAccountedUnits());
             assertEquals(new Callable(420, 605, 550012), acc.getCallee());
-            assertEquals(new Date(112, 3, 8, 17, 50, 0), acc.getDate());
+            assertEquals(new DateTime(2012, 4, 8, 17, 50, 0), acc.getDate());
             assertEquals("Vodafone", acc.getDestination());
             assertTrue(acc.getFreeUnitsApplied());
             assertEquals(acc.getService(), ServiceType.TEL);
 
 
+        } catch (Exception ex) {
+            fail(ex.toString());
         } finally {
-            try {
-                testData.close();
-            } catch (IOException ex) {
+            if (testData != null) {
+                try {
+                    testData.close();
+                } catch (IOException ex) {
 
+                }
             }
         }
     }
@@ -144,7 +156,7 @@ public class RealDataUnitTest {
     @Test
     public void textMemberWiseTest() throws Exception {
         try {
-            Interval period = new XLSInterval(new Date(112, 00, 01), new Date(112, 11, 01));
+            Interval period = new XLSInterval(new DateTime(2012, 01, 01, 0, 0), new DateTime(2013, 01, 01, 0, 0));
             Collection<Accountable> accountables = readAccountables(period);
             Accountable acc = (accountables.toArray(new Accountable[accountables.size()]))[4];
 
@@ -152,16 +164,21 @@ public class RealDataUnitTest {
             assertEquals(new BigDecimal("1.33"), acc.getAccountedMoney());
             assertEquals(1, acc.getAccountedUnits());
             assertEquals(new Callable(420, 731, 108199), acc.getCallee());
-            assertEquals(new Date(112, 3, 8, 17, 56, 0), acc.getDate());
+            assertEquals(new DateTime(2012, 4, 8, 17, 56, 0), acc.getDate());
             assertEquals("T-Mobile 73", acc.getDestination());
             assertFalse(acc.getFreeUnitsApplied());
             assertEquals(acc.getService(), ServiceType.TEXT);
 
-        } finally {
-            try {
-                testData.close();
-            } catch (IOException ex) {
+        } catch (Exception ex) {
+            fail(ex.toString());
+        }
+        finally {
+            if (testData != null) {
+                try {
+                    testData.close();
+                } catch (IOException ex) {
 
+                }
             }
         }
     }

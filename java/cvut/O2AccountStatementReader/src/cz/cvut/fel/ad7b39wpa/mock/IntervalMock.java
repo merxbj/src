@@ -7,8 +7,8 @@ package cz.cvut.fel.ad7b39wpa.mock;
 
 import cz.cvut.fel.ad7b39wpa.core.Interval;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -19,8 +19,8 @@ public class IntervalMock implements Interval {
     private static Random random = new Random(Calendar.getInstance().getTimeInMillis());
     private static long ONE_DAY_AS_MILLISECONDS = 24L * 60L * 60L * 1000L;
 
-    private Date startDate;
-    private Date endDate;
+    private DateTime startDate;
+    private DateTime endDate;
 
     public static Interval createRandomInterval(int maxDaysBack, int daysDuration) {
         if (maxDaysBack < daysDuration) {
@@ -28,11 +28,11 @@ public class IntervalMock implements Interval {
         }
 
         int daysBack = random.nextInt(maxDaysBack);
-        long startMilis = Calendar.getInstance().getTimeInMillis() - (daysBack * ONE_DAY_AS_MILLISECONDS);
+        long startMilis = DateTime.now().getMillis() - (daysBack * ONE_DAY_AS_MILLISECONDS);
         
         Interval interval = new IntervalMock();
-        interval.setStartDate(new Date(startMilis));
-        interval.setEndDate(new Date(startMilis + (daysDuration * ONE_DAY_AS_MILLISECONDS)));
+        interval.setStartDate(new DateTime(startMilis));
+        interval.setEndDate(new DateTime(startMilis + (daysDuration * ONE_DAY_AS_MILLISECONDS)));
 
         return interval;
     }
@@ -41,19 +41,19 @@ public class IntervalMock implements Interval {
         
     }
 
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 

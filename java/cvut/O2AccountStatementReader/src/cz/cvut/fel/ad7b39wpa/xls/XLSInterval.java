@@ -6,7 +6,7 @@
 package cz.cvut.fel.ad7b39wpa.xls;
 
 import cz.cvut.fel.ad7b39wpa.core.Interval;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 
 /**
@@ -15,35 +15,35 @@ import java.util.Date;
  */
 public class XLSInterval implements Interval {
 
-    private Date startDate;
-    private Date endDate;
+    private DateTime startDate;
+    private DateTime endDate;
     
     public XLSInterval() {
         
     }
 
-    public XLSInterval(Date startDate, Date endDate) {
+    public XLSInterval(DateTime startDate, DateTime endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     @Override
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
     @Override
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
     @Override
-    public void setEndDate(Date endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
     @Override
-    public void setStartDate(Date startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 

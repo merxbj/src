@@ -5,19 +5,21 @@ import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class XLSAccountable implements Accountable {
-    private static final DateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
-    private static final DateFormat timeFormatter = new SimpleDateFormat("HH:mm Z");
-    private static final DateFormat unitTimeFormatter = new SimpleDateFormat("mm:ss Z");
 
+    private static final DateTimeZone zone = DateTimeZone.getDefault();
+    private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd.MM.yyyy").withZone(zone);
+    private static final DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(zone);
+    private static final DateTimeFormatter unitTimeFormatter = DateTimeFormat.forPattern("mm:ss").withZone(zone);
 
-    private Date date;
+    private DateTime date;
     private ServiceType service;
     private String destination;
     private Callable callee;
@@ -32,13 +34,13 @@ public class XLSAccountable implements Accountable {
 
         switch (XLSColumnMap.values()[cell.getColumnIndex()]) {
             case DATE:
-                Date tmpDate = (Date) dateFormatter.parse(cellValue);
+                DateTime tmpDate = DateTime.parse(cellValue, dateFormatter);
                 this.setDate(tmpDate);
                 break;
             case TIME:
-                Date time = (Date) timeFormatter.parse((cellValue + " GMT"));
-                Date originalDate = this.getDate();
-                Date dateTime = new Date(originalDate.getTime() + time.getTime());
+                DateTime time = DateTime.parse(cellValue, timeFormatter);
+                DateTime originalDate = this.getDate();
+                DateTime dateTime = originalDate.plus(time.getMillisOfDay());
                 this.setDate(dateTime);
                 break;
             case SERVICE:
@@ -59,8 +61,8 @@ public class XLSAccountable implements Accountable {
             case ACCOUNTED_UNITS:
                 long value = 0;
                 if (isTime(cellValue)) {
-                    Date unitTime = (Date) unitTimeFormatter.parse((cellValue + " GMT"));
-                    value = unitTime.getTime() / 1000;
+                    DateTime unitTime = DateTime.parse(cellValue, unitTimeFormatter);
+                    value = unitTime.getMillisOfDay() / 1000;
                 }
                 else {
                     value = Integer.parseInt(cellValue);
@@ -144,12 +146,12 @@ public class XLSAccountable implements Accountable {
     }
 
     @Override
-    public Date getDate() {
+    public DateTime getDate() {
         return date;
     }
 
     @Override
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 
