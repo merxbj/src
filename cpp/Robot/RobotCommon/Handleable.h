@@ -13,4 +13,3 @@ namespace RobotCommon
         virtual void Handle(ResponseHandler handler) = 0;
     };
 }
-

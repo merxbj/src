@@ -7,7 +7,7 @@
 
 using std::map;
 using std::list;
-using std::string;
+using std::wstring;
 
 namespace RobotCommon
 {

@@ -2,7 +2,7 @@
 
 #include <string>
 
-using std::wstring;
+using std::string;
 
 namespace RobotCommon
 {
@@ -12,7 +12,7 @@ namespace RobotCommon
         TcpFormatable(void);
         virtual ~TcpFormatable(void);
 
-        virtual wstring formatForTcp() = 0;
-        virtual bool parseParamsFromTcp(wstring params);
+        virtual string formatForTcp() = 0;
+        virtual bool parseParamsFromTcp(string params);
     };
 }

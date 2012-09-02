@@ -18,16 +18,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Handleable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResponseHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Processable.h">
@@ -39,21 +33,33 @@
     <ClInclude Include="TcpFormatable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RequestProcessor.h">
+    <ClInclude Include="Direction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Direction.h">
+    <ClInclude Include="RobotInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Request.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StringUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Direction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Request.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Response.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
