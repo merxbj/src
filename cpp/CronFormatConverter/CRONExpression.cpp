@@ -215,8 +215,6 @@ CCronElement* CCronSchedulePattern::parseSingleElement(const std::string& strRaw
 
         return new CCronElement(iPos, list);
     }
-
-    return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////
