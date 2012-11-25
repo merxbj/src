@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 /**
  *
@@ -54,15 +56,15 @@ public class XLSAccountStatementReader implements AccountStatementReader {
 
     private Collection<Accountable> filterOutUndesiredAccountables(Collection<Accountable> accountables) {
         Collection<Accountable> validatedAccountables = new ArrayList<Accountable>() {};
-        Date startDate = desiredPeriod.getStartDate();
-        Date endDate = desiredPeriod.getEndDate();
+        DateTime startDate = desiredPeriod.getStart();
+        DateTime endDate = desiredPeriod.getEnd();
 
-        if (startDate.getTime() == 0 && endDate.getTime() == 0) {
+        if (startDate.getMillis() == 0 && endDate.getMillis() == 0) {
             return accountables;
         }
 
         for (Accountable accountable : accountables) {
-            if (accountable.getDate().after(startDate) && accountable.getDate().before(endDate)) {
+            if (accountable.getDate().isAfter(startDate) && accountable.getDate().isBefore(endDate)) {
                 validatedAccountables.add(accountable);
             }
         }

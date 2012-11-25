@@ -11,11 +11,11 @@ import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
 import cz.cvut.fel.ad7b39wpa.core.ConfigurationException;
 import cz.cvut.fel.ad7b39wpa.core.DataFormatException;
-import cz.cvut.fel.ad7b39wpa.core.Interval;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.TreeSet;
+import org.joda.time.Interval;
 
 /**
  *

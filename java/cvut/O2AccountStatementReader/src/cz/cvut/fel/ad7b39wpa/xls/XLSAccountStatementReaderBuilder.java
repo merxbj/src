@@ -5,6 +5,7 @@
 package cz.cvut.fel.ad7b39wpa.xls;
 
 import cz.cvut.fel.ad7b39wpa.core.*;
+import org.joda.time.Interval;
 
 /**
  *

@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiday13", "Fiday13\Fiday13.csproj", "{708B1C07-098D-453D-A831-1CEAB88267B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlTimeSpan", "XmlTimeSpan\XmlTimeSpan.csproj", "{1D92258E-E0EA-4342-9A06-2F79B5E1ADE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandMaster", "GrandMaster\GrandMaster.csproj", "{707BF21A-A193-45A9-AA85-A2B987561F34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,16 @@ Global
 		{1D92258E-E0EA-4342-9A06-2F79B5E1ADE0}.Release|Mixed Platforms.Build.0 = Release|x86
 		{1D92258E-E0EA-4342-9A06-2F79B5E1ADE0}.Release|x86.ActiveCfg = Release|x86
 		{1D92258E-E0EA-4342-9A06-2F79B5E1ADE0}.Release|x86.Build.0 = Release|x86
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{707BF21A-A193-45A9-AA85-A2B987561F34}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

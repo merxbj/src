@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RobotClient", "RobotClient\RobotClient.vcxproj", "{BFF1077B-FE7F-4D48-9CDD-A7C60D1E22C4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RobotServer", "RobotServer\RobotServer.vcxproj", "{179AF310-A9B0-4F3B-8969-DCA4DA53B14E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RobotCommon", "RobotCommon\RobotCommon.vcxproj", "{01DE9AD2-1960-470A-8AB2-BC368409A4D8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RobotCommonTest", "RobotCommonTest\RobotCommonTest.vcxproj", "{5C97058D-DDCF-41C5-B1FC-11B466CE66B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01DE9AD2-1960-470A-8AB2-BC368409A4D8} = {01DE9AD2-1960-470A-8AB2-BC368409A4D8}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFF1077B-FE7F-4D48-9CDD-A7C60D1E22C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFF1077B-FE7F-4D48-9CDD-A7C60D1E22C4}.Debug|Win32.Build.0 = Debug|Win32
+		{BFF1077B-FE7F-4D48-9CDD-A7C60D1E22C4}.Release|Win32.ActiveCfg = Release|Win32
+		{BFF1077B-FE7F-4D48-9CDD-A7C60D1E22C4}.Release|Win32.Build.0 = Release|Win32
+		{179AF310-A9B0-4F3B-8969-DCA4DA53B14E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{179AF310-A9B0-4F3B-8969-DCA4DA53B14E}.Debug|Win32.Build.0 = Debug|Win32
+		{179AF310-A9B0-4F3B-8969-DCA4DA53B14E}.Release|Win32.ActiveCfg = Release|Win32
+		{179AF310-A9B0-4F3B-8969-DCA4DA53B14E}.Release|Win32.Build.0 = Release|Win32
+		{01DE9AD2-1960-470A-8AB2-BC368409A4D8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01DE9AD2-1960-470A-8AB2-BC368409A4D8}.Debug|Win32.Build.0 = Debug|Win32
+		{01DE9AD2-1960-470A-8AB2-BC368409A4D8}.Release|Win32.ActiveCfg = Release|Win32
+		{01DE9AD2-1960-470A-8AB2-BC368409A4D8}.Release|Win32.Build.0 = Release|Win32
+		{5C97058D-DDCF-41C5-B1FC-11B466CE66B4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5C97058D-DDCF-41C5-B1FC-11B466CE66B4}.Debug|Win32.Build.0 = Debug|Win32
+		{5C97058D-DDCF-41C5-B1FC-11B466CE66B4}.Release|Win32.ActiveCfg = Release|Win32
+		{5C97058D-DDCF-41C5-B1FC-11B466CE66B4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

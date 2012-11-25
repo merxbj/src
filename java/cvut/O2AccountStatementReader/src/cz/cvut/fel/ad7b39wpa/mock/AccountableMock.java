@@ -3,15 +3,15 @@ package cz.cvut.fel.ad7b39wpa.mock;
 import cz.cvut.fel.ad7b39wpa.core.Accountable;
 import cz.cvut.fel.ad7b39wpa.core.AccountablePeriod;
 import cz.cvut.fel.ad7b39wpa.core.Callable;
-import cz.cvut.fel.ad7b39wpa.core.Interval;
 import cz.cvut.fel.ad7b39wpa.core.ServiceType;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 public class AccountableMock implements Accountable {
 
@@ -19,7 +19,7 @@ public class AccountableMock implements Accountable {
     private static String[] knownDestinations = {"GSM O2 72", "Vodafone 77", "T-Mobile 73", "T-Mobile 605"};
     private static final List<Callable> knownCallables;
 
-    private Date date;
+    private DateTime date;
     private ServiceType service;
     private String destination;
     private Callable callee;
@@ -41,7 +41,7 @@ public class AccountableMock implements Accountable {
         acc.setAccountedMoney(BigDecimal.valueOf(random.nextDouble() * 255).round(new MathContext(5)));
         acc.setAccountedUnits(Math.abs(random.nextLong()) % 255);
         acc.setCallee(knownCallables.get(random.nextInt(knownCallables.size())));
-        acc.setDate(new Date(withinInterval.getStartDate().getTime() + (Math.abs(random.nextLong()) % (withinInterval.getEndDate().getTime() - withinInterval.getStartDate().getTime()))));
+        acc.setDate(new DateTime(withinInterval.getStart().getMillis() + (Math.abs(random.nextLong()) % (withinInterval.getEnd().getMillis() - withinInterval.getStart().getMillis()))));
         acc.setDestination(knownDestinations[random.nextInt(knownDestinations.length)]);
         acc.setFreeUnitsApplied(random.nextBoolean());
         acc.setService(ServiceType.values()[random.nextInt(ServiceType.values().length)]);
@@ -83,11 +83,11 @@ public class AccountableMock implements Accountable {
         this.callee = callee;
     }
 
-    public Date getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 

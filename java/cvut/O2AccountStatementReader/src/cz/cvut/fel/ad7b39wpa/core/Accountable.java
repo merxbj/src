@@ -2,7 +2,7 @@ package cz.cvut.fel.ad7b39wpa.core;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Represents a single accountable unit that is a part of the account statement.
@@ -14,13 +14,13 @@ public interface Accountable extends Comparable<Accountable>, Serializable {
      * Gets the timestamp when the accountable event occurred.
      * @return the date
      */
-    public Date getDate();
+    public DateTime getDate();
 
     /**
      * Sets the timestamp when the accountable event occurred.
      * @param date the date
      */
-    public void setDate(Date date);
+    public void setDate(DateTime date);
 
     /**
      * Gets the service by which means the accountable event occurred.
