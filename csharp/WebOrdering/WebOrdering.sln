@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebOrdering.Common", "WebOrdering\Common\WebOrdering.Common.csproj", "{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebOrdering.TranReceiver", "WebOrdering\TranReceiver\WebOrdering.TranReceiver.csproj", "{B5743934-B426-4DCD-A3CB-55C1F1FB459C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1} = {854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebOrdering.TranSender", "WebOrdering.TranSender\WebOrdering.TranSender.csproj", "{9C8C6B97-6CB7-4AA2-9B9A-797EE186C1E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1} = {854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854B0FE2-FB2B-4413-85B2-CE129DC8F7D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5743934-B426-4DCD-A3CB-55C1F1FB459C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5743934-B426-4DCD-A3CB-55C1F1FB459C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5743934-B426-4DCD-A3CB-55C1F1FB459C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5743934-B426-4DCD-A3CB-55C1F1FB459C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C8C6B97-6CB7-4AA2-9B9A-797EE186C1E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C8C6B97-6CB7-4AA2-9B9A-797EE186C1E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C8C6B97-6CB7-4AA2-9B9A-797EE186C1E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C8C6B97-6CB7-4AA2-9B9A-797EE186C1E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

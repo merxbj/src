@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><Transaction>
+    <ID>123456</ID>
+    <Items>
+        <Item>
+            <Name>Susenka</Name>
+            <Quantity>10</Quantity>
+            <Price>5</Price>
+        </Item>
+        <Item>
+            <Name>Brambora</Name>
+            <Quantity>4</Quantity>
+            <Price>1</Price>
+        </Item>
+        <Item>
+            <Name>Notebook</Name>
+            <Quantity>1</Quantity>
+            <Price>20000</Price>
+        </Item>
+    </Items>
+</Transaction>
+
+<?xml version="1.0" encoding="utf-8"?><Transaction><ID>123456</ID><Items><Item><Name>Susenka</Name><Quantity>10</Quantity><Price>5</Price></Item><Item><Name>Brambora</Name><Quantity>4</Quantity><Price>1</Price></Item><Item><Name>Notebook</Name><Quantity>1</Quantity><Price>20000</Price></Item></Items></Transaction>
