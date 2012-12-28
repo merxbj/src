@@ -8,6 +8,7 @@ package cz.merxbj.csob.core;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -25,19 +26,64 @@ public class TextFilesCsobParser implements CsobParser {
 
     private Collection<Collection<String>> parseFile(InputStream is) {
         Scanner sc = new Scanner(is);
-        Collection<String> block = new ArrayList<String>(12);
+        Collection<Collection<String>> blocks = new ArrayList<Collection<String>>();
         while (sc.hasNextLine()) {
-            String line = sc.nextLine();
-            
+            ArrayList<String> block = new ArrayList<String>(11);
+            int linesProcessed = 0;
+            while (sc.hasNextLine() && linesProcessed < 12) {
+                String line = sc.nextLine();
+                if (linesProcessed < 11) {
+                    block.add(line.trim());
+                } else {
+                    block.add(block.get(10) + " " + line); // poor csob formatting
+                }
+                linesProcessed += 1;
+            }
+            blocks.add(block);
+
+            if (sc.hasNextLine()) {
+                String emptyLine = sc.nextLine();
+                if (!emptyLine.trim().equals(""))
+                {
+                    throw new RuntimeException("Expected empty line but found: " + emptyLine);
+                }
+            }
         }
+        
+        return blocks;
     }
 
     private Collection<Map<String, String>> parseBlocks(Collection<Collection<String>> blocks) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Collection<Map<String, String>> tranNvps = new ArrayList<Map<String, String>>(blocks.size());
+        for (Collection<String> rawNvps : blocks) {
+            Map<String, String> nvps = new HashMap<String, String>();
+            for (String rawNvp : rawNvps) {
+                String[] pair = parseRawNvp(rawNvp);
+                String name = pair[0].trim();
+                String value = ((pair.length > 1) && (pair[1] != null) ? pair[1].trim() : "");
+                nvps.put(name, value);
+            }
+            tranNvps.add(nvps);
+        }
+        return tranNvps;
     }
 
     private Collection<Transaction> parseNvps(Collection<Map<String, String>> nvps) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        Collection<Transaction> trans = new ArrayList<Transaction>(nvps.size());
+        for (Map<String, String> tranNvps : nvps) {
+            Transaction tran = new Transaction();
+            tran.parseNvps(tranNvps);
+            trans.add(tran);
+        }
+        return trans;
+    }
+
+    private String[] parseRawNvp(String rawNvp) {
+        String[] nameAndValue = new String[2];
+        int firstColumnPos = rawNvp.indexOf(":");
+        nameAndValue[0] = rawNvp.substring(0, firstColumnPos).trim();
+        nameAndValue[1] = rawNvp.substring(firstColumnPos + 1).trim();
+        return nameAndValue;
     }
 
 }

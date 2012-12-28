@@ -5,13 +5,15 @@
 
 package cz.merxbj.csob.core;
 
+import cz.merxbj.csob.core.Transaction;
 import java.util.Collection;
 
 /**
  *
  * @author merxbj
  */
-public interface DatabaseImporter {
+public interface AnalysisDriver {
 
-    void importTransactions(Collection<Transaction> trans);
+    public void analyze(Collection<Transaction> trans);
+
 }

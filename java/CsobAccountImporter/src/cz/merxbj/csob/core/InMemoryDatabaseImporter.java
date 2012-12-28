@@ -11,7 +11,10 @@ import java.util.Collection;
  *
  * @author merxbj
  */
-public interface DatabaseImporter {
+public class InMemoryDatabaseImporter implements DatabaseImporter {
 
-    void importTransactions(Collection<Transaction> trans);
+    public void importTransactions(Collection<Transaction> trans) {
+        
+    }
+
 }
