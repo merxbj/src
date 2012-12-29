@@ -1,11 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileChecker", "FileChecker\FileChecker.vcxproj", "{851DACB0-4000-4763-83B3-50A955E15B6F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdInArraySort", "StdInArraySort\StdInArraySort.vcxproj", "{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CronFormatConverter", "CronFormatConverter\CronFormatConverter.vcxproj", "{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Queue", "Queue\Queue.vcxproj", "{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}"
 EndProject
@@ -14,6 +12,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestStl", "TestStl\TestStl.vcxproj", "{954E13DD-1C8F-4F21-B349-688520553CC1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Parser\Parser.vcxproj", "{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logger", "Logger\Logger.vcxproj", "{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggerAppender", "LoggerAppender\LoggerAppender.vcxproj", "{3B57AE5A-FFCB-4111-A3F1-C55B7A9DC33C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58} = {3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +32,6 @@ Global
 		{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}.Release|Win32.ActiveCfg = Release|Win32
 		{D1E06B4F-7381-4BFE-9CAC-AFBB4BC79F48}.Release|Win32.Build.0 = Release|Win32
-		{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}.Debug|Win32.Build.0 = Debug|Win32
-		{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}.Release|Win32.ActiveCfg = Release|Win32
-		{A5C5D7CE-DFDC-4BD8-BC6C-899B8636FCBF}.Release|Win32.Build.0 = Release|Win32
 		{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}.Release|Win32.ActiveCfg = Release|Win32
 		{0FC4A932-5358-400E-B1F5-D0CDC9F3A92F}.Release|Win32.Build.0 = Release|Win32
@@ -45,6 +46,14 @@ Global
 		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Debug|Win32.Build.0 = Debug|Win32
 		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Release|Win32.ActiveCfg = Release|Win32
 		{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}.Release|Win32.Build.0 = Release|Win32
+		{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}.Debug|Win32.Build.0 = Debug|Win32
+		{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}.Release|Win32.ActiveCfg = Release|Win32
+		{3D835FCB-5C57-43E6-BF2A-8E6E677E0A58}.Release|Win32.Build.0 = Release|Win32
+		{3B57AE5A-FFCB-4111-A3F1-C55B7A9DC33C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3B57AE5A-FFCB-4111-A3F1-C55B7A9DC33C}.Debug|Win32.Build.0 = Debug|Win32
+		{3B57AE5A-FFCB-4111-A3F1-C55B7A9DC33C}.Release|Win32.ActiveCfg = Release|Win32
+		{3B57AE5A-FFCB-4111-A3F1-C55B7A9DC33C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
