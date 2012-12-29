@@ -58,3 +58,4 @@ csharp/*/_ReSharper*
 /objc/*/xcuserdata/
 /objc/*/*.xcodeproj/xcuserdata/
 /objc/*/*.xcodeproj/project.xcworkspace/
+_resharper.*
