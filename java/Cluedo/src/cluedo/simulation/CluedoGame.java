@@ -19,9 +19,9 @@
  */
 package cluedo.simulation;
 
+import cluedo.core.*;
 import java.util.*;
 import org.w3c.dom.*;
-import cluedo.core.*;
 
 /**
  *
