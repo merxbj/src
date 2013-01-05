@@ -1,0 +1,26 @@
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.05"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1995P"]
+[BlackElo "1445P"]
+[ECO "C60"]
+[TimeControl "60+1"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 59607]} Nc6 
+{[%clkms 60110]} 3. Bb5 {[%clkms 55237]} Nb4 {[%clkms 57579]} 4. d4 {[%clkms 
+46858]} c6 {[%clkms 54204]} 5. dxe5 {[%clkms 44843]} Ne7 {[%clkms 45641]} 6. 
+O-O {[%clkms 45618]} cxb5 {[%clkms 43157]} 7. Bg5 {[%clkms 43369]} f6 
+{[%clkms 41063]} 8. Bh4 {[%clkms 43950]} Qc7 {[%clkms 34000]} 9. exf6 
+{[%clkms 43146]} gxf6 {[%clkms 33422]} 10. Bxf6 {[%clkms 43606]} Ng6 {[%clkms 
+30078]} 11. Bxh8 {[%clkms 44389]} Qc6 {[%clkms 15922]} 12. Re1 {[%clkms 
+42618]} Bd6 {[%clkms 12406]} 13. Qd2 {[%clkms 39203]} Kd8 {[%clkms 10499]} 
+14. Rd1 {[%clkms 39378]} Kc7 {[%clkms 10015]} 15. Nd4 {[%clkms 35324]} Kb8 
+{[%clkms 10915]} 16. Nxc6+ {[%clkms 35502]} bxc6 {[%clkms 10525]} 17. Qxd6+ 
+{[%clkms 33726]} Kb7 {[%clkms 9619]} 18. Qxb4 {[%clkms 30157]} Kb6 {[%clkms 
+8494]} 19. Bd4+ {[%clkms 26812]} Ka6 {[%clkms 2510]} 20. Nc3 {[%clkms 20984]} 
+Nf4 {[%clkms 2681]} 21. Nxb5 {[%clkms 18242]} {mrneo forfeits on time} 1-0
+
