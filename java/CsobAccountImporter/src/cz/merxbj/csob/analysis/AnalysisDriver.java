@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package cz.merxbj.csob.core;
+package cz.merxbj.csob.analysis;
 
+import cz.merxbj.csob.core.Transaction;
 import cz.merxbj.csob.core.Transaction;
 import java.util.Collection;
 

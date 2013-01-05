@@ -11,6 +11,7 @@ import java.util.Collection;
  *
  * @author merxbj
  */
-public interface TransactionAnalyzer {
-    void analyze(Collection<Transaction> trans);
+public interface TransactionImporter {
+
+    void importTransactions(Collection<Transaction> trans);
 }

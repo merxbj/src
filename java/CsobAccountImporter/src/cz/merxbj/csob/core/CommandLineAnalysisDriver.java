@@ -5,6 +5,8 @@
 
 package cz.merxbj.csob.core;
 
+import cz.merxbj.csob.analysis.AnalysisDriver;
+import cz.merxbj.csob.analysis.TransactionAnalyzer;
 import java.util.Collection;
 import java.util.Scanner;
 
