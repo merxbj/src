@@ -58,3 +58,584 @@ c1=Q+ {[%clkms 10029]} 23. Qd1 {[%clkms 2037]} Qxd1+ {[%clkms 7299]} 24. Kg2
 {[%clkms 1424]} Qd4 {[%clkms 5489]} 25. Bxd6 {[%clkms 1323]} Q4g1+ {[%clkms 
 4210]} {merxbj forfeits on time} 0-1
 
+[Event "rated blitz match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "merxbj"]
+[Black "aaronn"]
+[Result "0-1"]
+[WhiteElo "1882P"]
+[BlackElo "1352"]
+[ECO "B32"]
+[TimeControl "240"]
+
+1. e4 {[%clkms 240000]} c5 {[%clkms 240000]} 2. Nf3 {[%clkms 237516]} Nc6 
+{[%clkms 239485]} 3. d4 {[%clkms 233812]} cxd4 {[%clkms 237047]} 4. Nxd4 
+{[%clkms 232362]} e6 {[%clkms 231141]} 5. Nc3 {[%clkms 214911]} Bb4 {[%clkms 
+229250]} 6. Bd2 {[%clkms 203892]} Nxd4 {[%clkms 226375]} 7. Bd3 {[%clkms 
+167927]} Nc6 {[%clkms 221360]} 8. O-O {[%clkms 156197]} Nge7 {[%clkms 
+218938]} 9. Re1 {[%clkms 139896]} O-O {[%clkms 212766]} 10. a3 {[%clkms 
+137009]} Bxc3 {[%clkms 198110]} 11. bxc3 {[%clkms 130867]} a6 {[%clkms 
+196844]} 12. Rb1 {[%clkms 129729]} d5 {[%clkms 194235]} 13. exd5 {[%clkms 
+124459]} Nxd5 {[%clkms 192469]} 14. c4 {[%clkms 116358]} Nf6 {[%clkms 
+188938]} 15. Bg5 {[%clkms 111007]} h6 {[%clkms 178141]} 16. Bh4 {[%clkms 
+108267]} Kh8 {[%clkms 170563]} 17. Qd2 {[%clkms 92263]} Qe7 {[%clkms 151922]} 
+18. Rb3 {[%clkms 84386]} Nd4 {[%clkms 148485]} 19. Rc3 {[%clkms 79944]} Rd8 
+{[%clkms 133517]} 20. Qe3 {[%clkms 66654]} Nc6 {[%clkms 121923]} 21. f3 
+{[%clkms 53623]} Na5 {[%clkms 111923]} 22. g4 {[%clkms 48306]} Bd7 {[%clkms 
+105954]} 23. Qe5 {[%clkms 30348]} Nc6 {[%clkms 87782]} 24. Qe3 {[%clkms 
+13112]} Be8 {[%clkms 78345]} 25. f4 {[%clkms 9124]} Nd4 {[%clkms 76517]} 26. 
+g5 {[%clkms 8593]} hxg5 {[%clkms 73017]} 27. fxg5 {[%clkms 7201]} Ng4 
+{[%clkms 63955]} 28. g6 {[%clkms 5529]} f6 {[%clkms 49940]} 29. Qxd4 {[%clkms 
+3541]} Rxd4 {[%clkms 46706]} {merxbj resigns} 0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1635P"]
+[BlackElo "1353P"]
+[ECO "A45"]
+[TimeControl "60+1"]
+
+1. d4 {[%clkms 60000]} Nf6 {[%clkms 60000]} 2. Nc3 {[%clkms 57360]} g6 
+{[%clkms 57580]} 3. Bg5 {[%clkms 48970]} Bg7 {[%clkms 58133]} 4. Bxf6 
+{[%clkms 47314]} O-O {[%clkms 59015]} 5. Bxg7 {[%clkms 46751]} Kxg7 {[%clkms 
+58488]} 6. Nf3 {[%clkms 42751]} f5 {[%clkms 55070]} 7. e3 {[%clkms 34564]} 
+Qe8 {[%clkms 49271]} 8. Bd3 {[%clkms 34392]} d6 {[%clkms 49463]} 9. g3 
+{[%clkms 32970]} e5 {[%clkms 47865]} 10. Ng5 {[%clkms 27111]} e4 {[%clkms 
+41185]} 11. f4 {[%clkms 25314]} exd3 {[%clkms 38279]} 12. Qxd3 {[%clkms 
+23736]} Nc6 {[%clkms 34041]} 13. O-O {[%clkms 23455]} Be6 {[%clkms 32123]} 
+14. a3 {[%clkms 17018]} Rf7 {[%clkms 28056]} 15. Nxe6+ {[%clkms 17253]} Qxe6 
+{[%clkms 27566]} 16. b4 {[%clkms 11331]} a6 {[%clkms 24363]} 17. Rad1 
+{[%clkms 9675]} Re8 {[%clkms 23979]} 18. Qe4 {[%clkms 9379]} Qxe4 {[%clkms 
+23085]} 19. Nxe4 {[%clkms 9613]} fxe4 {[%clkms 21874]} 20. Rfe1 {[%clkms 
+7769]} b5 {[%clkms 15607]} 21. h4 {[%clkms 8669]} h5 {[%clkms 12835]} 22. Rd2 
+{[%clkms 9569]} Rfe7 {[%clkms 12062]} 23. Kf1 {[%clkms 10469]} Kh6 {[%clkms 
+10365]} 24. Kg1 {[%clkms 11369]} Rg7 {[%clkms 7273]} 25. Ree2 {[%clkms 
+12269]} g5 {[%clkms 7041]} 26. Rh2 {[%clkms 13169]} gxh4 {[%clkms 6416]} 27. 
+Kf1 {[%clkms 10950]} Rxg3 {[%clkms 6413]} 28. Kf2 {[%clkms 9857]} Reg8 
+{[%clkms 6223]} 29. Rd1 {[%clkms 5669]} h3 {[%clkms 1534]} 30. Ke2 {[%clkms 
+5372]} Rg2+ {[%clkms 1812]} 31. Rxg2 {[%clkms 5575]} Rxg2+ {[%clkms 2356]} 
+32. Ke1 {[%clkms 5341]} h2 {[%clkms 2569]} {mrneo forfeits on time} 0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1443P"]
+[BlackElo "1472P"]
+[ECO "C60"]
+[TimeControl "60+2"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 60497]} Nc6 
+{[%clkms 61234]} 3. Bb5 {[%clkms 60107]} Nb4 {[%clkms 57750]} 4. O-O {[%clkms 
+52101]} c6 {[%clkms 58297]} 5. Ba4 {[%clkms 51297]} Bd6 {[%clkms 51454]} 6. 
+d4 {[%clkms 48192]} f6 {[%clkms 48532]} 7. dxe5 {[%clkms 46192]} Bxe5 
+{[%clkms 45564]} 8. Nxe5 {[%clkms 44798]} fxe5 {[%clkms 46798]} 9. Qd6 
+{[%clkms 35943]} Nxc2 {[%clkms 37017]} 10. Qxe5+ {[%clkms 24233]} Qe7 
+{[%clkms 35376]} 11. Qxe7+ {[%clkms 20080]} Nxe7 {[%clkms 34094]} 12. Bxc2 
+{[%clkms 21864]} d5 {[%clkms 30360]} 13. exd5 {[%clkms 16927]} cxd5 {[%clkms 
+30469]} 14. Re1 {[%clkms 17280]} Be6 {[%clkms 31156]} 15. Bg5 {[%clkms 
+17404]} Ng8 {[%clkms 25750]} 16. Rxe6+ {[%clkms 16602]} Kd7 {[%clkms 19531]} 
+17. Bf5 {[%clkms 13891]} Kc7 {[%clkms 14265]} 18. Bf4+ {[%clkms 13144]} Kc8 
+{[%clkms 12156]} 19. Re8# {[%clkms 11755]} {mrneo checkmated} 1-0
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1385P"]
+[BlackElo "1498P"]
+[ECO "A00"]
+[TimeControl "60+2"]
+
+1. h4 {[%clkms 60000]} d5 {[%clkms 60000]} 2. g3 {[%clkms 52000]} e5 {[%clkms 
+59329]} 3. Bg2 {[%clkms 52922]} Nf6 {[%clkms 58777]} 4. e3 {[%clkms 50532]} 
+Bd6 {[%clkms 59114]} 5. b3 {[%clkms 40001]} O-O {[%clkms 59177]} 6. Nc3 
+{[%clkms 39814]} Nc6 {[%clkms 57666]} 7. Ba3 {[%clkms 40095]} Be6 {[%clkms 
+55607]} 8. Qe2 {[%clkms 40454]} Qe7 {[%clkms 55327]} 9. O-O-O {[%clkms 
+38829]} Rfe8 {[%clkms 56056]} 10. Nf3 {[%clkms 28720]} e4 {[%clkms 52612]} 
+11. Ng5 {[%clkms 25142]} h6 {[%clkms 49519]} 12. Nxe6 {[%clkms 25205]} Qxe6 
+{[%clkms 43600]} 13. f4 {[%clkms 6595]} Ng4 {[%clkms 33828]} {mrneo forfeits 
+on time} 0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1532P"]
+[BlackElo "1336P"]
+[ECO "C23"]
+[TimeControl "60+2"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Bc4 {[%clkms 58638]} Nc6 
+{[%clkms 59750]} 3. Nf3 {[%clkms 55307]} b6 {[%clkms 55359]} 4. Ng5 {[%clkms 
+55840]} f6 {[%clkms 51828]} 5. Nf7 {[%clkms 50066]} Qe7 {[%clkms 48547]} 6. 
+Nxh8 {[%clkms 50965]} Nh6 {[%clkms 36079]} 7. g4 {[%clkms 45558]} g5 {[%clkms 
+32470]} 8. Qe2 {[%clkms 34974]} d6 {[%clkms 27954]} 9. d3 {[%clkms 34957]} 
+Bxg4 {[%clkms 26875]} 10. f3 {[%clkms 31673]} Bh5 {[%clkms 23156]} 11. Nd2 
+{[%clkms 31624]} Nb4 {[%clkms 16844]} 12. Nf1 {[%clkms 24995]} Nxc2+ {[%clkms 
+16922]} 13. Qxc2 {[%clkms 24728]} O-O-O {[%clkms 13907]} 14. Ng3 {[%clkms 
+25723]} Bg6 {[%clkms 12141]} 15. Be3 {[%clkms 16638]} Qf7 {[%clkms 12485]} 
+16. Bxf7 {[%clkms 11889]} Bxf7 {[%clkms 8797]} 17. Nxf7 {[%clkms 12478]} Nxf7 
+{[%clkms 9938]} 18. Nf5 {[%clkms 12120]} Re8 {[%clkms 5797]} 19. O-O-O 
+{[%clkms 10670]} Kd8 {[%clkms 6125]} 20. Kb1 {[%clkms 9516]} c5 {[%clkms 
+6766]} 21. b4 {[%clkms 6289]} a6 {[%clkms 3297]} 22. bxc5 {[%clkms 3062]} 
+bxc5 {[%clkms 3062]} 23. d4 {[%clkms 3692]} a5 {[%clkms 3999]} 24. Rc1 
+{[%clkms 4272]} cxd4 {[%clkms 5202]} 25. Qc8# {[%clkms 4850]} {mrneo 
+checkmated} 1-0
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1304P"]
+[BlackElo "1555P"]
+[ECO "A00"]
+[TimeControl "60+2"]
+
+1. h3 {[%clkms 60000]} d5 {[%clkms 60000]} 2. f3 {[%clkms 61328]} e5 {[%clkms 
+58291]} 3. d3 {[%clkms 63228]} Nf6 {[%clkms 58678]} 4. b3 {[%clkms 65128]} 
+Bd6 {[%clkms 59466]} 5. e4 {[%clkms 63081]} O-O {[%clkms 50436]} 6. Qd2 
+{[%clkms 63722]} d4 {[%clkms 49069]} 7. c3 {[%clkms 60597]} Nc6 {[%clkms 
+49398]} 8. cxd4 {[%clkms 61800]} Nxd4 {[%clkms 44455]} 9. Ne2 {[%clkms 
+53347]} Bc5 {[%clkms 36591]} 10. b4 {[%clkms 47691]} Bb6 {[%clkms 33644]} 11. 
+Nbc3 {[%clkms 45316]} Nxe2 {[%clkms 30560]} 12. Bxe2 {[%clkms 45300]} c5 
+{[%clkms 26922]} 13. Rg1 {[%clkms 37316]} cxb4 {[%clkms 26404]} 14. Nb5 
+{[%clkms 36348]} Qd7 {[%clkms 22605]} 15. Nc3 {[%clkms 30223]} Qd4 {[%clkms 
+22313]} 16. Bb2 {[%clkms 29051]} Qxg1+ {[%clkms 21488]} 17. Bf1 {[%clkms 
+25504]} Bf2+ {[%clkms 8944]} 18. Kd1 {[%clkms 25426]} Qxf1+ {[%clkms 8559]} 
+19. Kc2 {[%clkms 23536]} Rd8 {[%clkms 8035]} 20. Nd5 {[%clkms 21645]} Nxd5 
+{[%clkms 8318]} 21. exd5 {[%clkms 22364]} Rxd5 {[%clkms 7650]} 22. Qxf2 
+{[%clkms 21161]} Qxf2+ {[%clkms 7359]} 23. Kb3 {[%clkms 20443]} Be6 {[%clkms 
+7637]} 24. Ka4 {[%clkms 19959]} b5+ {[%clkms 7376]} 25. Ka5 {[%clkms 20396]} 
+Qb6+ {[%clkms 5900]} 26. Kxb4 {[%clkms 12396]} Qc5+ {[%clkms 3774]} 27. Ka5 
+{[%clkms 10677]} Rxd3 {[%clkms 4892]} 28. Bxe5 {[%clkms 10223]} Qxe5 {[%clkms 
+5580]} 29. Ka6 {[%clkms 10427]} Qxa1 {[%clkms 6524]} 30. Kb7 {[%clkms 11271]} 
+Qxa2 {[%clkms 7828]} 31. Kxa8 {[%clkms 12614]} Qd5+ {[%clkms 8237]} 32. Kxa7 
+{[%clkms 11161]} Rc3 {[%clkms 9060]} 33. Kb8 {[%clkms 12286]} Qd7 {[%clkms 
+9441]} 34. Ka8 {[%clkms 11427]} Rc8# {[%clkms 11024]} {mrneo checkmated} 0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.06"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1573P"]
+[BlackElo "1281P"]
+[ECO "B00"]
+[TimeControl "60+2"]
+
+1. e4 {[%clkms 60000]} a6 {[%clkms 60000]} 2. Nf3 {[%clkms 61900]} Nc6 
+{[%clkms 61265]} 3. d4 {[%clkms 62352]} d5 {[%clkms 59750]} 4. Bd3 {[%clkms 
+63187]} Nxd4 {[%clkms 60234]} 5. Nxd4 {[%clkms 63062]} e5 {[%clkms 59562]} 6. 
+Nb3 {[%clkms 61435]} b5 {[%clkms 59046]} 7. Nc3 {[%clkms 57974]} b4 {[%clkms 
+59796]} 8. Nxd5 {[%clkms 54456]} Qxd5 {[%clkms 59546]} 9. exd5 {[%clkms 
+53368]} Nf6 {[%clkms 49562]} 10. Qf3 {[%clkms 49646]} Nh5 {[%clkms 40922]} 
+11. d6 {[%clkms 45164]} Kd8 {[%clkms 40125]} 12. Qxa8 {[%clkms 45093]} Bxd6 
+{[%clkms 37750]} 13. Bg5+ {[%clkms 39524]} f6 {[%clkms 36969]} 14. Be3 
+{[%clkms 32177]} Re8 {[%clkms 36500]} 15. Bxa6 {[%clkms 31830]} Kd7 {[%clkms 
+28719]} 16. Bxc8+ {[%clkms 18567]} Rxc8 {[%clkms 28391]} 17. Qa4+ {[%clkms 
+16652]} Ke7 {[%clkms 28281]} 18. O-O {[%clkms 13922]} g5 {[%clkms 20937]} 19. 
+Na5 {[%clkms 15007]} h6 {[%clkms 19828]} 20. Nc6+ {[%clkms 15390]} Kf7 
+{[%clkms 19531]} 21. Qb3+ {[%clkms 13476]} Kg7 {[%clkms 19625]} 22. c3 
+{[%clkms 8521]} Nf4 {[%clkms 12562]} 23. Bxf4 {[%clkms 8609]} gxf4 {[%clkms 
+13468]} 24. cxb4 {[%clkms 9243]} Bxb4 {[%clkms 14265]} 25. Qxb4 {[%clkms 
+9935]} Kg6 {[%clkms 14484]} 26. Ne7+ {[%clkms 9059]} Kg7 {[%clkms 15109]} 27. 
+Nxc8 {[%clkms 10959]} Kg6 {[%clkms 14109]} 28. Qe7 {[%clkms 11883]} Kg5 
+{[%clkms 14562]} 29. Qxc7 {[%clkms 11493]} Kf5 {[%clkms 14765]} 30. Qd7+ 
+{[%clkms 10335]} Kg6 {[%clkms 15624]} 31. h4 {[%clkms 10304]} Kh5 {[%clkms 
+15562]} 32. g3 {[%clkms 9865]} Kg6 {[%clkms 14109]} 33. Qg4+ {[%clkms 6474]} 
+Kh7 {[%clkms 13390]} 34. Nd6 {[%clkms 6397]} Kh8 {[%clkms 12140]} 35. Nf7+ 
+{[%clkms 7252]} Kh7 {[%clkms 11609]} 36. Nd6 {[%clkms 5307]} Kh8 {[%clkms 
+11469]} 37. Ne8 {[%clkms 5784]} Kh7 {[%clkms 11891]} 38. Qg7# {[%clkms 7684]} 
+{mrneo checkmated} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.12"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1263P"]
+[BlackElo "1587P"]
+[ECO "A00"]
+[TimeControl "60+1"]
+
+1. g3 {[%clkms 60000]} e5 {[%clkms 60000]} 2. f4 {[%clkms 55625]} Nc6 
+{[%clkms 52669]} 3. Nf3 {[%clkms 54969]} d5 {[%clkms 50449]} 4. e3 {[%clkms 
+48687]} Bg4 {[%clkms 50188]} 5. Ng5 {[%clkms 47124]} f6 {[%clkms 46159]} 6. 
+Qxg4 {[%clkms 47093]} fxg5 {[%clkms 44109]} 7. fxg5 {[%clkms 42827]} g6 
+{[%clkms 37207]} 8. Na3 {[%clkms 28687]} Qd7 {[%clkms 36629]} 9. Qxd7+ 
+{[%clkms 18656]} Kxd7 {[%clkms 37125]} 10. h4 {[%clkms 16422]} Nge7 {[%clkms 
+35163]} 11. Nb5 {[%clkms 15969]} a6 {[%clkms 31422]} 12. Nxc7 {[%clkms 
+15453]} Kxc7 {[%clkms 30810]} 13. b3 {[%clkms 14609]} e4 {[%clkms 29794]} 14. 
+d4 {[%clkms 14218]} exd3 {[%clkms 29127]} 15. cxd3 {[%clkms 14015]} d4 
+{[%clkms 27964]} 16. Bd2 {[%clkms 13124]} dxe3 {[%clkms 27409]} 17. Bxe3 
+{[%clkms 12780]} Rd8 {[%clkms 25571]} 18. Bg2 {[%clkms 13155]} Kb8 {[%clkms 
+25048]} 19. Rf1 {[%clkms 12499]} Rxd3 {[%clkms 24258]} 20. Rxf8+ {[%clkms 
+12124]} Rxf8 {[%clkms 23803]} 21. Ke2 {[%clkms 11467]} Rd6 {[%clkms 18973]} 
+22. Rd1 {[%clkms 8217]} Rxd1 {[%clkms 17503]} 23. Kxd1 {[%clkms 7280]} Rd8+ 
+{[%clkms 18060]} 24. Bd5 {[%clkms 5248]} Rxd5+ {[%clkms 16894]} 25. Ke2 
+{[%clkms 4701]} Nf5 {[%clkms 15909]} 26. g4 {[%clkms 4122]} Ng3+ {[%clkms 
+12816]} 27. Kf2 {[%clkms 1809]} Ne4+ {[%clkms 4673]} {mrneo forfeits on time} 
+0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.19"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1587P"]
+[BlackElo "1263P"]
+[ECO "B00"]
+[TimeControl "60+2"]
+
+1. e4 {[%clkms 60000]} b6 {[%clkms 60000]} 2. d4 {[%clkms 60105]} Nc6 
+{[%clkms 58109]} 3. Nf3 {[%clkms 59783]} d5 {[%clkms 56078]} 4. Nc3 {[%clkms 
+58087]} Be6 {[%clkms 51266]} 5. Bd3 {[%clkms 55754]} Nb4 {[%clkms 42469]} 6. 
+Qe2 {[%clkms 48061]} g6 {[%clkms 32282]} 7. O-O {[%clkms 49044]} Bg7 {[%clkms 
+32141]} 8. Be3 {[%clkms 43289]} f5 {[%clkms 27547]} 9. e5 {[%clkms 40496]} c5 
+{[%clkms 22766]} 10. dxc5 {[%clkms 37365]} bxc5 {[%clkms 23281]} 11. Bxc5 
+{[%clkms 39235]} Nxd3 {[%clkms 23062]} 12. Qxd3 {[%clkms 38139]} Qc8 {[%clkms 
+20202]} 13. b4 {[%clkms 37069]} Rb8 {[%clkms 20218]} 14. a3 {[%clkms 37907]} 
+a6 {[%clkms 20453]} 15. Rab1 {[%clkms 36455]} Nf6 {[%clkms 18609]} 16. exf6 
+{[%clkms 33299]} exf6 {[%clkms 19297]} 17. Rfe1 {[%clkms 30551]} Kd8 {[%clkms 
+13453]} 18. h3 {[%clkms 23218]} Rb7 {[%clkms 13781]} 19. Nd1 {[%clkms 15030]} 
+f4 {[%clkms 12609]} 20. g3 {[%clkms 13936]} Bf5 {[%clkms 10374]} 21. g4 
+{[%clkms 12774]} Bxd3 {[%clkms 11265]} 22. cxd3 {[%clkms 8799]} f5 {[%clkms 
+12187]} 23. gxf5 {[%clkms 8486]} gxf5 {[%clkms 12047]} 24. Ng5 {[%clkms 
+8587]} h6 {[%clkms 11454]} 25. Nf3 {[%clkms 2049]} Qc7 {[%clkms 12392]} 26. 
+Ne5 {[%clkms 3949]} Kc8 {[%clkms 12001]} 27. Nd7 {[%clkms 5849]} Qxd7 
+{[%clkms 12844]} 28. Rc1 {[%clkms 7749]} Qb5 {[%clkms 12079]} 29. Nc3 
+{[%clkms 9630]} Qxd3 {[%clkms 12313]} 30. Kg2 {[%clkms 5891]} Qf3+ {[%clkms 
+14213]} 31. Kxf3 {[%clkms 6630]} d4 {[%clkms 12619]} 32. Nd5 {[%clkms 7044]} 
+Rd7 {[%clkms 12103]} 33. Nb6+ {[%clkms 7095]} Kc7 {[%clkms 9994]} 34. Nxd7 
+{[%clkms 8995]} Kxd7 {[%clkms 10431]} 35. Re2 {[%clkms 9399]} Kc6 {[%clkms 
+11181]} 36. Bxd4+ {[%clkms 10490]} Kb7 {[%clkms 9103]} 37. Bxg7 {[%clkms 
+12390]} Rg8 {[%clkms 9572]} 38. Bh8 {[%clkms 14290]} Rxh8 {[%clkms 10431]} 
+39. Re7+ {[%clkms 15074]} Kb8 {[%clkms 10322]} 40. Rce1 {[%clkms 15211]} a5 
+{[%clkms 9509]} 41. Re8+ {[%clkms 16572]} Rxe8 {[%clkms 9462]} 42. Rxe8+ 
+{[%clkms 18399]} Kb7 {[%clkms 10181]} 43. bxa5 {[%clkms 20299]} Kc7 {[%clkms 
+9962]} 44. Re7+ {[%clkms 21202]} Kc6 {[%clkms 10962]} 45. a6 {[%clkms 22546]} 
+Kb6 {[%clkms 10009]} 46. a7 {[%clkms 23160]} Ka6 {[%clkms 10541]} 47. a8=Q+ 
+{[%clkms 22667]} Kb5 {[%clkms 10682]} 48. Rc7 {[%clkms 21959]} Kb6 {[%clkms 
+8447]} 49. Qb7+ {[%clkms 22051]} {mrneo forfeits on time} 1-0
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.19"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1248P"]
+[BlackElo "1599P"]
+[ECO "A00"]
+[TimeControl "60+2"]
+
+1. a3 {[%clkms 60000]} e5 {[%clkms 60000]} 2. b4 {[%clkms 58422]} d5 {[%clkms 
+61750]} 3. Nc3 {[%clkms 58735]} Nf6 {[%clkms 63467]} 4. d3 {[%clkms 56579]} 
+Bd6 {[%clkms 64369]} 5. e4 {[%clkms 57657]} O-O {[%clkms 66118]} 6. Nf3 
+{[%clkms 57876]} Nc6 {[%clkms 64882]} 7. Ng5 {[%clkms 56766]} h6 {[%clkms 
+61699]} 8. Nh3 {[%clkms 53781]} d4 {[%clkms 60430]} 9. Nf4 {[%clkms 54250]} 
+dxc3 {[%clkms 56978]} 10. Be3 {[%clkms 47265]} exf4 {[%clkms 57893]} 11. Bxf4 
+{[%clkms 47796]} Bxf4 {[%clkms 58576]} 12. h3 {[%clkms 46530]} Bd2+ {[%clkms 
+39662]} 13. Ke2 {[%clkms 39999]} Bg5 {[%clkms 38787]} 14. Rb1 {[%clkms 
+33796]} Re8 {[%clkms 39348]} 15. Rb3 {[%clkms 34780]} Rxe4+ {[%clkms 20436]} 
+16. dxe4 {[%clkms 20874]} Nd4+ {[%clkms 22336]} 17. Kd3 {[%clkms 17186]} 
+Nxb3+ {[%clkms 24236]} 18. Kc4 {[%clkms 15671]} Qxd1 {[%clkms 26136]} 19. 
+Kxb3 {[%clkms 16514]} Qa1 {[%clkms 19187]} 20. Bc4 {[%clkms 12342]} Be6 
+{[%clkms 18469]} 21. Bxe6 {[%clkms 12982]} fxe6 {[%clkms 19822]} 22. Rh2 
+{[%clkms 11310]} Nxe4 {[%clkms 7916]} 23. f3 {[%clkms 10216]} Nd2+ {[%clkms 
+7917]} 24. Ka4 {[%clkms 10060]} c6 {[%clkms 7011]} 25. g4 {[%clkms 3935]} b5+ 
+{[%clkms 7702]} {mrneo forfeits on time} 0-1
+
+[Event "rated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.20"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1609P"]
+[BlackElo "1236P"]
+[ECO "C61"]
+[TimeControl "60+2"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 60505]} Nc6 
+{[%clkms 59250]} 3. Bb5 {[%clkms 59826]} Nd4 {[%clkms 55891]} 4. Nxd4 
+{[%clkms 58835]} c6 {[%clkms 54594]} 5. Bc4 {[%clkms 42208]} exd4 {[%clkms 
+53547]} 6. d3 {[%clkms 41374]} d5 {[%clkms 50890]} 7. exd5 {[%clkms 40794]} 
+cxd5 {[%clkms 51468]} 8. Bb5+ {[%clkms 36590]} Bd7 {[%clkms 48515]} 9. Bxd7+ 
+{[%clkms 37210]} Qxd7 {[%clkms 49671]} 10. O-O {[%clkms 35558]} Be7 {[%clkms 
+47624]} 11. Re1 {[%clkms 33407]} Nf6 {[%clkms 40967]} 12. b3 {[%clkms 32215]} 
+Rc8 {[%clkms 34811]} 13. Bb2 {[%clkms 28814]} O-O {[%clkms 35077]} 14. Bxd4 
+{[%clkms 25416]} Ne8 {[%clkms 27468]} 15. Bxa7 {[%clkms 24854]} Bd6 {[%clkms 
+14656]} 16. Nc3 {[%clkms 21324]} Nf6 {[%clkms 12140]} 17. d4 {[%clkms 11883]} 
+Rfe8 {[%clkms 12546]} 18. Rxe8+ {[%clkms 11903]} Rxe8 {[%clkms 13312]} 19. 
+Qd3 {[%clkms 10993]} Qc6 {[%clkms 11718]} 20. f3 {[%clkms 6995]} Re6 {[%clkms 
+7797]} 21. Rd1 {[%clkms 5644]} Bxh2+ {[%clkms 3797]} 22. Kxh2 {[%clkms 6426]} 
+{mrneo forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.27"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1225P"]
+[BlackElo "1618P"]
+[ECO "A00"]
+[TimeControl "60+1"]
+
+1. g3 {[%clkms 60000]} e5 {[%clkms 60000]} 2. f4 {[%clkms 58328]} d6 {[%clkms 
+56196]} 3. Nf3 {[%clkms 58219]} Nc6 {[%clkms 51406]} 4. d3 {[%clkms 55907]} 
+f5 {[%clkms 44364]} 5. Be3 {[%clkms 55063]} Be6 {[%clkms 39275]} 6. Qd2 
+{[%clkms 53875]} Qd7 {[%clkms 30185]} 7. a3 {[%clkms 53797]} O-O-O {[%clkms 
+30037]} 8. Nc3 {[%clkms 44750]} Be7 {[%clkms 19619]} 9. Bh3 {[%clkms 44781]} 
+Nf6 {[%clkms 19370]} 10. Bxf5 {[%clkms 41718]} Bxf5 {[%clkms 18474]} 11. Nxe5 
+{[%clkms 41483]} Nxe5 {[%clkms 18011]} 12. fxe5 {[%clkms 41686]} dxe5 
+{[%clkms 16766]} 13. d4 {[%clkms 41186]} exd4 {[%clkms 16334]} 14. Bxd4 
+{[%clkms 41467]} Ne4 {[%clkms 8592]} 15. Nxe4 {[%clkms 40092]} Bxe4 {[%clkms 
+9475]} 16. Qe3 {[%clkms 37889]} Rde8 {[%clkms 7891]} 17. Rf1 {[%clkms 35577]} 
+Bf5 {[%clkms 5412]} 18. Rd1 {[%clkms 35359]} c6 {[%clkms 3609]} 19. c3 
+{[%clkms 35594]} b5 {[%clkms 3337]} 20. Qf4 {[%clkms 22766]} Rhf8 {[%clkms 
+3815]} 21. Qe5 {[%clkms 16110]} Bc2 {[%clkms 2035]} 22. Rc1 {[%clkms 12517]} 
+Rxf1+ {[%clkms 1312]} 23. Kd2 {[%clkms 11454]} {merxbj forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.27"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1618P"]
+[BlackElo "1225P"]
+[ECO "C43"]
+[TimeControl "60+1"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 60750]} Nf6 
+{[%clkms 56953]} 3. d4 {[%clkms 61468]} Nc6 {[%clkms 55187]} 4. dxe5 {[%clkms 
+61430]} Nxe4 {[%clkms 53671]} 5. Bd3 {[%clkms 59026]} Nc5 {[%clkms 50531]} 6. 
+Qe2 {[%clkms 58266]} Qe7 {[%clkms 44750]} 7. O-O {[%clkms 56405]} d6 {[%clkms 
+40750]} 8. Bg5 {[%clkms 56557]} Qe6 {[%clkms 38172]} 9. Re1 {[%clkms 52427]} 
+f6 {[%clkms 36968]} 10. exf6 {[%clkms 50276]} gxf6 {[%clkms 36625]} 11. Bh4 
+{[%clkms 44735]} Qxe2 {[%clkms 36000]} 12. Rxe2+ {[%clkms 43900]} Be7 
+{[%clkms 35110]} 13. Bxf6 {[%clkms 40007]} Rf8 {[%clkms 32876]} 14. Bxe7 
+{[%clkms 39430]} Rf7 {[%clkms 26032]} 15. Bxd6+ {[%clkms 33258]} Kd7 {[%clkms 
+23626]} 16. Bxc5 {[%clkms 33093]} a6 {[%clkms 18751]} 17. Ne5+ {[%clkms 
+28208]} Nxe5 {[%clkms 17704]} 18. Rxe5 {[%clkms 27380]} Re7 {[%clkms 16439]} 
+19. Rxe7+ {[%clkms 25956]} Kd8 {[%clkms 10048]} 20. Nc3 {[%clkms 16732]} Bd7 
+{[%clkms 7532]} 21. Rae1 {[%clkms 14540]} c6 {[%clkms 6219]} 22. Re8+ 
+{[%clkms 13107]} Bxe8 {[%clkms 3094]} 23. Be7+ {[%clkms 11017]} Kd7 {[%clkms 
+1375]} 24. Bf5+ {[%clkms 10001]} Kc7 {[%clkms 1031]} 25. Bg5 {[%clkms 5025]} 
+{mrneo forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.27"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1225P"]
+[BlackElo "1618P"]
+[ECO "A00"]
+[TimeControl "60+1"]
+
+1. a4 {[%clkms 60000]} d5 {[%clkms 60000]} 2. b3 {[%clkms 59906]} e5 {[%clkms 
+60141]} 3. Nc3 {[%clkms 58734]} Nf6 {[%clkms 58649]} 4. d4 {[%clkms 57656]} 
+e4 {[%clkms 54122]} 5. e3 {[%clkms 54828]} Bc5 {[%clkms 52059]} 6. dxc5 
+{[%clkms 52657]} c6 {[%clkms 48413]} 7. f3 {[%clkms 50532]} Bf5 {[%clkms 
+44653]} 8. Bd2 {[%clkms 40063]} O-O {[%clkms 44501]} 9. g4 {[%clkms 37297]} 
+Bg6 {[%clkms 40862]} 10. g5 {[%clkms 33625]} Nh5 {[%clkms 26219]} 11. Nh3 
+{[%clkms 22593]} Re8 {[%clkms 19109]} 12. Rg1 {[%clkms 17265]} Na6 {[%clkms 
+17407]} 13. f4 {[%clkms 17578]} Nb4 {[%clkms 12432]} 14. Rg4 {[%clkms 6422]} 
+Bf5 {[%clkms 9462]} 15. Rh4 {[%clkms 5235]} g6 {[%clkms 7549]} 16. Nf2 
+{[%clkms 2407]} Qc8 {[%clkms 2536]} 17. h3 {[%clkms 3307]} Qd8 {[%clkms 
+2476]} 18. Bg2 {[%clkms 4207]} Qc8 {[%clkms 2917]} 19. Ke2 {[%clkms 4895]} 
+Qd8 {[%clkms 3392]} 20. Qg1 {[%clkms 5052]} Re7 {[%clkms 3857]} 21. Bf3 
+{[%clkms 4412]} Qe8 {[%clkms 4409]} 22. Bxe4 {[%clkms 4631]} dxe4 {[%clkms 
+4522]} 23. Nfxe4 {[%clkms 4178]} Bxe4 {[%clkms 4704]} 24. Nxe4 {[%clkms 
+3271]} Rxe4 {[%clkms 5047]} 25. Bc3 {[%clkms 2537]} Nxc2 {[%clkms 3781]} 26. 
+Kf2 {[%clkms 1381]} Nxa1 {[%clkms 3929]} 27. Qxa1 {[%clkms 1084]} {merxbj 
+forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.01.27"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1618P"]
+[BlackElo "1225P"]
+[ECO "C42"]
+[TimeControl "60+1"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 58177]} Nf6 
+{[%clkms 56125]} 3. Bc4 {[%clkms 55754]} d5 {[%clkms 44250]} 4. exd5 {[%clkms 
+49113]} Nxd5 {[%clkms 42375]} 5. Nxe5 {[%clkms 48552]} f6 {[%clkms 38234]} 6. 
+Nd3 {[%clkms 40613]} c6 {[%clkms 32031]} 7. Qe2+ {[%clkms 40665]} Qe7 
+{[%clkms 29281]} 8. O-O {[%clkms 41536]} Qxe2 {[%clkms 27547]} 9. Re1 
+{[%clkms 40130]} Qxe1+ {[%clkms 24922]} 10. Nxe1 {[%clkms 39694]} b5 {[%clkms 
+20859]} 11. Bd3 {[%clkms 36008]} Ba6 {[%clkms 16219]} 12. b3 {[%clkms 33979]} 
+Nd7 {[%clkms 16016]} 13. b4 {[%clkms 32285]} Bxb4 {[%clkms 15735]} 14. Nc3 
+{[%clkms 33049]} Bxc3 {[%clkms 15547]} 15. dxc3 {[%clkms 32964]} b4 {[%clkms 
+15344]} 16. cxb4 {[%clkms 33053]} Nxb4 {[%clkms 15313]} 17. Rb1 {[%clkms 
+31645]} Nxd3 {[%clkms 15250]} 18. cxd3 {[%clkms 32528]} Nc5 {[%clkms 14453]} 
+19. d4 {[%clkms 32343]} Nd3 {[%clkms 13094]} 20. Nxd3 {[%clkms 32206]} Bb5 
+{[%clkms 9031]} 21. Nc5 {[%clkms 31608]} a6 {[%clkms 6578]} 22. Ne6 {[%clkms 
+23454]} Rf8 {[%clkms 4922]} 23. Nc7+ {[%clkms 23856]} Kd8 {[%clkms 4656]} 24. 
+Nxa8 {[%clkms 24756]} Bc4 {[%clkms 1984]} 25. a3 {[%clkms 21889]} {mrneo 
+forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.02.03"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1225P"]
+[BlackElo "1618P"]
+[ECO "A00"]
+[TimeControl "60+1"]
+
+1. g3 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 56891]} Nc6 
+{[%clkms 57544]} 3. Bh3 {[%clkms 54735]} d5 {[%clkms 53599]} 4. Nc3 {[%clkms 
+53110]} Bxh3 {[%clkms 51606]} 5. Nxd5 {[%clkms 38797]} Qxd5 {[%clkms 50469]} 
+6. Nh4 {[%clkms 28969]} Qxh1# {[%clkms 47259]} {mrneo checkmated} 0-1
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.02.03"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "1-0"]
+[WhiteElo "1618P"]
+[BlackElo "1225P"]
+[ECO "A00"]
+[TimeControl "60+1"]
+
+1. e3 {[%clkms 60000]} e5 {[%clkms 60000]} 2. d4 {[%clkms 59338]} d6 {[%clkms 
+52594]} 3. c4 {[%clkms 48895]} Be6 {[%clkms 51485]} 4. Nd2 {[%clkms 46121]} 
+Nc6 {[%clkms 48907]} 5. b3 {[%clkms 42186]} Be7 {[%clkms 41860]} 6. d5 
+{[%clkms 39325]} Nb4 {[%clkms 37297]} 7. dxe6 {[%clkms 33971]} fxe6 {[%clkms 
+36969]} 8. Ba3 {[%clkms 27393]} Nd3+ {[%clkms 31751]} 9. Ke2 {[%clkms 20427]} 
+Nxf2 {[%clkms 23486]} 10. Kxf2 {[%clkms 14063]} Nh6 {[%clkms 21204]} 11. Ke1 
+{[%clkms 11026]} Rf8 {[%clkms 20579]} 12. Ngf3 {[%clkms 9107]} Nf5 {[%clkms 
+18564]} 13. e4 {[%clkms 8195]} Ne3 {[%clkms 18002]} 14. Qc1 {[%clkms 7325]} 
+Rf6 {[%clkms 9831]} 15. Be2 {[%clkms 6368]} Qd7 {[%clkms 8893]} 16. Qc3 
+{[%clkms 3799]} Nxg2+ {[%clkms 5878]} 17. Kf1 {[%clkms 2161]} Nf4 {[%clkms 
+5035]} 18. Rg1 {[%clkms 2022]} Nxe2 {[%clkms 4926]} 19. Kxe2 {[%clkms 1884]} 
+Rxf3 {[%clkms 3613]} 20. Kxf3 {[%clkms 1737]} {mrneo forfeits on time} 1-0
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.02.03"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1225P"]
+[BlackElo "1618P"]
+[ECO "A40"]
+[TimeControl "60+1"]
+
+1. d4 {[%clkms 60000]} a5 {[%clkms 60000]} 2. Nf3 {[%clkms 53453]} h5 
+{[%clkms 59432]} 3. a4 {[%clkms 51187]} Ra6 {[%clkms 58544]} 4. h4 {[%clkms 
+44343]} Rah6 {[%clkms 58486]} 5. g3 {[%clkms 33421]} f6 {[%clkms 57706]} 6. 
+Bd2 {[%clkms 28234]} g5 {[%clkms 57207]} 7. Bxa5 {[%clkms 28265]} b6 {[%clkms 
+51828]} 8. Bb4 {[%clkms 25796]} c5 {[%clkms 46101]} 9. dxc5 {[%clkms 22468]} 
+bxc5 {[%clkms 46490]} 10. Bxc5 {[%clkms 22296]} e5 {[%clkms 46044]} 11. Ng1 
+{[%clkms 18718]} Bxc5 {[%clkms 44993]} 12. c3 {[%clkms 17656]} Ne7 {[%clkms 
+33441]} 13. Qc2 {[%clkms 16015]} d6 {[%clkms 30998]} 14. f4 {[%clkms 13749]} 
+gxf4 {[%clkms 29062]} 15. gxf4 {[%clkms 13718]} exf4 {[%clkms 29381]} 16. Bg2 
+{[%clkms 10593]} Bb7 {[%clkms 26761]} 17. Bxb7 {[%clkms 8734]} O-O {[%clkms 
+23930]} 18. Bd5+ {[%clkms 4890]} Kg7 {[%clkms 20220]} 19. Be4 {[%clkms 1624]} 
+Bxg1 {[%clkms 11609]} 20. Kf1 {[%clkms 2524]} Bc5 {[%clkms 2850]} 21. Rh3 
+{[%clkms 3424]} Nbc6 {[%clkms 3000]} {mrneo forfeits on time} 0-1
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.02.03"]
+[Round "?"]
+[White "merxbj"]
+[Black "mrneo"]
+[Result "0-1"]
+[WhiteElo "1618P"]
+[BlackElo "1225P"]
+[ECO "C40"]
+[TimeControl "60+1"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. Nf3 {[%clkms 59470]} f6 
+{[%clkms 58734]} 3. Nxe5 {[%clkms 54414]} d6 {[%clkms 54531]} 4. Nf3 {[%clkms 
+47214]} g6 {[%clkms 49062]} 5. d4 {[%clkms 45627]} Nc6 {[%clkms 46828]} 6. 
+Bc4 {[%clkms 41658]} Nh6 {[%clkms 43109]} 7. h3 {[%clkms 36216]} f5 {[%clkms 
+41000]} 8. e5 {[%clkms 26069]} Be7 {[%clkms 36250]} 9. Bxh6 {[%clkms 23767]} 
+Bh4 {[%clkms 27000]} 10. Nxh4 {[%clkms 21321]} dxe5 {[%clkms 23469]} 11. g3 
+{[%clkms 19800]} exd4 {[%clkms 21703]} 12. O-O {[%clkms 16864]} b6 {[%clkms 
+16140]} 13. Re1+ {[%clkms 17046]} Kd7 {[%clkms 13968]} 14. Be6+ {[%clkms 
+13791]} Kd6 {[%clkms 9625]} 15. Bf4+ {[%clkms 8363]} Kc5 {[%clkms 4031]} 16. 
+b4+ {[%clkms 2416]} Kxb4 {[%clkms 3296]} 17. c3+ {[%clkms 1915]} Ka5 {[%clkms 
+1062]} {merxbj forfeits on time} 0-1
+
+[Event "unrated lightning match"]
+[Site "Free Internet Chess Server"]
+[Date "2013.02.03"]
+[Round "?"]
+[White "mrneo"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1225P"]
+[BlackElo "1618P"]
+[ECO "C20"]
+[TimeControl "60+1"]
+
+1. e4 {[%clkms 60000]} e5 {[%clkms 60000]} 2. f3 {[%clkms 59703]} f6 {[%clkms 
+59627]} 3. Bd3 {[%clkms 51657]} Bd6 {[%clkms 57538]} 4. Nh3 {[%clkms 49829]} 
+Nh6 {[%clkms 56985]} 5. O-O {[%clkms 45844]} O-O {[%clkms 56512]} 6. Qe1 
+{[%clkms 44907]} Qe8 {[%clkms 54958]} 7. Bc4+ {[%clkms 39750]} Kh8 {[%clkms 
+48941]} 8. Qe2 {[%clkms 30859]} Bc5+ {[%clkms 48296]} 9. Rf2 {[%clkms 25968]} 
+Bxf2+ {[%clkms 47424]} 10. Qxf2 {[%clkms 25952]} c6 {[%clkms 42278]} 11. d3 
+{[%clkms 21937]} d5 {[%clkms 42018]} 12. Bd2 {[%clkms 20203]} dxc4 {[%clkms 
+41483]} 13. dxc4 {[%clkms 20078]} Bxh3 {[%clkms 39106]} 14. gxh3 {[%clkms 
+19781]} Nd7 {[%clkms 38547]} 15. Qg3 {[%clkms 19078]} b5 {[%clkms 31580]} 16. 
+Nc3 {[%clkms 18593]} bxc4 {[%clkms 31500]} 17. Nd5 {[%clkms 16155]} cxd5 
+{[%clkms 31421]} 18. exd5 {[%clkms 15842]} Rb8 {[%clkms 29157]} 19. c3 
+{[%clkms 15014]} Rxb2 {[%clkms 29687]} 20. Be3 {[%clkms 13296]} Nf5 {[%clkms 
+24581]} 21. Qg4 {[%clkms 12421]} Nxe3 {[%clkms 22818]} 22. Kh1 {[%clkms 
+9812]} Nxg4 {[%clkms 20137]} 23. hxg4 {[%clkms 10265]} Nc5 {[%clkms 17025]} 
+24. Rb1 {[%clkms 11165]} Rxb1+ {[%clkms 17287]} 25. Kg2 {[%clkms 10462]} Rb2+ 
+{[%clkms 16149]} 26. Kg3 {[%clkms 10087]} Rxa2 {[%clkms 17049]} 27. h4 
+{[%clkms 8728]} e4 {[%clkms 17223]} 28. fxe4 {[%clkms 7087]} Nxe4+ {[%clkms 
+17896]} 29. Kf4 {[%clkms 6306]} Nxc3 {[%clkms 18240]} 30. g5 {[%clkms 4728]} 
+Qe4+ {[%clkms 18153]} {mrneo forfeits on time} 0-1
+
