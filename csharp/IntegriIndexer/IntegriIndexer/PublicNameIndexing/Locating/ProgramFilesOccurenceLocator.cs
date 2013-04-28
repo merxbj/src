@@ -14,7 +14,7 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
 
         public List<Occurrence> Locate(List<ReferencedPublicObject> references, List<PublicObject> localObjects, Project project)
         {
-            Console.WriteLine("ProgramFilesOccurenceLocator locating {0} references in {1}", references.Count, project.Name);
+            Console.WriteLine("ProgramFilesOccurenceLocator locating {0} references and {1} local objects in {2}", references.Count, localObjects.Count, project.Name);
 
             List<Occurrence> occurrences = new List<Occurrence>();
             List<FileInfo> programFiles = DiscoverProgramFiles(project);

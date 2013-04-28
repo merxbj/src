@@ -12,7 +12,7 @@ namespace IntegriIndexer.PublicNameIndexing.Gathering
         public IList<PublicObject> GatherPublicObjects(Project project)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(project.SrcPath + "DataSourcesIndex.xml");
+            doc.Load(project.SrcPath + "DataSources.xml");
             XmlNodeList dataObjects = doc.SelectNodes("/Application/DataSourceRepository/DataObjects/DataObject[@Public]");
 
             var publics = new List<PublicObject>();

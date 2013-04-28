@@ -13,7 +13,6 @@ namespace IntegriIndexer
         {
             List<IIndexer> indexers = Utils.Discover<IIndexer>();
             indexers.ForEach(idx => idx.Index());
-            Console.ReadLine();
         }
     }
 }

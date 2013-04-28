@@ -80,9 +80,9 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
         private string BuildModelUsagePath(XmlNode hit)
         {
             return string.Format("Data/{0}/{1}/{2}",
-                hit.ParentNode.ParentNode.Attributes["Folder"].Value,
-                hit.ParentNode.ParentNode.Attributes["name"].Value,
-                hit.Attributes["name"].Value);
+                hit.ParentNode.ParentNode.Attributes["Folder"] != null ? hit.ParentNode.ParentNode.Attributes["Folder"].Value : "",
+                hit.ParentNode.ParentNode.Attributes["name"] != null ? hit.ParentNode.ParentNode.Attributes["name"].Value : "",
+                hit.Attributes["name"] != null ? hit.Attributes["name"].Value : "");
         }
     }
 }
