@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Common
 {
     public class Project
     {

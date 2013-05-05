@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Integri.Common;
+using Integri.Common.Publishing;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Indexer.PublicNameIndexing
 {
-    class DatabasePublisher : IPublisher, IDisposable
+    class DatabasePublisher : IPublisher<Occurrence>, IDisposable
     {
         #region Construction & Disposal
 

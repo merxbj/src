@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Integri.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace IntegriIndexer.PublicNameIndexing.Locating
+namespace Integri.Indexer.PublicNameIndexing.Locating
 {
     class ProgramFilesOccurenceLocator : IReferenceLocator
     {
@@ -17,16 +18,13 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
             Console.WriteLine("ProgramFilesOccurenceLocator locating {0} references and {1} local objects in {2}", references.Count, localObjects.Count, project.Name);
 
             List<Occurrence> occurrences = new List<Occurrence>();
-            List<FileInfo> programFiles = DiscoverProgramFiles(project);
-            foreach (FileInfo programFile in programFiles)
+            ProgramDiscovery pd = new ProgramDiscovery(project);
+            foreach (Program program in pd.DiscoverPrograms())
             {
-                Console.WriteLine("\t{0}", programFile.Name);
+                Console.WriteLine("\t{0}", program.FileName);
 
-                XmlDocument program = new XmlDocument();
-                program.Load(programFile.FullName);
-
-                occurrences.AddRange(LocateReferences(references, project, program, programFile));
-                occurrences.AddRange(LocateLocalObjects(localObjects, project, program, programFile));
+                occurrences.AddRange(LocateReferences(references, program));
+                occurrences.AddRange(LocateLocalObjects(localObjects, program));
             }
 
             return occurrences;
@@ -36,45 +34,45 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
 
         #region Reference Locating
 
-        private IEnumerable<Occurrence> LocateReferences(List<ReferencedPublicObject> references, Project project, XmlDocument program, FileInfo programFile)
+        private IEnumerable<Occurrence> LocateReferences(List<ReferencedPublicObject> references, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             foreach (ReferencedPublicObject reference in references)
             {
-                occurrences.AddRange(LocateReferences(reference, project, programFile, program));
+                occurrences.AddRange(LocateReferences(reference, program));
             }
 
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateReferences(ReferencedPublicObject reference, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateReferences(ReferencedPublicObject reference, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             switch (reference.Type)
             {
                 case ObjectType.DataSource:
-                    occurrences.AddRange(LocateDataSourceReferences(reference, project, programFile, program));
+                    occurrences.AddRange(LocateDataSourceReferences(reference, program));
                     break;
                 case ObjectType.Event:
-                    occurrences.AddRange(LocateEventReferences(reference, project, programFile, program));
+                    occurrences.AddRange(LocateEventReferences(reference, program));
                     break;
                 case ObjectType.Model:
-                    occurrences.AddRange(LocateModelReferences(reference, project, programFile, program));
+                    occurrences.AddRange(LocateModelReferences(reference, program));
                     break;
                 case ObjectType.Program:
-                    occurrences.AddRange(LocateProgramReferences(reference, project, programFile, program));
+                    occurrences.AddRange(LocateProgramReferences(reference, program));
                     break;
             }
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateProgramReferences(ReferencedPublicObject reference, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateProgramReferences(ReferencedPublicObject reference, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateModelReferences(ReferencedPublicObject reference, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateModelReferences(ReferencedPublicObject reference, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             /*XmlNodeList hits = program.SelectNodes(
@@ -92,39 +90,39 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateEventReferences(ReferencedPublicObject reference, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateEventReferences(ReferencedPublicObject reference, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
-            XmlNodeList raised = program.SelectNodes(
+            XmlNodeList raised = program.Source.SelectNodes(
                     string.Format("//RaiseEvent/Event/PublicObject[@comp={0} and @obj={1}]",
                         reference.ComponentId, reference.ObjectIsn));
             foreach (XmlNode raise in raised)
             {
                 occurrences.Add(new EventOccurence(
                         new PublicObject(reference.Name, reference.Type, reference.MciFile, reference.LocalId),
-                        project,
-                        programFile.Name,
-                        program.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
+                        program.Project,
+                        program.Name,
+                        program.Source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
                         true));
             }
 
-            XmlNodeList handled = program.SelectNodes(
+            XmlNodeList handled = program.Source.SelectNodes(
                     string.Format("//LogicUnit/Event/PublicObject[@comp={0} and @obj={1}]",
                         reference.ComponentId, reference.ObjectIsn));
             foreach (XmlNode handle in handled)
             {
                 occurrences.Add(new EventOccurence(
                         new PublicObject(reference.Name, reference.Type, reference.MciFile, reference.LocalId),
-                        project,
-                        programFile.Name,
-                        program.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
+                        program.Project,
+                        program.Name,
+                        program.Source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
                         false));
             }
 
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateDataSourceReferences(ReferencedPublicObject reference, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateDataSourceReferences(ReferencedPublicObject reference, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             return occurrences;
@@ -134,96 +132,90 @@ namespace IntegriIndexer.PublicNameIndexing.Locating
 
         #region Local Object Locating
 
-        private List<Occurrence> LocateLocalObjects(List<PublicObject> localObjects, Project project, XmlDocument program, FileInfo programFile)
+        private List<Occurrence> LocateLocalObjects(List<PublicObject> localObjects, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             foreach (PublicObject po in localObjects)
             {
-                occurrences.AddRange(LocateLocalObjects(po, project, program, programFile));
+                occurrences.AddRange(LocateLocalObjects(po, program));
             }
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateLocalObjects(PublicObject localObject, Project project, XmlDocument program, FileInfo programFile)
+        private IEnumerable<Occurrence> LocateLocalObjects(PublicObject localObject, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
             switch (localObject.Type)
             {
                 case ObjectType.DataSource:
-                    occurrences.AddRange(LocateLocalDataSource(localObject, project, programFile, program));
+                    occurrences.AddRange(LocateLocalDataSource(localObject, program));
                     break;
                 case ObjectType.Event:
-                    occurrences.AddRange(LocateLocalEvent(localObject, project, programFile, program));
+                    occurrences.AddRange(LocateLocalEvent(localObject, program));
                     break;
                 case ObjectType.Model:
-                    occurrences.AddRange(LocateLocalModel(localObject, project, programFile, program));
+                    occurrences.AddRange(LocateLocalModel(localObject, program));
                     break;
                 case ObjectType.Program:
-                    occurrences.AddRange(LocateLocalProgram(localObject, project, programFile, program));
+                    occurrences.AddRange(LocateLocalProgram(localObject, program));
                     break;
             }
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateLocalProgram(PublicObject localObject, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateLocalProgram(PublicObject localObject, Program program)
         {
             return new List<Occurrence>();
         }
 
-        private IEnumerable<Occurrence> LocateLocalModel(PublicObject localObject, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateLocalModel(PublicObject localObject, Program program)
         {
             return new List<Occurrence>();
         }
 
-        private List<Occurrence> LocateLocalEvent(PublicObject localObject, Project project, FileInfo programFile, XmlDocument program)
+        private List<Occurrence> LocateLocalEvent(PublicObject localObject, Program program)
         {
             List<Occurrence> occurrences = new List<Occurrence>();
-            XmlNodeList raised = program.SelectNodes(
+            XmlNodeList raised = program.Source.SelectNodes(
                     string.Format("//RaiseEvent/Event/PublicObject[@comp=-1 and @obj={0}]",
                         localObject.LocalId));
             foreach (XmlNode raise in raised)
             {
                 occurrences.Add(new EventOccurence(
                         new PublicObject(localObject.Name, localObject.Type, localObject.MciFile, localObject.LocalId),
-                        project,
-                        programFile.Name,
-                        program.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
+                        program.Project,
+                        program.Name,
+                        program.Source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
                         true));
             }
 
-            XmlNodeList handled = program.SelectNodes(
+            XmlNodeList handled = program.Source.SelectNodes(
                     string.Format("//LogicUnit/Event/PublicObject[@comp=-1 and @obj={0}]",
                         localObject.LocalId));
             foreach (XmlNode handle in handled)
             {
                 occurrences.Add(new EventOccurence(
                         new PublicObject(localObject.Name, localObject.Type, localObject.MciFile, localObject.LocalId),
-                        project,
-                        programFile.Name,
-                        program.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
+                        program.Project,
+                        program.Name,
+                        program.Source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value,
                         false));
             }
 
             return occurrences;
         }
 
-        private IEnumerable<Occurrence> LocateLocalDataSource(PublicObject localObject, Project project, FileInfo programFile, XmlDocument program)
+        private IEnumerable<Occurrence> LocateLocalDataSource(PublicObject localObject, Program program)
         {
             return new List<Occurrence>();
         }
 
         #endregion
 
-        private List<FileInfo> DiscoverProgramFiles(Project project)
-        {
-            DirectoryInfo di = new DirectoryInfo(project.SrcPath);
-            return new List<FileInfo>(di.EnumerateFiles("Prg_*.xml"));
-        }
-
-        private string BuildModelUsagePath(XmlDocument program, XmlNode hit)
+        private string BuildModelUsagePath(XmlDocument source, XmlNode hit)
         {
             return string.Format("Programs/{0}",
-                program.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value);
+                source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task[1]/Header/@Description").Value);
         }
     }
 }

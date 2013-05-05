@@ -1,13 +1,13 @@
-﻿using IntegriIndexer.PublicNameIndexing;
+﻿using Integri.Indexer.PublicNameIndexing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer
+namespace Integri.Indexer
 {
-    class Program
+    class Application
     {
         static void Main(string[] args)
         {

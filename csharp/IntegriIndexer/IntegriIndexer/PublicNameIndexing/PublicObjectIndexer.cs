@@ -1,6 +1,7 @@
-﻿using IntegriIndexer.Configuration;
-using IntegriIndexer.PublicNameIndexing.Gathering;
-using IntegriIndexer.PublicNameIndexing.Locating;
+﻿using Integri.Common;
+using Integri.Common.Configuration;
+using Integri.Indexer.PublicNameIndexing.Gathering;
+using Integri.Indexer.PublicNameIndexing.Locating;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Indexer.PublicNameIndexing
 {
     public class PublicObjectIndexer : IIndexer
     {
@@ -20,7 +21,7 @@ namespace IntegriIndexer.PublicNameIndexing
         public void Index()
         {
             Console.WriteLine("PublicObjectIndexer - About to index public objects in the following projects...");
-            List<Project> projects = DetermineProjects();
+            List<Project> projects = ProjectDiscovery.Discover("ProjectConfiguration");
             projects.ForEach(project => Console.WriteLine("\t{0}", project));
 
             Console.WriteLine("PublicObjectIndexer - About to gather all declared public objects...");
@@ -39,23 +40,6 @@ namespace IntegriIndexer.PublicNameIndexing
             }
             Console.WriteLine("PublicObjectIndexer - Results published ...");
             Console.WriteLine("PublicObjectIndexer - Done.");
-        }
-
-        private List<Project> DetermineProjects()
-        {
-            List<Project> projects = new List<Project>();
-
-            IntegriIndexerConfigSection config = (IntegriIndexerConfigSection)ConfigurationManager.GetSection("IntegriIndexer");
-            if (config != null)
-            {
-                string root = config.ProjectItems.Root;
-                foreach (ProjectElement project in config.ProjectItems)
-                {
-                    projects.Add(new Project(project.Name, root + project.Path, project.Mci));
-                }
-            }
-
-            return projects;           
         }
 
         private List<PublicObject> GatherPublicObjects(List<Project> projects)

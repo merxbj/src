@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Integri.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace IntegriIndexer.PublicNameIndexing.Gathering
+namespace Integri.Indexer.PublicNameIndexing.Gathering
 {
     public class EventGatherer : IGatherer
     {

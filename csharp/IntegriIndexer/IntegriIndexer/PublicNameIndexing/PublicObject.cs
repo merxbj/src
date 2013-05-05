@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Indexer.PublicNameIndexing
 {
     public class PublicObject : IComparable<PublicObject>
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing.Locating
+namespace Integri.Indexer.PublicNameIndexing.Locating
 {
     class ReferencedPublicObject : PublicObject
     {

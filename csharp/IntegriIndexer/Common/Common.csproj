@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CAD022CA-06B3-43C3-A9A2-3169294C4340}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{FBE169FB-A403-4A82-A347-4016705FDB2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IntegriIndexer</RootNamespace>
-    <AssemblyName>IntegriIndexer</AssemblyName>
+    <RootNamespace>Integri.Common</RootNamespace>
+    <AssemblyName>Integri.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,34 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PublicNameIndexing\DatabasePublisher.cs" />
-    <Compile Include="IIndexer.cs" />
+    <Compile Include="Configuration\ProjectConfiguration.cs" />
+    <Compile Include="ProgramDiscovery.cs" />
+    <Compile Include="Publishing\EmailPublisher.cs" />
+    <Compile Include="Publishing\IPublisher.cs" />
+    <Compile Include="LogicLine.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="Configuration\ProjectDiscovery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PublicNameIndexing\ConsolePublisher.cs" />
-    <Compile Include="PublicNameIndexing\EventOccurence.cs" />
-    <Compile Include="PublicNameIndexing\FilePublisher.cs" />
-    <Compile Include="PublicNameIndexing\ModelOccurence.cs" />
-    <Compile Include="PublicNameIndexing\Gathering\DataSourceGatherer.cs" />
-    <Compile Include="PublicNameIndexing\Gathering\EventGatherer.cs" />
-    <Compile Include="PublicNameIndexing\Gathering\IGatherer.cs" />
-    <Compile Include="PublicNameIndexing\IPublisher.cs" />
-    <Compile Include="PublicNameIndexing\Occurrence.cs" />
-    <Compile Include="PublicNameIndexing\Project.cs" />
-    <Compile Include="PublicNameIndexing\PublicObjectIndexer.cs" />
-    <Compile Include="PublicNameIndexing\PublicObject.cs" />
-    <Compile Include="PublicNameIndexing\Gathering\ModelsGatherer.cs" />
-    <Compile Include="PublicNameIndexing\Gathering\ProgramGatherer.cs" />
-    <Compile Include="PublicNameIndexing\Locating\DataSourceFileOccurenceLocator.cs" />
-    <Compile Include="PublicNameIndexing\Locating\IReferenceLocator.cs" />
-    <Compile Include="PublicNameIndexing\Locating\ProgramFilesOccurenceLocator.cs" />
-    <Compile Include="PublicNameIndexing\Locating\ProjectExplorer.cs" />
-    <Compile Include="PublicNameIndexing\Locating\ReferencedPublicObject.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="Configuration\IntegriIndexerConfiguration.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
+    <Compile Include="Task.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

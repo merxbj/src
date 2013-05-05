@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Common.Publishing
 {
-    public interface IPublisher
+    public interface IPublisher<T>
     {
-        void Publish(List<Occurrence> occurrences);
+        void Publish(List<T> publishables);
     }
 }

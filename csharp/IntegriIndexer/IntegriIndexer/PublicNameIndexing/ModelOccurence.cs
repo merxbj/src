@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Integri.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Indexer.PublicNameIndexing
 {
     public class ModelOccurence : Occurrence
     {

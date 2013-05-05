@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Integri.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing.Gathering
+namespace Integri.Indexer.PublicNameIndexing.Gathering
 {
     public interface IGatherer
     {

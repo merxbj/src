@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Integri.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace IntegriIndexer.PublicNameIndexing.Gathering
+namespace Integri.Indexer.PublicNameIndexing.Gathering
 {
     public class ProgramGatherer : IGatherer
     {
@@ -14,12 +15,11 @@ namespace IntegriIndexer.PublicNameIndexing.Gathering
         {
             var publics = new List<PublicObject>();
 
-            List<FileInfo> programFiles = DiscoverProgramFiles(project);
-            foreach (FileInfo programFile in programFiles)
+            ProgramDiscovery pd = new ProgramDiscovery(project);
+            foreach (Program program in pd.DiscoverPrograms())
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(programFile.FullName);
-                XmlNode obj = doc.SelectSingleNode("/Application/ProgramsRepository/Programs/Task/Header[Public]");
+                XmlDocument source = program.Source;
+                XmlNode obj = source.SelectSingleNode("/Application/ProgramsRepository/Programs/Task/Header[Public]");
                 if (obj != null)
                 {
                     string name = obj.SelectSingleNode("./Public/@val").Value;
@@ -34,12 +34,6 @@ namespace IntegriIndexer.PublicNameIndexing.Gathering
         public ObjectType ForType
         {
             get { return ObjectType.Program; }
-        }
-
-        private List<FileInfo> DiscoverProgramFiles(Project project)
-        {
-            DirectoryInfo di = new DirectoryInfo(project.SrcPath);
-            return new List<FileInfo>(di.EnumerateFiles("Prg_*.xml"));
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Integri.Common;
+using Integri.Common.Publishing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.PublicNameIndexing
+namespace Integri.Indexer.PublicNameIndexing
 {
-    public class ConsolePublisher : IPublisher
+    public class ConsolePublisher : IPublisher<Occurrence>
     {
         public void Publish(List<Occurrence> occurrences)
         {

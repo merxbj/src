@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer
+namespace Integri.Indexer
 {
     public static class Utils
     {

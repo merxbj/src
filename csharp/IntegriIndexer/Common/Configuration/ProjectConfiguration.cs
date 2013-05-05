@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntegriIndexer.Configuration
+namespace Integri.Common.Configuration
 {
-    class IntegriIndexerConfigSection : ConfigurationSection
+    public class ProjectConfigurationSection : ConfigurationSection
     {
         [ConfigurationProperty("projects")]
         public ProjectsCollection ProjectItems
@@ -16,7 +16,7 @@ namespace IntegriIndexer.Configuration
         }
     }
 
-    class ProjectsCollection : ConfigurationElementCollection
+    public class ProjectsCollection : ConfigurationElementCollection
     {
         [ConfigurationProperty("root", DefaultValue = "", IsKey = true, IsRequired = false)]
         public string Root
@@ -45,12 +45,12 @@ namespace IntegriIndexer.Configuration
         {
             get
             {
-                return (ProjectElement) BaseGet(idx);
+                return (ProjectElement)BaseGet(idx);
             }
         }
     }
 
-    class ProjectElement : ConfigurationElement
+    public class ProjectElement : ConfigurationElement
     {
         [ConfigurationProperty("name", DefaultValue = "", IsKey = true, IsRequired = true)]
         public string Name
