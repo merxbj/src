@@ -38,7 +38,7 @@ namespace Integri.CallByNameChecker
         private IEnumerable<CallByName> FindInProgram(Program program)
         {
             log.InfoFormat("\t\t" + program.FileName);
-            XmlNodeList invokeNodes = program.Source.SelectNodes("//Invoke[OperationType/@val='B']");
+            XmlNodeList invokeNodes = program.Source.SelectNodes("//Invoke[OperationType/@val='B' and (not(boolean(Disabled)) or not(Disabled/@val='1'))]");
             if (invokeNodes != null)
             {
                 foreach (XmlNode invokeNode in invokeNodes)
