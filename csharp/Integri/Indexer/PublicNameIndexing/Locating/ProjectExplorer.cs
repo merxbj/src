@@ -12,7 +12,7 @@ namespace Integri.Indexer.PublicNameIndexing.Locating
         public ProjectExplorer(List<PublicObject> publics)
         {
             this.publics = publics;
-            locators = Utils.Discover<IReferenceLocator>();
+            locators = Utils.Discover<IReferenceLocator>(typeof(ProjectExplorer).Assembly);
             componentCache = new Dictionary<string, XmlElement>();
         }
 

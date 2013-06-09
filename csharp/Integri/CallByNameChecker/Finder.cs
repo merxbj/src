@@ -11,9 +11,9 @@ namespace Integri.CallByNameChecker
     // ReSharper disable PossibleNullReferenceException
     class Finder
     {
-        public Finder(List<Project> projects)
+        public Finder(IEnumerable<Project> projects)
         {
-            this.projects = projects;
+            this.projects = new List<Project>(projects);
         }
 
         public List<CallByName> Find()

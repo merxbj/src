@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Integri.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
       <HintPath>..\..\..\..\log4net-1.2.11\bin\net\4.0\release\log4net.dll</HintPath>
@@ -44,11 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ProjectNames.cs" />
     <Compile Include="Configuration\ProjectConfiguration.cs" />
     <Compile Include="Configuration\XmlNodeSectionHandler.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataAccess\DataAccessLayer.cs" />
     <Compile Include="Logging\LoggingFactory.cs" />
+    <Compile Include="Unipaas\CallByName.cs" />
+    <Compile Include="Unipaas\Event.cs" />
     <Compile Include="Unipaas\ProgramDiscovery.cs" />
     <Compile Include="Publishing\EmailPublisher.cs" />
     <Compile Include="Publishing\IPublisher.cs" />
@@ -59,6 +68,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unipaas\Task.cs" />
     <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Integri.snk">
+      <Link>Integri.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

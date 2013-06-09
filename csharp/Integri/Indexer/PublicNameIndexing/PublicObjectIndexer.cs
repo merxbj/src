@@ -15,22 +15,23 @@ namespace Integri.Indexer.PublicNameIndexing
     {
         public PublicObjectIndexer()
         {
-            gatherers = Utils.Discover<IGatherer>();
+            gatherers = Utils.Discover<IGatherer>(typeof(PublicObjectIndexer).Assembly);
         }
 
         public void Index()
         {
             log.Info("About to index public objects in the following projects...");
-            List<Project> projects = ProjectDiscovery.Discover("ProjectConfiguration");
-            projects.ForEach(project => log.InfoFormat("\t{0}", project));
+            IDictionary<string, Project> projects = ProjectDiscovery.Discover("ProjectConfiguration");
+            List<Project> projectList = new List<Project>(projects.Values);
+            projectList.ForEach(project => log.InfoFormat("\t{0}", project));
 
             log.Info("About to gather all declared public objects...");
-            List<PublicObject> publics = GatherPublicObjects(projects);
+            List<PublicObject> publics = GatherPublicObjects(projectList);
             log.InfoFormat("Found total of {0} public objects...", publics.Count());
 
             log.Info("About to find occurrences of all declared public objects...");
             List<Occurrence> occurrences = new List<Occurrence>();
-            projects.ForEach(p => occurrences.AddRange(FindOccurrences(publics, p)));
+            projectList.ForEach(p => occurrences.AddRange(FindOccurrences(publics, p)));
             log.InfoFormat("Found total of {0} occurrences ...", occurrences.Count);
 
             log.Info("About to publish the results ...");

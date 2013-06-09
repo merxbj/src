@@ -1,9 +1,6 @@
-﻿using Integri.Common;
-using Integri.Common.Unipaas;
-
-namespace Integri.CallByNameChecker
+﻿namespace Integri.Common.Unipaas
 {
-    class CallByName : LogicLine
+    public class CallByName : LogicLine
     {
         public CallByName(Task owner, string condition, string cabinet, string publicName) : base(owner, condition)
         {

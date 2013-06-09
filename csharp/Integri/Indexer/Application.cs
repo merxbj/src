@@ -7,7 +7,7 @@ namespace Integri.Indexer
     {
         static void Main()
         {
-            List<IIndexer> indexers = Utils.Discover<IIndexer>();
+            List<IIndexer> indexers = Utils.Discover<IIndexer>(typeof(Application).Assembly);
             indexers.ForEach(idx => idx.Index());
         }
     }

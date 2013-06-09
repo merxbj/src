@@ -6,9 +6,9 @@ namespace Integri.Common.Configuration
 {
     public class ProjectDiscovery
     {
-        public static List<Project> Discover(string configurationSectionName)
+        public static IDictionary<string, Project> Discover(string configurationSectionName)
         {
-            List<Project> projects = new List<Project>();
+            Dictionary<string, Project> projects = new Dictionary<string, Project>();
 
             ProjectConfigurationSection config = (ProjectConfigurationSection)ConfigurationManager.GetSection(configurationSectionName);
             if (config != null)
@@ -16,7 +16,7 @@ namespace Integri.Common.Configuration
                 string root = config.ProjectItems.Root;
                 foreach (ProjectElement project in config.ProjectItems)
                 {
-                    projects.Add(new Project(project.Name, root + project.Path, project.Mci));
+                    projects.Add(project.Name, new Project(project.Name, root + project.Path, project.Mci));
                 }
             }
 

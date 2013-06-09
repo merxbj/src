@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Integri.Common.Unipaas;
 
 namespace Integri.CallByNameChecker
 {
-    class Checker
+    class DangerousUsageChecker
     {
-        public Checker(List<CallByName> callByNames)
+        public DangerousUsageChecker(List<CallByName> callByNames)
         {
             this.callByNames = callByNames;
             exceptions = new List<string> { "konverze.ecf" };

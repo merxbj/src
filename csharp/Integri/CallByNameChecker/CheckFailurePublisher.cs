@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
+using Integri.Common.Unipaas;
 
 namespace Integri.CallByNameChecker
 {
