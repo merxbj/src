@@ -10,13 +10,15 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * "d:\src\PCS_RPOS_Version_6\Releases\06_09_C1\6.1\" 
+ * "d:\src\PCS_RPOS_Version_6\Releases\06_09_C1\6.1\PCSCommon\Include\posoptions.h" 
+ * "d:\temp\sheetz\options.csv"
  * @author jmerxbauer
  */
 public class OptionUsageSearcher {

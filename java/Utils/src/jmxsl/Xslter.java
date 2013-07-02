@@ -20,12 +20,16 @@
 package jmxsl;
 
 import java.io.File;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -50,6 +54,11 @@ public class Xslter {
         Result outputResult = new StreamResult(outputFile);
         
         transform.transform(xmlInputSource, outputResult);
+        
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(outputFile);
+        Node tranXml = doc.getDocumentElement().getElementsByTagName("tran_xml").item(0);
+        
+        System.out.println(tranXml.toString());
         
         System.out.println("Transformation successfull ...");
     }
