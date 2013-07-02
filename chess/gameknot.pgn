@@ -1,144 +1,1041 @@
-[Event "Let's play chess"]
-[Site "http://gameknot.com/"]
-[Date "2012.09.25"]
-[Round "-"]
-[White "rogerp3"]
-[Black "merxbj"]
-[Result "1-0"]
-[WhiteElo "1468"]
-[BlackElo "1475"]
-
-1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 e5 5. Nc3 exd4 6. Nd5 Bb4+ 7. c3 dxc3 8. bxc3 Ba5 9. Qf3 Ne5 10. Qg3 g6 11. Qxe5+ Kf8 12. Ba3+ 1-0
-
-[Event "One Sitting Quick Match"]
-[Site "http://gameknot.com/"]
-[Date "2012.09.28"]
-[Round "-"]
-[White "furiousme"]
-[Black "merxbj"]
-[Result "0-1"]
-[WhiteElo "1442"]
-[BlackElo "1475"]
-
-1. e4 c6 2. d4 d5 3. e5 Bf5 4. f4 e6 5. Nf3 Ne7 6. Be3 Nd7 7. Nbd2 f6 8. c3 Qc7 9. exf6 gxf6 10. Nb3 b6 11. Nh4 O-O-O 12. Bd3 Rg8 13. Bxf5 exf5 14. Qh5 h6 15. g3 c5 16. Nxf5 Nxf5 17. Qxf5 Re8 18. Kd2 c4 19. Qxd5 Rg4 20. Nc1 a6 21. b3 b5 22. a4 bxa4 23. bxc4 a3 24. Nd3 Nb6 25. Qf5+ Qd7 26. Qxf6 Nxc4+ 27. Kc1 Nxe3 28. Qxa6+ Qb7 29. Qa4 Qxh1+ 30. Kd2 Qxh2+ 31. Kc1 Qg1+ 32. Kd2 Qg2+ 33. Kc1 Re6 34. d5 Qxd5 35. Ne5 Qh1+ 36. Kd2 Qxa1 37. Qa8+ Kc7 38. Qa7+ Kd6 39. Qd7+ Kc5 40. Qxe6 Qb2+ 41. Kxe3 Rxg3+ 42. Ke4 Qc2+ 43. Nd3+ Qxd3+ 44. Ke5 Qe3+ 45. Kf5 Qxe6+ 46. Kxe6 a2 47. f5 0-1
-
-[Event "Challenge from merxbj"]
-[Site "http://gameknot.com/"]
-[Date "2012.10.03"]
-[Round "-"]
-[White "rogerp3"]
-[Black "merxbj"]
-[Result "1-0"]
-[WhiteElo "1468"]
-[BlackElo "1475"]
-
-1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 e5 6. Nf3 Bb4 7. Bd3 d5 8. exd5 Nxd5 9. O-O e4 10. Nxe4 f5 11. Neg5 O-O 12. Bc4 Nce7 13. c3 Bc5 14. Qb3 b6 15. Rd1 Bb7 16. Ne6 Qd7 17. Nxf8 Kxf8 18. Bxd5 Bxd5 19. c4 Rd8 20. cxd5 Nxd5 21. Bg5 Be7 22. Ne5 Qd6 23. Bxe7+ Kxe7 24. f4 h6 25. Rd2 Qc5+ 26. Kh1 Nb4 27. Qf7# 1-0
-
-[Event "Challenge from furiousme"]
-[Site "http://gameknot.com/"]
-[Date "2012.10.07"]
-[Round "-"]
-[White "furiousme"]
-[Black "merxbj"]
-[Result "0-1"]
-[WhiteElo "1442"]
-[BlackElo "1475"]
-
-1. e4 c5 2. c4 Nc6 3. d3 g6 4. Nc3 Bg7 5. Nf3 Nf6 6. Bg5 d6 7. Qa4 a6 8. Nd5 Bd7 9. Bxf6 Bxf6 10. Nxf6+ exf6 11. Be2 O-O 12. O-O Re8 13. Qd1 Nd4 14. Nxd4 cxd4 15. b3 Rc8 16. f3 h5 17. h4 g5 18. hxg5 fxg5 19. g4 h4 20. f4 f6 21. f5 Bc6 22. b4 b5 23. Qb3 Kg7 24. cxb5 Bxb5 25. a4 Bd7 26. a5 Bb5 27. Qd5 Rc2 28. Ra2 Qc7 29. Rxc2 Qxc2 30. Bd1 Qxd3 31. Re1 Qg3+ 32. Kh1 Qxe1+ 33. Kg2 Qxd1 34. Qxd6 Bf1+ 35. Kg1 Bh3+ 36. Kh2 Qf3 37. Qd7+ Kh6 38. Qxe8 Qg2# 0-1
-
-[Event "Let's play chess"]
-[Site "http://gameknot.com/"]
-[Date "2012.10.07"]
-[Round "-"]
-[White "thelmacolin"]
-[Black "merxbj"]
-[Result "1-0"]
-[WhiteElo "1237"]
-[BlackElo "1475"]
-
-1. e4 c5 2. Nf3 Nc6 3. Bb5 d6 4. Bxc6+ bxc6 5. h3 g6 6. O-O Bg7 7. c3 e6 8. d4 cxd4 9. cxd4 e5 10. d5 cxd5 11. exd5 Bh6 12. Nbd2 Ne7 13. b3 O-O 14. Nc4 Bb7 15. Bxh6 Re8 16. Ng5 Nxd5 17. h4 f6 18. Ne4 Re6 19. Qf3 f5 20. Ng5 e4 21. Qh3 Re8 22. Rad1 Qc7 23. h5 Ba6 24. Rxd5 Bxc4 25. bxc4 Qxc4 26. Rxd6 Re7 27. hxg6 Qc7 28. gxh7+ Rxh7 29. Qxf5 Qc8 30. Qxh7# 1-0
-
-[Event "Challenge from dwabro22"]
-[Site "http://gameknot.com/"]
-[Date "2012.11.02"]
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19370304"]
+[Date "2013.04.15"]
 [Round "-"]
 [White "merxbj"]
-[Black "dwabro22"]
-[Result "0-1"]
-[WhiteElo "1461"]
-[BlackElo "1514"]
-
-1. d4 d5 2. Nf3 Nc6 3. Bf4 Bf5 4. e3 e6 5. c4 Nf6 6. Nc3 Bb4 7. a3 Bxc3+ 8. bxc3 O-O 9. cxd5 exd5 10. h3 a6 11. g4 Be4 12. Bg2 Re8 13. O-O Na5 14. Ne5 Nc4 15. Nxc4 dxc4 16. Rb1 Bxb1 17. Qxb1 Nd5 18. Bg3 Nxc3 19. Qb2 Ne4 20. Qxb7 Nxg3 21. fxg3 Rb8 22. Qf3 Rb3 23. Qd5 Qxd5 24. Bxd5 Re7 25. e4 Rxg3+ 26. Kh2 Rxa3 27. e5 Ra2+ 28. Kg3 Rc2 29. g5 g6 30. h4 c3 31. Be4 Rd2 32. Bb7 c5 33. dxc5 Rxb7 0-1
-
-[Event "Let's play chess"]
-[Site "http://gameknot.com/"]
-[Date "2012.11.02"]
-[Round "-"]
-[White "rabbit1"]
-[Black "merxbj"]
+[Black "ledzepper"]
 [Result "1-0"]
-[WhiteElo "1496"]
-[BlackElo "1461"]
+[WhiteElo "1502"]
+[BlackElo "1439"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. e4 c5 2. Nf3 Nc6 3. Nc3 d6 4. d3 Nf6 5. Be2 e6 6. O-O Be7 7. Bd2 O-O 8. h3 Nd7 9. a3 a6 10. Nh2 b5 11. Ng4 b4 12. Nd5 exd5 13. exd5 Nd4 14. Bf3 Nf6 15. Be3 Nxg4 16. hxg4 Bf6 17. axb4 cxb4 18. Ra4 Nxf3+ 19. Qxf3 Rb8 20. b3 Qc7 21. Qe2 Re8 22. Qf3 Qxc2 23. g5 Bd8 24. Bd4 Bxg5 25. Qg3 Qd2 26. f4 f6 27. fxg5 fxg5 28. Qxd6 Qxd3 29. Qxb8 Qxd4+ 30. Kh1 Bd7 31. Qd6 Bxa4 32. bxa4 Qd3 33. Rc1 Qh3+ 1-0
+1. e4 e5 2. Nc3 Be7 3. Bc4 Nf6 4. d3 h6 5. f4 Nc6 6. fxe5 Nxe5 7. d4 d5 
+8. Nxd5 Nxc4 9. Nc3 Bb4 10. Nge2 Nxe4 11. O-O Bg4 12. Nxe4 O-O 13. c3 Be7 
+14. b3 Nd6 15. Qc2 Re8 16. Ne2g3 Bh4 17. Nxd6 Qxd6 18. Nf5 Qe6 19. Nxh4 Re7 
+20. Ba3 Qe3+ 21. Qf2 Qxc3 22. Bxe7  1-0
 
-[Event "Challenge from mrn3o"]
-[Site "http://gameknot.com/"]
-[Date "2012.11.07"]
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19216360"]
+[Date "2013.04.25"]
 [Round "-"]
 [White "merxbj"]
-[Black "mrn3o"]
-[Result "1-0"]
-[WhiteElo "1468"]
-[BlackElo "1069"]
+[Black "gunnar01"]
+[Result "0-1"]
+[WhiteElo "1499"]
+[BlackElo "1919"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. e4 e5 2. Nf3 f6 3. Nxe5 d6 4. Qh5+ Ke7 5. Qf7# 1-0
+1. e4 e5 2. Nc3 Nc6 3. Nf3 Nf6 4. Bc4 Nxe4 5. Nxe4 d5 6. Bd3 dxe4 7. Bxe4 Qd6 
+8. O-O f6 9. d4 Nxd4 10. Nxd4 Qxd4 11. Qxd4 exd4 12. Bd2 Bd6 13. Rfe1 O-O 
+14. c3 Be5 15. f4 dxc3 16. bxc3 Bd6 17. Rab1 Rb8 18. g3 b6 19. Kg2 Bb7 
+20. Bxb7 Rxb7 21. f5 Be5 22. c4 c5 23. Re2 Rd7 24. Kf3 Rd4 25. Rc1 Rfd8 
+26. Rc2 Rd3+ 27. Be3 Bd4 28. Rcd2 Ra3 29. Kg2 Rc3 30. Bxd4 cxd4 31. Re7 a5 
+32. Re6 Rxc4 33. Rxb6 Rc5 34. g4 h5 35. h3 d3 36. Re6 Kf7 37. Kf3 g6  0-1
 
-[Event "Challenge from merxbj"]
-[Site "http://gameknot.com/"]
-[Date "2012.11.23"]
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19205120"]
+[Date "2013.04.27"]
 [Round "-"]
-[White "mrn3o"]
+[White "lampiaodoxadrez"]
 [Black "merxbj"]
 [Result "0-1"]
-[WhiteElo "1069"]
-[BlackElo "1468"]
+[WhiteElo "1598"]
+[BlackElo "1487"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. d4 d5 2. c4 e6 3. Nc3 f5 4. g3 Nf6 5. Nf3 Bb4 6. Qa4+ Nc6 7. Kd2 Ne4+ 8. Kd3 Nxf2+ 9. Kc2 Nxh1 10. Bf4 O-O 11. Bg2 Bd7 12. Rxh1 Nxd4+ 13. Nxd4 Bxa4+ 14. Kd2 Bxc3+ 15. bxc3 Re8 16. Bh3 e5 17. Bxe5 Rxe5 18. Bxf5 Qg5+ 19. Ke1 Qc1+ 20. Kf2 Qxh1 21. Be6+ Kf8 22. cxd5 Qxh2+ 23. Kf3 Qh5+ 24. g4 Qh3+ 25. Kf4 Qe3# 0-1
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 b5 5. Bb3 f6 6. O-O Bb7 7. c3 Nge7 
+8. d4 d6 9. d5 Na5 10. Bc2 c6 11. dxc6 Naxc6 12. b4 Qd7 13. a4 d5 14. a5 Nd8 
+15. Nbd2 Nc8 16. exd5 Bxd5 17. Re1 Nc6 18. Qe2 Bd6 19. c4 bxc4 20. Nxc4 Bxb4 
+21. Rd1 Qf7 22. Bb3 Nxa5 23. Nxa5 Bxb3 24. Nxb3 Qxb3 25. Rxa6 Rxa6 26. Qb5+ Kf7 
+27. Rd7+ Ke6 28. Rxg7 Qd1+ 29. Qf1 Qxf1+ 30. Kxf1 Ra1 31. Rc7 Ba3  0-1
 
-[Event "Let's play chess"]
-[Site "http://gameknot.com/"]
-[Date "2012.12.31"]
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19204201"]
+[Date "2013.04.09"]
 [Round "-"]
 [White "merxbj"]
-[Black "supersuperpippo"]
+[Black "leafless"]
+[Result "1-0"]
+[WhiteElo "1489"]
+[BlackElo "1247"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 e6 2. e4 d6 3. Nf3 h6 4. Bd3 a6 5. O-O Be7 6. Nc3 Bg5 7. Bd2 Nc6 
+8. d5 Ne5 9. Nxe5 dxe5 10. Qf3 Bxd2 11. Na4 Bf4 12. g3 Bg5 13. c4 Nf6 
+14. Rad1 Bd7 15. Nc5 b6 16. Nxd7 Qxd7 17. h4 exd5 18. exd5 Qh3 19. Bf5 e4 
+20. Bxh3 exf3 21. Rfe1+ Kf8 22. hxg5 hxg5 23. Bf5 g6 24. Bc2 Kg7 25. Re7 Rac8 
+26. Bb3 Ng4 27. d6 cxd6 28. Rxd6 b5 29. c5 Rxc5 30. Rxf7+ Kh6 31. Rxf3 Rc1+ 
+32. Kg2 Kg7 33. Rf7+ Kh6 34. Rxa6 Rb1 35. Rb6 Rxb2 36. Rxb5 Kh5 37. a4 Ne3+ 
+38. Kh3 Rb1 39. fxe3 Kh6 40. Kg4 Re1 41. Re7 Rh7 42. Rxh7+ Kxh7 43. Re5 Kg7 
+44. Kxg5 Rg1 45. Re7+ Kf8 46. Rf7+ Ke8 47. g4 Rg3 48. Kf4 Rg1 49. a5 Rb1 
+50. Rb7 Kd8 51. a6 Ra1 52. a7 Kc8 53. Bd5 Rxa7 54. Rxa7 Kd8 55. Kg5 Ke8 
+56. Kxg6 Kf8 57. Kh6 Ke8 58. g5 Kd8 59. g6 Kc8 60. g7 Kb8 61. Rb7+  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19170815"]
+[Date "2013.02.23"]
+[Round "-"]
+[White "merxbj"]
+[Black "abikhan"]
+[Result "0-1"]
+[WhiteElo "1492"]
+[BlackElo "1200"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Bg5 e6 7. f4 Qb6 
+8. Nb3 Be7 9. Qf3 Nbd7 10. O-O-O Qc7 11. Qg3 h6 12. Bh4 b5 13. a3 Bb7 
+14. Bd3 O-O 15. Qh3 Nc5 16. Nxc5 dxc5 17. e5 Nd5 18. Nxd5 Bxd5 19. Rhe1 Bxh4 
+20. Qxh4 c4 21. Be4 Bxe4 22. Rxe4 c3 23. b3 Rfd8 24. Qe1 Qe7 25. b4 Rxd1+ 
+26. Qxd1 a5 27. Qd4 axb4 28. Qxb4 Rxa3 29. Qb1 Qd8 30. Re2 Qd4  0-1
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19170298"]
+[Date "2013.02.22"]
+[Round "-"]
+[White "trango64"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1769"]
+[BlackElo "1492"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Be2 O-O 6. Bg5 Nbd7 7. f4 c5 
+8. e5 dxe5 9. dxe5 Nh5 10. Bxh5 gxh5 11. Qxh5 f6 12. Bh4 fxe5 13. O-O-O Qe8 
+14. Qe2 Rxf4 15. Bg3 Rf5 16. Nf3 Qh5 17. Nd5 Bf8 18. Bf2 b6 19. g4 Qxg4 
+20. Rdg1 Qg7 21. Rxg7+ Bxg7 22. Nxe7+  1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19170297"]
+[Date "2013.02.25"]
+[Round "-"]
+[White "merxbj"]
+[Black "trango64"]
+[Result "1-0"]
+[WhiteElo "1492"]
+[BlackElo "1769"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 g6 7. f3 Bg7 
+8. Qd2 Nbd7 9. O-O-O O-O 10. Bh6 Ne5 11. h4 Nh5 12. Be2 Ng3 13. Bxg7 Kxg7 
+14. Rh2 b5 15. Qe1 Nxe2+ 16. Qxe2 h5 17. b3 b4 18. Nb1 Bb7 19. Nd2 Qa5 
+20. Kb1 Rfc8 21. g4 Qc7 22. Qe3 hxg4 23. h5 Nxf3 24. Nd2xf3 gxf3 25. Qxf3 Rf8 
+26. hxg6 fxg6 27. Ne6+  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19162299"]
+[Date "2013.02.21"]
+[Round "-"]
+[White "merxbj"]
+[Black "aluk42"]
+[Result "1-0"]
+[WhiteElo "1502"]
+[BlackElo "897"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 Qe7 3. Nc3 d6 4. d4 f5 5. dxe5 c5 6. exd6 Qxd6 7. Bd2 Nf6 
+8. Qe2 h5 9. O-O-O b6 10. g3 a5 11. e5 Qc6 12. exf6+ Kf7 13. Ne5+ Kxf6 
+14. Nxc6 Nxc6 15. Nd5+ Kg6 16. Nxb6 Rb8 17. Nxc8 Rxc8 18. Qe6+ Kh7 19. Qxc8 Bd6 
+20. Qxf5+ g6 21. Qf7#  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19161434"]
+[Date "2013.02.28"]
+[Round "-"]
+[White "merxbj"]
+[Black "touli"]
+[Result "1-0"]
+[WhiteElo "1502"]
+[BlackElo "1340"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e6 2. d4 d5 3. e5 c5 4. c3 Nc6 5. Bd3 Qb6 6. Nf3 Nh6 7. O-O Be7 
+8. a3 Nf5 9. Bg5 Bxg5 10. Nxg5 Qxb2 11. Nd2 Qxc3 12. Bxf5 exf5 13. dxc5 Qxc5 
+14. Ngf3 O-O 15. Re1 Re8 16. Nb3 Qe7 17. Qxd5 Be6 18. Qd3 Rad8 19. Qc3 Bxb3 
+20. Qxb3 g6 21. Qb2 Rd5 22. Rab1 b6 23. Qb3 Rd7 24. h3 Na5 25. Qa2 Qc5 
+26. e6 fxe6 27. Rxe6 Rxe6 28. Qxe6+ Rf7 29. Ng5 Qc7 30. Qe8+ Kg7 31. Ne6+ 
+ 1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19150128"]
+[Date "2013.02.24"]
+[Round "-"]
+[White "merxbj"]
+[Black "egyptpawn"]
+[Result "1/2-1/2"]
+[WhiteElo "1474"]
+[BlackElo "1280"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 d6 3. d4 exd4 4. Nxd4 c5 5. Nb3 Nc6 6. Nc3 Be7 7. Be3 Nf6 
+8. Be2 O-O 9. Qd2 Be6 10. f3 a5 11. a4 Rb8 12. O-O-O Bxb3 13. cxb3 Qb6 
+14. Nb5 Rfc8 15. Kb1 Nb4 16. Bc4 Rd8 17. g4 h6 18. Qc3 d5 19. exd5 Nfxd5 
+20. Bxd5 Nxd5 21. Qe1 Re8 22. Rxd5 Qg6+ 23. Ka2 Bg5 24. Qg3 Bxe3 25. Re5 Bd4 
+26. Nxd4 cxd4 27. Rxe8+ Rxe8 28. Re1 Rxe1 29. Qxe1 Qc2 30. Qxa5 d3 31. Qf5 Qe2 
+32. Qc8+ Kh7 33. Qc4 Qxf3 34. Qc3 Qd5 35. Qd2  1/2-1/2
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19149227"]
+[Date "2013.02.13"]
+[Round "-"]
+[White "merxbj"]
+[Black "sourciman"]
+[Result "1-0"]
+[WhiteElo "1474"]
+[BlackElo "1315"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 e6 3. d4 cxd4 4. Nxd4 Bc5 5. Nb3 Bb6 6. Nc3 Qf6 7. f4 g5 
+8. g3 gxf4 9. Bxf4 e5 10. Nd5 Qd6 11. Nxb6 Qxb6 12. Bxe5 Nf6 13. Qd4 Qxd4 
+14. Nxd4 Ke7 15. Nf5+ Ke6 16. Bc3 Rg8 17. Bc4+ d5 18. exd5+ Kxf5 19. O-O+ Kg6 
+20. Rxf6+ Kh5 21. Be2+ Bg4 22. Rf5+ Kg6 23. Bxg4 Nd7 24. Raf1 Kh6 25. Bd2+ 
+ 1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19139821"]
+[Date "2013.03.26"]
+[Round "-"]
+[White "jpdix"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1513"]
+[BlackElo "1474"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c6 2. Bc4 d5 3. exd5 cxd5 4. Bb5+ Bd7 5. Bxd7+ Nxd7 6. Nf3 e5 7. d3 Ngf6 
+8. Bg5 Qb6 9. Nc3 Qxb2 10. Bd2 d4 11. Na4 Qa3 12. c3 b5 13. cxd4 exd4 
+14. Qe2+ Be7 15. O-O Qxa4 16. Rfe1 Nd5 17. Bg5 Nd7f6 18. Bxf6 gxf6 19. Qe4 Rd8 
+20. Nh4 Kf8 21. Nf5 Bc5 22. Rac1 Qb4 23. Qh4 h5 24. g4 Nf4 25. Qxf6 Kg8 
+26. Qg7#  1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19139820"]
+[Date "2013.04.15"]
+[Round "-"]
+[White "merxbj"]
+[Black "jpdix"]
+[Result "1-0"]
+[WhiteElo "1474"]
+[BlackElo "1513"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 d6 3. d4 exd4 4. Nxd4 h6 5. Nc3 Nf6 6. Be3 Be7 7. Qd2 a6 
+8. O-O-O Bg4 9. Be2 O-O 10. f3 Bd7 11. h3 c5 12. Nf5 Bxf5 13. exf5 Nc6 
+14. a3 Ne5 15. Nd5 Nxd5 16. Qxd5 Qb6 17. g4 Rac8 18. Kb1 Bf6 19. Qxd6 Rc6 
+20. Qd5 Nxf3 21. b4 Nd4 22. Bc4 a5 23. c3 axb4 24. axb4 cxb4 25. cxd4 Rd6 
+26. Qc5 Qd8 27. Rd3 Rc6 28. Qd5 Qc7 29. Rc1 Bg5 30. Bxg5 hxg5 31. Rd2 b3 
+32. Rd3 b2 33. Kxb2 Qh2+ 34. Rc2 Rb6+ 35. Rb3 Rxb3+ 36. Bxb3 Qxh3 37. Qxb7 Qxg4 
+38. Bxf7+ Kh7 39. Rh2+ Qh4 40. Rxh4+ gxh4 41. Bg6+ Kh6 42. Qh1 Kg5 43. Kc3 Rc8+ 
+44. Kd3 Rd8 45. d5 h3 46. Qxh3 Rxd5+ 47. Ke4 Ra5 48. Qg3+ Kf6 49. Qc3+ 
+ 1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19132699"]
+[Date "2013.02.13"]
+[Round "-"]
+[White "merxbj"]
+[Black "karma67"]
+[Result "1-0"]
+[WhiteElo "1466"]
+[BlackElo "1591"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 d5 5. Nf3 O-O 6. Bd3 dxc4 7. Bxc4 Ne4 
+8. Qc2 Nxc3 9. bxc3 Ba5 10. O-O Nd7 11. Bd3 h6 12. e4 c5 13. Bb2 e5 14. dxc5 Nxc5 
+15. Nxe5 Re8 16. f4 Bb6 17. Kh1 Nxd3 18. Qxd3 Qxd3 19. Nxd3 Rxe4 20. Rae1 Bf5 
+21. Nf2 Bxf2 22. Rxe4 Bxe4 23. Rxf2 Rd8 24. h3 Rd5 25. Kh2 a5 26. a3 f6 
+27. g3 Rd1 28. g4 Kf7 29. Kg3 Ke6 30. Re2 Kd5 31. c4+ Kxc4 32. Rxe4+ Kb3 
+33. Re2 Rb1 34. Bd4 Kxa3 35. Re7 a4 36. Rxg7 Rb4 37. Bc5 Kb3 38. Bxb4 Kxb4 
+39. Rxb7+ Kc3 40. Kh4 a3 41. g5 hxg5+ 42. fxg5 a2 43. Ra7  1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19132571"]
+[Date "2013.04.09"]
+[Round "-"]
+[White "merxbj"]
+[Black "kingjames73"]
+[Result "1-0"]
+[WhiteElo "1466"]
+[BlackElo "1540"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 c6 4. Nc3 Bb4 5. Qc2 d5 6. e3 Ne4 7. Bd3 Bxc3+ 
+8. bxc3 Qa5 9. Bb2 O-O 10. Nd2 Qd8 11. Nxe4 dxe4 12. Bxe4 Nd7 13. Bxh7+ Kh8 
+14. Bd3 Qg5 15. g3 Nf6 16. h4 Qh5 17. Qe2 Qh6 18. O-O-O a6 19. g4 Nd7 
+20. g5  1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19130408"]
+[Date "2013.02.14"]
+[Round "-"]
+[White "merxbj"]
+[Black "coachbob"]
+[Result "1-0"]
+[WhiteElo "1466"]
+[BlackElo "1464"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e6 2. d4 d5 3. Nd2 Nf6 4. e5 Nfd7 5. c3 c5 6. f4 cxd4 7. cxd4 Nc6 
+8. Ndf3 Bb4+ 9. Bd2 Bxd2+ 10. Qxd2 f6 11. Bd3 fxe5 12. fxe5 Nb6 13. b3 O-O 
+14. Ne2 Ne7 15. O-O Ng6 16. g3 Bd7 17. Rac1 a6 18. Nf4 Nxf4 19. gxf4 Be8 
+20. Ng5 g6 21. Nxe6 Qh4 22. Nxf8 Kxf8 23. Qb4+ Kg7 24. Qxb6 Qg4+ 25. Kh1 Bc6 
+26. Rxc6  1-0
+
+
+[Event "League division D2"]
+[Site "http://gameknot.com/chess.pl?bd=19130407"]
+[Date "2013.02.16"]
+[Round "-"]
+[White "coachbob"]
+[Black "merxbj"]
+[Result "1/2-1/2"]
+[WhiteElo "1464"]
+[BlackElo "1466"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. Nf3 O-O 5. e4 d6 6. Be2 e5 7. dxe5 dxe5 
+8. Qxd8 Rxd8 9. Bg5 Nbd7 10. Nd5 c6 11. Nxf6+ Nxf6 12. O-O Bg4 13. Rfe1 Bxf3 
+14. Bxf3 Rd4 15. b3 h6 16. Be3 Rd7 17. a4 a6 18. Bb6 Ne8 19. h4 Bf6 20. Bg4 Rd3 
+21. Be3 Rxb3 22. Bxh6 Bxh4 23. Rad1 Nf6 24. Be2 Nxe4 25. Be3 Nc3 26. Rd2 Nxe2+ 
+27. Rdxe2 Rd8 28. a5 f5 29. Bb6 Rd7 30. Rxe5 Be7 31. Rxe7 Rbd3 32. Re8+ Kf7 
+33. Bc5 Kf6 34. Rf8+ Kg5 35. Be3+ Kg4 36. Rh8 f4 37. f3+ Kg5 38. Bf2 Rf7 
+39. Re5+ Kf6 40. Re4 g5 41. Bd4+ Kf5 42. Re5+ Kf6 43. Re4+ Kf5 44. Rhe8 Rd1+ 
+45. Kf2 Rd2+ 46. Kf1 Rh7 47. Rf8+ Kg6 48. Rg8+ Kf5 49. Re5+ Kf6 50. Re4+ 
+ 1/2-1/2
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19122493"]
+[Date "2013.02.16"]
+[Round "-"]
+[White "gregdan2008"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1462"]
+[BlackElo "1457"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c6 2. Nf3 d5 3. e5 Bg4 4. h3 Bh5 5. g4 Bg6 6. d4 e6 7. Nc3 Bb4 8. Bd2 Ne7 
+9. a3 Ba5 10. b4 Bb6 11. a4 a5 12. b5 O-O 13. Ne2 Nd7 14. Nf4 Be4 15. Rg1 c5 
+16. c3 h6 17. Bd3 Bg6 18. Nxg6 Nxg6 19. Rh1 Nh4 20. Nxh4 Qxh4 21. Qf3 cxd4 
+22. Qe2 f6 23. O-O-O Nxe5 24. f4 Nxd3+ 25. Qxd3 dxc3 26. Bxc3 Rfc8 27. Kb1 Qf2 
+28. Rhf1 Qe3 29. Rfe1 Qxf4 30. Rxe6 Qxa4 31. Bxf6 gxf6 32. Qg6+ Kf8 33. Rxf6+ Ke7 
+34. Qg7+ Ke8 35. Rf8#  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19119287"]
+[Date "2013.03.23"]
+[Round "-"]
+[White "merxbj"]
+[Black "whbmoores"]
+[Result "1-0"]
+[WhiteElo "1448"]
+[BlackElo "1334"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. d4 d5 2. e3 a6 3. Bd3 g6 4. Nf3 Nc6 5. Nbd2 Nb4 6. Qe2 Bf5 7. Bxf5 gxf5 
+8. Nb3 b6 9. O-O e6 10. c3 Nc6 11. Bd2 Bd6 12. Nc1 Nf6 13. h3 Qe7 14. Nd3 
+ 1-0
+
+
+[Event "Challenge from guyn"]
+[Site "http://gameknot.com/chess.pl?bd=19093683"]
+[Date "2013.02.07"]
+[Round "-"]
+[White "merxbj"]
+[Black "guyn"]
+[Result "1-0"]
+[WhiteElo "1448"]
+[BlackElo "1432"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 a6 5. Nc3 g6 6. Be3 Nf6 7. f3 Bg7 
+8. Qd2 h6 9. O-O-O Nc6 10. Nxc6 bxc6 11. e5 Nd7 12. exd6 exd6 13. Qxd6 Be5 
+14. Qxc6 Rb8 15. Bxa6 O-O 16. Bxc8 Rxc8 17. Qxd7 Qa5 18. Rd5  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19055824"]
+[Date "2013.02.02"]
+[Round "-"]
+[White "merxbj"]
+[Black "winsumlosesum"]
+[Result "1-0"]
+[WhiteElo "1437"]
+[BlackElo "1312"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 a6 4. Nc3 Bc5 5. O-O d6 6. Nd5 Na5 7. Bb3 Nh6 
+8. h3 c6 9. Ne3 Qf6 10. c3 Qg6 11. Kh1 Qxe4 12. d4 exd4 13. cxd4 Bb6 14. Re1 d5 
+15. Nxd5 O-O 16. Rxe4 cxd5 17. Bxd5 Bf5 18. Re2 Rfd8 19. Be4 Rac8 20. Bxh6 Bxe4 
+21. Rxe4 gxh6 22. Rc1 Nc6 23. g4 Rd5 24. Rc4 f6 25. Qd2 Ba5 26. Qxh6 Rc7 
+27. Re8+ Kf7 28. Qf8+ Kg6 29. Qg8+ Kh6 30. Qxd5 Nb4 31. Qh5+ Kg7 32. Rxc7+ Bxc7 
+33. Re7+ Kf8  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19052070"]
+[Date "2013.02.06"]
+[Round "-"]
+[White "jjimenez"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1410"]
+[BlackElo "1437"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. e3 g6 3. Nf3 Bg7 4. c3 O-O 5. Bc4 d5 6. Be2 Nbd7 7. O-O c5 
+8. dxc5 Nxc5 9. Nbd2 Qc7 10. Nb3 Rd8 11. Nxc5 Qxc5 12. Qd4 b6 13. Qxc5 bxc5 
+14. c4 Ba6 15. b3 Ne4 16. Nd2 Bxa1 17. Nxe4 dxe4 18. Ba3 Be5 19. Bxc5 e6 
+20. Be7 Rd2 21. Re1 Rxa2 22. f3 Bc3 23. Kf2 Bxe1+ 24. Kxe1 Rc8 25. fxe4 Rb2 
+26. Bf6 Rxb3 27. Bg5 Bxc4 28. Bxc4 Rxc4 29. Ke2 Rxe4  0-1
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19031004"]
+[Date "2013.01.25"]
+[Round "-"]
+[White "merxbj"]
+[Black "dimitri29"]
+[Result "1-0"]
+[WhiteElo "1427"]
+[BlackElo "1200"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 Nf6 3. Nc3 c6 4. Bc4 d5 5. exd5 cxd5 6. Bb5+ Bd7 7. Nxe5 Bxb5 
+8. Nxb5 Qb6 9. Qe2 Be7 10. O-O O-O 11. d4 Nc6 12. Be3 Nxe5 13. dxe5 Qa6 
+14. exf6 Bxf6 15. c3 Rad8 16. Rfe1 Rfe8 17. Nc7 Qxe2 18. Rxe2 Re7 19. Nb5 a6 
+20. Nd4 Bxd4 21. cxd4 h6 22. Rc2 Kh7 23. Re1 b5 24. g4 g6 25. Rcc1 b4 
+26. g5 hxg5 27. Bxg5 Rxe1+ 28. Rxe1 Rc8 29. Rc1 Re8 30. Rc7 Kg7 31. Rd7 Re2 
+32. Rxd5 Rxb2 33. Ra5 b3 34. axb3 Rxb3 35. Rxa6 Rb4 36. Be3 Rb5 37. Ra2 Kf6 
+38. Kg2 Kf5 39. Kf3 g5 40. h3 f6 41. Rd2 Rb8 42. d5 Rh8 43. Kg3 Kg6 44. d6 f5 
+45. Bc5 f4+ 46. Kh2 g4 47. d7 Rxh3+ 48. Kg2 f3+ 49. Kg1 g3 50. d8=Q  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19019496"]
+[Date "2013.02.02"]
+[Round "-"]
+[White "merxbj"]
+[Black "totoman"]
+[Result "1/2-1/2"]
+[WhiteElo "1427"]
+[BlackElo "1411"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nc6 5. Nc3 g6 6. Be3 Bg7 7. Qd2 Ne5 
+8. f4 Ng4 9. Bg1 Bd7 10. h3 Ng4f6 11. O-O-O a6 12. Kb1 b5 13. Bd3 b4 14. Nd5 a5 
+15. c3 Nxd5 16. exd5 bxc3 17. Qxc3 Nf6 18. Nc6 Bxc6 19. dxc6 O-O 20. c7 Qc8 
+21. Bd4 Nd5 22. Qc4 Bxd4 23. Qxd5 Bc5 24. Qc6 Ra7 25. g4 Rxc7 26. Qg2 Qb8 
+27. Rhe1 a4 28. Re2 a3 29. b3 Rb7 30. Bc2 Qa7 31. Rd3 Rb4 32. f5 Rd4 33. Rf3 Qc7 
+34. h4 Rc8 35. h5 Bb4 36. Rf1 d5 37. fxg6 hxg6 38. hxg6 fxg6 39. Bxg6 Rf4 
+40. Qxd5+ Kg7 41. Qd1 Rxf1 42. Qxf1 Kxg6 43. Qf5+ Kg7 44. Qg5+ Kf8 45. Rf2+ Ke8 
+46. Qg6+ Kd7 47. Qf5+ e6 48. Qf7+ Kd6 49. Qf4+ Kd7 50. Qf7+ Kd6 51. Qf4+ Kd5 
+52. Qf3+ Kd6 53. Qf4+  1/2-1/2
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=19003792"]
+[Date "2013.02.02"]
+[Round "-"]
+[White "guyn"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1444"]
+[BlackElo "1419"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c6 2. Nf3 d5 3. Nc3 e6 4. d4 Nf6 5. Bg5 Be7 6. e5 Nfd7 7. Bxe7 Qxe7 
+8. Bd3 O-O 9. O-O a6 10. Qd2 c5 11. Ng5 h6 12. Nf3 cxd4 13. Nxd4 Nxe5 
+14. Be2 Nbc6 15. h3 Rd8 16. Nxc6 bxc6 17. Rfe1 Qc7 18. Bd3 Nxd3 19. Qxd3 a5 
+20. Ne2 e5 21. c4 Ba6 22. Qf5 Bxc4 23. Ng3 f6 24. Nh5 Qf7 25. Re3 Qf8 
+26. Rg3 Ra7 27. Rc1 Rd6 28. b3 Ba6 29. Qf3 Rc7 30. Qe3 Kh8 31. Qb6 Qc8 
+32. Qxa5 Be2 33. Qc5 Rdd7 34. f3 Qe8 35. Qe3 Ba6 36. Nf4 g5 37. Ne2 d4 
+38. Qd2 Qb8 39. f4 Bxe2 40. Qxe2 exf4 41. Rd3 Re7 42. Qh5 Kg7 43. Rxd4 Qa7 
+44. Rcd1 Rcd7 45. Qf3 Rxd4 46. Rxd4 Qxd4+  0-1
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=18993414"]
+[Date "2013.02.09"]
+[Round "-"]
+[White "merxbj"]
+[Black "stiggs"]
+[Result "1-0"]
+[WhiteElo "1430"]
+[BlackElo "1200"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d3 d6 6. O-O O-O 7. b4 Bb6 
+8. a4 a6 9. Bg5 h6 10. Bh4 g5 11. Bg3 g4 12. Ne1 Nh5 13. Nc2  1-0
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=18992325"]
+[Date "2013.01.15"]
+[Round "-"]
+[White "merxbj"]
+[Black "chrimas1"]
+[Result "0-1"]
+[WhiteElo "1430"]
+[BlackElo "1377"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. Nf3 Nd7 7. h4 h6 
+8. h5 Bh7 9. Bd3 Ngf6 10. Bxh7 Rxh7 11. Qe2 Qc7 12. Bf4 Qxf4 13. Rh4 Qc7 
+14. O-O-O g5 15. hxg6 fxg6 16. Ne4 Rf7 17. Kb1 Bg7 18. Rhh1 Kf8 19. Nxf6 Bxf6 
+20. Rxh6 Kg7 21. Rhh1 Rh8 22. Qe3 Nf8 23. Rxh8 Kxh8 24. Rh1+ Rh7 25. Rxh7+ Kxh7 
+26. Ng5+ Bxg5 27. Qxg5 Qd6 28. Qh4+ Kg7 29. c3 Qf6 30. Qg3 Qd6 31. f4 Qe6 
+32. Qf3 Nd7 33. b3 Nf6 34. Kc2 Qe4+ 35. Qxe4 Nxe4 36. g4 Nf6 37. g5 Nd5 
+38. a4  0-1
+
+
+[Event "Fast Ladder"]
+[Site "http://gameknot.com/chess.pl?bd=18991075"]
+[Date "2013.01.17"]
+[Round "-"]
+[White "wtowns"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1345"]
+[BlackElo "1418"]
+[TimeControl "259200+86400"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. Nc3 g6 3. Nf3 Bg7 4. h3 O-O 5. e4 d6 6. d5 b6 7. Bg5 Nbd7 
+8. Bxf6 Nxf6 9. Bc4 Re8 10. Bb5 Bd7 11. Bd3 c5 12. a4 e6 13. Bc4 exd5 
+14. Be2 dxe4 15. Ng1 Bc6 16. f3 d5 17. fxe4 Nxe4 18. Nxe4 Rxe4 19. Rh2 Bxb2 
+20. Rb1 Be5 21. Nf3 Bxh2 22. Nxh2 Qd6 23. Nf3 Rae8 24. Ng1 Bxa4 25. Rc1 d4 
+26. Qd2 f5 27. c3 d3 28. Kf2 Rxe2+ 29. Nxe2 Rxe2+  0-1
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18977619"]
+[Date "2013.01.28"]
+[Round "-"]
+[White "merxbj"]
+[Black "thomascouret"]
+[Result "0-1"]
+[WhiteElo "1408"]
+[BlackElo "1439"]
+[TimeControl "1/604800"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 Nc6 3. d4 Bd6 4. d5 Nce7 5. c4 Nf6 6. Qc2 b6 7. Be3 O-O 
+8. c5 bxc5 9. Bxc5 Bxc5 10. Qxc5 Nxe4 11. Qb4 Nd6 12. Nxe5 Nxd5 13. Qd2 Bb7 
+14. Nc3 c6 15. Nxd5 cxd5 16. Be2 Re8 17. Ng4 a6 18. O-O Rc8 19. Rac1 Rxc1 
+20. Rxc1 f5 21. Ne3 Ne4 22. Qb4 Bc6 23. Nxf5 Qg5 24. Ne3 Rf8 25. f3 Qxe3+ 
+ 0-1
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18971881"]
+[Date "2013.01.12"]
+[Round "-"]
+[White "merxbj"]
+[Black "appells"]
+[Result "1-0"]
+[WhiteElo "1397"]
+[BlackElo "1391"]
+[TimeControl "1/604800"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Qf6 7. Qb3 b6 
+8. Nc3 Bc5 9. Be3 Bxe3 10. fxe3 Ne7 11. Rf1 Qh4+ 12. g3 Qxh2 13. O-O-O Qxg3 
+14. Bxf7+ Kf8 15. Bg6+  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18932722"]
+[Date "2013.01.08"]
+[Round "-"]
+[White "merxbj"]
+[Black "stefbeavis"]
 [Result "1-0"]
 [WhiteElo "1386"]
-[BlackElo "1335"]
+[BlackElo "1420"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 g6 7. Be2 Nc6 8. Qd2 Bg7 9. O-O-O O-O 10. h3 e5 11. Nf3 b5 12. Bh6 Bxh6 13. Qxh6 Nh5 14. Ng5 Nf6 15. Nd5 Ne7 16. Nxf6+ 1-0
+1. e4 e5 2. Nf3 d6 3. d4 Nf6 4. Nc3 exd4 5. Nxd4 c5 6. Bb5+ Bd7 7. Nf5 a6 
+8. Bxd7+ Nbxd7 9. O-O g6 10. Nxd6+ Bxd6 11. Qxd6 b5 12. Re1 c4 13. e5 Ng4 
+14. e6 Nb6 15. exf7+ Kxf7 16. Qe6+ Kf8 17. Qxg4 h5 18. Qxg6 Rg8 19. Bh6+ 
+ 1-0
+
 
 [Event "Let's play chess"]
-[Site "http://gameknot.com/"]
-[Date "2013.01.02"]
+[Site "http://gameknot.com/chess.pl?bd=18924213"]
+[Date "2013.01.12"]
 [Round "-"]
 [White "merxbj"]
-[Black "wanana"]
+[Black "mikelee"]
 [Result "1-0"]
-[WhiteElo "1386"]
-[BlackElo "1324"]
+[WhiteElo "1376"]
+[BlackElo "1507"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. e4 e5 2. Nc3 Nf6 3. Bc4 Bc5 4. d3 d6 5. f4 Ng4 6. f5 Bf2+ 7. Kf1 Be3 8. Qxg4 Bxg1 9. Rxg1 g6 10. Bh6 Nc6 11. Nd5 Nd4 12. Ne3 f6 13. c3 Nc6 14. Qf3 Bd7 15. g4 Qe7 16. Nd5 Qd8 17. g5 Ne7 18. Nxf6# 1-0
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 e5 5. Nb5 a6 6. Nd6+ Bxd6 7. Qxd6 Qf6 
+8. Qd1 Nge7 9. Nc3 O-O 10. Be3 d6 11. Qd2 Rd8 12. O-O-O Be6 13. Nd5 Bxd5 
+14. exd5 Nd4 15. Bxd4 exd4 16. Qxd4 Qxd4 17. Rxd4 Rac8 18. Bd3 b5 19. Re1 Rd7 
+20. Kb1 g6 21. a3 Rc5 22. c4 bxc4 23. Bxc4 a5 24. b4 Rb7 25. Rxe7 Rxc4 
+26. Re8+ Kg7 27. Rxc4 axb4 28. Rxb4 Rc7 29. a4 Rc3 30. Re3 Rc5 31. Rb5 Rc4 
+32. a5 Ra4 33. g3 h5 34. f4 Kf6 35. Rb6 Rxa5 36. Rxd6+ Kg7 37. h4 Ra7 
+38. Kc2 f6 39. Ree6 Rf7 40. Kd3 Kh6 41. Rxf6  1-0
+
 
 [Event "Let's play chess"]
-[Site "http://gameknot.com/"]
+[Site "http://gameknot.com/chess.pl?bd=18919515"]
 [Date "2013.01.03"]
 [Round "-"]
 [White "merxbj"]
 [Black "crumblemouth"]
 [Result "1-0"]
-[WhiteElo "1397"]
-[BlackElo "1376"]
+[WhiteElo "1376"]
+[BlackElo "1410"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
 
-1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qc3 Bd6 8. O-O Nxe4 9. Qe3 Nf6 10. Nc3 c6 11. a4 Nbd7 12. Ne4 h6 13. Nxd6+ Ke7 14. Nxf7 Qc8 15. Nxh8 Qxh8 16. f4 Ng4 17. Qa3+ c5 18. h3 Ngf6 19. fxe5 Ne4 20. Re1 Ng5 21. Bxg5+ hxg5 22. e6 b6 23. exd7+ Kxd7 24. Rad1+ Kc8 25. Be6+ Kc7 26. Qg3+ Kb7 27. Bd5+ Ka6 28. Qd3+ 1-0
+1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qc3 Bd6 
+8. O-O Nxe4 9. Qe3 Nf6 10. Nc3 c6 11. a4 Nbd7 12. Ne4 h6 13. Nxd6+ Ke7 
+14. Nxf7 Qc8 15. Nxh8 Qxh8 16. f4 Ng4 17. Qa3+ c5 18. h3 Ngf6 19. fxe5 Ne4 
+20. Re1 Ng5 21. Bxg5+ hxg5 22. e6 b6 23. exd7+ Kxd7 24. Rad1+ Kc8 25. Be6+ Kc7 
+26. Qg3+ Kb7 27. Bd5+ Ka6 28. Qd3+  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18909521"]
+[Date "2012.12.31"]
+[Round "-"]
+[White "merxbj"]
+[Black "supersuperpippo"]
+[Result "1-0"]
+[WhiteElo "1367"]
+[BlackElo "1319"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 g6 7. Be2 Nc6 
+8. Qd2 Bg7 9. O-O-O O-O 10. h3 e5 11. Nf3 b5 12. Bh6 Bxh6 13. Qxh6 Nh5 
+14. Ng5 Nf6 15. Nd5 Ne7 16. Nxf6+  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18847168"]
+[Date "2013.01.02"]
+[Round "-"]
+[White "merxbj"]
+[Black "wanana"]
+[Result "1-0"]
+[WhiteElo "1367"]
+[BlackElo "1398"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 e5 2. Nc3 Nf6 3. Bc4 Bc5 4. d3 d6 5. f4 Ng4 6. f5 Bf2+ 7. Kf1 Be3 
+8. Qxg4 Bxg1 9. Rxg1 g6 10. Bh6 Nc6 11. Nd5 Nd4 12. Ne3 f6 13. c3 Nc6 
+14. Qf3 Bd7 15. g4 Qe7 16. Nd5 Qd8 17. g5 Ne7 18. Nxf6#  1-0
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638876"]
+[Date "2012.12.05"]
+[Round "-"]
+[White "elchorbagy"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1319"]
+[BlackElo "1461"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. e4 c6 2. e5 d5 3. d4 Bf5 4. Nf3 e6 5. c3 Nd7 6. Bd3 Bxd3 7. Qxd3 c5 
+8. O-O f6 9. Re1 c4 10. exf6 cxd3 11. fxg7 Bxg7 12. Ng5 e5 13. Ne6 Qb6 
+14. Nxg7+ Kf7 15. Nf5 e4 16. Nd2  1-0
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638873"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "rgeorge55"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1337"]
+[BlackElo "1461"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Bd3 Qxd4 6. Qf3 Bxe4 7. Bxe4 Nf6 
+8. Bd3 e5 9. Ne2 Qd5 10. Qxd5 Nxd5 11. O-O Bd6 12. c4 Nf6 13. Bg5 Nbd7 
+14. f4  1-0
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638870"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "gerdas"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1355"]
+[BlackElo "1461"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nf3 e6 5. Nc3 Nd7 6. Be3 c5 7. Nb5 Qb6 
+8. Be2 a6 9. Nd6+ Bxd6 10. exd6 Qxd6 11. b3 e5 12. dxe5 Nxe5 13. c3 Nf6 
+14. Nxe5 Qxe5 15. Bxc5 Qxc3+ 16. Kf1 Qxc5 17. f3  1-0
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638869"]
+[Date "2012.12.01"]
+[Round "-"]
+[White "merxbj"]
+[Black "elchorbagy"]
+[Result "0-1"]
+[WhiteElo "1461"]
+[BlackElo "1319"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. d4 d5 2. Nf3 Nc6 3. Bf4 f6 4. e3 Nh6 5. Be2 Nf5 6. Nc3 Be6 7. Qd2 Qd7 
+8. O-O-O O-O-O 9. Kb1 Bf7 10. e4 dxe4 11. Nxe4 e5 12. dxe5 fxe5 13. Qxd7+ Rxd7 
+ 0-1
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638868"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "merxbj"]
+[Black "rgeorge55"]
+[Result "0-1"]
+[WhiteElo "1461"]
+[BlackElo "1337"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. d4 d5 2. Nf3 Nc6 3. Bf4 Nf6 4. e3 Bg4 5. Be2 e6 6. O-O Bd6 7. Bxd6 Qxd6 
+8. Nc3 O-O 9. Qd2 Rfe8 10. Rad1 Ne4 11. Nxe4 dxe4 12. Ne5 Bxe2 13. Qxe2 Nxe5 
+14. dxe5 Qxe5  0-1
+
+
+[Event "99th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=18638867"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "merxbj"]
+[Black "gerdas"]
+[Result "0-1"]
+[WhiteElo "1461"]
+[BlackElo "1355"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. d4 d5 2. Nf3 Bf5 3. e3 Nc6 4. c4 Nb4 5. Qa4+ Nc6 6. Nc3 Nf6 7. cxd5 Nxd5 
+8. Bb5 e6 9. Bxc6+ bxc6 10. Qxc6+ Ke7 11. O-O Nb4 12. Qc5+ Qd6 13. Qxd6+ cxd6 
+14. e4 Bg4 15. a3 Nc2 16. Rb1 Bxf3  0-1
+
+
+[Event "Challenge from merxbj"]
+[Site "http://gameknot.com/chess.pl?bd=18620510"]
+[Date "2012.12.05"]
+[Round "-"]
+[White "rabbit1"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1508"]
+[BlackElo "1461"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. d4 e6 2. c4 Nf6 3. Nc3 Bb4 4. Bd2 O-O 5. e3 d5 6. Nf3 c6 7. Be2 Nbd7 
+8. a3 Be7 9. O-O b6 10. Rc1 Ba6 11. cxd5 Bxe2 12. Qxe2 exd5 13. Qd3 Rc8 
+14. Rc2 c5 15. Rfc1 a6 16. Ne2 Ne4 17. Ng3 c4 18. Qe2  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18617784"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "volhouder"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1506"]
+[BlackElo "1461"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "time forfeit"]
+
+1. e4 c5 2. Bc4 e6 3. d3 Nc6 4. Nf3 Nf6 5. a3 d5 6. exd5 exd5 7. Bb3 Be6 
+8. h3 b5 9. O-O c4 10. Ba2 Bd6 11. Nc3 a6 12. Re1 O-O 13. Bg5 Be7 14. dxc4 dxc4 
+15. Bb1 Qxd1 16. Rxd1 Rad8 17. Ba2 h6 18. Be3  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18617775"]
+[Date "2012.11.30"]
+[Round "-"]
+[White "merxbj"]
+[Black "jasminkic"]
+[Result "0-1"]
+[WhiteElo "1461"]
+[BlackElo "1519"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 d5 2. Nf3 Nf6 3. Bf4 Bf5 4. e3 h6 5. Bd3 Qd7 6. Bxf5 Qxf5 7. Bxc7 Nc6 
+8. c3 Ne4 9. O-O g5 10. Bg3 Rc8 11. Nbd2 h5 12. Nxe4 dxe4 13. Ne5 h4 14. Nxc6 bxc6 
+15. Qa4 hxg3 16. fxg3 Qd7 17. Rad1 e6 18. Rf2 Bg7 19. Qc2 f5 20. Qe2 Qd6 
+21. Rdf1 Ke7 22. h4 Qxg3 23. Rd1 Rxh4  0-1
+
+
+[Event "Challenge from dwabro22"]
+[Site "http://gameknot.com/chess.pl?bd=18518264"]
+[Date "2012.11.02"]
+[Round "-"]
+[White "merxbj"]
+[Black "dwabro22"]
+[Result "0-1"]
+[WhiteElo "1475"]
+[BlackElo "1534"]
+[TimeControl "1/432000"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 d5 2. Nf3 Nc6 3. Bf4 Bf5 4. e3 e6 5. c4 Nf6 6. Nc3 Bb4 7. a3 Bxc3+ 
+8. bxc3 O-O 9. cxd5 exd5 10. h3 a6 11. g4 Be4 12. Bg2 Re8 13. O-O Na5 
+14. Ne5 Nc4 15. Nxc4 dxc4 16. Rb1 Bxb1 17. Qxb1 Nd5 18. Bg3 Nxc3 19. Qb2 Ne4 
+20. Qxb7 Nxg3 21. fxg3 Rb8 22. Qf3 Rb3 23. Qd5 Qxd5 24. Bxd5 Re7 25. e4 Rxg3+ 
+26. Kh2 Rxa3 27. e5 Ra2+ 28. Kg3 Rc2 29. g5 g6 30. h4 c3 31. Be4 Rd2 32. Bb7 c5 
+33. dxc5 Rxb7  0-1
+
+
+[Event "Challenge from thelmacolin"]
+[Site "http://gameknot.com/chess.pl?bd=18499782"]
+[Date "2012.10.29"]
+[Round "-"]
+[White "merxbj"]
+[Black "thelmacolin"]
+[Result "1-0"]
+[WhiteElo "1475"]
+[BlackElo "1274"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 d5 2. Nf3 Bg4 3. e3 e6 4. Be2 Nc6 5. O-O Nf6 6. Nc3 Bb4 7. Na4 O-O 
+8. Bd2 Bxd2 9. Qxd2 Qd7 10. Nc5 Qc8 11. Ne5 Bxe2 12. Qxe2 b6 13. Nb3 Nxe5 
+14. dxe5 Nd7 15. f4 c5 16. c4 Qc6 17. Nd2 dxc4 18. Nxc4 Qb5 19. b3 Qc6 
+20. Rad1 f6 21. exf6 Rxf6 22. Qf3 Qc8 23. Rxd7 Qxd7 24. Qxa8+ Rf8 25. Qf3 b5 
+26. Ne5 Qc8 27. Qc6 Qxc6 28. Nxc6 a5 29. Rc1 Rf6 30. Rxc5 a4 31. Rxb5 axb3 
+32. axb3 e5 33. Nxe5 h6 34. g3 Rf5 35. Rb8+ Kh7 36. b4 Rf6 37. b5 g5 38. b6 gxf4 
+39. exf4 Kg7 40. h4  1-0
+
+
+[Event "Challenge from merxbj"]
+[Site "http://gameknot.com/chess.pl?bd=18437637"]
+[Date "2012.10.03"]
+[Round "-"]
+[White "rogerp3"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1463"]
+[BlackElo "1481"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 e5 6. Nf3 Bb4 7. Bd3 d5 
+8. exd5 Nxd5 9. O-O e4 10. Nxe4 f5 11. Neg5 O-O 12. Bc4 Nce7 13. c3 Bc5 
+14. Qb3 b6 15. Rd1 Bb7 16. Ne6 Qd7 17. Nxf8 Kxf8 18. Bxd5 Bxd5 19. c4 Rd8 
+20. cxd5 Nxd5 21. Bg5 Be7 22. Ne5 Qd6 23. Bxe7+ Kxe7 24. f4 h6 25. Rd2 Qc5+ 
+26. Kh1 Nb4 27. Qf7#  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18422993"]
+[Date "2012.10.07"]
+[Round "-"]
+[White "thelmacolin"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1321"]
+[BlackElo "1492"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 Nc6 3. Bb5 d6 4. Bxc6+ bxc6 5. h3 g6 6. O-O Bg7 7. c3 e6 
+8. d4 cxd4 9. cxd4 e5 10. d5 cxd5 11. exd5 Bh6 12. Nbd2 Ne7 13. b3 O-O 
+14. Nc4 Bb7 15. Bxh6 Re8 16. Ng5 Nxd5 17. h4 f6 18. Ne4 Re6 19. Qf3 f5 
+20. Ng5 e4 21. Qh3 Re8 22. Rad1 Qc7 23. h5 Ba6 24. Rxd5 Bxc4 25. bxc4 Qxc4 
+26. Rxd6 Re7 27. hxg6 Qc7 28. gxh7+ Rxh7 29. Qxf5 Qc8 30. Qxh7#  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=18419914"]
+[Date "2012.09.25"]
+[Round "-"]
+[White "rogerp3"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1429"]
+[BlackElo "1492"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 e5 5. Nc3 exd4 6. Nd5 Bb4+ 7. c3 dxc3 
+8. bxc3 Ba5 9. Qf3 Ne5 10. Qg3 g6 11. Qxe5+ Kf8 12. Ba3+  1-0
+
+
+[Event "Challenge from merxbj"]
+[Site "http://gameknot.com/chess.pl?bd=18360050"]
+[Date "2012.11.23"]
+[Round "-"]
+[White "mrn3o"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1200"]
+[BlackElo "1489"]
+[TimeControl "1/1209600"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 d5 2. c4 e6 3. Nc3 f5 4. g3 Nf6 5. Nf3 Bb4 6. Qa4+ Nc6 7. Kd2 Ne4+ 
+8. Kd3 Nxf2+ 9. Kc2 Nxh1 10. Bf4 O-O 11. Bg2 Bd7 12. Rxh1 Nxd4+ 13. Nxd4 Bxa4+ 
+14. Kd2 Bxc3+ 15. bxc3 Re8 16. Bh3 e5 17. Bxe5 Rxe5 18. Bxf5 Qg5+ 19. Ke1 Qc1+ 
+20. Kf2 Qxh1 21. Be6+ Kf8 22. cxd5 Qxh2+ 23. Kf3 Qh5+ 24. g4 Qh3+ 25. Kf4 Qe3# 
+ 0-1
+
+
+[Event "66th GK tournament"]
+[Site "http://gameknot.com/chess.pl?bd=13254508"]
+[Date "2010.03.02"]
+[Round "-"]
+[White "ashmal29"]
+[Black "merxbj"]
+[Result "1-0"]
+[WhiteElo "1580"]
+[BlackElo "1516"]
+[TimeControl "1/172800"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. Qc2 O-O 5. Nf3 d5 6. Bg5 dxc4 7. e4 h6 
+8. Bh4 g5 9. Bg3 g4 10. Nd2 Qxd4 11. Bxc4 Nc6 12. O-O Rd8 13. Rad1 Bxc3 
+14. bxc3 Qb6 15. Rb1 Qc5 16. Bxc7 Rxd2 17. Qxd2 Qxc4 18. Qxh6 Nxe4 19. Rfd1 Nxc3 
+20. Rd8+ Nxd8 21. Be5 f6 22. Bxf6 Qc7 23. Qh8+ Kf7 24. Qg7+ Ke8 25. Qxc7 Bd7 
+26. Qxc3 Rc8 27. Qd4 b6 28. Qxg4 Bb5 29. Qg8+ Kd7 30. Qg7+ Kc6 31. Rc1+ Kd5 
+32. Rxc8 Nc6 33. Qd7+ Kc4 34. Qd4#  1-0
+
+
+[Event "Let's play chess"]
+[Site "http://gameknot.com/chess.pl?bd=13215787"]
+[Date "2010.02.16"]
+[Round "-"]
+[White "gladiateur"]
+[Black "merxbj"]
+[Result "0-1"]
+[WhiteElo "1509"]
+[BlackElo "1516"]
+[TimeControl "1/259200"]
+[Mode "ICS"]
+[Termination "normal"]
+
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. f3 e5 6. Nb3 d5 7. exd5 Nxd5 
+8. Bc4 Qh4+ 9. g3 Qxc4 10. Nb1d2 Qa4 11. c4 Ne3 12. Qe2 Nc2+ 13. Kf2 Nxa1 
+14. Nxa1 Qxa2 15. Nc2 Bc5+ 16. Kg2 O-O 17. Ne4 Nd4 18. Nxd4 Bxd4 19. Rd1 f5 
+20. Nd6 Be6 21. Rd2 f4 22. Rxd4 exd4 23. Qxe6+ Kh8 24. Bxf4 Qxb2+ 25. Kh3 d3 
+26. Qd5 Qe2 27. Nf7+ Rxf7 28. Qxf7 d2 29. Bxd2 Qxd2 30. Qxb7 Rf8 31. c5 Qd8 
+32. c6 Qb8 33. Qd7 Qc8  0-1
+
 

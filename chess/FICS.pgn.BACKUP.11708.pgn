@@ -60,6 +60,7 @@ c1=Q+ {[%clkms 10029]} 23. Qd1 {[%clkms 2037]} Qxd1+ {[%clkms 7299]} 24. Kg2
 
 [Event "rated blitz match"]
 [Site "Free Internet Chess Server"]
+<<<<<<< HEAD
 [Date "2013.01.11"]
 [Round "?"]
 [White "resistenza"]
@@ -84,9 +85,7 @@ c1=Q+ {[%clkms 10029]} 23. Qd1 {[%clkms 2037]} Qxd1+ {[%clkms 7299]} 24. Kg2
 {[%clkms 95769]} Nc6 {[%clkms 26002]} 19. Rad1 {[%clkms 92162]} Qc7 {[%clkms 
 20656]} 20. Bxc7 {[%clkms 89884]} Bxd1 {[%clkms 10211]} 21. Qf7# {[%clkms 
 86264]} {merxbj checkmated} 1-0
-
-[Event "rated blitz match"]
-[Site "Free Internet Chess Server"]
+=======
 [Date "2013.01.06"]
 [Round "?"]
 [White "merxbj"]
@@ -665,4 +664,5 @@ Nc3 {[%clkms 18593]} bxc4 {[%clkms 31500]} 17. Nd5 {[%clkms 16155]} cxd5
 {[%clkms 8728]} e4 {[%clkms 17223]} 28. fxe4 {[%clkms 7087]} Nxe4+ {[%clkms 
 17896]} 29. Kf4 {[%clkms 6306]} Nxc3 {[%clkms 18240]} 30. g5 {[%clkms 4728]} 
 Qe4+ {[%clkms 18153]} {mrneo forfeits on time} 0-1
+>>>>>>> b16b88b54a05dcba80d56697a2138fd791f6230c
 

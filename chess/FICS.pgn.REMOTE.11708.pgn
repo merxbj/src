@@ -60,33 +60,6 @@ c1=Q+ {[%clkms 10029]} 23. Qd1 {[%clkms 2037]} Qxd1+ {[%clkms 7299]} 24. Kg2
 
 [Event "rated blitz match"]
 [Site "Free Internet Chess Server"]
-[Date "2013.01.11"]
-[Round "?"]
-[White "resistenza"]
-[Black "merxbj"]
-[Result "1-0"]
-[WhiteElo "1301"]
-[BlackElo "1470P"]
-[ECO "C41"]
-[TimeControl "420"]
-
-1. e4 {[%clkms 420000]} e5 {[%clkms 420000]} 2. Nf3 {[%clkms 417520]} d6 
-{[%clkms 412166]} 3. d4 {[%clkms 378877]} exd4 {[%clkms 400297]} 4. Bc4 
-{[%clkms 377925]} h6 {[%clkms 354693]} 5. c3 {[%clkms 361092]} dxc3 {[%clkms 
-316268]} 6. Nxc3 {[%clkms 350547]} Nf6 {[%clkms 277873]} 7. Qb3 {[%clkms 
-329549]} Qd7 {[%clkms 260416]} 8. O-O {[%clkms 322795]} b6 {[%clkms 240553]} 
-9. e5 {[%clkms 288553]} Ng4 {[%clkms 172986]} 10. exd6 {[%clkms 281565]} Bxd6 
-{[%clkms 163404]} 11. Re1+ {[%clkms 278538]} Kf8 {[%clkms 130599]} 12. Ne4 
-{[%clkms 200163]} Bb7 {[%clkms 105960]} 13. Nxd6 {[%clkms 166498]} Qxd6 
-{[%clkms 105681]} 14. h3 {[%clkms 143426]} Bxf3 {[%clkms 89703]} 15. hxg4 
-{[%clkms 131539]} Bxg4 {[%clkms 78942]} 16. Bxf7 {[%clkms 129277]} Qd7 
-{[%clkms 55237]} 17. Bf4 {[%clkms 105113]} c5 {[%clkms 40225]} 18. Bg6 
-{[%clkms 95769]} Nc6 {[%clkms 26002]} 19. Rad1 {[%clkms 92162]} Qc7 {[%clkms 
-20656]} 20. Bxc7 {[%clkms 89884]} Bxd1 {[%clkms 10211]} 21. Qf7# {[%clkms 
-86264]} {merxbj checkmated} 1-0
-
-[Event "rated blitz match"]
-[Site "Free Internet Chess Server"]
 [Date "2013.01.06"]
 [Round "?"]
 [White "merxbj"]
