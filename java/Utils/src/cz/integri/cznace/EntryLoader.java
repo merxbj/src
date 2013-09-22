@@ -29,8 +29,8 @@ public class EntryLoader {
 
     public List<Entry> Load() {
         try {
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(csvPath), Charset.forName("Windows-1250"));
-            final CsvMapReader csvReader = new CsvMapReader(reader, CsvPreference.EXCEL_NORTH_EUROPE_PREFERENCE);
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(csvPath), Charset.forName("UTF-8"));
+            final CsvMapReader csvReader = new CsvMapReader(reader, CsvPreference.STANDARD_PREFERENCE);
             final String[] header = createHeader();
             return loadEntries(csvReader, header);
         } catch (Exception ex) {
@@ -50,8 +50,9 @@ public class EntryLoader {
         while ((entryMap = csvReader.read(header, getCellProcessors())) != null) {
             String code = (String)entryMap.get(Column.LevelThreeCode);
             if ((code != null) && !code.trim().equals("")) {
+                long normalizedCode = normalize(code.trim());
                 String name = (String)entryMap.get(Column.Name);
-                entries.add(new Entry(code.trim(), name.trim()));
+                entries.add(new Entry(normalizedCode, name.trim()));
             }
         }
         return entries;
@@ -59,6 +60,14 @@ public class EntryLoader {
     
     private CellProcessor[] getCellProcessors() {
         return new CellProcessor[4];
+    }
+
+    private long normalize(String code) {
+        String[] tokens = code.split("\\.");
+        int levelOneCode = Integer.parseInt(tokens[0].trim());
+        int levelTwoCode = (tokens.length > 1) ? Integer.parseInt(tokens[1].trim()) : 0;
+        int levelThreeCode = (tokens.length > 2) ? Integer.parseInt(tokens[2].trim()) : 0;
+        return levelOneCode*10000 + levelTwoCode*100 + levelThreeCode;
     }
     
     private static class Column {

@@ -9,15 +9,15 @@ package cz.integri.cznace;
  * @author mexbik
  */
 public class Entry {
-    private String code;
+    private long code;
     private String name;
 
-    public Entry(String code, String name) {
+    public Entry(long code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public String getCode() {
+    public long getCode() {
         return code;
     }
 
@@ -25,7 +25,7 @@ public class Entry {
         return name;
     }
 
-    public void setCode(String code) {
+    public void setCode(long code) {
         this.code = code;
     }
 
