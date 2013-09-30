@@ -25,13 +25,15 @@ public class TextFilesCsobParser implements CsobParser {
     }
 
     private Collection<Collection<String>> parseFile(InputStream is) {
-        Scanner sc = new Scanner(is);
+        Scanner sc = new Scanner(is,"utf-8");
         Collection<Collection<String>> blocks = new ArrayList<Collection<String>>();
+        int totalLinesProcessed = 0;
         while (sc.hasNextLine()) {
             ArrayList<String> block = new ArrayList<String>(11);
             int linesProcessed = 0;
             while (sc.hasNextLine() && linesProcessed < 12) {
                 String line = sc.nextLine();
+                totalLinesProcessed += 1;
                 if (linesProcessed < 11) {
                     block.add(line.trim());
                 } else {
@@ -43,9 +45,10 @@ public class TextFilesCsobParser implements CsobParser {
 
             if (sc.hasNextLine()) {
                 String emptyLine = sc.nextLine();
+                totalLinesProcessed += 1;
                 if (!emptyLine.trim().equals(""))
                 {
-                    throw new RuntimeException("Expected empty line but found: " + emptyLine);
+                    throw new RuntimeException(totalLinesProcessed - 1 + ": Expected empty line but found: " + emptyLine);
                 }
             }
         }

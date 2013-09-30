@@ -6,7 +6,9 @@ package cz.merxbj.csob.db;
 
 import cz.merxbj.csob.core.Transaction;
 import cz.merxbj.csob.core.TransactionImporter;
+import java.io.FileWriter;
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  *
@@ -27,8 +29,8 @@ public class DatabaseImporter implements TransactionImporter {
             for (Transaction tran : trans) {
                 String insertStatementTemplate = "INSERT INTO Transaction (date, amount, ks, vs, ss, type, offset_account_name, offset_account_number, comment) "
                         + "VALUES ('%s', %f, '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
-                String insertStatement = String.format(insertStatementTemplate, 
-                        tran.getDate().toString(),
+                String insertStatement = String.format(Locale.ENGLISH,insertStatementTemplate, 
+                        tran.getDate().toLocalDate().toString(),
                         tran.getAmount().doubleValue(),
                         tran.getKs(),
                         tran.getVs(),
@@ -37,7 +39,16 @@ public class DatabaseImporter implements TransactionImporter {
                         tran.getOffsetAccountName(),
                         tran.getOffsetAccountNumber(),
                         tran.getComment());
-                System.out.println(insertStatement);
+                FileWriter writer = new FileWriter("/users/merxbj/temp/dump.sql", true);
+                try
+                {
+                   writer.write(insertStatement);
+                   writer.write(System.lineSeparator());
+                }
+                finally
+                {
+                    writer.close();
+                }
                 con.executeCommand(insertStatement);
             }
         } catch (Exception ex) {

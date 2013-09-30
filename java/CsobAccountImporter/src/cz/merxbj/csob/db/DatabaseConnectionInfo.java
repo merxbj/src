@@ -167,7 +167,7 @@ public class DatabaseConnectionInfo extends ConnectionInfo {
      *         <p><code>jdbc:mysql://host:port/dbname?options</code></p>
      */
     public String compileConnectionString() {
-        String cs = String.format("jdbc:mysql://%s:%s/%s?zeroDateTimeBehavior=convertToNull",
+        String cs = String.format("jdbc:mysql://%s:%s/%s?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8",
                 this.getHost(),
                 this.getPort(),
                 this.getDbname());
