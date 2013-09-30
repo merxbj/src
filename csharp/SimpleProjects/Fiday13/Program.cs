@@ -1,59 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 
 namespace Fiday13
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Hashtable days = new Hashtable();
-            initDays(days);
+            Dictionary<DayOfWeek, int> days = new Dictionary<DayOfWeek, int>();
+            InitDays(days);
+
+            Dictionary<int, int> daysOfMonth = new Dictionary<int, int>();
+            InitDaysOfMonth(daysOfMonth);
 
             DateTime dt = DateTime.MinValue;
             while (dt < DateTime.MaxValue)
             {
                 if (dt.Day == 13)
                 {
-                    int count = (int)days[dt.DayOfWeek];
+                    int count = days[dt.DayOfWeek];
                     days[dt.DayOfWeek] = count + 1;
                 }
+
+                if (dt.DayOfWeek == DayOfWeek.Friday)
+                {
+                    int count = daysOfMonth[dt.Day];
+                    daysOfMonth[dt.Day] = count + 1;
+                }
+
                 try
                 {
                     dt = dt.AddDays(1);
                 }
-                catch (ArgumentOutOfRangeException ex)
+                catch (ArgumentOutOfRangeException)
                 {
                     dt = DateTime.MaxValue;
                 }
             }
 
-            showDays(days);
-            System.Console.In.ReadLine();
+            ShowDays(days);
+            Console.WriteLine();
+            ShowDaysOfMonth(daysOfMonth);
+            Console.In.ReadLine();
         }
 
-        private static void initDays(Hashtable days)
+        private static void InitDaysOfMonth(Dictionary<int, int> daysOfMonth)
         {
-            days[DayOfWeek.Friday] = (int)0;
-            days[DayOfWeek.Monday] = (int)0;
-            days[DayOfWeek.Saturday] = (int)0;
-            days[DayOfWeek.Sunday] = (int)0;
-            days[DayOfWeek.Thursday] = (int)0;
-            days[DayOfWeek.Tuesday] = (int)0;
-            days[DayOfWeek.Wednesday] = (int)0;
-        }
-
-        private static void showDays(Hashtable days)
-        {
-            System.Console.Out.WriteLine(String.Format("Statistics From {0} to {1}", DateTime.MinValue, DateTime.MaxValue));
-            foreach (DictionaryEntry de in days)
+            for (int i = 1; i <= 31; i++)
             {
-                DayOfWeek day = (DayOfWeek)de.Key;
-                int count = (int)de.Value;
+                daysOfMonth[i] = 0;
+            }
+        }
 
-                System.Console.Out.WriteLine(String.Format("{0} appeared {1} times", day, count));
+        private static void InitDays(Dictionary<DayOfWeek, int> days)
+        {
+            days[DayOfWeek.Friday] = 0;
+            days[DayOfWeek.Monday] = 0;
+            days[DayOfWeek.Saturday] = 0;
+            days[DayOfWeek.Sunday] = 0;
+            days[DayOfWeek.Thursday] = 0;
+            days[DayOfWeek.Tuesday] = 0;
+            days[DayOfWeek.Wednesday] = 0;
+        }
+
+        private static void ShowDays(Dictionary<DayOfWeek, int> days)
+        {
+            Console.Out.WriteLine(String.Format("Statistics From {0} to {1}", DateTime.MinValue, DateTime.MaxValue));
+            foreach (var entry in days)
+            {
+                DayOfWeek day = entry.Key;
+                int count = entry.Value;
+
+                Console.Out.WriteLine(String.Format("{0} appeared {1} times", day, count));
+            }
+        }
+
+        private static void ShowDaysOfMonth(Dictionary<int, int> daysOfMonth)
+        {
+            Console.Out.WriteLine(String.Format("Statistics From {0} to {1}", DateTime.MinValue, DateTime.MaxValue));
+            foreach (var entry in daysOfMonth)
+            {
+                int day = entry.Key;
+                int count = entry.Value;
+
+                Console.Out.WriteLine(String.Format("{0} appeared {1} times", day, count));
             }
         }
     }

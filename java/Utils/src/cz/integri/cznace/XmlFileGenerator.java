@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  *
  * @author mexbik
  */
-public class XmlFileGenerator {
+public class XmlFileGenerator implements FileGenerator {
     
     private String xmlFilePath;
 
@@ -30,6 +30,7 @@ public class XmlFileGenerator {
         this.xmlFilePath = xmlFilePath;
     }
 
+    @Override
     public void generate(List<Entry> entries) {
         try {
             Document xml = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -54,7 +55,7 @@ public class XmlFileGenerator {
     
     private void generate(Entry entry, Element row, Document xml) {
         Element kod = xml.createElement("Kod_CZNACE");
-        kod.setTextContent(entry.getCode());
+        kod.setTextContent(String.valueOf(entry.getCode()));
         
         Element nazev = xml.createElement("Nazev");
         nazev.setTextContent(entry.getName());
