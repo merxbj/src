@@ -45,7 +45,7 @@ public class FemaleWorm extends Worm {
     @Override
     protected Color getColor() {
         Color color = Color.MAGENTA;
-        if (isDieing) {
+        if (isDying) {
             color = (drawCount < BLINK_RATE ? Color.RED : Color.MAGENTA);
             drawCount = (drawCount + 1) % (BLINK_RATE * 2);
         }

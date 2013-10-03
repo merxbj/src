@@ -44,7 +44,7 @@ public class MaleWorm extends Worm {
     @Override
     protected Color getColor() {
         Color color = Color.BLUE;
-        if (isDieing) {
+        if (isDying) {
             color = (drawCount < BLINK_RATE ? Color.RED : Color.BLUE);
             drawCount = (drawCount + 1) % (BLINK_RATE * 2);
         }

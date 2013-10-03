@@ -44,7 +44,7 @@ public class Worm implements Drawable {
     protected LinkedList<Worm> children;
     protected LinkedList<Worm> parents;
     protected long lifeTime;
-    protected boolean isDieing;
+    protected boolean isDying;
     boolean selected;
 
     public Worm() {
@@ -72,8 +72,8 @@ public class Worm implements Drawable {
         this.cooldown = 0;
         this.children = new LinkedList<Worm>();
         this.parents = new LinkedList<Worm>();
-        this.lifeTime = 1000;
-        this.isDieing = false;
+        this.lifeTime = 2000;
+        this.isDying = false;
         
         this.selected = false;
         changeDirection(Direction.getRandom());
@@ -138,7 +138,7 @@ public class Worm implements Drawable {
         if (lifeTime == 0) {
             hatch.died(this);
         } else if (lifeTime <= 100) {
-            isDieing = true;
+            isDying = true;
         }
 
     }
