@@ -12,6 +12,7 @@ import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -64,6 +65,11 @@ public class MqConnectionProxy {
     
     public void send(TextMessage message, long messageExpiryInMs) throws JMSException {
         producer.send(message, DeliveryMode.NON_PERSISTENT, 1, messageExpiryInMs);
+    }
+    
+    public TextMessage receive() throws JMSException {
+        Message msg = consumer.receiveNoWait();
+        return (msg instanceof TextMessage) ? (TextMessage) msg : null;
     }
     
     public void close() {
