@@ -16,7 +16,8 @@ public class CommandLine {
     private String queueManagerName = "MALCOLM.NCR.QM";
     private String destinationName = "MERXBJ_TOSTORE";
     private String destinationAckName = "MERXBJ_TOSTOREACK";
-    private int timeout = 5000;
+    private long timeout = 10000;
+    private long expiry = 5000;
     private int orderCount = 1;
     private int orderSequenceBegin = 1;
     private String orderTemplatePath;
@@ -73,6 +74,9 @@ public class CommandLine {
                     case 's':
                         cl.destinationStore = args[++i];
                         break;
+                    case 'e':
+                        cl.expiry = Integer.parseInt(args[++i]);
+                        break;
                     default: {
                         throw new IllegalArgumentException("Unknown argument: " + opt);
                     }
@@ -112,6 +116,7 @@ public class CommandLine {
             System.out.println("\t[-p port]");
             System.out.println("\t[-l channel]");
             System.out.println("\t[-t timeout]");
+            System.out.println("\t[-e messageExpiry]");
     }
 
     public String getHost() {
@@ -138,8 +143,12 @@ public class CommandLine {
         return destinationAckName;
     }
 
-    public int getTimeout() {
+    public long getTimeout() {
         return timeout;
+    }
+
+    public long getExpiry() {
+        return expiry;
     }
 
     public int getOrderCount() {

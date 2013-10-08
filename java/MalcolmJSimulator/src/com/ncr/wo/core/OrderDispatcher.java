@@ -14,9 +14,11 @@ import java.io.FileReader;
 public class OrderDispatcher {
     
     private OrderSender sender;
+    private OrderStatusWatcher watcher;
     
-    public OrderDispatcher(MqConnectionProxy proxy, String destinationStore, long orderImportExpiryInMs) {
+    public OrderDispatcher(MqConnectionProxy proxy, String destinationStore, long orderImportExpiryInMs, OrderStatusWatcher watcher) {
         this.sender = new OrderSender(proxy, destinationStore, orderImportExpiryInMs);
+        this.watcher = watcher;
     }
 
     public void dispatchOrders(String orderTemplatePath, int sequenceBegin, int count) throws Exception {
@@ -25,7 +27,8 @@ public class OrderDispatcher {
             int orderSequenceNumber = sequenceBegin + i;
             String order = String.format(orderTemplate, orderSequenceNumber);
             sender.send(order);
-            System.out.printf("Dispatched order %d out of %d with sequenceId = %d\n", i, count, orderSequenceNumber);
+            watcher.watch(orderSequenceNumber);
+            System.out.printf("[TOSTORE] Dispatched order %d out of %d with sequenceId = %d\n", i, count + 1, orderSequenceNumber);
         }
     }
 
