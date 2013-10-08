@@ -105,8 +105,11 @@ public class CsvEntryLoader implements EntryLoader {
     }
 
     private TimeEntry ValidateEntry(TimeEntry entry) {
-        if (!entry.calculateDuration().isEqual(entry.getDuration())) {
-            System.out.printf("WARNING! Provided duration %s does not match to calculated duration %s!\n", Common.getPeriodFormatter().print(entry.getDuration().toPeriod()), Common.getPeriodFormatter().print(entry.calculateDuration().toPeriod()));
+        Duration calculated = entry.calculateDuration();
+        Duration provided = entry.getDuration();
+        double ratio = (double)Math.min(calculated.getMillis(), provided.getMillis()) / Math.max(calculated.getMillis(), provided.getMillis());
+        if (ratio < 0.90) {
+            System.out.printf("WARNING! Provided duration %s does not fit within a reasonable ratio with calculated duration %s!\n", Common.getPeriodFormatter().print(provided.toPeriod()), Common.getPeriodFormatter().print(calculated.toPeriod()));
         }
         return entry;
     }
