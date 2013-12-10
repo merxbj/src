@@ -30,7 +30,7 @@ public class OrderStatusWatcher {
 
     private MqConnectionProxy proxy;
     private String watchedStore;
-    private ConcurrentHashMap<Integer, String> watched = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, String> watched = new ConcurrentHashMap<Integer, String>();
     private final Object receiveSync = new Object();
     private AtomicBoolean shutdown = new AtomicBoolean(false);
     private Thread receiveThread;
@@ -131,7 +131,7 @@ public class OrderStatusWatcher {
                     }
                 }
             }
-        } catch (JMSException | InterruptedException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
             System.out.println("[TOSTOREACK] Receiving acknowledgements stopped ...");

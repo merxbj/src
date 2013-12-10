@@ -28,16 +28,22 @@ public class OrderDispatcher {
             String order = String.format(orderTemplate, orderSequenceNumber);
             sender.send(order);
             watcher.watch(orderSequenceNumber);
-            System.out.printf("[TOSTORE] Dispatched order %d out of %d with sequenceId = %d\n", i, count + 1, orderSequenceNumber);
+            System.out.printf("[TOSTORE] Dispatched order %d out of %d with sequenceId = %d\n", i + 1, count, orderSequenceNumber);
         }
     }
 
     private String loadOrderTemplate(String orderTemplatePath) throws Exception {
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(orderTemplatePath))) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(orderTemplatePath));
             String line;
             while ((line = reader.readLine()) != null) {
                 builder.append(line);
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
             }
         }
         return builder.toString();
