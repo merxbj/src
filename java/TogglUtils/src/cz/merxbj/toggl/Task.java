@@ -96,6 +96,6 @@ public class Task implements Comparable<Task> {
 
     @Override
     public String toString() {
-        return user + " - " + client + " - " + project + " - " + task;
+        return client + " - " + project + " - " + task;
     }
 }

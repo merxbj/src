@@ -6,8 +6,6 @@ package cz.merxbj.toggl;
 
 import java.util.Objects;
 import org.joda.time.Duration;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 /**
  *
@@ -16,7 +14,6 @@ import org.joda.time.format.PeriodFormatterBuilder;
 public class TaskEntry implements Comparable<TaskEntry> {
     private Task task;
     private Duration duration;
-    private static final PeriodFormatter pf = new PeriodFormatterBuilder().minimumPrintedDigits(2).printZeroAlways().appendHours().appendLiteral(":").printZeroAlways().appendMinutes().appendLiteral(":").printZeroAlways().appendSeconds().toFormatter();
 
     TaskEntry(Task task, Duration duration) {
         this.task = task;
@@ -79,6 +76,6 @@ public class TaskEntry implements Comparable<TaskEntry> {
 
     @Override
     public String toString() {
-        return String.format("%100s:\t%s", task, pf.print(duration.toPeriod()));
+        return String.format("%60s:\t%s", task, Common.getPeriodFormatter().print(duration.toPeriod()));
     }
 }

@@ -49,6 +49,10 @@ public class DayEntry {
         TaskEntry entry = getTaskEntry(new Task(te.getUser(), te.getClient(), te.getProject(), te.getTask()));
         entry.addTimeEntry(te);
     }
+    
+    public String dayOfWeekToString() {
+        return dayOfWeekToString(dayOfWeek);
+    }
 
     private TaskEntry getTaskEntry(Task forTask) {
         TaskEntry entry;
@@ -70,7 +74,7 @@ public class DayEntry {
         return builder.toString();
     }
 
-    private String dayOfWeekToString(Integer dayOfWeek) {
+    private static String dayOfWeekToString(Integer dayOfWeek) {
         switch (dayOfWeek) {
             case DateTimeConstants.MONDAY:
                 return "Monday";
@@ -92,7 +96,7 @@ public class DayEntry {
     }
 
     private void buildDayHeader(StringBuilder builder) {
-        String dayOfWeekString = dayOfWeekToString(dayOfWeek);
+        String dayOfWeekString = dayOfWeekToString();
         builder.append(String.format("%s:",dayOfWeekString));
         builder.append(System.lineSeparator());
     }
@@ -102,7 +106,7 @@ public class DayEntry {
         Collections.sort(sortedTaskEntries);
         
         for (TaskEntry te : sortedTaskEntries) {
-            builder.append(String.format("\t%s", te));
+            builder.append(String.format("%s", te));
             builder.append(System.lineSeparator());
         }
     }
@@ -113,7 +117,7 @@ public class DayEntry {
             total = total.plus(te.getDuration());
         }
         builder.append(System.lineSeparator());
-        builder.append(String.format("\t%100s\t%s", "Total worked hours this day:", Common.getPeriodFormatter().print(total.toPeriod())));
+        builder.append(String.format("%60s\t%s", "Total worked hours this day:", Common.getPeriodFormatter().print(total.toPeriod())));
         builder.append(System.lineSeparator());
     }
 }
