@@ -8,6 +8,9 @@ class ConsolePrinter:
     def print_report(self):
             dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             total = timedelta()
+
+            print("\n")
+
             for task, task_report in self._report.items():
                 print("{0}:".format(task))
                 for day, duration in task_report.items():

@@ -26,7 +26,7 @@
       <file leaf-file-name="wr.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wr.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="0" selection-start="867" selection-end="867" vertical-scroll-proportion="0.6966292" vertical-offset="80" max-vertical-offset="765">
+            <state line="16" column="21" selection-start="545" selection-end="545" vertical-scroll-proportion="0.30337077" vertical-offset="105" max-vertical-offset="855">
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -37,7 +37,7 @@
       <file leaf-file-name="generator.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="725" max-vertical-offset="1170">
+            <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="1170">
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -48,7 +48,7 @@
       <file leaf-file-name="printers.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/printers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="0" selection-start="576" selection-end="576" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
+            <state line="11" column="21" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="435">
               <folding />
             </state>
           </provider>
@@ -355,26 +355,17 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/wr.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/printers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="576" selection-end="576" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="725" max-vertical-offset="1170">
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/posixpath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="92" column="0" selection-start="3190" selection-end="3190" vertical-scroll-proportion="0.6269663" vertical-offset="1041" max-vertical-offset="6900">
@@ -389,9 +380,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/printers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="21" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="435">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="725" max-vertical-offset="1170">
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wr.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="867" selection-end="867" vertical-scroll-proportion="0.6966292" vertical-offset="80" max-vertical-offset="765">
+        <state line="16" column="21" selection-start="545" selection-end="545" vertical-scroll-proportion="0.30337077" vertical-offset="105" max-vertical-offset="855">
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>
