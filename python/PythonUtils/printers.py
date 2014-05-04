@@ -9,9 +9,13 @@ class ConsolePrinter:
             dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
             total = timedelta()
             for task, task_report in self._report.items():
+                print("{0}:".format(task))
                 for day, duration in task_report.items():
-                    print("{0} - {1} - {2}".format(task, dow[day], duration))
+                    print("\t{0:10}: {1:8}".format(dow[day], str(duration)))
                     total += duration
-            print("Total = {0:2}:{1:2}:{2:2}".format(int(total.total_seconds()) // 3600,
+                print("")
+
+
+            print("Total = {0:02}:{1:02}:{2:02}".format(int(total.total_seconds()) // 3600,
                                                      (int(total.total_seconds()) % 3600) // 60,
                                                      (int(total.total_seconds()) % 3600) % 60))
