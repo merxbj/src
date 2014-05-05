@@ -24,16 +24,18 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="wr.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://D:/mysrc/src/python/TogglUtils/wr.py">
+        <entry file="file://$PROJECT_DIR$/wr.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="0" selection-start="933" selection-end="933" vertical-scroll-proportion="0.6891892" vertical-offset="0" max-vertical-offset="969">
-              <folding />
+            <state line="16" column="21" selection-start="545" selection-end="545" vertical-scroll-proportion="0.2652106" vertical-offset="102" max-vertical-offset="969">
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="generator.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://D:/mysrc/src/python/TogglUtils/generator.py">
+        <entry file="file://$PROJECT_DIR$/generator.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="1071" max-vertical-offset="1326">
               <folding />
@@ -42,7 +44,7 @@
         </entry>
       </file>
       <file leaf-file-name="printers.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://D:/mysrc/src/python/TogglUtils/printers.py">
+        <entry file="file://$PROJECT_DIR$/printers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="11" column="21" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="493">
               <folding />
@@ -60,9 +62,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="D:/mysrc/src/python/PythonUtils/generator.py" />
-        <option value="D:/mysrc/src/python/PythonUtils/printers.py" />
-        <option value="D:/mysrc/src/python/PythonUtils/wr.py" />
+        <option value="$PROJECT_DIR$/generator.py" />
+        <option value="$PROJECT_DIR$/printers.py" />
+        <option value="$PROJECT_DIR$/wr.py" />
       </list>
     </option>
   </component>
@@ -105,8 +107,14 @@
               <option name="myItemId" value="PythonUtils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="TogglUtils" />
+              <option name="myItemId" value="PythonUtils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PythonUtils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -116,7 +124,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="D:/mysrc/src/python" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
@@ -138,12 +146,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="D:/mysrc/src/python/PythonUtils" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="PythonUtils" />
-      <option name="SCRIPT_NAME" value="D:/mysrc/src/python/PythonUtils/wr.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wr.py" />
       <option name="PARAMETERS" value="~/Downloads" />
       <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
@@ -345,25 +353,34 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/wr.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
       <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/mysrc/src/python/TogglUtils/wr.py">
+    <entry file="file://$PROJECT_DIR$/wr.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="21" selection-start="545" selection-end="545" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="969">
-          <folding />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/mysrc/src/python/TogglUtils/generator.py">
+    <entry file="file://$PROJECT_DIR$/generator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="1071" max-vertical-offset="1326">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/mysrc/src/python/TogglUtils/printers.py">
+    <entry file="file://$PROJECT_DIR$/printers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="21" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="493">
           <folding />
@@ -375,24 +392,26 @@
         <state line="36" column="0" selection-start="1164" selection-end="1164" vertical-scroll-proportion="0.7977528" vertical-offset="185" max-vertical-offset="630" />
       </provider>
     </entry>
-    <entry file="file://D:/mysrc/src/python/TogglUtils/printers.py">
+    <entry file="file://$PROJECT_DIR$/printers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="21" selection-start="297" selection-end="297" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="435">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/mysrc/src/python/TogglUtils/generator.py">
+    <entry file="file://$PROJECT_DIR$/generator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="63" column="35" selection-start="2126" selection-end="2136" vertical-scroll-proportion="0.0" vertical-offset="725" max-vertical-offset="1170">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/mysrc/src/python/TogglUtils/wr.py">
+    <entry file="file://$PROJECT_DIR$/wr.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="0" selection-start="933" selection-end="933" vertical-scroll-proportion="0.6891892" vertical-offset="0" max-vertical-offset="969">
-          <folding />
+        <state line="16" column="21" selection-start="545" selection-end="545" vertical-scroll-proportion="0.2652106" vertical-offset="102" max-vertical-offset="969">
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
