@@ -6,7 +6,7 @@ class ConsolePrinter:
         self._report = report
 
     def print_report(self):
-            dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            dow = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             total = timedelta()
 
             print("\n")
