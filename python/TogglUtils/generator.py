@@ -1,31 +1,4 @@
-import csv
-import re
-from datetime import datetime, timedelta
-from os import path
-
-
-class ReportColumn:
-    Project = "Project"
-    Task = "Task"
-    StartDate = "Start date"
-    StartTime = "Start time"
-    EndDate = "End date"
-    EndTime = "End time"
-    Duration = "Duration"
-
-
-def parse_duration(string):
-    regex = re.compile(r"(?P<hours>\d{2}):(?P<minutes>\d{2}):(?P<seconds>\d{2})")
-    parts = regex.match(string)
-    if not parts:
-        raise NameError("Invalid duration format")
-
-    parts = parts.groupdict()
-    time_params = {}
-    for (name, param) in parts.items():
-        if param:
-            time_params[name] = int(param)
-    return timedelta(**time_params)
+from datetime import timedelta
 
 
 class WeeklyReportGenerator:
@@ -39,14 +12,13 @@ class WeeklyReportGenerator:
             print("WARNING! Provided duration {0} does not fit within a reasonable ratio with\
                   calculated duration {1} for {2}!".format(provided, calculated, task))
 
-    def process_row(self, row):
-        task = row[ReportColumn.Project] + "/" + row[ReportColumn.Task]
-
-        st = datetime.strptime(row[ReportColumn.StartDate] + "T" + row[ReportColumn.StartTime], "%Y-%m-%dT%H:%M:%S")
-        et = datetime.strptime(row[ReportColumn.EndDate] + "T" + row[ReportColumn.EndTime], "%Y-%m-%dT%H:%M:%S")
+    def process_entry(self, entry):
+        task = entry['project'] + "/" + entry['task']
+        st = entry['start']
+        et = entry['end']
 
         calculated_diff = et - st
-        provided_diff = parse_duration(row[ReportColumn.Duration])
+        provided_diff = timedelta(milliseconds=entry['dur'])
         self.check_duration(calculated_diff, provided_diff, task)
 
         if task in self._report:
@@ -60,13 +32,9 @@ class WeeklyReportGenerator:
         else:
             task_report[st.weekday()] = task_report[st.weekday()] + calculated_diff
 
-    def generate(self, detailed_report_path):
-        file_path = path.expanduser(detailed_report_path)
-        print("Will process " + file_path)
-
-        with open(file_path, 'r+', encoding="utf-8-sig") as file:
-            entry_reader = csv.DictReader(file)
-            for row in entry_reader:
-                self.process_row(row)
+    def generate(self, data_source):
+        entries = data_source.get_detailed_report()
+        for entry in entries:
+            self.process_entry(entry)
 
         return self._report

@@ -1,10 +1,12 @@
-from os import listdir, walk
+from os import walk
 from os.path import isfile, basename, expanduser, join
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys
 import re
 from generator import WeeklyReportGenerator
 from printers import ConsolePrinter
+from toggl.datasource.csv import CsvReportParser
+from toggl.datasource.web import ReportApi
 
 
 def guess_last_report(downloads_path):
@@ -34,17 +36,49 @@ def guess_last_report(downloads_path):
     return join(downloads_path, sorted(report_files, key=lambda rf: (rf[0], rf[1]), reverse=True)[0][2])
 
 
+def week_magic(day):
+    day_of_week = day.weekday()
+
+    to_beginning_of_week = timedelta(days=day_of_week)
+    beginning_of_week = day - to_beginning_of_week
+
+    to_end_of_week = timedelta(days=6 - day_of_week)
+    end_of_week = day + to_end_of_week
+
+    return beginning_of_week, end_of_week
+
 def main():
+    if len(sys.argv) < 2:
+        raise Exception('Unexpected number of arguments: {0}!'.format(len(sys.argv)))
 
-    if (len(sys.argv) == 2) and (isfile(sys.argv[1])):
-        file_path = sys.argv[1]
-    elif len(sys.argv) == 2:
-        file_path = guess_last_report(sys.argv[1])
+    #csv ~/Downloads
+    if sys.argv[1] == 'csv':
+        if (len(sys.argv) == 3) and (isfile(sys.argv[2])):
+            file_path = sys.argv[2]
+        elif len(sys.argv) == 3:
+            file_path = guess_last_report(sys.argv[2])
+        else:
+            file_path = r"~/Downloads/2014-04-21-2014-04-2 details.csv"
+
+        data_source = CsvReportParser(file_path)
+
+    elif sys.argv[1] == 'web':
+        if len(sys.argv) >= 3 and sys.argv[2] == 'last':
+            since, until = week_magic(datetime.now() - timedelta(days=7))
+            clients = sys.argv[3:]
+        elif len(sys.argv) >= 3 and sys.argv[2] == 'this':
+            since, until = week_magic(datetime.now())
+            clients = sys.argv[3:]
+        else:
+            since, until = week_magic(datetime.now())
+            clients = sys.argv[2:]
+
+        data_source = ReportApi(since, until, clients)
+
     else:
-        #debugging
-        file_path = r"~/Downloads/2014-04-21-2014-04-2 details.csv"
+        raise Exception('Unexpected data source: {0}'.format(sys.argv[1]))
 
-    report = WeeklyReportGenerator().generate(file_path)
+    report = WeeklyReportGenerator().generate(data_source)
     ConsolePrinter(report).print_report()
 
 
