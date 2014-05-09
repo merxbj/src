@@ -13,7 +13,7 @@ class WeeklyReportGenerator:
                   calculated duration {1} for {2}!".format(provided, calculated, task))
 
     def process_entry(self, entry):
-        task = entry['project'] + "/" + entry['task']
+        task = entry['project'] + " / " + entry['task']
         st = entry['start']
         et = entry['end']
 

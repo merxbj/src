@@ -1,10 +1,12 @@
 from os import walk
+import os
 from os.path import isfile, basename, expanduser, join
 from datetime import datetime, timedelta
 import sys
 import re
+
 from generator import WeeklyReportGenerator
-from printers import ConsolePrinter
+from toggl.printer.html import HtmlPrinter
 from toggl.datasource.csv import CsvReportParser
 from toggl.datasource.web import ReportApi
 
@@ -47,6 +49,7 @@ def week_magic(day):
 
     return beginning_of_week, end_of_week
 
+
 def main():
     if len(sys.argv) < 2:
         raise Exception('Unexpected number of arguments: {0}!'.format(len(sys.argv)))
@@ -79,7 +82,7 @@ def main():
         raise Exception('Unexpected data source: {0}'.format(sys.argv[1]))
 
     report = WeeklyReportGenerator().generate(data_source)
-    ConsolePrinter(report).print_report()
+    HtmlPrinter(report, os.path.expanduser('~/Desktop/Weekly_Report.html')).print_report()
 
 
 if __name__ == "__main__":
