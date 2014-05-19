@@ -82,7 +82,7 @@ def main():
         raise Exception('Unexpected data source: {0}'.format(sys.argv[1]))
 
     report = WeeklyReportGenerator().generate(data_source)
-    HtmlPrinter(report, os.path.expanduser('~/Desktop/Weekly_Report.html')).print_report()
+    HtmlPrinter(report).print_report()
 
 
 if __name__ == "__main__":

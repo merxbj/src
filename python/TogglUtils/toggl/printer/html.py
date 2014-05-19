@@ -5,16 +5,14 @@ __author__ = 'merxbj'
 
 
 class HtmlPrinter:
-    def __init__(self, report, path):
+    def __init__(self, report):
         self._report = report
-        self._path = path
 
     def print_report(self):
         style = r'table,th,td{border:1px solid black;border-collapse:collapse;}th,td{padding:5px;}'
         page = '<html><head><h1>Week Report<h1></head><style>{0}</style><body>{1}</body></html>'.format(style,
                                                                                                         self.report_to_html())
-        with open(self._path, 'w') as file:
-            file.write(page)
+        print(page)
 
     def report_to_html(self):
         day_totals = {}
