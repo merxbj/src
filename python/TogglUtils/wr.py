@@ -38,6 +38,14 @@ def guess_last_report(downloads_path):
     return join(downloads_path, sorted(report_files, key=lambda rf: (rf[0], rf[1]), reverse=True)[0][2])
 
 
+def is_integer(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
 def week_magic(day):
     day_of_week = day.weekday()
 
@@ -54,7 +62,7 @@ def main():
     if len(sys.argv) < 2:
         raise Exception('Unexpected number of arguments: {0}!'.format(len(sys.argv)))
 
-    #csv ~/Downloads
+    # csv ~/Downloads
     if sys.argv[1] == 'csv':
         if (len(sys.argv) == 3) and (isfile(sys.argv[2])):
             file_path = sys.argv[2]
@@ -72,6 +80,9 @@ def main():
         elif len(sys.argv) >= 3 and sys.argv[2] == 'this':
             since, until = week_magic(datetime.now())
             clients = sys.argv[3:]
+        elif len(sys.argv) >= 3 and is_integer(sys.argv[2]):
+            since, until = week_magic(datetime.now() - timedelta(days=7*int(sys.argv[2])))
+            clients = sys.argv[3:]
         else:
             since, until = week_magic(datetime.now())
             clients = sys.argv[2:]
@@ -82,7 +93,7 @@ def main():
         raise Exception('Unexpected data source: {0}'.format(sys.argv[1]))
 
     report = WeeklyReportGenerator().generate(data_source)
-    HtmlPrinter(report, os.path.expanduser('~/Desktop/Weekly_Report.html')).print_report()
+    HtmlPrinter(report).print_report()
 
 
 if __name__ == "__main__":

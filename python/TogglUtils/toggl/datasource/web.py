@@ -51,6 +51,7 @@ class ReportApi:
     def parse_entry(entry):
         entry['start'] = datetime.strptime(entry['start'][:19], '%Y-%m-%dT%H:%M:%S')
         entry['end'] = datetime.strptime(entry['end'][:19], '%Y-%m-%dT%H:%M:%S')
+        entry['task'] = entry['task'] if not entry['task'] is None else entry['description']
         return entry
 
 
