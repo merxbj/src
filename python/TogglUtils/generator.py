@@ -13,7 +13,7 @@ class WeeklyReportGenerator:
                   calculated duration {1} for {2}!".format(provided, calculated, task))
 
     def process_entry(self, entry):
-        task = entry['project'] + " / " + entry['task']
+        task = entry['project'] + " : " + entry['task']
         st = entry['start']
         et = entry['end']
 
@@ -28,9 +28,10 @@ class WeeklyReportGenerator:
             self._report[task] = task_report
 
         if st.weekday() not in task_report:
-            task_report[st.weekday()] = calculated_diff
+            task_report[st.weekday()] = {'duration': calculated_diff, 'descriptions': {entry['description']}}
         else:
-            task_report[st.weekday()] = task_report[st.weekday()] + calculated_diff
+            task_report[st.weekday()]['duration'] = task_report[st.weekday()]['duration'] + calculated_diff
+            task_report[st.weekday()]['descriptions'].add(entry['description'])
 
     def generate(self, data_source):
         entries = data_source.get_detailed_report()
