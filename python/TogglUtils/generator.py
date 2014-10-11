@@ -6,8 +6,9 @@ class WeeklyReportGenerator:
     _CALCULATED_TO_PROVIDED_DURATION_RATIO_MAX = 0.05
 
     def check_duration(self, calculated, provided, task):
-        ratio = calculated / provided
-        ratio = ratio if ratio < 1.0 else ratio - 1
+        # add 1ms to provided duration to prevent divisions by 0
+        ratio = calculated / (provided + timedelta(milliseconds=1))
+        ratio = 1 - ratio if ratio < 1.0 else ratio - 1
         if ratio > self._CALCULATED_TO_PROVIDED_DURATION_RATIO_MAX:
             print("WARNING! Provided duration {0} does not fit within a reasonable ratio with\
                   calculated duration {1} for {2}!".format(provided, calculated, task))
