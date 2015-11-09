@@ -20,7 +20,7 @@ class HtmlPrinter:
 
     def report_to_html(self):
         day_totals = {}
-        task_details = {}
+        task_day_details = {}
 
         report = []
 
@@ -43,7 +43,7 @@ class HtmlPrinter:
 
             needs_details = False
             if 'ELB' in task.upper():
-                task_details[task] = set()
+                task_day_details[task] = {}
                 needs_details = True
 
             # open the row and add task name
@@ -59,7 +59,9 @@ class HtmlPrinter:
                     duration = task_report[day]['duration']
                     table += '<td>{}</td>'.format(duration)
                     if needs_details and task_report[day]['descriptions']:
-                        task_details[task] |= task_report[day]['descriptions']
+                        if day not in task_day_details[task]:
+                            task_day_details[task][day] = set()
+                        task_day_details[task][day] |= task_report[day]['descriptions']
                 else:
                     duration = timedelta(0)
                     table += '<td></td>'
@@ -90,11 +92,14 @@ class HtmlPrinter:
         table += '</table>'
         report.append(table)
 
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         footer = '<h1>Task Details</h1>'
-        for task, details in task_details.items():
+        for task, day_details in task_day_details.items():
             footer += '<h2>{}</h2>'.format(task)
-            footer += self.format_details(details)
-        report.append(footer)
+            for day, details in day_details.items():
+                footer += '<h3>{}</h3>'.format(days[day])
+                footer += self.format_details(details)
+            report.append(footer)
 
         return ''.join(report)
 
