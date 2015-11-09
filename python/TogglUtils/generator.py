@@ -2,6 +2,9 @@ from datetime import timedelta
 
 
 class WeeklyReportGenerator:
+    def __init__(self):
+        pass
+
     _report = {}
     _CALCULATED_TO_PROVIDED_DURATION_RATIO_MAX = 0.05
 
