@@ -132,7 +132,7 @@ public class Main {
             synchronized (signal) {
                 /*
                  * Make sure that we are not spawning more threads than 
-                 * availabke processors unless we will generate unnecessary overhead.
+                 * available processors unless we will generate unnecessary overhead.
                  */
                 if (++threadCount >= Runtime.getRuntime().availableProcessors()) {
                     try {
