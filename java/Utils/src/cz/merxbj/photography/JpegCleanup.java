@@ -6,6 +6,7 @@ package cz.merxbj.photography;
 
 import java.io.File;
 import java.io.FileFilter;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -17,13 +18,28 @@ public class JpegCleanup {
     long size = 0L;
     
     public static void main(String[] args) {
-        String[] roots = new String[] {
+        /*String[] roots = new String[] {
             "/Users/merxbj/Pictures/2015", 
             "/Users/merxbj/Pictures/2016",
             "/Volumes/My Passport/Jarda Backup/2015",
             "/Volumes/My Passport/Jarda Backup/2016",
             "/Volumes/DATASTORE/Production"
-        };
+        };*/
+        
+        if (!FileSystemView.getFileSystemView().getSystemDisplayName(new File("H:\\")).equals("My Passport (H:)") ||
+            !FileSystemView.getFileSystemView().getSystemDisplayName(new File("G:\\")).equals("DATASTORE (G:)")) {
+            throw new RuntimeException("Invalid mounts!");
+        }
+        
+        /*String[] roots = new String[] {
+            "D:\\Photography\\2015", 
+            "D:\\Photography\\2016",
+            "H:\\Jarda Backup\\2015",
+            "H:\\Jarda Backup\\2016",
+            "G:\\Production"
+        };*/
+        
+        String[] roots = args;
         
         for (String root : roots) {
             File f = new File(root);
