@@ -1,0 +1,9 @@
+p:ncr & overdue,
+p:ncr & today & (@Routine & @Morning), 
+p:TICKLER & today,
+p:ncr & today & @Walk,
+p:ncr & today & (@Focus | @Thinking),
+p:ncr & today & (@Relax),
+p:ncr & today & (!@Focus & !@Thinking & !@Emails & !@Walk & !@Routine & !@Relax),
+p:ncr & today & @Emails,
+p:ncr & today & (@Routine & @Evening)

@@ -1,0 +1,9 @@
+p:personal & overdue,
+p:personal & today & (@Routine & @Morning), 
+p:TICKLER & today,
+p:personal & today & (@Focus | @Thinking),
+p:personal & today & (@Relax),
+p:personal & today & @Walk,
+p:personal & today & (!@Focus & !@Thinking & !@Emails & !@Walk & !@Routine & !@Relax),
+p:personal & today & @Emails,
+p:personal & today & (@Routine & @Evening)
