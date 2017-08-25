@@ -6,6 +6,7 @@ package cz.merxbj.photography;
 
 import java.io.File;
 import java.io.FileFilter;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  *
@@ -17,12 +18,47 @@ public class JpegCleanup {
     long size = 0L;
     
     public static void main(String[] args) {
-        String root = args[0];
-        File f = new File(root);
-        JpegCleanup cln = new JpegCleanup((args.length == 2) && args[1].equalsIgnoreCase("test"));
-        cln.handleFile(f);
-        System.out.printf("Cleaned up %d MB worth of sidecar JPGs!", cln.size/1024/1024);
-        System.out.println("");
+        /*String[] roots = new String[] {
+            "/Users/merxbj/Pictures/2015", 
+            "/Users/merxbj/Pictures/2016",
+            "/Volumes/My Passport/Jarda Backup/2015",
+            "/Volumes/My Passport/Jarda Backup/2016",
+            "/Volumes/DATASTORE/Production"
+        };*/
+        
+        if (!FileSystemView.getFileSystemView().getSystemDisplayName(new File("H:\\")).equals("My Passport (H:)") ||
+            !FileSystemView.getFileSystemView().getSystemDisplayName(new File("G:\\")).equals("DATASTORE (G:)")) {
+            throw new RuntimeException("Invalid mounts!");
+        }
+        
+        /*String[] roots = new String[] {
+            "D:\\Photography\\2015", 
+            "D:\\Photography\\2016",
+            "H:\\Jarda Backup\\2015",
+            "H:\\Jarda Backup\\2016",
+            "G:\\Production"
+        };*/
+        
+        String[] roots = args;
+        
+        for (String root : roots) {
+            File f = new File(root);
+            if (!f.exists() || !f.isDirectory()) {
+                throw new RuntimeException(f.getAbsolutePath());
+            }
+        }
+        
+        long totalSize = 0;
+        for (String root : roots) {
+            File f = new File(root);
+            JpegCleanup cln = new JpegCleanup((args.length == 2) && args[1].equalsIgnoreCase("test"));
+            cln.handleFile(f);
+            System.out.printf("Cleaned up %d MB worth of sidecar JPGs!", cln.size/1024/1024);
+            System.out.println("");
+            totalSize += cln.size;
+        }
+        
+        System.out.printf("Total: Cleaned up %d MB worth of sidecar JPGs!", totalSize/1024/1024);
     }
 
     public JpegCleanup(boolean test) {
