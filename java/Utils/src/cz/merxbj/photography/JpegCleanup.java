@@ -6,6 +6,7 @@ package cz.merxbj.photography;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.regex.Matcher;
 import javax.swing.filechooser.FileSystemView;
 
 /**
@@ -13,32 +14,20 @@ import javax.swing.filechooser.FileSystemView;
  * @author merxbj
  */
 public class JpegCleanup {
-    
+
     boolean test = false;
     long size = 0L;
     
     public static void main(String[] args) {
-        /*String[] roots = new String[] {
-            "/Users/merxbj/Pictures/2015", 
-            "/Users/merxbj/Pictures/2016",
-            "/Volumes/My Passport/Jarda Backup/2015",
-            "/Volumes/My Passport/Jarda Backup/2016",
-            "/Volumes/DATASTORE/Production"
-        };*/
-        
+
         if (!FileSystemView.getFileSystemView().getSystemDisplayName(new File("H:\\")).equals("My Passport (H:)") ||
             !FileSystemView.getFileSystemView().getSystemDisplayName(new File("G:\\")).equals("DATASTORE (G:)")) {
-            throw new RuntimeException("Invalid mounts!");
+            
+            if (!normalizeMounts(args)) {
+                throw new RuntimeException("Invalid mounts!");
+            }
         }
-        
-        /*String[] roots = new String[] {
-            "D:\\Photography\\2015", 
-            "D:\\Photography\\2016",
-            "H:\\Jarda Backup\\2015",
-            "H:\\Jarda Backup\\2016",
-            "G:\\Production"
-        };*/
-        
+
         String[] roots = args;
         
         for (String root : roots) {
@@ -59,6 +48,46 @@ public class JpegCleanup {
         }
         
         System.out.printf("Total: Cleaned up %d MB worth of sidecar JPGs!", totalSize/1024/1024);
+        System.out.println("");
+    }
+    
+    private static boolean normalizeMounts(String[] roots) {
+        
+        String hDriveReplacement = null, gDriveReplacement = null;
+        
+        for (File f : File.listRoots()) {
+            if (FileSystemView.getFileSystemView().getSystemDisplayName(f).startsWith("My Passport")) {
+                hDriveReplacement = f.getPath();
+            } else if (FileSystemView.getFileSystemView().getSystemDisplayName(f).startsWith("DATASTORE")) {
+                gDriveReplacement = f.getPath();
+            }
+        }
+        
+        if (hDriveReplacement == null || gDriveReplacement == null) {
+            return false;
+        } else {
+            System.out.println("New H: drive is " + hDriveReplacement);
+            System.out.println("New G: drive is " + gDriveReplacement);
+        }
+        
+        for (int i = 0; i < roots.length; i++) {
+            String root = roots[i];
+            String newRoot = root;
+
+            if (root.startsWith("H:\\")) {
+                root = root.replaceFirst("H:\\\\", Matcher.quoteReplacement(hDriveReplacement));
+            } else if (root.startsWith("G:\\")) {
+                root = root.replaceFirst("G:\\\\", Matcher.quoteReplacement(gDriveReplacement) );
+            }
+
+            if (!newRoot.equals(root)) {
+                roots[i] = root;
+                System.out.printf("Normalized path, oldPath = %s, newPath = %s", root, newRoot);
+                System.out.println("");
+            }
+        }
+        
+        return true;
     }
 
     public JpegCleanup(boolean test) {
