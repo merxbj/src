@@ -1,0 +1,10 @@
+p:ncr & overdue & (@Routine & @Morning), 
+p:ncr & overdue & (@Waiting_For),
+p:TICKLER & overdue,
+p:ncr & overdue & @Quick,
+p:ncr & overdue & @Emails,
+p:ncr & overdue & @Walk,
+p:ncr & overdue & (@Focus | @Thinking | @Code),
+p:ncr & overdue & (@Relax),
+p:ncr & overdue & (!@Focus & !@Thinking & !@Emails & !@Walk & !@Routine & !@Relax & !@Waiting_For & !@Quick & !@Code & !@Bus),
+p:ncr & overdue & (@Routine & @Evening)
