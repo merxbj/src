@@ -1,57 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Microsoft.Office.Interop.Outlook;
 
 namespace NcrOrgChartDataGrabber
 {
     [Serializable]
+    [DataContract]
     public class Employee : IEquatable<Employee>
     {
-        private Employee()
+        public Employee(ExchangeUser eu, string qlid, string firstName, string lastName, string title, string email, string city, string department)
         {
-            // for (de)serialization sake
+            Eu = eu;
+            Qlid = qlid;
+            Email = email.ToLower();
+            FirstName = firstName;
+            LastName = lastName;
+            Title = title;
+            City = city;
+            Department = department;
         }
 
-        public Employee(ExchangeUser eu, string qlid, string firstName, string lastName, string title, string email)
-        {
-            this.eu = eu;
-            this.qlid = qlid;
-            this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.title = title;
-        }
+        [DataMember]
+        public string Qlid { get; set; }
 
-        public string Qlid
-        {
-            get { return qlid; }
-        }
+        [DataMember]
+        public string FirstName { get; set; }
 
-        public string FirstName
-        {
-            get { return firstName; }
-        }
+        [DataMember]
+        public string LastName { get; set; }
 
-        public string LastName
-        {
-            get { return lastName; }
-        }
+        [DataMember]
+        public string Title { get; set; }
 
-        public string Title
-        {
-            get { return title; }
-        }
+        [DataMember]
+        public string Email { get; set; }
 
-        public ExchangeUser Eu
-        {
-            get { return eu; }
-        }
+        [DataMember]
+        public string City { get; set; }
+
+        [DataMember]
+        public string Department { get; set; }
+
+        public Employee Manager { get; set; }
+
+        [DataMember]
+        public List<Employee> DirectReports { get; set; }
+
+        public ExchangeUser Eu { get; set; }
 
         public bool Equals(Employee other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.qlid, qlid);
+            return Equals(other.Qlid, Qlid);
         }
 
         public override bool Equals(object obj)
@@ -64,7 +66,8 @@ namespace NcrOrgChartDataGrabber
 
         public override int GetHashCode()
         {
-            return (qlid != null ? qlid.GetHashCode() : 0);
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
+            return Qlid?.GetHashCode() ?? 0;
         }
 
         public static bool operator ==(Employee left, Employee right)
@@ -77,26 +80,9 @@ namespace NcrOrgChartDataGrabber
             return !Equals(left, right);
         }
 
-        public Employee Manager { get; set; }
-        public List<Employee> DirectReports { get; set; }
-
-        public string Email
-        {
-            get { return email; }
-        }
-
         public override string ToString()
         {
-            return "[" + qlid + "] - " + lastName + ", " + firstName + " (" + email + ") - " + title;
+            return "[" + Qlid + "] - " + LastName + ", " + FirstName + " (" + Email + ") - " + Title + " at " + City + " in " + Department;
         }
-
-        private readonly string qlid;
-        private readonly string firstName;
-        private readonly string lastName;
-        private readonly string title;
-        private readonly string email;
-
-        [NonSerialized]
-        private readonly ExchangeUser eu;
     }
 }
