@@ -1,7 +1,7 @@
 from datetime import timedelta
-from os import linesep
-from toggl.printer.util import format_duration
 from html import escape
+
+from toggl.printer.util import format_duration
 
 __author__ = 'merxbj'
 
