@@ -23,11 +23,10 @@ public class Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws MalformedURLException {
-        String outputDirName = "c:\\temp\\elections";
+        String outputDirName = "c:\\temp\\elections\\zast";
         File outputDir = new File(outputDirName);
         outputDir.mkdirs();
-
-        URL url = new URL("http://volby.cz/pls/kv2014/vysledky_obec?datumvoleb=20150131&cislo_obce=562971");
+        URL url = new URL("https://www.volby.cz/pls/kv2018/vysledky_obec?cislo_obce=562971");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
         Object sleeper = new Object();
