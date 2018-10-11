@@ -4,10 +4,11 @@ from datetime import datetime
 
 
 class ReportApi:
-    def __init__(self, since, until, clients):
+    def __init__(self, since, until, clients, debug):
         self.since = since
         self.until = until
         self.clients = clients
+        self.debug = debug
 
     def get_report_page(self, page=1):
         headers = {'content-type': 'application/json'}
@@ -23,6 +24,10 @@ class ReportApi:
                                 auth=('84a975312e9cf2f028037f5f292133ce', 'api_token'),
                                 headers=headers,
                                 params=params)
+        if self.debug:
+            with open(r"c:\temp\toggl\pages.log", encoding="utf8", mode="a") as f:
+                f.write(response.text + '\n')
+
         return response.json()
 
     def get_detailed_report(self):
