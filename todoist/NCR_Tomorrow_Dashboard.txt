@@ -1,9 +1,8 @@
-p:ncr & tomorrow & (@Waiting_For),
-p:TICKLER & tomorrow,
 p:ncr & tomorrow & @Quick,
-p:ncr & tomorrow & @TFS,
-p:ncr & tomorrow & @Emails,
-p:ncr & tomorrow & @Walk,
-p:ncr & tomorrow & (@Focus | @Thinking | @Code),
-p:ncr & tomorrow & (@Relax),
-p:ncr & tomorrow & (!@Focus & !@Thinking & !@Emails & !@Walk & !@Routine & !@Relax & !@Waiting_For & !@Quick & !@Code & !@Bus & !@TFS)
+p:ncr & tomorrow & (@Waiting_For) & (p1 | p2),
+p:TICKLER & tomorrow,
+p:ncr & tomorrow & @TFS & (p1 | p2),
+p:ncr & tomorrow & @Emails & (p1 | p2),
+p:ncr & tomorrow & @Walk & (p1 | p2),
+p:ncr & tomorrow & (@Focus | @Code) & (p1 | p2),
+p:ncr & tomorrow & (!@Focus & !@Emails & !@Walk & !@Routine & !@Waiting_For & !@Quick & !@Code & !@Travel & !@TFS) & (p1 | p2)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using NcrOrgChartDataGrabber;
 
 namespace NcrOrgChartDataGrabberApp
@@ -11,14 +12,40 @@ namespace NcrOrgChartDataGrabberApp
         {
             if (args[0] == "walk")
             {
-                Walker walker = new Walker(Console.Out);
-                Employee manager = walker.WalkOrganizationDownFrom(args[1]);
-                SerializeObject(manager, args[1] + ".dat");
+                Employee root = null;
+                try
+                {
+                    Walker walker = new Walker(Console.Out);
+                    root = walker.WalkOrganizationDownFrom(args[1]);
+                }
+                finally
+                {
+                    if (root != null)
+                    {
+                        Serialization.SerializeObject(root, args[1] + ".json");
+                    }
+                }
             }
             else if (args[0] == "load")
             {
-                Employee manager = DeSerializeObject<Employee>(args[1] + ".dat");
+                Employee manager = Serialization.DeSerializeObject<Employee>(args[1] + ".json");
                 WalkOrganizationDownFrom(manager, 0);
+            }
+            else if (args[0] == "resume")
+            {
+                Employee root = Serialization.DeSerializeObject<Employee>(args[1] + ".json");
+                try
+                {
+                    Walker walker = new Walker(Console.Out);
+                    walker.ResumeWalk(root);
+                }
+                finally
+                {
+                    if (root != null)
+                    {
+                        Serialization.SerializeObject(root, args[1] + ".json");
+                    }
+                }
             }
 
             Console.WriteLine("Done.");
@@ -31,7 +58,7 @@ namespace NcrOrgChartDataGrabberApp
                 Console.Write(" ");
             }
 
-            Console.WriteLine(String.Format("{0}:\t{1}", level, employee));
+            Console.WriteLine("{0}:\t{1}", level, employee);
             if (employee.DirectReports != null)
             {
                 foreach (Employee directReport in employee.DirectReports)
@@ -39,23 +66,6 @@ namespace NcrOrgChartDataGrabberApp
                     WalkOrganizationDownFrom(directReport, level + 1);
                 }
             }
-        }
-
-        public static void SerializeObject<T>(T objectToSerialize, string filename)
-        {
-            Stream stream = File.Open(filename, FileMode.Create);
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, objectToSerialize);
-            stream.Close();
-        }
-
-        public static T DeSerializeObject<T>(string filename)
-        {
-            Stream stream = File.Open(filename, FileMode.Open);
-            BinaryFormatter formatter = new BinaryFormatter();
-            T objectToSerialize = (T)formatter.Deserialize(stream);
-            stream.Close();
-            return objectToSerialize;
         }
     }
 }

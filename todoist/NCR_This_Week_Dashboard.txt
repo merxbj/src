@@ -1,0 +1,1 @@
+p:ncr & 7 days & !@Routine & !(p1 | p2)

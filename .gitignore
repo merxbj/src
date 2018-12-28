@@ -59,3 +59,4 @@ csharp/*/_ReSharper*
 /objc/*/*.xcodeproj/xcuserdata/
 /objc/*/*.xcodeproj/project.xcworkspace/
 _resharper.*
+venv/

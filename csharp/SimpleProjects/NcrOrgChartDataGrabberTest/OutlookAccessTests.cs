@@ -21,7 +21,7 @@ namespace NcrOrgChartDataGrabberTest
         {
             Employee emp = OutlookAccess.Instance.CreateEmployeeFrom("jaroslav.merxbauer@ncr.com");
             Employee man = OutlookAccess.Instance.GetManagerOf(emp);
-            Assert.AreEqual("jozef.smizansky@ncr.com", man.Email);
+            Assert.AreEqual("jan.psenicka@ncr.com", man.Email);
         }
 
         [TestMethod]
@@ -29,7 +29,7 @@ namespace NcrOrgChartDataGrabberTest
         {
             Employee manager = OutlookAccess.Instance.CreateEmployeeFrom("jozef.smizansky@ncr.com");
             List<Employee> directReports = new List<Employee>(OutlookAccess.Instance.GetDirectReportsOf(manager));
-            Assert.AreEqual(22, directReports.Count);
+            Assert.AreEqual(16, directReports.Count);
         }
     }
 }

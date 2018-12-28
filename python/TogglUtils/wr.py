@@ -87,7 +87,7 @@ def main():
             since, until = week_magic(datetime.now())
             clients = sys.argv[2:]
 
-        data_source = ReportApi(since, until, clients)
+        data_source = ReportApi(since, until, clients, debug=False)
 
     else:
         raise Exception('Unexpected data source: {0}'.format(sys.argv[1]))
