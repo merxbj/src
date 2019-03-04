@@ -6,6 +6,6 @@ p:TICKLER & today,
 p:ncr & today & @TFS & (p1 | p2),
 p:ncr & today & @Walk & (p1 | p2),
 p:ncr & today & (@Focus | @Code) & (p1 | p2),
-p:ncr & today & @Emails & (p1 | p2),
-p:ncr & today & (!@Focus & !@Emails & !@Walk & !@Routine & !@Waiting_For & !@Quick & !@Code & !@Travel & !@TFS) & (p1 | p2),
+p:ncr & today & @Outlook & (p1 | p2),
+p:ncr & today & (!@Focus & !@Outlook & !@Walk & !@Routine & !@Waiting_For & !@Quick & !@Code & !@Travel & !@TFS) & (p1 | p2),
 p:ncr & today & (@Routine & @Evening)
