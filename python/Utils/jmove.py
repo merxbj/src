@@ -36,11 +36,18 @@ def move_picture(source_path, file_name, capture_date, destination_root):
 
         counter = 0
         while os.path.isfile(destination_path):
-            counter += 1
-            new_file_name = '{}_{:03}'.format(file_name, counter)
-            destination_path = os.path.join(destination_root, destination_subdir, new_file_name)
+            if os.path.getsize(destination_path) == os.path.getsize(source_path):
+                print('WARNING: {} is already in destination. Will delete source.'.format(file_name))
+                destination_path = ''
+            else:
+                counter += 1
+                new_file_name = '{}_{:03}'.format(file_name, counter)
+                destination_path = os.path.join(destination_root, destination_subdir, new_file_name)
 
-        shutil.move(source_path, destination_path)
+        if destination_path != '':
+            shutil.move(source_path, destination_path)
+        else:
+            os.remove(source_path)
 
         print('SUCCESS: {} -> {}'.format(source_path, destination_path))
     except:
