@@ -53,8 +53,12 @@ def append_to_backlog(jpg_path, jpg, reason):
 
 
 def main(argv):
-    source = r'h:\Lenka Backup\erralie\Pictures\Fotky Family Library.photoslibrary\Masters'
-    destination = r'h:\Family Fotky'
+    # source = r'h:\Lenka Backup\erralie\Pictures\Fotky Family Library.photoslibrary\Masters'
+    # destination = r'h:\Family Fotky'
+
+    source = r'e:\Lenka Backup\erralie\Pictures\Fotky Library.photoslibrary\Masters'
+    destination = r'd:\Fotky'
+
     print('Source path: {}'.format(source))
     print('Destination path: {}'.format(destination))
 
