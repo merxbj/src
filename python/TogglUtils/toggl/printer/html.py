@@ -99,7 +99,7 @@ class HtmlPrinter:
             for day, details in day_details.items():
                 footer += '<h3>{}</h3>'.format(days[day])
                 footer += self.format_details(details)
-            report.append(footer)
+        report.append(footer)
 
         return ''.join(report)
 
