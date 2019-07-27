@@ -1,5 +1,6 @@
+robocopy /MIR /v D:\Photography\2019 "F:\Jarda Backup\2019"
 robocopy /MIR /v D:\Photography\2018 "F:\Jarda Backup\2018"
 robocopy /MIR /v D:\Photography\2017 "F:\Jarda Backup\2017"
 robocopy /MIR /v D:\Photography\2016 "F:\Jarda Backup\2016"
 robocopy /MIR /v D:\Photography\2015 "F:\Jarda Backup\2015"
-robocopy /MIR /v G:\ "F:\DATASTORE Backup" /XD "G:\SD Card Backups"
+robocopy /MIR /v I:\ "F:\DATASTORE Backup" /XD "G:\SD Card Backups"
