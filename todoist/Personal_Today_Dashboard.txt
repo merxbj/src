@@ -5,6 +5,6 @@ p:personal & today & (@Routine & @Morning),
 p:personal & today & (@Waiting_For),
 p:TICKLER & today,
 p:personal & today & (@Focus | @Code) & !p1,
-p:personal & today & @Emails & !p1,
-p:personal & today & (!@Focus & !@Emails & !@Routine & !@Waiting_For & !@Quick & !@Code) & !p1,
+p:personal & today & @Outlook & !p1,
+p:personal & today & (!@Focus & !@Outlook & !@Routine & !@Waiting_For & !@Quick & !@Code) & !p1,
 p:personal & today & (@Routine & @Evening)
