@@ -1,11 +1,11 @@
 p:ncr & today & @Quick & (p1 | p2),
 p:ncr & overdue,
 p:ncr & today & (@Routine & @Morning),
-p:ncr & today & (@Waiting_For),
 p:TICKLER & today,
 p:ncr & today & @TFS & (p1 | p2),
 p:ncr & today & @Walk & (p1 | p2),
 p:ncr & today & (@Focus | @Code) & (p1 | p2),
 p:ncr & today & @Outlook & (p1 | p2),
 p:ncr & today & (!@Focus & !@Outlook & !@Walk & !@Routine & !@Waiting_For & !@Quick & !@Code & !@Travel & !@TFS) & (p1 | p2),
+p:ncr & @Waiting_For,
 p:ncr & today & (@Routine & @Evening)
