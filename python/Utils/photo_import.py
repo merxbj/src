@@ -26,7 +26,7 @@ def get_capture_date(jpg_path):
     return capture_date
 
 
-def move_picture(source_path, file_name, capture_date, destination_root):
+def import_picture(source_path, file_name, capture_date, destination_root):
     try:
         destination_final_dir = '{:04}-{:02}-{:02}'.format(capture_date.year, capture_date.month, capture_date.day)
         destination_subdir = os.path.join(str(capture_date.year), destination_final_dir)
@@ -37,7 +37,7 @@ def move_picture(source_path, file_name, capture_date, destination_root):
         counter = 0
         while os.path.isfile(destination_path):
             if os.path.getsize(destination_path) == os.path.getsize(source_path):
-                print('WARNING: {} is already in destination. Will delete source.'.format(file_name))
+                print('WARNING: {} is already in destination. Skipping.'.format(file_name))
                 destination_path = ''
             else:
                 counter += 1
@@ -45,9 +45,7 @@ def move_picture(source_path, file_name, capture_date, destination_root):
                 destination_path = os.path.join(destination_root, destination_subdir, new_file_name)
 
         if destination_path != '':
-            shutil.move(source_path, destination_path)
-        else:
-            os.remove(source_path)
+            shutil.copy(source_path, destination_path)
 
         print('SUCCESS: {} -> {}'.format(source_path, destination_path))
     except:
@@ -60,8 +58,8 @@ def append_to_backlog(jpg_path, jpg, reason):
 
 
 def main(argv):
-    source = r'G:\DCIM\100CANON'
-    destination = r'f:\Family Fotky'
+    source = r'D:\Photography\2019'
+    destination = r'F:\Family Fotky'
     print('Source path: {}'.format(source))
     print('Destination path: {}'.format(destination))
 
@@ -74,12 +72,12 @@ def main(argv):
             if capture_date is None:
                 append_to_backlog(jpg_path, jpg, 'Failed to get capture time.')
             else:
-                move_picture(jpg_path, jpg, capture_date, destination)
+                import_picture(jpg_path, jpg, capture_date, destination)
 
     for file_path, file in backlog:
         dest_file = os.path.join(destination, '0000', file)
         print('WARNING: {} -> {}'.format(file_path, dest_file))
-        shutil.move(file_path, dest_file)
+        shutil.copy(file_path, dest_file)
 
 
 if __name__ == '__main__':

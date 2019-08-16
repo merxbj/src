@@ -31,7 +31,7 @@ def main(argv):
 
     for driver in drivers:
         if driver.cname == 'Grafické adaptéry' and driver.provider == 'NVIDIA':
-            if '23.21.13.9135' not in driver.version:
+            if '25.21.14.1967' not in driver.version:
                 print('pnputil /delete-driver ' + driver.pubname)
 
 
