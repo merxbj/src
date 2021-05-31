@@ -58,8 +58,8 @@ def append_to_backlog(jpg_path, jpg, reason):
 
 
 def main(argv):
-    source = r'D:\Photography\2019'
-    destination = r'F:\Family Fotky'
+    source = r'C:\Photography\2020'
+    destination = r'D:\Family Fotky'
     print('Source path: {}'.format(source))
     print('Destination path: {}'.format(destination))
 
