@@ -27,6 +27,9 @@
     <ClInclude Include="Algos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Algos2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Algos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Algos2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

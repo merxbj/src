@@ -153,12 +153,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algos.h" />
+    <ClInclude Include="Algos2.h" />
     <ClInclude Include="Futures.h" />
     <ClInclude Include="MyLinkedList.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algos.cpp" />
+    <ClCompile Include="Algos2.cpp" />
     <ClCompile Include="CppBasics.cpp" />
     <ClCompile Include="Futures.cpp" />
     <ClCompile Include="MyLinkedList.cpp" />

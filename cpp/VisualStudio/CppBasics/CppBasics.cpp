@@ -3,6 +3,7 @@
 #include "Futures.h"
 #include "MyLinkedList.h"
 #include "Algos.h"
+#include "Algos2.h"
 
 using namespace std;
 
@@ -152,8 +153,84 @@ public:
     const string& GetData() const { return data; }
 };
 
+std::list<int>&& GetList()
+{
+    std::list<int> ret{ 1, 2, 3, 4, 5 };
+
+    return std::move(ret);
+}
+
+const std::string&& GetSummaryLinesSQL()
+{
+    // Used values for tran_type: SS_TRAN_TYPE_REGULAR_SALE and SS_TRAN_TYPE_REFUND
+    const char* sql = R"(
+
+        DECLARE @BusinessDate DATETIME = ?
+        DECLARE @TerminalNode INT = ?
+
+        SELECT sales_item_id, CASE WHEN tran_type = 0 THEN 1 ELSE 2 END AS aena_tran_type,
+        item_gross_sold_qty, item_gross_sold_amt, item_reduction_amt, CASE WHEN tran_type = 0 THEN item_tax_total ELSE 0 END AS item_gross_tax,
+        refund_item_qty, refund_item_amt, refund_item_reduction_amt, CASE WHEN tran_type = 0 THEN 0 ELSE item_tax_total END AS item_refund_tax
+        FROM f_sales_item_trans FSIT
+        JOIN emea.f_sales_item_trans_extended_info FSITEI
+        ON(FSIT.business_date = FSITEI.business_date)
+        AND(FSIT.tran_sequence_number = FSITEI.tran_sequence_number) AND(FSIT.item_number = FSITEI.item_number)
+        JOIN POS_Shift PS ON(FSIT.business_date = PS.business_date) AND(FSIT.shift_id = PS.shift_number) AND(FSIT.employee_id = PS.operator_id)
+        WHERE FSIT.business_date = @BusinessDate AND PS.last_terminal_node = @TerminalNode AND tran_type IN(0, 1)
+
+        UNION ALL
+
+        SELECT  sales_item_id, CASE WHEN tran_type = 0 THEN 1 ELSE 2 END AS aena_tran_type,
+        item_gross_sold_qty, item_gross_sold_amt, item_reduction_amt, CASE WHEN tran_type = 0 THEN item_tax_total ELSE 0 END AS item_gross_tax,
+        refund_item_qty, refund_item_amt, refund_item_reduction_amt, CASE WHEN tran_type = 0 THEN 0 ELSE item_tax_total END AS item_refund_tax
+        FROM f_sales_fuel_item_trans FSFIT
+        JOIN emea.f_sales_item_trans_extended_info FSITEI
+        ON(FSFIT.business_date = FSITEI.business_date)
+        AND(FSFIT.tran_sequence_number = FSITEI.tran_sequence_number) AND(FSFIT.item_number = FSITEI.item_number)
+        JOIN POS_Shift PS ON(FSFIT.business_date = PS.business_date) AND(FSFIT.shift_id = PS.shift_number) AND(FSFIT.employee_id = PS.operator_id)
+        WHERE FSFIT.business_date = @BusinessDate AND PS.last_terminal_node = @TerminalNode AND tran_type IN(0, 1)
+
+        UNION ALL
+
+        SELECT  sales_item_id, CASE WHEN tran_type = 0 THEN 3 ELSE 4 END AS aena_tran_type,
+        item_gross_sold_qty, item_gross_sold_amt, item_reduction_amt, CASE WHEN tran_type = 0 THEN item_tax_total ELSE 0 END AS item_gross_tax,
+        refund_item_qty, refund_item_amt, refund_item_reduction_amt, CASE WHEN tran_type = 0 THEN 0 ELSE item_tax_total END AS item_refund_tax
+        FROM emea.f_sales_item_deleted_trans FSIDT
+        JOIN emea.f_sales_item_trans_extended_info FSITEI
+        ON(FSIDT.business_date = FSITEI.business_date)
+        AND(FSIDT.tran_sequence_number = FSITEI.tran_sequence_number) AND(FSIDT.item_number = FSITEI.item_number)
+        JOIN POS_Shift PS ON(FSIDT.business_date = PS.business_date) AND(FSIDT.shift_id = PS.shift_number) AND(FSIDT.employee_id = PS.operator_id)
+        WHERE FSIDT.business_date = @BusinessDate AND PS.last_terminal_node = @TerminalNode AND tran_type IN(0, 1)
+
+        UNION ALL
+
+        SELECT  sales_item_id, CASE WHEN tran_type = 0 THEN 3 ELSE 4 END AS aena_tran_type,
+        item_gross_sold_qty, item_gross_sold_amt, item_reduction_amt, CASE WHEN item_gross_sold_qty > 0 THEN item_tax_total ELSE 0 END AS item_gross_tax,
+        refund_item_qty, refund_item_amt, refund_item_reduction_amt, CASE WHEN item_gross_sold_qty > 0 THEN 0 ELSE item_tax_total END AS item_refund_tax
+        FROM emea.f_sales_fuel_deleted_item_trans FSFDIT
+        JOIN emea.f_sales_item_trans_extended_info FSITEI
+        ON(FSFDIT.business_date = FSITEI.business_date)
+        AND(FSFDIT.tran_sequence_number = FSITEI.tran_sequence_number) AND(FSFDIT.item_number = FSITEI.item_number)
+        JOIN POS_Shift PS ON(FSFDIT.business_date = PS.business_date) AND(FSFDIT.shift_id = PS.shift_number) AND(FSFDIT.employee_id = PS.operator_id)
+        WHERE FSFDIT.business_date = @BusinessDate AND PS.last_terminal_node = @TerminalNode AND tran_type IN(0, 1)
+        
+        )";
+
+    return std::string(sql);
+}
+
 int main()
 {
+    cout << "begin" << endl;
+
+    std::list<int> list = GetList();
+
+    const std::string str = GetSummaryLinesSQL();
+
+    Algos2 a2;
+    a2.main();
+    return 0;
+
     Algos a;
     if (a.main() == 0)
     {
