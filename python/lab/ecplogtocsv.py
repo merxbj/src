@@ -60,7 +60,7 @@ def assign_response_to_request(file_comms, response):
             matching_request_found = True
             break
     if not matching_request_found:
-        print("Unexpected response found: ") + response
+        print("Unexpected response found: " + str(response))
 
 
 def parse_empty_response(file_comms, log):
