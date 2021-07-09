@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="">
+    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecplogtocsv.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecplogtocsv.py" afterDir="false" />
     </list>
@@ -165,6 +165,14 @@
       <option name="presentableId" value="Default" />
       <updated>1564267479970</updated>
     </task>
+    <task id="LOCAL-00001" summary="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response">
+      <created>1625753379924</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1625753379924</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -204,12 +212,16 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response" />
+    <option name="LAST_COMMIT_MESSAGE" value="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ecplogtocsv.py</url>
-          <line>62</line>
+          <line>63</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

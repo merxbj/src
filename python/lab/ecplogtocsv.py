@@ -48,6 +48,7 @@ def parse_comms(logs):
         match = re.search(r"Unable to refresh token", log["message"][0])
         if match:
             file_comms.append(build_failed_token_refresh(log, pos_number))
+            continue
 
     return file_comms, pos_number
 
