@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response">
+    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - ECP Log Parser&#10;Added missing continue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecplogtocsv.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecplogtocsv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +75,12 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.ecplogtocsv">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\mysrc\src\python\lab" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.extract_pt_signature">
     <configuration name="ecplogtocsv" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="lab" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -119,6 +123,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="extract_pt_signature" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/extract_pt_signature.py" />
+      <option name="PARAMETERS" value="-d &quot;c:\temp\Repsol\Portugal&quot;" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lab" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -144,9 +169,11 @@
       <item itemvalue="Python.ecplogtocsv" />
       <item itemvalue="Python.extract_json_eci" />
       <item itemvalue="Python.scratch" />
+      <item itemvalue="Python.extract_pt_signature" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.extract_pt_signature" />
         <item itemvalue="Python.ecplogtocsv" />
         <item itemvalue="Python.extract_json_eci" />
         <item itemvalue="Python.scratch" />
@@ -172,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625753379924</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Python - ECP Log Parser&#10;Added missing continue">
+      <created>1625822619058</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1625822619058</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -214,7 +248,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response" />
-    <option name="LAST_COMMIT_MESSAGE" value="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response" />
+    <MESSAGE value="Python - ECP Log Parser&#10;Added missing continue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Python - ECP Log Parser&#10;Added missing continue" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -224,8 +259,20 @@
           <line>63</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/extract_pt_signature.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="event_id.text" language="Python" />
+        <watch expression="subevent_id.text" language="Python" />
+        <watch expression="modifier1_id.text" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/extract_eci_json.py" />
