@@ -421,18 +421,18 @@ if __name__ == "__main__":
    import rh
 
    RX=17
-   TX=0
+   TX=17
 
    BPS=2000
 
-   DEVICE_ADDRESS=1
+   DEVICE_ADDRESS=0xFF
    
    pi = pigpio.pi() # Connect to local Pi.
 
-   rx = rh.rx(pi, RX, BPS) # Specify Pi, rx GPIO, and baud.
-   #tx = rh.tx(pi, TX, BPS) # Specify Pi, tx GPIO, and baud.
+   #rx = rh.rx(pi, RX, BPS) # Specify Pi, rx GPIO, and baud.
+   tx = rh.tx(pi, TX, BPS) # Specify Pi, tx GPIO, and baud.
    
-   #tx.set_this_address(DEVICE_ADDRESS) # Set the tx device address
+   tx.set_this_address(DEVICE_ADDRESS) # Set the tx device address
    
    # Set the rx device address: only messages with "headerTo" field equal to this
    # address or broadcasted (address 255) from other devices will be accepted
@@ -442,14 +442,14 @@ if __name__ == "__main__":
 
    start = time.time()
 
-   while (time.time()-start) < 300:
+   while (time.time()-start) < 3000:
 
       msg_count += 1
 
-      #while not tx.ready():
-      #   time.sleep(0.02)
+      while not tx.ready():
+         time.sleep(0.02)
 
-      #time.sleep(0.1)
+      time.sleep(0.1)
 
       #tx.put("{:04d}".format(msg_count))
 
@@ -458,15 +458,16 @@ if __name__ == "__main__":
 
       #time.sleep(0.1)
 
-      #tx.put("Hello World #{:04d}!".format(msg_count))
+      tx.put("HW #{:04d}!".format(msg_count))
+      print("HW #{:04d}!".format(msg_count))
 
-      while rx.ready():
-         remote_msg = rx.get()
-         print("msg: %s, from: %d, to: %d, msg_id: %d, flags: %d" % ("".join(chr (c) for c in remote_msg["msg"]), remote_msg["headerFrom"], remote_msg["headerTo"], remote_msg["headerMsgId"], remote_msg["headerFlags"]) )
+      #while rx.ready():
+      #   remote_msg = rx.get()
+      #   print("msg: %s, from: %d, to: %d, msg_id: %d, flags: %d" % ("".join(chr (c) for c in remote_msg["msg"]), remote_msg["headerFrom"], remote_msg["headerTo"], remote_msg["headerMsgId"], remote_msg["headerFlags"]) )
          
       time.sleep(3)
 
-   rx.cancel() # Cancel Virtual Wire receiver.
-   #tx.cancel() # Cancel Virtual Wire transmitter.
+   #rx.cancel() # Cancel Virtual Wire receiver.
+   tx.cancel() # Cancel Virtual Wire transmitter.
 
    pi.stop() # Disconnect from local Pi.
