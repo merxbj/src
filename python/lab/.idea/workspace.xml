@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - ECP Log Parser&#10;Added missing continue">
-      <change afterPath="$PROJECT_DIR$/encoding_convert.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Lab.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Lab.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - Encoding converter">
+      <change afterPath="$PROJECT_DIR$/dbf2csv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/election.py" beforeDir="false" afterPath="$PROJECT_DIR$/election_data_gatherer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/election_progress.py" beforeDir="false" afterPath="$PROJECT_DIR$/election_data_to_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +88,28 @@
       <recent name="C:\mysrc\src\python\lab" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.encoding_convert">
+  <component name="RunManager" selected="Python.dbf2csv">
+    <configuration name="dbf2csv" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dbf2csv.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="ecplogtocsv" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="lab" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,41 +194,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="lab" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.ecplogtocsv" />
       <item itemvalue="Python.extract_json_eci" />
-      <item itemvalue="Python.scratch" />
       <item itemvalue="Python.extract_pt_signature" />
       <item itemvalue="Python.encoding_convert" />
+      <item itemvalue="Python.dbf2csv" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.dbf2csv" />
         <item itemvalue="Python.encoding_convert" />
         <item itemvalue="Python.extract_pt_signature" />
         <item itemvalue="Python.ecplogtocsv" />
         <item itemvalue="Python.extract_json_eci" />
-        <item itemvalue="Python.scratch" />
       </list>
     </recent_temporary>
   </component>
@@ -237,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625822619058</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Python - Encoding converter">
+      <created>1630190929856</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1630190929856</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -277,7 +284,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Python - ECP Log Parser&#10;Fixed bug when logging unexpected response" />
     <MESSAGE value="Python - ECP Log Parser&#10;Added missing continue" />
-    <option name="LAST_COMMIT_MESSAGE" value="Python - ECP Log Parser&#10;Added missing continue" />
+    <MESSAGE value="Python - Encoding converter" />
+    <option name="LAST_COMMIT_MESSAGE" value="Python - Encoding converter" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
