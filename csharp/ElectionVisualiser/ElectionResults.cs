@@ -44,9 +44,12 @@ namespace ElectionVisualiser
 
     class TotalResults
     {
-        public TotalResults(int votes)
+        public TotalResults(int votes, decimal areasCompleted, decimal participation, DateTime timestamp)
         {
             Votes = votes;
+            AreasCompleted = areasCompleted;
+            Participation = participation;
+            Timestamp = timestamp;
             RegionResults = new Dictionary<Region, RegionResults>();
             PartyResults = new Dictionary<Party, PartyResults>();
             MandateNumber = 0;
@@ -56,6 +59,9 @@ namespace ElectionVisualiser
         public IDictionary<Region, RegionResults> RegionResults {private set; get;}
         public IDictionary<Party, PartyResults> PartyResults { private set; get; }
         public int Votes { private set; get; }
+        public decimal AreasCompleted { private set; get; }
+        public decimal Participation { private set; get; }
+        public DateTime Timestamp { private set; get; }
         public int MandateNumber { get; set; }
         public int VoteNumber { set; get; }
 

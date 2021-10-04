@@ -6,26 +6,29 @@ namespace ElectionVisualiser
 {
     class ElectionResultsAnalyzer
     {
-        public ElectionResultsAnalyzer(XmlDocument resultsXml, IPartyDataProvider partyData)
+        public ElectionResultsAnalyzer(IPartyDataProvider partyData)
         {
-            this.resultsXml = resultsXml;
             this.partyData = partyData;
         }
 
-        public TotalResults CalculateResults()
+        public TotalResults CalculateResults(XmlDocument resultsXml)
         {
-            TotalResults results = LoadResults();
+            TotalResults results = LoadResults(resultsXml);
 
-            ValidateResultsXml(results);
+            ValidateResultsData(results);
 
-            UpdateRepublicMandateNumber(results);
-            UpdateRegionMandates(results);
-            ApplyQuorum(results);
-            UpdateRegionVoteNumbers(results);
-            CalculateFirstScrutiny(results);
-            UpdateRepublicResults(results);
-            CalculateSecondScrutiny(results);
-            UpdateRegionResults(results);
+            // don't calculate anything while under 5% - results might be ... crazy
+            if (results.AreasCompleted >= 5m)
+            {
+                UpdateRepublicMandateNumber(results);
+                UpdateRegionMandates(results);
+                ApplyQuorum(results);
+                UpdateRegionVoteNumbers(results);
+                CalculateFirstScrutiny(results);
+                UpdateRepublicResults(results);
+                CalculateSecondScrutiny(results);
+                UpdateRegionResults(results);
+            }
 
             return results;
         }
@@ -392,25 +395,49 @@ namespace ElectionVisualiser
             results.MandateNumber = (int)(Math.Round(results.Votes / 200.0));
         }
 
-        private TotalResults LoadResults()
+        private TotalResults LoadResults(XmlDocument resultsXml)
         {
-            int totalValidVotes = 0;
-            var totalValidVotesXml = resultsXml.SelectSingleNode("/VYSLEDKY/CR/UCAST");
-            if (totalValidVotesXml == null 
-                || !int.TryParse(totalValidVotesXml.Attributes["PLATNE_HLASY"].Value, out totalValidVotes)
-                || totalValidVotes < 0)
+            var resultsNode = resultsXml.SelectSingleNode("/VYSLEDKY");
+            if (resultsNode == null)
             {
-                throw new Exception($"Invalid data - Total votes not found or negative!");
+                throw new Exception("Invalid XML - Missing VYSLEDKY element!");
             }
 
-            TotalResults results = new TotalResults(totalValidVotes);
-            LoadTotalPartyResults(results);
-            LoadRegionResults(results);
+            DateTime timestamp = XmlConvert.ToDateTime(resultsNode.Attributes["DATUM_CAS_GENEROVANI"].Value, XmlDateTimeSerializationMode.Local);
+
+            var participationXml = resultsXml.SelectSingleNode("/VYSLEDKY/CR/UCAST");
+            if (participationXml == null)
+            {
+                throw new Exception("Invalid XML - Missing UCAST element!");
+            }
+            
+            int totalValidVotes = 0;
+            if (!int.TryParse(participationXml.Attributes["PLATNE_HLASY"].Value, out totalValidVotes)
+                || totalValidVotes < 0)
+            {
+                throw new Exception($"Invalid data - Total votes negative!");
+            }
+
+            decimal areasCompleted = XmlConvert.ToDecimal(participationXml.Attributes["OKRSKY_ZPRAC_PROC"].Value);
+            if (areasCompleted < Decimal.Zero || areasCompleted > 100m)
+            {
+                throw new Exception($"Invalid data - Areas completed {areasCompleted} is out of range!");
+            }
+
+            decimal participation = XmlConvert.ToDecimal(participationXml.Attributes["UCAST_PROC"].Value);
+            if (participation < Decimal.Zero || participation > 100m)
+            {
+                throw new Exception($"Invalid data - Participation {participation} is out of range!");
+            }
+
+            TotalResults results = new TotalResults(totalValidVotes, areasCompleted, participation, timestamp);
+            LoadTotalPartyResults(resultsXml, results);
+            LoadRegionResults(resultsXml, results);
 
             return results;
         }
 
-        private void LoadRegionResults(TotalResults results)
+        private void LoadRegionResults(XmlDocument resultsXml, TotalResults results)
         {
             foreach (XmlNode regionXml in resultsXml.SelectNodes("VYSLEDKY/KRAJ"))
             {
@@ -464,7 +491,7 @@ namespace ElectionVisualiser
             }
         }
 
-        private void LoadTotalPartyResults(TotalResults results)
+        private void LoadTotalPartyResults(XmlDocument resultsXml, TotalResults results)
         {
             foreach (XmlNode totalPartyResults in resultsXml.SelectNodes("VYSLEDKY/CR/STRANA"))
             {
@@ -482,12 +509,10 @@ namespace ElectionVisualiser
                     throw new Exception($"Invalid data - failed to read HODNOTY_STRANA for {partyId}");
                 }
 
-                decimal partyPercentage = Decimal.Zero;
-                if (!decimal.TryParse(partyValuesXml.Attributes["PROC_HLASU"].Value, out partyPercentage) 
-                    || partyPercentage < decimal.Zero
-                    || partyPercentage > 100m)
+                decimal partyPercentage = XmlConvert.ToDecimal(partyValuesXml.Attributes["PROC_HLASU"].Value);
+                if (partyPercentage < decimal.Zero || partyPercentage > 100m)
                 {
-                    throw new Exception($"Invalid data - party percentage {partyPercentage} is out of range!");
+                    throw new Exception($"Invalid data - party percentage {partyPercentage} for {partyName} is out of range!");
                 }
 
                 int partyTotalVotes = 0;
@@ -500,7 +525,7 @@ namespace ElectionVisualiser
             }
         }
 
-        private void ValidateResultsXml(TotalResults results)
+        private void ValidateResultsData(TotalResults results)
         {
             int totalValidVotes = results.Votes;
 
@@ -519,8 +544,6 @@ namespace ElectionVisualiser
                 throw new Exception("Invalid number of valid votes!");
             }
         }
-
-        private XmlDocument resultsXml;
         private IPartyDataProvider partyData;
     }
 }
