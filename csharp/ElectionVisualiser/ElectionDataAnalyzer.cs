@@ -17,8 +17,8 @@ namespace ElectionVisualiser
 
             ValidateResultsData(results);
 
-            // don't calculate anything while under 5% - results might be ... crazy
-            if (results.AreasCompleted >= 5m)
+            // don't calculate anything while under 2% - results might be ... crazy
+            if (results.AreasCompleted >= 2m)
             {
                 UpdateRepublicMandateNumber(results);
                 UpdateRegionMandates(results);

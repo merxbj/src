@@ -27,7 +27,7 @@ namespace ElectionVisualiser
             }
             else
             {
-                VisualisePartyResults(currentResults.PartyResults.Values, previousResults.PartyResults);
+                VisualisePartyResults(currentResults.PartyResults, previousResults.PartyResults);
             }
 
             Console.WriteLine();
@@ -36,10 +36,19 @@ namespace ElectionVisualiser
             Console.WriteLine($"Time to next update: {timeToNextUpdate:ss}");
         }
 
-        private void VisualisePartyResults(ICollection<PartyResults> currentResults, IDictionary<Party, PartyResults> previousResults)
+        private void VisualisePartyResults(IDictionary<Party, PartyResults> currentResults, IDictionary<Party, PartyResults> previousResults)
         {
             var sortedParties = new List<PartyResults>();
-            sortedParties.AddRange(currentResults);
+            sortedParties.AddRange(currentResults.Values);
+
+            // include parties that lost all mandates so that we can see their misery
+            foreach (var previousResult in previousResults)
+            {
+                if (!currentResults.Keys.Contains(previousResult.Key))
+                {
+                    sortedParties.Add(previousResult.Value);
+                }
+            }
 
             sortedParties.Sort((left, right) => {
                 return right.Mandates.CompareTo(left.Mandates);

@@ -14,7 +14,7 @@ namespace ElectionVisualiser
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-                var downloader = new Election2006DataDownloader();
+                var downloader = new Election2021DataDownloader();
                 var partiesXml = downloader.DownloadParties();
                 var candidatesXml = downloader.DownloadCandidates();
                 var partyDataProvider = new PartyDataProvider(partiesXml, candidatesXml);
@@ -26,21 +26,32 @@ namespace ElectionVisualiser
 
                 while (true)
                 {
-                    if (results.Count == 0 || stopwatch.Elapsed >= DataRefreshPeriod)
+                    try
                     {
-                        var resultsXml = downloader.DownloadResults();
-                        results.AddFirst(analyzer.CalculateResults(resultsXml));
-                        if (results.Count > 2)
+                        if (results.Count == 0 || stopwatch.Elapsed >= DataRefreshPeriod)
                         {
-                            results.RemoveLast();
+                            var resultsXml = downloader.DownloadResults();
+                            results.AddFirst(analyzer.CalculateResults(resultsXml));
+                            if (results.Count > 2)
+                            {
+                                results.RemoveLast();
+                            }
+                            stopwatch.Restart();
                         }
-                
-                        stopwatch.Restart();
-                    }
-                    
-                    visualiser.Visualise(results, (DataRefreshPeriod - stopwatch.Elapsed));
+                        
+                        visualiser.Visualise(results, (DataRefreshPeriod - stopwatch.Elapsed));
 
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                    }
+                    catch (Exception ex)
+                    {
+                        if (results.Count > 1)
+                        {
+                            visualiser.Visualise(results, (DataRefreshPeriod - stopwatch.Elapsed));
+                        }
+                        
+                        Console.Error.WriteLine(ex.ToString());
+                    }
                 }
             }
             catch (Exception ex)
