@@ -39,14 +39,20 @@ namespace ElectionVisualiser
 
             foreach (var partyResults in results.PartyResults.Values)
             {
-                mandatesToDistribute[partyResults.Party] = partyResults.Mandates;
+                if (partyResults.PassedQuorum)
+                {
+                    mandatesToDistribute[partyResults.Party] = partyResults.Mandates;
+                }
             }
 
             foreach (var regionResults in results.RegionResults.Values)
             {
                 foreach (var partyResults in regionResults.PartyResults.Values)
                 {
-                    mandatesToDistribute[partyResults.Party] -= partyResults.Mandates;
+                    if (partyResults.PassedQuorum)
+                    {
+                        mandatesToDistribute[partyResults.Party] -= partyResults.Mandates;
+                    }
                 }
             }
 
@@ -64,7 +70,7 @@ namespace ElectionVisualiser
         private void DistributeMandatesToRegions(TotalResults results, Party party, int mandatesToDistribute)
         {
             Random rnd = new Random();
-            List<PartyResults> gainingMandate = new List<PartyResults>(results.RegionResults.Keys.Count);
+            List<PartyResults> gainingMandate = new List<PartyResults>();
             
             foreach (var regionResults in results.RegionResults.Values)
             {
@@ -98,14 +104,17 @@ namespace ElectionVisualiser
 
             foreach (var partyResults in results.PartyResults.Values)
             {
-                // for the first step let's assume that all parties have enough candidates
-                partiesWithEnoughCandidates.Add(partyResults.Party);
+                if (partyResults.PassedQuorum)
+                {
+                    // for the first step let's assume that all parties have enough candidates
+                    partiesWithEnoughCandidates.Add(partyResults.Party);
 
-                // assign the mandates and update modules for further redistribution
-                partyResults.Mandates += partyResults.RemainingVotes / results.VoteNumber;
-                partyModulos[partyResults.Party] = partyResults.RemainingVotes % results.VoteNumber;
+                    // assign the mandates and update modules for further redistribution
+                    partyResults.Mandates += partyResults.RemainingVotes / results.VoteNumber;
+                    partyModulos[partyResults.Party] = partyResults.RemainingVotes % results.VoteNumber;
 
-                remainingMandates -= partyResults.Mandates;
+                    remainingMandates -= partyResults.Mandates;
+                }
             }
 
             if (remainingMandates < 0)
@@ -128,13 +137,16 @@ namespace ElectionVisualiser
                 // take mandates away from parties with insufficient candidates and try distribution again
                 foreach (var partyResults in results.PartyResults.Values)
                 {
-                    int totalCandidates = partyData.GetNumCandidates(partyResults.Party.Id);
-
-                    mandatesToTakeAway += partyResults.Mandates - totalCandidates;
-                    if (mandatesToTakeAway > 0)
+                    if (partyResults.PassedQuorum)
                     {
-                        partyResults.Mandates -= mandatesToTakeAway;
-                        partiesWithEnoughCandidates.Remove(partyResults.Party);
+                        int totalCandidates = partyData.GetNumCandidates(partyResults.Party.Id);
+
+                        mandatesToTakeAway += partyResults.Mandates - totalCandidates;
+                        if (mandatesToTakeAway > 0)
+                        {
+                            partyResults.Mandates -= mandatesToTakeAway;
+                            partiesWithEnoughCandidates.Remove(partyResults.Party);
+                        }
                     }
                 }
 
@@ -158,8 +170,16 @@ namespace ElectionVisualiser
         private void UnassignExcessiveMandates(TotalResults results, int mandatesToTakeAway, IDictionary<Party, int> partyModulos)
         {
             Random rnd = new Random();
-            List<PartyResults> losingMandate = new List<PartyResults>(results.PartyResults.Keys.Count);
-            losingMandate.AddRange(results.PartyResults.Values);
+            List<PartyResults> losingMandate = new List<PartyResults>();
+
+            foreach (var losing in results.PartyResults.Values)
+            {
+                if (losing.PassedQuorum)
+                {
+                    losingMandate.Add(losing);
+                }
+            }
+    
             losingMandate.Sort((left, right) => {
                 int result = partyModulos[left.Party].CompareTo(partyModulos[right.Party]);
                 if (result == 0)
@@ -182,8 +202,16 @@ namespace ElectionVisualiser
         private void AssignRemainingMandates(TotalResults results, int remainingMandates, IDictionary<Party, int> partyModulos, HashSet<Party> partiesWithEnoughCandidates)
         {
             Random rnd = new Random();
-            List<PartyResults> gainingMandate = new List<PartyResults>(results.PartyResults.Keys.Count);
-            gainingMandate.AddRange(results.PartyResults.Values);
+            List<PartyResults> gainingMandate = new List<PartyResults>();
+
+            foreach (var gaining in results.PartyResults.Values)
+            {
+                if (gaining.PassedQuorum)
+                {
+                    gainingMandate.Add(gaining);
+                }
+            }
+
             gainingMandate.Sort((left, right) => {
                 int result = partyModulos[right.Party].CompareTo(partyModulos[left.Party]);
                 if (result == 0)
@@ -214,8 +242,11 @@ namespace ElectionVisualiser
 
             foreach (var partyResutls in results.PartyResults.Values)
             {
-                remainingMandates -= partyResutls.Mandates;
-                transferredVotes += partyResutls.RemainingVotes;
+                if (partyResutls.PassedQuorum)
+                {
+                    remainingMandates -= partyResutls.Mandates;
+                    transferredVotes += partyResutls.RemainingVotes;
+                }
             }
 
             results.VoteNumber = (int)Math.Round((double)transferredVotes / (remainingMandates + 1));
@@ -228,8 +259,11 @@ namespace ElectionVisualiser
             {
                 foreach (var partyResutls in regionResults.PartyResults.Values)
                 {
-                    results.PartyResults[partyResutls.Party].RemainingVotes += partyResutls.RemainingVotes;
-                    results.PartyResults[partyResutls.Party].Mandates += partyResutls.Mandates;
+                    if (partyResutls.PassedQuorum)
+                    {
+                        results.PartyResults[partyResutls.Party].RemainingVotes += partyResutls.RemainingVotes;
+                        results.PartyResults[partyResutls.Party].Mandates += partyResutls.Mandates;
+                    }
                 }
             }
         }
@@ -241,17 +275,27 @@ namespace ElectionVisualiser
                 int mandatesGiven = 0;
                 foreach (var partyResults in regionResults.PartyResults.Values)
                 {
-                    partyResults.Mandates = partyResults.Votes / regionResults.VoteNumber;
-                    partyResults.RemainingVotes = partyResults.Votes % regionResults.VoteNumber;
+                    if (partyResults.PassedQuorum)
+                    {
+                        partyResults.Mandates = partyResults.Votes / regionResults.VoteNumber;
+                        partyResults.RemainingVotes = partyResults.Votes % regionResults.VoteNumber;
 
-                    mandatesGiven += partyResults.Mandates;
+                        mandatesGiven += partyResults.Mandates;
+                    }
                 }
 
                 if (mandatesGiven > regionResults.Mandates)
                 {
                     Random rnd = new Random();
-                    List<PartyResults> yieldingMandate = new List<PartyResults>(regionResults.PartyResults.Keys.Count);
-                    yieldingMandate.AddRange(regionResults.PartyResults.Values);
+                    List<PartyResults> yieldingMandate = new List<PartyResults>();
+                    foreach (var yielding in regionResults.PartyResults.Values)
+                    {
+                        if (yielding.PassedQuorum)
+                        {
+                            yieldingMandate.Add(yielding);
+                        }
+                    }
+
                     yieldingMandate.Sort((left, right) => {
                         int result = left.RemainingVotes.CompareTo(right.RemainingVotes);
                         if (result == 0) 
@@ -273,20 +317,23 @@ namespace ElectionVisualiser
 
                 foreach (var partyResults in regionResults.PartyResults.Values)
                 {
-                    if (partyResults.Mandates == 0)
+                    if (partyResults.PassedQuorum)
                     {
-                        // make sure that if we took away a mandate from a party that resulted in
-                        // zero mandates in the given region, we set the RemainingVotes back to the
-                        // original votes for the second scrutiny
-                        partyResults.RemainingVotes = partyResults.Votes;
-                    }
+                        if (partyResults.Mandates == 0)
+                        {
+                            // make sure that if we took away a mandate from a party that resulted in
+                            // zero mandates in the given region, we set the RemainingVotes back to the
+                            // original votes for the second scrutiny
+                            partyResults.RemainingVotes = partyResults.Votes;
+                        }
 
-                    // make sure we don't assign more mandates than there is candidates for the given party
-                    // any revoked mandates will be assigned during the second scrutiny
-                    int numCandidates = partyData.GetNumCandidatesInRegion(regionResults.Region.Id, partyResults.Party.Id);
-                    if (partyResults.Mandates > numCandidates)
-                    {
-                        partyResults.Mandates = numCandidates;
+                        // make sure we don't assign more mandates than there is candidates for the given party
+                        // any revoked mandates will be assigned during the second scrutiny
+                        int numCandidates = partyData.GetNumCandidatesInRegion(regionResults.Region.Id, partyResults.Party.Id);
+                        if (partyResults.Mandates > numCandidates)
+                        {
+                            partyResults.Mandates = numCandidates;
+                        }
                     }
                 }
             }
@@ -300,7 +347,10 @@ namespace ElectionVisualiser
 
                 foreach (var partyResults in regionResults.PartyResults.Values)
                 {
-                    totalQuoredPartyVotes += partyResults.Votes;
+                    if (partyResults.PassedQuorum)
+                    {
+                        totalQuoredPartyVotes += partyResults.Votes;
+                    }
                 }
 
                 regionResults.VoteNumber = (int)Math.Round((double)totalQuoredPartyVotes / (regionResults.Mandates + 2));
@@ -329,11 +379,14 @@ namespace ElectionVisualiser
 
             foreach (var failedParty in failedParties)
             {
-                results.PartyResults.Remove(failedParty);
+                results.PartyResults[failedParty].PassedQuorum = false;
 
                 foreach (var regionResult in results.RegionResults.Values)
                 {
-                    regionResult.PartyResults.Remove(failedParty);
+                    if (regionResult.PartyResults.ContainsKey(failedParty))
+                    {
+                        regionResult.PartyResults[failedParty].PassedQuorum = false;
+                    }   
                 }
             }
         }

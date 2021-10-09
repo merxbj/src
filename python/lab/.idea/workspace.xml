@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99f0212b-ceb7-455c-9072-e8c6066ddeee" name="Default Changelist" comment="Python - Encoding converter">
-      <change beforePath="$PROJECT_DIR$/dbf2csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbf2xml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../csharp/ElectionVisualiser/ElectionDataAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../csharp/ElectionVisualiser/ElectionDataAnalyzer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../csharp/ElectionVisualiser/ElectionResults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../csharp/ElectionVisualiser/ElectionResults.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

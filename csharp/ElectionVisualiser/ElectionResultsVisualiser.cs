@@ -41,38 +41,42 @@ namespace ElectionVisualiser
             var sortedParties = new List<PartyResults>();
             sortedParties.AddRange(currentResults.Values);
 
-            // include parties that lost all mandates so that we can see their misery
-            foreach (var previousResult in previousResults)
-            {
-                if (!currentResults.Keys.Contains(previousResult.Key))
-                {
-                    sortedParties.Add(previousResult.Value);
-                }
-            }
-
             sortedParties.Sort((left, right) => {
-                return right.Mandates.CompareTo(left.Mandates);
+                int result = right.Mandates.CompareTo(left.Mandates);
+                if (result == 0)
+                {
+                    result = right.Percentage.CompareTo(left.Percentage);
+                }
+                return result;
             });
 
 
             int maxNameLength = int.MinValue;
             foreach (var partyResults in sortedParties)
             {
-                if (partyResults.Party.Name.Length > maxNameLength)
+                if (partyResults.Percentage > 0.5m)
                 {
-                    maxNameLength = partyResults.Party.Name.Length;
+                    if (partyResults.Party.Name.Length > maxNameLength)
+                    {
+                        maxNameLength = partyResults.Party.Name.Length;
+                    }
                 }
             }
 
             int mandatesSum = 0;
             foreach (var partyResults in sortedParties)
             {
-                string partyName = partyResults.Party.Name.PadLeft(maxNameLength);
-                string mandates = partyResults.Mandates.ToString().PadLeft(3);
-                string mandatesDiff = string.Format("{0:+###;-###;+0}", partyResults.Mandates - previousResults[partyResults.Party].Mandates);
+                if (partyResults.Percentage > 0.5m)
+                {
+                    string partyName = partyResults.Party.Name.PadLeft(maxNameLength);
+                    string mandates = partyResults.Mandates.ToString().PadLeft(3);
+                    string mandatesDiff = string.Format("{0:+###;-###;+0}", partyResults.Mandates - previousResults[partyResults.Party].Mandates);
+                    string percent = partyResults.Percentage.ToString().PadLeft(6);
+                    string percentDiff = string.Format("{0:+#.##;-#.##;+0.00}", partyResults.Percentage - previousResults[partyResults.Party].Percentage);
 
-                Console.WriteLine($"{partyName}: {mandates} ({mandatesDiff})");
-                mandatesSum += partyResults.Mandates;
+                    Console.WriteLine($"{partyName}: {mandates} ({mandatesDiff}) | {percent} ({percentDiff})");
+                    mandatesSum += partyResults.Mandates;
+                }
             }
 
             Console.WriteLine();

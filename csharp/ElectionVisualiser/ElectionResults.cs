@@ -10,12 +10,15 @@ namespace ElectionVisualiser
             Party = party;
             Votes = votes;
             Percentage = percentage;
+            PassedQuorum = true;
             Mandates = 0;
             RemainingVotes = 0;
         }
+
         public Party Party { private set; get; }
         public int Votes { private set; get; }
         public decimal Percentage { private set; get; }
+        public bool PassedQuorum{ get; set; }
         public int Mandates { get; set; }
         public int RemainingVotes { get; set; }
     }
