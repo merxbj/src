@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="60aa7a03-ae8a-4a1f-86e6-1c8392f63723" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/TogglUtils.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TogglUtils.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/toggl/datasource/web.py" beforeDir="false" afterPath="$PROJECT_DIR$/toggl/datasource/web.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,14 +84,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="FullScreen" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SearchEverywhereHistory" value="" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Utils" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="recentsLimit" value="5" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -94,7 +101,7 @@
       <recent name="$PROJECT_DIR$/toggl/datasource" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.scratch">
+  <component name="RunManager" selected="Python.wr">
     <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -194,7 +201,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wr.py" />
-      <option name="PARAMETERS" value="web this &quot;NCR&quot; &quot;PCR CI Internal&quot; &quot;Sheetz&quot; &quot;Unspecified&quot;" />
+      <option name="PARAMETERS" value="web last &quot;NCR&quot; &quot;PCR CI Internal&quot; &quot;HSR Retail Internal&quot; &quot;Sheetz&quot; &quot;Unspecified&quot; &quot;Wawa&quot; &quot;OKQ8&quot; &quot;SCAN&quot; &quot;T&amp;R&quot; &quot;PCR Internal&quot; &quot;MONEYGRAM&quot; &quot;Shell&quot; &quot;ExxonMobil&quot; &quot;Repsol&quot; &quot;Amic PL&quot; &gt; c:\users\jm185267\Desktop\Weekly_Report.html" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -276,8 +283,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.wr" />
+        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.api" />
       </list>
     </recent_temporary>
@@ -328,6 +335,15 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/toggl/datasource/web.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="pubKey[&quot;LL&quot;][&quot;value&quot;]" language="TEXT" />

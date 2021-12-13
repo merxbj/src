@@ -20,7 +20,7 @@ class ReportApi:
         if page > 1:
             params['page'] = page
 
-        response = requests.get('https://toggl.com/reports/api/v2/details',
+        response = requests.get('https://api.track.toggl.com/reports/api/v2/details',
                                 auth=('84a975312e9cf2f028037f5f292133ce', 'api_token'),
                                 headers=headers,
                                 params=params)
