@@ -60,3 +60,4 @@ csharp/*/_ReSharper*
 /objc/*/*.xcodeproj/project.xcworkspace/
 _resharper.*
 venv/
+/cpp/Integri/.vs/Integri

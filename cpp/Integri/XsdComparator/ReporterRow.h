@@ -9,11 +9,10 @@ public:
     
 
 private:
-    ReporterRowStatus status;
-    int depth;
+    ReporterRowStatus status = ReporterRowStatus::None;
+    int depth = 0;
     std::string nodeName;
     std::string nodeValueOfName;
 
-    char ConvertStatus(ReporterRowStatus status);
     friend std::ostream& operator<<(std::ostream& os, const ReporterRow& row);
 };

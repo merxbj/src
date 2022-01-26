@@ -4,9 +4,9 @@
 #include <iostream>
 #include "XsdComparator.h"
 
-bool FileExists(const char* fileName) {
+bool FileExists(std::string fileName) {
     struct stat buffer;
-    return (stat(fileName, &buffer) == 0);
+    return (stat(fileName.c_str(), &buffer) == 0);
 }
 
 int main(int argc, char* argv[])
@@ -20,10 +20,10 @@ int main(int argc, char* argv[])
     if (FileExists(argv[1]) && FileExists(argv[2]))
     {
         std::cout << argv[1] << " " << argv[2] << std::endl;
-        auto reporter = new Reporter();
-        auto comparator = new XsdComparator(reporter);
+        Reporter reporter;
+        std::unique_ptr<XsdComparator> comparator = std::make_unique<XsdComparator>(reporter);
         comparator->Compare(argv[1], argv[2]);
-        reporter->Export("d:\\_temp\\test\\report.txt");
+        reporter.Export("d:\\_temp\\test\\report.txt");
     }
     else
     {

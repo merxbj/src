@@ -7,13 +7,13 @@
 class XsdComparator
 {
 public:
-	XsdComparator(Reporter* reporter);
+	XsdComparator(Reporter& reporter);
 	void Compare(const std::string file1, const std::string file2);
-	void Compare(MSXML2::IXMLDOMElement* firstRoot, MSXML2::IXMLDOMElement* secondRoot);
+	
 private:
-	Reporter* reporter;
+	Reporter& reporter;
 
-	void ReadXml(const std::string file);
+	void Compare(MSXML2::IXMLDOMElement* firstRoot, MSXML2::IXMLDOMElement* secondRoot);
 	std::string GetElementName(MSXML2::IXMLDOMNode* node);
 	void GetRootElement(const std::string file, MSXML2::IXMLDOMElement** root);
 	std::string GetValueOfNameAttribute(MSXML2::IXMLDOMNode* node);

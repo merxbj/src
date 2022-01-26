@@ -1,6 +1,6 @@
 #pragma once
 
-enum ReporterRowStatus
+enum class ReporterRowStatus
 {
     Added, Removed, None
 };

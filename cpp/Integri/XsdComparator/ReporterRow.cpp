@@ -12,12 +12,12 @@ char ConvertStatus(ReporterRowStatus status)
 {
     switch (status)
     {
-    case Added:
-        return '+';
-    case Removed:
-        return '-';
-    default:
-        return ' ';
+        case ReporterRowStatus::Added:
+            return '+';
+        case ReporterRowStatus::Removed:
+            return '-';
+        default:
+            return ' ';
     }
 }
 

@@ -1,25 +1,25 @@
 #include "Reporter.h"
 #include <fstream>
 
-void Reporter::Add(ReporterRow* row)
+void Reporter::Add(std::unique_ptr<ReporterRow> row)
 {
-    report.push_back(row);
+    report.push_back(std::move(row));
 }
 
 void Reporter::Add(ReporterRowStatus reportRowStatus, int depth, std::string nodeName, std::string nodeValueOfName)
 {
     if (IsAcceptableNode(nodeName))
     {
-        Add(new ReporterRow(reportRowStatus, depth, nodeName, nodeValueOfName));
+        Add(std::make_unique<ReporterRow>(reportRowStatus, depth, nodeName, nodeValueOfName));
     }
 }
 
-void Reporter::Export(const char* path)
+void Reporter::Export(const std::string path)
 {
     std::ofstream file;
     file.open(path);
     
-    for (auto value : report)
+    for (auto& value : report)
     {
         file << *value << std::endl;
     }
