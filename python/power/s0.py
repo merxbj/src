@@ -62,7 +62,6 @@ def db_thread():
                 last_handled_tick = ticks[index]["values"]
                 break
 
-        tick_event.clear()
         tick_event.release()
 
         for tick in ticks_to_handle:
