@@ -1,20 +1,21 @@
 import datetime
-import threading
 
 import pigpio
 from threading import Thread
-from threading import Event
+from threading import Condition
 
 ticks = []
-tick_event = Event()
+tick_event = Condition()
 
 
 def callback(g, l, t):
     if len(ticks) >= 552000:
         del ticks[0]
 
+    tick_event.acquire()
     ticks.append({"values": (g, l, t), "handled": False})
     tick_event.set()
+    tick_event.release()
 
 
 def setup_pulse_monitoring():
@@ -48,8 +49,8 @@ def print_tick(tick, previous_tick):
 
 def db_thread():
     while True:
+        tick_event.acquire()
         tick_event.wait()
-        tick_event.clear()
 
         ticks_to_handle = []
         last_handled_tick = (0, 0, 0)
@@ -60,6 +61,9 @@ def db_thread():
             else:
                 last_handled_tick = ticks[index]["values"]
                 break
+
+        tick_event.clear()
+        tick_event.release()
 
         for tick in ticks_to_handle:
             print_tick(tick, last_handled_tick)
