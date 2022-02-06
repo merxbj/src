@@ -26,7 +26,6 @@ pin = 23
 
 pi.set_mode(pin, pigpio.INPUT)
 pi.set_pull_up_down(pin, pigpio.PUD_UP)
-pi.set_glitch_filter(pin, 157000)  # equivalent to 100A across all three phases
 
 cb1 = pi.callback(pin, pigpio.FALLING_EDGE, callback)
 
