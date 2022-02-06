@@ -1,13 +1,25 @@
+import datetime
 import pigpio, time
+
+last_tick = 0
 
 
 def callback(g, l, t):
-    print("Callback " + str(l) + " " + str(t))
+    global last_tick
+    ticks_since_callback = t - last_tick
+    last_tick = t
+
+    average_watts = (1000 / 60 / 60 / 1000 / 1000) / ticks_since_callback
+    time_period = datetime.timedelta(microseconds = ticks_since_callback/10)
+
+    print("\t\tAverage watts = " + str(average_watts) + " over " + time_period.total_seconds() + "s")
 
 
 pi = pigpio.pi()
 if not pi.connected:
     exit()
+
+last_tick = pi.get_current_tick()
 
 pin = 23
 
@@ -18,4 +30,4 @@ cb1 = pi.callback(pin, pigpio.FALLING_EDGE, callback)
 
 while True:
     print("Direct " + str(pi.read(pin)) + " " + str(pi.get_current_tick()))
-    time.sleep(1)
+    time.sleep(1000)
