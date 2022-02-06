@@ -34,8 +34,8 @@ def setup_pulse_monitoring():
 
 def print_tick(tick, previous_tick):
 
-    g, l, t, handled = tick
-    pg, pl, pt, phandled = previous_tick
+    g, l, t = tick
+    pg, pl, pt = previous_tick
 
     if pt == 0:
         return
