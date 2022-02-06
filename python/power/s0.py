@@ -10,8 +10,6 @@ tick_event = Event()
 
 
 def callback(g, l, t):
-    print("Got tick!")
-
     if len(ticks) >= 552000:
         del ticks[0]
 
@@ -50,19 +48,13 @@ def print_tick(tick, previous_tick):
 
 def db_thread():
     while True:
-        print("Waiting for tick to arrive")
         tick_event.wait()
         tick_event.clear()
-
-        print("Tick arrived")
 
         ticks_to_handle = []
         last_handled_tick = (0, 0, 0)
         for index in range(len(ticks) - 1, -1, -1):
             if not ticks[index]["handled"]:
-
-                print("Tick to handle: " + str(ticks[index]["values"]))
-
                 ticks_to_handle.insert(0, ticks[index]["values"])
                 ticks[index]["handled"] = True
             else:
