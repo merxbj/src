@@ -10,6 +10,8 @@ tick_event = Event()
 
 
 def callback(g, l, t):
+    print("Got tick!")
+
     if len(ticks) >= 552000:
         del ticks[0]
 
@@ -21,8 +23,6 @@ def setup_pulse_monitoring():
     pi = pigpio.pi()
     if not pi.connected:
         exit()
-
-    global last_tick
 
     pin = 23
 
@@ -50,13 +50,19 @@ def print_tick(tick, previous_tick):
 
 def db_thread():
     while True:
+        print("Waiting for tick to arrive")
         tick_event.wait()
         tick_event.clear()
+
+        print("Tick arrived")
 
         ticks_to_handle = []
         last_handled_tick = (0, 0, 0, True)
         for index in range(len(ticks) - 1, -1, -1):
-            if ticks[index][3]:
+            if not ticks[index][3]:
+
+                print("Tick to handle: " + str(tick))
+
                 ticks_to_handle.insert(0, ticks[index])
                 ticks[index][3] = True
             else:
