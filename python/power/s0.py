@@ -1,8 +1,9 @@
 import datetime
+import threading
+
 import pigpio
 from threading import Thread
-from asyncio import Event
-
+from threading import Event
 
 ticks = []
 tick_event = Event()
