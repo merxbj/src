@@ -61,7 +61,7 @@ def db_thread():
         for index in range(len(ticks) - 1, -1, -1):
             if not ticks[index][3]:
 
-                print("Tick to handle: " + str(tick))
+                print("Tick to handle: " + str(ticks[index]))
 
                 ticks_to_handle.insert(0, ticks[index])
                 ticks[index][3] = True
