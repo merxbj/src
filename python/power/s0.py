@@ -1,6 +1,6 @@
 import datetime
-
-import pigpio, time
+import pigpio
+import time
 
 last_tick = 0
 
