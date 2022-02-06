@@ -15,7 +15,7 @@ def callback(g, l, t):
     if len(ticks) >= 552000:
         del ticks[0]
 
-    ticks.append((g, l, t, False))
+    ticks.append({"values": (g, l, t), "handled": False})
     tick_event.set()
 
 
@@ -57,16 +57,16 @@ def db_thread():
         print("Tick arrived")
 
         ticks_to_handle = []
-        last_handled_tick = (0, 0, 0, True)
+        last_handled_tick = (0, 0, 0)
         for index in range(len(ticks) - 1, -1, -1):
-            if not ticks[index][3]:
+            if not ticks[index]["handled"]:
 
-                print("Tick to handle: " + str(ticks[index]))
+                print("Tick to handle: " + str(ticks[index]["values"]))
 
-                ticks_to_handle.insert(0, ticks[index])
-                ticks[index][3] = True
+                ticks_to_handle.insert(0, ticks[index]["values"])
+                ticks[index]["handled"] = True
             else:
-                last_handled_tick = ticks[index]
+                last_handled_tick = ticks[index]["values"]
                 break
 
         for tick in ticks_to_handle:
