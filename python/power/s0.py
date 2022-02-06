@@ -70,6 +70,7 @@ def db_thread():
 if __name__ == '__main__':
 
     db_thread = Thread(target=db_thread)
+    db_thread.start()
 
     setup_pulse_monitoring()
     print("Reading impulses ... ")
