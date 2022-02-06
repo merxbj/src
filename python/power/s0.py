@@ -14,7 +14,7 @@ def callback(g, l, t):
 
     tick_event.acquire()
     ticks.append({"values": (g, l, t), "handled": False})
-    tick_event.set()
+    tick_event.notify()
     tick_event.release()
 
 
