@@ -12,7 +12,7 @@ def callback(g, l, t):
     average_watts = (1000 / 60 / 60 / 1000 / 1000) / ticks_since_callback
     time_period = datetime.timedelta(microseconds = ticks_since_callback/10)
 
-    print("\t\tAverage watts = " + str(average_watts) + " over " + time_period.total_seconds() + "s")
+    print("\t\tAverage watts = " + str(average_watts) + " over " + str(time_period.total_seconds()) + "s")
 
 
 pi = pigpio.pi()
