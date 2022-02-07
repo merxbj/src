@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta charset="UTF-8">
+    <title>Birch Hill Power</title>
+</head>
+<body>
+    <h1>Feel the power!</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Time:</th>
+                <th>Average Power:</th>
+                <th>Over Duration:</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tick in ticks %}
+            <tr>
+                <td>{{ tick['timestamp'] }}</td>
+                <td class="number">{{ tick['power'] }}</td>
+                <td class="number">{{ tick['duration'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
