@@ -7,7 +7,8 @@
 </head>
 <body>
     <h1>Feel the power!</h1>
-    <div id='chart' class='chart'”></div>
+    <div id='power_over_day' class='chart'></div>
+    <div id='power_bar' class='chart'></div>
     <table>
         <thead>
             <tr>
@@ -29,7 +30,10 @@
 </body>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
-  var graphs = {{graphJSON | safe}};
-  Plotly.plot('chart',graphs,{});
+  var power_over_day = {{podJson | safe}};
+  Plotly.plot('power_over_day',power_over_day,{});
+
+  var power_bar = {{pbJson | safe}};
+  Plotly.plot('power_bar',power_bar,{});
 </script>
 </html>

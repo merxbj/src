@@ -76,9 +76,26 @@ def calc_ticks(raw_ticks):
     return ticks
 
 
-def render_graph(ticks):
+def render_power_over_day_chart(ticks):
     df = pd.DataFrame.from_records(ticks)
-    fig = px.line(df, x="timestamp", y="power", title="Power consumption during the day")
+    fig = px.line(df,
+                  x="timestamp",
+                  y="power",
+                  title="Power consumption on {:%A, %x}:".format(datetime.datetime.now()),
+                  labels={"timestamp": "Time of Day", "power": "Power (W)"})
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+def render_power_bar(last_tick):
+    df = pd.DataFrame.from_records([last_tick])
+    fig = px.bar(df,
+                 x="timestamp",
+                 y="power",
+                 title="Current Power Level",
+                 range_y=[0, 5000],
+                 width=500,
+                 labels={"timestamp": "", "power": "Power"})
+    fig.update_xaxes(showticklabels=False)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
@@ -94,11 +111,17 @@ def index():
              AND day = :day
         ORDER BY hour ASC, minute ASC, second ASC, millis ASC
     """, params)
-    ticks = calc_ticks(raw_ticks)
-    graphJSON = render_graph(ticks)
-    time_limited_ticks = filter(lambda tick: (now - tick["timestamp"]).total_seconds() <= 60, ticks)
 
-    return render_template("index.html", ticks=time_limited_ticks, graphJSON=graphJSON)
+    ticks = calc_ticks(raw_ticks)
+
+    pod_json = render_power_over_day_chart(ticks)
+    pb_json = render_power_bar(ticks[0])
+
+    time_limited_ticks = list(filter(lambda tick: (now - tick["timestamp"]).total_seconds() <= 60, ticks))
+    if len(time_limited_ticks) == 0:
+        time_limited_ticks = ticks[0:5]
+
+    return render_template("index.html", ticks=time_limited_ticks, podJson=pod_json, pbJson=pb_json)
 
 
 if __name__ == "__main__":
