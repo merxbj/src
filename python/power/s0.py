@@ -1,8 +1,10 @@
 import datetime
+import os
 
 import pigpio
 from threading import Thread
 from threading import Condition
+import sqlite3
 
 ticks = []
 tick_event = Condition()
@@ -13,7 +15,7 @@ def callback(g, l, t):
         del ticks[0]
 
     tick_event.acquire()
-    ticks.append({"values": (g, l, t), "handled": False})
+    ticks.append({"values": (g, l, t, datetime.datetime.utcnow()), "handled": False})
     tick_event.notify()
     tick_event.release()
 
@@ -33,8 +35,8 @@ def setup_pulse_monitoring():
 
 def print_tick(tick, previous_tick):
 
-    g, l, t = tick
-    pg, pl, pt = previous_tick
+    g, l, t, time = tick
+    pg, pl, pt, time = previous_tick
 
     if pt == 0:
         return
@@ -47,7 +49,23 @@ def print_tick(tick, previous_tick):
     print("Average watts = " + str(average_watts) + " over " + str(time_period.total_seconds()) + "s")
 
 
-def db_thread():
+def store_tick(tick, db_conn):
+    g, l, t, time = tick
+    params = {
+        "year": time.year,
+        "month": time.month,
+        "day": time.day,
+        "hour": time.hour,
+        "minute": time.minute,
+        "second": time.second,
+        "millis": int(time.microsecond / 1000)
+    }
+    with db_conn.cursor() as cur:
+        cur.execute("INSERT INTO ticks VALUES(:year, :month, :day, :hour, :minute, :second, :millis)", params)
+        db_conn.commit()
+
+
+def db_thread(db_conn):
     while True:
         tick_event.acquire()
         tick_event.wait()
@@ -65,13 +83,40 @@ def db_thread():
         tick_event.release()
 
         for tick in ticks_to_handle:
+            store_tick(tick, db_conn)
             print_tick(tick, last_handled_tick)
             last_handled_tick = tick
 
 
+def setup_database():
+    data_path = "~/data/power".format(**os.environ)
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+
+    con = sqlite3.connect(os.path.join(data_path, "power.dat"))
+
+    with con.cursor() as cur:
+        cur.execute("""CREATE TABLE IF NOT EXISTS ticks (
+                            year    INTEGER,
+                            month   INTEGER,
+                            day     INTEGER,
+                            hour    INTEGER,
+                            minute  INTEGER,
+                            second  INTEGER,
+                            millis  INTEGER,
+                            PRIMARY KEY (year, month, day, hour, minute, second, millis)
+                           );
+            """)
+        con.commit()
+
+    return con
+
+
 if __name__ == '__main__':
 
-    db_thread = Thread(target=db_thread)
+    connection = setup_database()
+
+    db_thread = Thread(target=db_thread(connection))
     db_thread.start()
 
     setup_pulse_monitoring()
