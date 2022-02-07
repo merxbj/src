@@ -34,7 +34,6 @@ def setup_pulse_monitoring():
 
 
 def print_tick(tick, previous_tick):
-
     g, l, t, time = tick
     pg, pl, pt, time = previous_tick
 
@@ -66,7 +65,8 @@ def store_tick(tick, db_conn):
     db_conn.commit()
 
 
-def db_thread(db_conn):
+def db_thread():
+    db_conn = create_connection()
     while True:
         tick_event.acquire()
         tick_event.wait()
@@ -89,12 +89,20 @@ def db_thread(db_conn):
             last_handled_tick = tick
 
 
+def get_data_path:
+    return "~/data/power/".format(**os.environ)
+
+
+def create_connection():
+    return sqlite3.connect(os.path.join(get_data_path(), "power.dat"))
+
+
 def setup_database():
-    data_path = "~/data/power".format(**os.environ)
+    data_path = get_data_path()
     if not os.path.exists(data_path):
         os.makedirs(data_path)
 
-    con = sqlite3.connect(os.path.join(data_path, "power.dat"))
+    con = create_connection()
 
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS ticks (
@@ -108,20 +116,23 @@ def setup_database():
                         PRIMARY KEY (year, month, day, hour, minute, second, millis)
                        );
         """)
+
     cur.close()
     con.commit()
-
-    return con
+    con.close()
 
 
 if __name__ == '__main__':
+    print("Setting up the database ...")
+    setup_database()
 
-    connection = setup_database()
-
-    db_thread = Thread(target=db_thread(connection))
+    print("Setting up the database update thread ...")
+    db_thread = Thread(target=db_thread)
     db_thread.start()
 
+    print("Setting up the pulse monitoring")
     setup_pulse_monitoring()
-    print("Reading impulses ... ")
+
+    print("Monitoring pulses ... ")
 
     db_thread.join()
