@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Feel the power!</h1>
+    <div id='chart' class='chart'”></div>
     <table>
         <thead>
             <tr>
@@ -18,12 +19,17 @@
         <tbody>
         {% for tick in ticks %}
             <tr>
-                <td>{{ tick['timestamp'] }}</td>
-                <td class="number">{{ tick['power'] }}</td>
-                <td class="number">{{ tick['duration'] }}</td>
+                <td>{{ "{:%H:%M:%S}".format(tick['timestamp']) }}</td>
+                <td class="number">{{ "{:.1f}W".format(tick['power']) }}</td>
+                <td class="number">{{ "{:.3f}s".format(tick['duration']) }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </body>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+  var graphs = {{graphJSON | safe}};
+  Plotly.plot('chart',graphs,{});
+</script>
 </html>

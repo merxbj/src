@@ -1,8 +1,14 @@
 import datetime
+import json
+
+from dateutil import tz
 import os
 from pathlib import Path
 from flask import Flask, render_template, g
 import sqlite3
+import plotly
+import plotly.express as px
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -51,13 +57,18 @@ def calc_ticks(raw_ticks):
             microsecond=int(raw_tick["millis"]) * 1000)
 
         if last_timestamp is None:
-            duration = "N/A"
-            power = "N/A"
+            duration = 0
+            power = 0
         else:
-            duration = "{:.3f}s".format((timestamp - last_timestamp).total_seconds())
-            power = "{:.1f}W".format((1 * 60 * 60) / (timestamp - last_timestamp).total_seconds())
+            duration = (timestamp - last_timestamp).total_seconds()
+            power = (1 * 60 * 60) / (timestamp - last_timestamp).total_seconds()
 
-        ticks.append({"timestamp": "{:%H:%M:%S}".format(timestamp), "power": power, "duration": duration})
+        from_zone = tz.tzutc()
+        to_zone = tz.tzlocal()
+        utc = timestamp.replace(tzinfo=from_zone)
+        local = utc.astimezone(to_zone)
+
+        ticks.append({"timestamp": local, "power": power, "duration": duration})
 
         last_timestamp = timestamp
 
@@ -65,12 +76,19 @@ def calc_ticks(raw_ticks):
     return ticks
 
 
+def render_graph(ticks):
+    df = pd.DataFrame.from_records(ticks)
+    fig = px.line(df, x="timestamp", y="power", title="Power consumption during the day")
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
 @app.route('/')
 def index():
     raw_ticks = query_db("SELECT * FROM ticks WHERE day = 7 ORDER BY hour ASC, minute ASC, second ASC, millis ASC")
     ticks = calc_ticks(raw_ticks)
+    graphJSON = render_graph(ticks)
 
-    return render_template("index.html", ticks=ticks)
+    return render_template("index.html", ticks=ticks, graphJSON=graphJSON)
 
 
 if __name__ == "__main__":
