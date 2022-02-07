@@ -5,6 +5,7 @@ import pigpio
 from threading import Thread
 from threading import Condition
 import sqlite3
+from pathlib import Path
 
 ticks = []
 tick_event = Condition()
@@ -90,7 +91,7 @@ def db_thread():
 
 
 def get_data_path():
-    return "~/data/power/".format(**os.environ)
+    return os.path.join(str(Path.home()), "data/power/")
 
 
 def create_connection():
