@@ -101,6 +101,7 @@ def render_power_bar(last_tick):
 
 @app.route('/')
 def index():
+    # TODO: This will effectively take 1 day in a UTC tz, e.g. 1 AM - 1 AM - this needs to be fixed
     now = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
     params = {"year": now.year, "month": now.month, "day": now.day}
     raw_ticks = query_db("""
