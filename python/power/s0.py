@@ -60,9 +60,10 @@ def store_tick(tick, db_conn):
         "second": time.second,
         "millis": int(time.microsecond / 1000)
     }
-    with db_conn.cursor() as cur:
-        cur.execute("INSERT INTO ticks VALUES(:year, :month, :day, :hour, :minute, :second, :millis)", params)
-        db_conn.commit()
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO ticks VALUES(:year, :month, :day, :hour, :minute, :second, :millis)", params)
+    cur.close()
+    db_conn.commit()
 
 
 def db_thread(db_conn):
@@ -95,19 +96,20 @@ def setup_database():
 
     con = sqlite3.connect(os.path.join(data_path, "power.dat"))
 
-    with con.cursor() as cur:
-        cur.execute("""CREATE TABLE IF NOT EXISTS ticks (
-                            year    INTEGER,
-                            month   INTEGER,
-                            day     INTEGER,
-                            hour    INTEGER,
-                            minute  INTEGER,
-                            second  INTEGER,
-                            millis  INTEGER,
-                            PRIMARY KEY (year, month, day, hour, minute, second, millis)
-                           );
-            """)
-        con.commit()
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS ticks (
+                        year    INTEGER,
+                        month   INTEGER,
+                        day     INTEGER,
+                        hour    INTEGER,
+                        minute  INTEGER,
+                        second  INTEGER,
+                        millis  INTEGER,
+                        PRIMARY KEY (year, month, day, hour, minute, second, millis)
+                       );
+        """)
+    cur.close()
+    con.commit()
 
     return con
 
