@@ -72,7 +72,7 @@ def db_thread():
         tick_event.wait()
 
         ticks_to_handle = []
-        last_handled_tick = (0, 0, 0)
+        last_handled_tick = (0, 0, 0, None)
         for index in range(len(ticks) - 1, -1, -1):
             if not ticks[index]["handled"]:
                 ticks_to_handle.insert(0, ticks[index]["values"])
