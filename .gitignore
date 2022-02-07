@@ -61,3 +61,4 @@ csharp/*/_ReSharper*
 _resharper.*
 venv/
 /cpp/Integri/.vs/Integri
+/cpp/VisualStudio/.vs

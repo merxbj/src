@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.106
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileChecker", "FileChecker\FileChecker.vcxproj", "{851DACB0-4000-4763-83B3-50A955E15B6F}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Parser\Parser.vcxproj", "{1A704DB0-ACD6-4AF8-8E5B-6E017BA79C5F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppBasics", "CppBasics\CppBasics.vcxproj", "{905C3F9B-BF21-4A1E-8F10-AFEF70FE1A8F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XsdComparator", "XsdComparator\XsdComparator.vcxproj", "{1BE3056B-61C4-4886-BE7A-A1567929E4A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,14 @@ Global
 		{905C3F9B-BF21-4A1E-8F10-AFEF70FE1A8F}.Release|Win32.Build.0 = Release|Win32
 		{905C3F9B-BF21-4A1E-8F10-AFEF70FE1A8F}.Release|x64.ActiveCfg = Release|x64
 		{905C3F9B-BF21-4A1E-8F10-AFEF70FE1A8F}.Release|x64.Build.0 = Release|x64
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Debug|Win32.Build.0 = Debug|Win32
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Debug|x64.ActiveCfg = Debug|x64
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Debug|x64.Build.0 = Debug|x64
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Release|Win32.ActiveCfg = Release|Win32
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Release|Win32.Build.0 = Release|Win32
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Release|x64.ActiveCfg = Release|x64
+		{1BE3056B-61C4-4886-BE7A-A1567929E4A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
