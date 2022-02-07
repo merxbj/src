@@ -84,11 +84,21 @@ def render_graph(ticks):
 
 @app.route('/')
 def index():
-    raw_ticks = query_db("SELECT * FROM ticks WHERE day = 7 ORDER BY hour ASC, minute ASC, second ASC, millis ASC")
+    now = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
+    params = {"year": now.year, "month": now.month, "day": now.day}
+    raw_ticks = query_db("""
+          SELECT * 
+            FROM ticks 
+           WHERE year = :year
+             AND month = :month
+             AND day = :day
+        ORDER BY hour ASC, minute ASC, second ASC, millis ASC
+    """, params)
     ticks = calc_ticks(raw_ticks)
     graphJSON = render_graph(ticks)
+    time_limited_ticks = filter(lambda tick: (now - tick["timestamp"]).total_seconds() <= 60, ticks)
 
-    return render_template("index.html", ticks=ticks, graphJSON=graphJSON)
+    return render_template("index.html", ticks=time_limited_ticks, graphJSON=graphJSON)
 
 
 if __name__ == "__main__":
