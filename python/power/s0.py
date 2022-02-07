@@ -89,7 +89,7 @@ def db_thread():
             last_handled_tick = tick
 
 
-def get_data_path:
+def get_data_path():
     return "~/data/power/".format(**os.environ)
 
 
