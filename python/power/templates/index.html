@@ -18,11 +18,11 @@
             </tr>
         </thead>
         <tbody>
-        {% for tick in ticks %}
+        {% for pulse in pulses %}
             <tr>
-                <td>{{ "{:%H:%M:%S}".format(tick['timestamp']) }}</td>
-                <td class="number">{{ "{:.1f}W".format(tick['power']) }}</td>
-                <td class="number">{{ "{:.3f}s".format(tick['duration']) }}</td>
+                <td>{{ "{:%H:%M:%S}".format(pulse['timestamp']) }}</td>
+                <td class="number">{{ "{:.1f}W".format(pulse['power']) }}</td>
+                <td class="number">{{ "{:.3f}s".format(pulse['duration']) }}</td>
             </tr>
         {% endfor %}
         </tbody>

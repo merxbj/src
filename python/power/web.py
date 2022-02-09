@@ -1,5 +1,6 @@
 import datetime
 import json
+import sys
 
 from dateutil import tz
 import os
@@ -43,18 +44,11 @@ def close_connection(exception):
         db.close()
 
 
-def calc_ticks(raw_ticks):
-    ticks = []
+def calc_pulses(raw_pulses):
+    pulses = []
     last_timestamp = None
-    for raw_tick in raw_ticks:
-        timestamp = datetime.datetime(
-            year=raw_tick["year"],
-            month=raw_tick["month"],
-            day=raw_tick["day"],
-            hour=raw_tick["hour"],
-            minute=raw_tick["minute"],
-            second=raw_tick["second"],
-            microsecond=int(raw_tick["millis"]) * 1000)
+    for raw_pulse in raw_pulses:
+        timestamp = datetime.datetime.fromisoformat(raw_pulse["timestamp"])
 
         if last_timestamp is None:
             duration = 0
@@ -63,21 +57,22 @@ def calc_ticks(raw_ticks):
             duration = (timestamp - last_timestamp).total_seconds()
             power = (1 * 60 * 60) / (timestamp - last_timestamp).total_seconds()
 
-        from_zone = tz.tzutc()
-        to_zone = tz.tzlocal()
-        utc = timestamp.replace(tzinfo=from_zone)
-        local = utc.astimezone(to_zone)
+        utc = timestamp.replace(tzinfo=tz.tzutc())
+        local = utc.astimezone(tz.tzlocal())
 
-        ticks.append({"timestamp": local, "power": power, "duration": duration})
+        pulses.append({"timestamp": local, "power": power, "duration": duration})
 
         last_timestamp = timestamp
 
-    ticks.reverse()
-    return ticks
+    if len(pulses) == 0:
+        pulses.append({"timestamp": datetime.datetime.utcnow().replace(tzinfo=tz.tzutc()), "power": 0, "duration": 0})
+
+    pulses.reverse()
+    return pulses
 
 
-def render_power_over_day_chart(ticks):
-    df = pd.DataFrame.from_records(ticks)
+def render_power_over_day_chart(pulses):
+    df = pd.DataFrame.from_records(pulses)
     fig = px.line(df,
                   x="timestamp",
                   y="power",
@@ -86,8 +81,8 @@ def render_power_over_day_chart(ticks):
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-def render_power_bar(last_tick):
-    df = pd.DataFrame.from_records([last_tick])
+def render_power_bar(last_pulse):
+    df = pd.DataFrame.from_records([last_pulse])
     fig = px.bar(df,
                  x="timestamp",
                  y="power",
@@ -101,28 +96,33 @@ def render_power_bar(last_tick):
 
 @app.route('/')
 def index():
-    # TODO: This will effectively take 1 day in a UTC tz, e.g. 1 AM - 1 AM - this needs to be fixed
-    now = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
-    params = {"year": now.year, "month": now.month, "day": now.day}
-    raw_ticks = query_db("""
+
+    filter_from = datetime.datetime.now()
+    filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+
+    filter_to = datetime.datetime.now()
+    filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+
+    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat()}
+
+    raw_pulses = query_db("""
           SELECT * 
-            FROM ticks 
-           WHERE year = :year
-             AND month = :month
-             AND day = :day
-        ORDER BY hour ASC, minute ASC, second ASC, millis ASC
+            FROM pulse 
+           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
+        ORDER BY datetime(timestamp) ASC
     """, params)
 
-    ticks = calc_ticks(raw_ticks)
+    pulses = calc_pulses(raw_pulses)
 
-    pod_json = render_power_over_day_chart(ticks)
-    pb_json = render_power_bar(ticks[0])
+    pod_json = render_power_over_day_chart(pulses)
+    pb_json = render_power_bar(pulses[0])
 
-    time_limited_ticks = list(filter(lambda tick: (now - tick["timestamp"]).total_seconds() <= 60, ticks))
-    if len(time_limited_ticks) == 0:
-        time_limited_ticks = ticks[0:5]
+    now = datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())
+    time_limited_pulses = list(filter(lambda pulse: (now - pulse["timestamp"]).total_seconds() <= 300, pulses))
+    if len(time_limited_pulses) == 0:
+        time_limited_pulses = pulses[0:5]
 
-    return render_template("index.html", ticks=time_limited_ticks, podJson=pod_json, pbJson=pb_json)
+    return render_template("index.html", pulses=time_limited_pulses, podJson=pod_json, pbJson=pb_json)
 
 
 if __name__ == "__main__":
