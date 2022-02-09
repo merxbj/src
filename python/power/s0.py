@@ -1,24 +1,24 @@
 import datetime
 import os
-
+from dateutil import tz
 import pigpio
 from threading import Thread
 from threading import Condition
 import sqlite3
 from pathlib import Path
 
-ticks = []
-tick_event = Condition()
+pulses = []
+pulse_event = Condition()
 
 
 def callback(g, l, t):
-    if len(ticks) >= 552000:
-        del ticks[0]
+    if len(pulses) >= 552000:
+        del pulses[0]
 
-    tick_event.acquire()
-    ticks.append({"values": (g, l, t, datetime.datetime.utcnow()), "handled": False})
-    tick_event.notify()
-    tick_event.release()
+    pulse_event.acquire()
+    pulses.append({"values": (g, l, t, datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())), "handled": False})
+    pulse_event.notify()
+    pulse_event.release()
 
 
 def setup_pulse_monitoring():
@@ -34,9 +34,9 @@ def setup_pulse_monitoring():
     cb1 = pi.callback(pin, pigpio.FALLING_EDGE, callback)
 
 
-def print_tick(tick, previous_tick):
-    g, l, t, time = tick
-    pg, pl, pt, time = previous_tick
+def print_pulse(pulse, previous_pulse):
+    g, l, t, time = pulse
+    pg, pl, pt, time = previous_pulse
 
     if pt == 0:
         return
@@ -46,22 +46,17 @@ def print_tick(tick, previous_tick):
     average_watts = (1 * 60 * 60 * 1000 * 1000) / ticks_since_callback
     time_period = datetime.timedelta(microseconds=ticks_since_callback)
 
-    print("Average watts = " + str(average_watts) + " over " + str(time_period.total_seconds()) + "s")
+    print("Average power at source " + str(g) + " = " + str(average_watts) + "W over " + str(time_period.total_seconds()) + "s")
 
 
-def store_tick(tick, db_conn):
-    g, l, t, time = tick
+def store_pulse(pulse, db_conn):
+    g, l, t, time = pulse
     params = {
-        "year": time.year,
-        "month": time.month,
-        "day": time.day,
-        "hour": time.hour,
-        "minute": time.minute,
-        "second": time.second,
-        "millis": int(time.microsecond / 1000)
+        "source": g,
+        "timestamp": time.isoformat()
     }
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO ticks VALUES(:year, :month, :day, :hour, :minute, :second, :millis)", params)
+    cur.execute("INSERT INTO pulse VALUES(:source, :timestamp)", params)
     cur.close()
     db_conn.commit()
 
@@ -69,25 +64,25 @@ def store_tick(tick, db_conn):
 def db_thread():
     db_conn = create_connection()
     while True:
-        tick_event.acquire()
-        tick_event.wait()
+        pulse_event.acquire()
+        pulse_event.wait()
 
-        ticks_to_handle = []
-        last_handled_tick = (0, 0, 0, None)
-        for index in range(len(ticks) - 1, -1, -1):
-            if not ticks[index]["handled"]:
-                ticks_to_handle.insert(0, ticks[index]["values"])
-                ticks[index]["handled"] = True
+        pulses_to_handle = []
+        last_handled_pulse = (0, 0, 0, None)
+        for index in range(len(pulses) - 1, -1, -1):
+            if not pulses[index]["handled"]:
+                pulses_to_handle.insert(0, pulses[index]["values"])
+                pulses[index]["handled"] = True
             else:
-                last_handled_tick = ticks[index]["values"]
+                last_handled_pulse = pulses[index]["values"]
                 break
 
-        tick_event.release()
+        pulse_event.release()
 
-        for tick in ticks_to_handle:
-            store_tick(tick, db_conn)
-            print_tick(tick, last_handled_tick)
-            last_handled_tick = tick
+        for pulse in pulses_to_handle:
+            store_pulse(pulse, db_conn)
+            print_pulse(pulse, last_handled_pulse)
+            last_handled_pulse = pulse
 
 
 def get_data_path():
@@ -106,17 +101,12 @@ def setup_database():
     con = create_connection()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS ticks (
-                        year    INTEGER,
-                        month   INTEGER,
-                        day     INTEGER,
-                        hour    INTEGER,
-                        minute  INTEGER,
-                        second  INTEGER,
-                        millis  INTEGER,
-                        PRIMARY KEY (year, month, day, hour, minute, second, millis)
+    cur.execute("""CREATE TABLE IF NOT EXISTS pulse (
+                        source      INTEGER,
+                        timestamp   TEXT,
+                        PRIMARY KEY (source, timestamp)
                        );
-        """)
+                """)
 
     cur.close()
     con.commit()
