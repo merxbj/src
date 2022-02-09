@@ -1,6 +1,5 @@
-import datetime
+from datetime import timedelta, datetime
 import json
-import sys
 
 from dateutil import tz
 import os
@@ -37,6 +36,11 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
+def date_range(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -48,55 +52,68 @@ def calc_power(raw_pulses):
     power_readings = []
     last_timestamp = None
     for raw_pulse in raw_pulses:
-        timestamp = datetime.datetime.fromisoformat(raw_pulse["timestamp"])
+        timestamp = datetime.fromisoformat(raw_pulse["timestamp"])
 
-        if last_timestamp is None:
-            duration = 0
-            power = 0
-        else:
+        if last_timestamp is not None:
             duration = (timestamp - last_timestamp).total_seconds()
             power = (1 * 60 * 60) / (timestamp - last_timestamp).total_seconds()
 
-        utc = timestamp.replace(tzinfo=tz.tzutc())
-        local = utc.astimezone(tz.tzlocal())
+            utc = timestamp.replace(tzinfo=tz.tzutc())
+            local = utc.astimezone(tz.tzlocal())
 
-        power_readings.append({"timestamp": local, "power": power, "duration": duration})
+            power_readings.append({"timestamp": local, "power": power, "duration": duration})
 
         last_timestamp = timestamp
 
     if len(power_readings) == 0:
-        power_readings.append({"timestamp": datetime.datetime.utcnow().replace(tzinfo=tz.tzutc()), "power": 0, "duration": 0})
+        power_readings.append({"timestamp": datetime.utcnow().replace(tzinfo=tz.tzutc()), "power": 0, "duration": 0})
 
     power_readings.reverse()
     return power_readings
 
 
-def get_power_readings_for_today():
-    filter_from = datetime.datetime.now()
+def get_power_readings_for_date(date):
+    filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
 
-    filter_to = datetime.datetime.now()
+    filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
     params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat()}
 
     raw_pulses = query_db("""
-          SELECT * 
-            FROM pulse 
-           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
-        ORDER BY datetime(timestamp) ASC
+          -- get the last pulse from the day before
+          SELECT *
+            FROM (
+                  SELECT *
+                    FROM pulse
+                   WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from, '- 1 day') AND datetime(:timestamp_to, '- 1 day')
+                ORDER BY datetime(timestamp) DESC
+                   LIMIT 1
+            )
+          
+           UNION
+          
+          -- get all pulses from the day
+          SELECT *
+            FROM (
+                  SELECT * 
+                    FROM pulse 
+                   WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
+                ORDER BY datetime(timestamp) ASC
+            )
     """, params)
 
     return calc_power(raw_pulses)
 
 
 def render_power_over_day_chart():
-    power_readings = get_power_readings_for_today()
+    power_readings = get_power_readings_for_date(datetime.now())
     df = pd.DataFrame.from_records(power_readings)
     fig = px.line(df,
                   x="timestamp",
                   y="power",
-                  title="Power consumption on {:%A, %x}:".format(datetime.datetime.now()),
+                  title="Power consumption on {:%A, %x}:".format(datetime.now()),
                   labels={"timestamp": "Time of Day", "power": "Power (W)"})
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -137,11 +154,44 @@ def get_sample_power_readings():
     return calc_power(raw_pulses)
 
 
+def ensure_summary_table_created():
+    con = get_db()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS total_power_daily (
+                        date        TEXT,
+                        total_power REAL,
+                        final       INTEGER,
+                        PRIMARY KEY (date)
+                       );
+                """)
+    cur.close()
+    con.commit()
+
+
+def prepare_daily_data(day_from, day_to):
+    ensure_summary_table_created()
+    for day in date_range(day_from, day_to + timedelta(days=1)):
+        get_power_readings_for_date(datetime.now())
+
+
+def render_power_over_month_chart():
+
+    day_from = datetime.now() - timedelta(days=30)
+    day_from = day_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+
+    day_to = datetime.now()
+    day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+
+    prepare_daily_data(day_from, day_to)
+
+
 @app.route('/')
 def index():
 
     pod_json = render_power_over_day_chart()
     pb_json = render_power_bar()
+    # pom_json = render_power_over_month_chart()
     sample_power_readings = get_sample_power_readings()
 
     return render_template("index.html", samplePowerReadings=sample_power_readings, podJson=pod_json, pbJson=pb_json)
