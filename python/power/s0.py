@@ -90,7 +90,7 @@ def get_data_path():
 
 
 def create_connection():
-    return sqlite3.connect(os.path.join(get_data_path(), "power.dat"))
+    return sqlite3.connect(os.path.join(get_data_path(), "power.dat"), timeout=120)
 
 
 def setup_database():

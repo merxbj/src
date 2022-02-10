@@ -86,26 +86,31 @@ def get_power_readings_for_date(date):
     params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat()}
 
     raw_pulses = query_db("""
-          -- get the last pulse from the day before
-          SELECT *
+          SELECT * 
             FROM (
+                  -- get the last pulse from the day before
                   SELECT *
-                    FROM pulse
-                   WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from, '- 1 day') AND datetime(:timestamp_to, '- 1 day')
-                ORDER BY datetime(timestamp) DESC
-                   LIMIT 1
+                    FROM (
+                          SELECT *
+                            FROM pulse
+                           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from, '- 1 day') 
+                                                         AND datetime(:timestamp_to, '- 1 day')
+                        ORDER BY datetime(timestamp) DESC
+                           LIMIT 1
+                    )
+                  
+                   UNION
+                  
+                  -- get all pulses from the day
+                  SELECT *
+                    FROM (
+                          SELECT * 
+                            FROM pulse 
+                           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) 
+                                                         AND datetime(:timestamp_to)
+                    )
             )
-          
-           UNION
-          
-          -- get all pulses from the day
-          SELECT *
-            FROM (
-                  SELECT * 
-                    FROM pulse 
-                   WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
-                ORDER BY datetime(timestamp) ASC
-            )
+        ORDER BY datetime(timestamp) ASC
     """, params)
 
     return calc_power(raw_pulses)
