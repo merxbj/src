@@ -1,14 +1,21 @@
-from datetime import timedelta, datetime
-import json
-
-from dateutil import tz
 import os
-from pathlib import Path
+
+# date stuff
+from datetime import timedelta, datetime
+from dateutil import tz
+
+# web server
 from flask import Flask, render_template, g
+
+# database access
+from pathlib import Path
 import sqlite3
+
+# chart rendering
 import plotly
 import plotly.express as px
 import pandas as pd
+import json
 
 app = Flask(__name__)
 
