@@ -8,7 +8,10 @@
 <body>
     <h1>Feel the power!</h1>
     <div id='power_over_day' class='chart'></div>
-    <div id='power_bar' class='chart'></div>
+    <div style="width: 100%; overflow: hidden;">
+        <div style="display: inline-block" id='power_bar' class='chart'></div>
+        <div style="display: inline-block" id='power_over_month' class='chart'></div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -18,11 +21,11 @@
             </tr>
         </thead>
         <tbody>
-        {% for pulse in pulses %}
+        {% for reading in samplePowerReadings %}
             <tr>
-                <td>{{ "{:%H:%M:%S}".format(pulse['timestamp']) }}</td>
-                <td class="number">{{ "{:.1f}W".format(pulse['power']) }}</td>
-                <td class="number">{{ "{:.3f}s".format(pulse['duration']) }}</td>
+                <td>{{ "{:%H:%M:%S}".format(reading['timestamp']) }}</td>
+                <td class="number">{{ "{:.1f}W".format(reading['power']) }}</td>
+                <td class="number">{{ "{:.3f}s".format(reading['duration']) }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -35,5 +38,8 @@
 
   var power_bar = {{pbJson | safe}};
   Plotly.plot('power_bar',power_bar,{});
+
+  var power_over_month = {{pomJson | safe}};
+  Plotly.plot('power_over_month',power_over_month,{});
 </script>
 </html>
