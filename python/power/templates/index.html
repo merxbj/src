@@ -7,15 +7,10 @@
 </head>
 <body>
     <h1>Feel the power!</h1>
-    <!--<div id='power_over_day' class='chart'></div>
-    <div style="width: 100%; overflow: hidden;">
-        <div style="width: 600px; float: left;" id='power_bar' class='chart'></div>
-        <div style="width: 620px;" id='power_over_month' class='chart'></div>
-    </div>-->
     <div id='power_over_day' class='chart'></div>
     <div style="width: 100%; overflow: hidden;">
-        <div style="width: 600px; float: left;" id='power_bar' class='chart'></div>
-        <div style="width: 620px;" id='power_over_month' class='chart'></div>
+        <div style="display: inline-block" id='power_bar' class='chart'></div>
+        <div style="display: inline-block" id='power_over_month' class='chart'></div>
     </div>
     <table>
         <thead>
@@ -44,7 +39,7 @@
   var power_bar = {{pbJson | safe}};
   Plotly.plot('power_bar',power_bar,{});
 
-  /*var power_over_month = {{pomJson | safe}};
-  Plotly.plot('power_over_month',power_over_month,{});*/
+  var power_over_month = {{pomJson | safe}};
+  Plotly.plot('power_over_month',power_over_month,{});
 </script>
 </html>
