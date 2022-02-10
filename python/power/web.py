@@ -111,13 +111,13 @@ def get_power_readings_for_date(date):
     return calc_power(raw_pulses)
 
 
-def render_power_over_day_chart():
-    power_readings = get_power_readings_for_date(datetime.now())
+def render_power_over_day_chart(date):
+    power_readings = get_power_readings_for_date(date)
     df = pd.DataFrame.from_records(power_readings)
     fig = px.line(df,
                   x="timestamp",
                   y="power",
-                  title="Power consumption on {:%A, %x}:".format(datetime.now()),
+                  title="Power consumption on {:%A, %x}:".format(date),
                   labels={"timestamp": "Time of Day", "power": "Power (W)"})
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -257,10 +257,9 @@ def render_power_over_month_chart():
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-@app.route('/')
-def index():
+def render_main_page(date):
 
-    pod_json = render_power_over_day_chart()
+    pod_json = render_power_over_day_chart(date)
     pb_json = render_power_bar()
     pom_json = render_power_over_month_chart()
     sample_power_readings = get_sample_power_readings()
@@ -270,6 +269,18 @@ def index():
                            podJson=pod_json,
                            pbJson=pb_json,
                            pomJson=pom_json)
+
+
+@app.route('/power')
+def power_today():
+
+    return render_main_page(datetime.now())
+
+
+@app.route('/power/<day_modifier>')
+def power_relative_date(day_modifier):
+
+    return render_main_page(datetime.now() + timedelta(int(day_modifier)))
 
 
 if __name__ == "__main__":
