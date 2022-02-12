@@ -1,4 +1,5 @@
 import os
+import re
 
 # date stuff
 from datetime import timedelta, datetime
@@ -282,10 +283,12 @@ def power_today():
     return render_main_page(datetime.now())
 
 
-@app.route('/power/<day_modifier>')
-def power_relative_date(day_modifier):
-
-    return render_main_page(datetime.now() + timedelta(int(day_modifier)))
+@app.route('/power/<day_specifier>')
+def power_relative_date(day_specifier):
+    if re.match("^[+-]?\d+$", day_specifier) is not None:
+        return render_main_page(datetime.now() + timedelta(int(day_specifier)))
+    else:
+        return render_main_page(datetime.fromisoformat(day_specifier))
 
 
 if __name__ == "__main__":
