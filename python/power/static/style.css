@@ -6,3 +6,24 @@ table, th, td {
 td.number {
     text-align: right
 }
+
+div.link-list {
+    padding-left: 10%;
+}
+
+div.link-list a {
+    color: dimgray;
+    text-decoration: none;
+}
+
+div.link-list a:visited {
+    color: dimgray;
+}
+
+div.link-list a:hover {
+    text-decoration: underline;
+}
+
+div.link-list a:active {
+    text-decoration: underline;
+}

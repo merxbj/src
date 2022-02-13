@@ -6,30 +6,17 @@
     <title>Birch Hill Power</title>
 </head>
 <body>
-    <h1>Feel the power!</h1>
     <div id='power_over_day' class='chart'></div>
+    <div class='link-list'>
+        {% for date in availableDates %}
+        | <a href="{{ '/power/{0}'.format(date['date']) }}">{{ date['date'] }}</a>
+        {% endfor %}
+        |
+    </div>
     <div style="width: 100%; overflow: hidden;">
         <div style="display: inline-block" id='power_bar' class='chart'></div>
         <div style="display: inline-block" id='power_over_month' class='chart'></div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Time:</th>
-                <th>Average Power:</th>
-                <th>Over Duration:</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for reading in samplePowerReadings %}
-            <tr>
-                <td>{{ "{:%H:%M:%S}".format(reading['timestamp']) }}</td>
-                <td class="number">{{ "{:.1f}W".format(reading['power']) }}</td>
-                <td class="number">{{ "{:.3f}s".format(reading['duration']) }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 </body>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>

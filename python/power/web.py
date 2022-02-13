@@ -159,11 +159,6 @@ def render_power_bar():
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-def get_sample_power_readings():
-    raw_pulses = get_latest_pulses(100)
-    return calc_power(raw_pulses)
-
-
 def ensure_summary_table_created():
     con = get_db()
 
@@ -263,18 +258,30 @@ def render_power_over_month_chart():
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
+def get_available_dates():
+    available_dates = query_db("""
+          SELECT DISTINCT date(timestamp) AS date
+            FROM pulse
+        ORDER BY date(timestamp) DESC
+        LIMIT 7
+    """)
+    
+    available_dates.reverse()
+    return available_dates
+
+
 def render_main_page(date):
 
     pod_json = render_power_over_day_chart(date)
     pb_json = render_power_bar()
     pom_json = render_power_over_month_chart()
-    sample_power_readings = get_sample_power_readings()
+    available_dates = get_available_dates()
 
     return render_template("index.html",
-                           samplePowerReadings=sample_power_readings,
                            podJson=pod_json,
                            pbJson=pb_json,
-                           pomJson=pom_json)
+                           pomJson=pom_json,
+                           availableDates=available_dates)
 
 
 @app.route('/power')
