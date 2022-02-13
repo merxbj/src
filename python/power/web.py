@@ -1,9 +1,12 @@
 import os
 import re
+import logging
+from functools import wraps
 
-# date stuff
+# date & time stuff
 from datetime import timedelta, datetime
 from dateutil import tz
+import time
 
 # web server
 from flask import Flask, render_template, g
@@ -23,6 +26,10 @@ app = Flask(__name__)
 
 def get_data_path():
     return os.path.join(str(Path.home()), "data/power/")
+
+
+def get_log_path():
+    return os.path.join(str(Path.home()), "log/power/")
 
 
 def create_connection():
@@ -49,6 +56,20 @@ def date_range(start_date, end_date):
         yield start_date + timedelta(n)
 
 
+def timed(func):
+    """This decorator prints the execution time for the decorated function."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+        logging.debug("{} ran in {}s".format(func.__name__, round(end - start, 2)))
+        return result
+
+    return wrapper
+
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -56,6 +77,7 @@ def close_connection(exception):
         db.close()
 
 
+@timed
 def calc_power(raw_pulses):
     power_readings = []
     last_timestamp = None
@@ -77,6 +99,7 @@ def calc_power(raw_pulses):
     return power_readings
 
 
+@timed
 def get_power_readings_for_date(date):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
@@ -117,7 +140,9 @@ def get_power_readings_for_date(date):
     return calc_power(raw_pulses)
 
 
+@timed
 def render_power_over_day_chart(date):
+
     power_readings = get_power_readings_for_date(date)
     df = pd.DataFrame.from_records(power_readings)
     fig = px.line(df,
@@ -139,12 +164,14 @@ def get_latest_pulses(count):
     return raw_pulses
 
 
+@timed
 def get_latest_power_reading():
     raw_pulses = get_latest_pulses(count=2)
 
     return calc_power(raw_pulses)[0]
 
 
+@timed
 def render_power_bar():
     latest_power_reading = get_latest_power_reading()
     df = pd.DataFrame.from_records([latest_power_reading])
@@ -213,6 +240,7 @@ def store_total_power(total, date, final):
     get_db().commit()
 
 
+@timed
 def get_daily_total_readings(day_from, day_to):
 
     daily_total_readings = []
@@ -239,6 +267,7 @@ def get_daily_total_readings(day_from, day_to):
     return daily_total_readings
 
 
+@timed
 def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
@@ -258,6 +287,7 @@ def render_power_over_month_chart():
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
+@timed
 def get_available_dates():
     available_dates = query_db("""
           SELECT DISTINCT date(timestamp) AS date
@@ -265,7 +295,7 @@ def get_available_dates():
         ORDER BY date(timestamp) DESC
         LIMIT 7
     """)
-    
+
     available_dates.reverse()
     return available_dates
 
@@ -299,4 +329,10 @@ def power_relative_date(day_specifier):
 
 
 if __name__ == "__main__":
+    if not os.path.exists(get_log_path()):
+        os.makedirs(get_log_path())
+
+    logging.basicConfig(filename=os.path.join(get_log_path(), "web.log"),
+                        level=logging.DEBUG,
+                        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
     app.run(debug=True, host="0.0.0.0", port=8081)
