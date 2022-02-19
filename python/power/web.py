@@ -140,8 +140,52 @@ def get_power_readings_for_date(date):
     return calc_power(raw_pulses)
 
 
+def ensure_power_over_day_cache_table_created():
+    con = get_db()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS power_over_day_cache (
+                        date        TEXT,
+                        fig_json    TEXT,
+                        PRIMARY KEY (date)
+                       );
+                """)
+    cur.close()
+    con.commit()
+
+
+def get_cached_fig_json(date):
+    ensure_power_over_day_cache_table_created()
+
+    fig_json_raw = query_db("""
+                      SELECT fig_json 
+                        FROM power_over_day_cache
+                       WHERE date(date) = date(:date)
+                """, {"date": date}, one=True)
+
+    return fig_json_raw["fig_json"] if fig_json_raw is not None else fig_json_raw
+
+
+def cache_fig_json(date, fig_json):
+    params = {
+        "date": date,
+        "fig_json": fig_json
+    }
+    cur = get_db().cursor()
+    cur.execute("INSERT OR REPLACE INTO power_over_day_cache VALUES(:date, :fig_json)", params)
+    cur.close()
+    get_db().commit()
+
+    logging.info("Power over day chart for {:%A, %x} stored into the cache!".format(date))
+
+
 @timed
 def render_power_over_day_chart(date):
+
+    cached_fig_json = get_cached_fig_json(date)
+    if cached_fig_json is not None:
+        logging.info("Power over day chart for {:%A, %x} found in the cache!".format(date))
+        return cached_fig_json
 
     power_readings = get_power_readings_for_date(date)
     df = pd.DataFrame.from_records(power_readings)
@@ -150,7 +194,12 @@ def render_power_over_day_chart(date):
                   y="power",
                   title="Power consumption on {:%A, %x}:".format(date),
                   labels={"timestamp": "Time of Day", "power": "Power (W)"})
-    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    if datetime.today().date() > date.date():
+        cache_fig_json(date, fig_json)
+
+    return fig_json
 
 
 def get_latest_pulses(count):
