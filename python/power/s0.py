@@ -6,6 +6,7 @@ from threading import Thread
 from threading import Condition
 import sqlite3
 from pathlib import Path
+import argparse
 
 pulses = []
 pulse_event = Condition()
@@ -21,12 +22,10 @@ def callback(g, l, t):
     pulse_event.release()
 
 
-def setup_pulse_monitoring():
+def setup_pulse_monitoring(pin):
     pi = pigpio.pi()
     if not pi.connected:
         exit()
-
-    pin = 23
 
     pi.set_mode(pin, pigpio.INPUT)
     pi.set_pull_up_down(pin, pigpio.PUD_UP)
@@ -110,10 +109,38 @@ def setup_database():
 
     cur.close()
     con.commit()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS pulse_source (
+                        source      INTEGER,
+                        description TEXT,
+                        PRIMARY KEY (source)
+                       );
+                """)
+    cur.close()
+    con.commit()
+
+    cur = con.cursor()
+    cur.execute("""INSERT OR REPLACE 
+                                INTO pulse_source 
+                              VALUES 
+                                     (23, "House and Pool"),
+                                     (24, "Heat Pump")
+                    """)
+    cur.close()
+    con.commit()
+
     con.close()
 
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Monitor pulses on RPi GPIO pin and store into SQLite.')
+    parser.add_argument("-p" "--pin", dest="pin", default="23", type=int,
+                        help="GPIO port to monitor pulses on")
+
+    args = parser.parse_args()
+
     print("Setting up the database ...")
     setup_database()
 
@@ -121,8 +148,8 @@ if __name__ == '__main__':
     db_thread = Thread(target=db_thread)
     db_thread.start()
 
-    print("Setting up the pulse monitoring")
-    setup_pulse_monitoring()
+    print("Setting up the pulse monitoring on pin {}".format(str(args.pin)))
+    setup_pulse_monitoring(args.pin)
 
     print("Monitoring pulses ... ")
 

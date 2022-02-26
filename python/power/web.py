@@ -91,7 +91,9 @@ def calc_power(raw_pulses):
             utc = timestamp.replace(tzinfo=tz.tzutc())
             local = utc.astimezone(tz.tzlocal())
 
-            power_readings.append({"timestamp": local, "power": power, "duration": duration})
+            source = raw_pulse["source"]
+
+            power_readings.append({"timestamp": local, "power": power, "duration": duration, "source": source})
 
         last_timestamp = timestamp
 
@@ -100,14 +102,14 @@ def calc_power(raw_pulses):
 
 
 @timed
-def get_power_readings_for_date(date):
+def get_power_readings_for_date(date, source):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
 
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat()}
+    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat(), "source": source}
 
     raw_pulses = query_db("""
           SELECT * 
@@ -119,6 +121,7 @@ def get_power_readings_for_date(date):
                             FROM pulse
                            WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from, '- 1 day') 
                                                          AND datetime(:timestamp_to, '- 1 day')
+                             AND source = :source
                         ORDER BY datetime(timestamp) DESC
                            LIMIT 1
                     )
@@ -132,6 +135,7 @@ def get_power_readings_for_date(date):
                             FROM pulse 
                            WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) 
                                                          AND datetime(:timestamp_to)
+                             AND source = :source
                     )
             )
         ORDER BY datetime(timestamp) ASC
@@ -179,6 +183,13 @@ def cache_fig_json(date, fig_json):
     logging.info("Power over day chart for {:%A, %x} stored into the cache!".format(date))
 
 
+def get_power_reading_sources():
+    sources_raw = query_db("""
+                    SELECT * FROM pulse_source
+                """)
+    return sources_raw
+
+
 @timed
 def render_power_over_day_chart(date):
 
@@ -187,13 +198,20 @@ def render_power_over_day_chart(date):
         logging.info("Power over day chart for {:%A, %x} found in the cache!".format(date))
         return cached_fig_json
 
-    power_readings = get_power_readings_for_date(date)
-    df = pd.DataFrame.from_records(power_readings)
+    df = pd.DataFrame()
+
+    sources = get_power_reading_sources()
+    for source in sources:
+        power_readings = get_power_readings_for_date(date, source=source["source"])
+        df = df.append(power_readings)
+
     fig = px.line(df,
                   x="timestamp",
                   y="power",
+                  range_y=[0, 7500],
+                  color="source",
                   title="Power consumption on {:%A, %x}:".format(date),
-                  labels={"timestamp": "Time of Day", "power": "Power (W)"})
+                  labels={"timestamp": "Time of Day", "power": "Power (W)", "source": "Consumer"})
 
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     if datetime.today().date() > date.date():
@@ -202,35 +220,43 @@ def render_power_over_day_chart(date):
     return fig_json
 
 
-def get_latest_pulses(count):
+def get_latest_pulses(count, source):
     raw_pulses = query_db("""
                   SELECT * 
                     FROM pulse
+                   WHERE source = :source
                 ORDER BY datetime(timestamp) DESC
                 LIMIT :count
-            """, {"count": count})
+            """, {"count": count, "source": source})
     raw_pulses.reverse()
     return raw_pulses
 
 
 @timed
-def get_latest_power_reading():
-    raw_pulses = get_latest_pulses(count=2)
+def get_latest_power_reading(source):
+    raw_pulses = get_latest_pulses(count=2, source=source)
 
     return calc_power(raw_pulses)[0]
 
 
 @timed
 def render_power_bar():
-    latest_power_reading = get_latest_power_reading()
-    df = pd.DataFrame.from_records([latest_power_reading])
+    latest_power_readings = []
+
+    sources = get_power_reading_sources()
+    for source in sources:
+        latest_power_reading = get_latest_power_reading(source["source"])
+        latest_power_readings.append({"source": source["description"], "power": latest_power_reading["power"]})
+
+    df = pd.DataFrame.from_records(latest_power_readings)
     fig = px.bar(df,
-                 x="timestamp",
+                 x="source",
                  y="power",
+                 color="source",
                  title="Current Power Level",
                  range_y=[0, 5000],
                  width=500,
-                 labels={"timestamp": "", "power": "Power"})
+                 labels={"source": "Consumer", "power": "Power (W)"})
     fig.update_xaxes(showticklabels=False)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -259,19 +285,20 @@ def get_total_power_reading(day):
     return raw_total
 
 
-def get_pulse_count_for_date(date):
+def get_pulse_count_for_date(date, source):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
 
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat()}
+    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat(), "source": source}
 
     raw_total_pulses = query_db("""          
           SELECT COUNT(*) AS total_pulses 
             FROM pulse 
            WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
+             AND source = :source
     """, params, one=True)
 
     return raw_total_pulses["total_pulses"]
@@ -300,7 +327,7 @@ def get_daily_total_readings(day_from, day_to):
         total = 0.0
         raw_total = get_total_power_reading(day)
         if raw_total is None or raw_total["final"] == 0:
-            pulse_count = get_pulse_count_for_date(day)
+            pulse_count = get_pulse_count_for_date(day, source=23)
             if pulse_count > 0:
                 total = pulse_count
                 final = datetime.today().date() > day.date()  # if we are calculating for previous date, it's final
