@@ -78,10 +78,13 @@ def close_connection(exception):
 
 
 @timed
-def calc_power(raw_pulses):
+def calc_power(raw_pulses, source):
     power_readings = []
     last_timestamp = None
     for raw_pulse in raw_pulses:
+        if source != raw_pulse["source"]:
+            continue
+
         timestamp = datetime.fromisoformat(raw_pulse["timestamp"])
 
         if last_timestamp is not None:
@@ -91,11 +94,58 @@ def calc_power(raw_pulses):
             utc = timestamp.replace(tzinfo=tz.tzutc())
             local = utc.astimezone(tz.tzlocal())
 
-            source = raw_pulse["source"]
-
             power_readings.append({"timestamp": local, "power": power, "duration": duration, "source": source})
 
         last_timestamp = timestamp
+
+    power_readings.reverse()
+    return power_readings
+
+
+@timed
+def calc_power_with_resolution(raw_pulses, source, resolution: timedelta):
+    power_readings = []
+
+    # for calculation of avg over a 'resolution' time delta
+    current_delta = 0.0
+    total_power = 0.0
+
+    last_timestamp = None
+    for raw_pulse in raw_pulses:
+        if source != raw_pulse["source"]:
+            continue
+
+        timestamp = datetime.fromisoformat(raw_pulse["timestamp"])
+
+        if last_timestamp is not None:
+            duration = (timestamp - last_timestamp).total_seconds()
+            power = (1 * 60 * 60) / (timestamp - last_timestamp).total_seconds()
+
+            total_power += power * duration
+            current_delta += duration
+
+            if current_delta >= resolution.total_seconds():
+                utc = timestamp.replace(tzinfo=tz.tzutc())
+                local = utc.astimezone(tz.tzlocal())
+
+                power_readings.append({"timestamp": local,
+                                       "power": total_power / current_delta,
+                                       "duration": current_delta,
+                                       "source": source})
+
+                current_delta = 0.0
+                total_power = 0.0
+
+        last_timestamp = timestamp
+
+    if total_power != 0.0 and current_delta != 0.0:
+        utc = last_timestamp.replace(tzinfo=tz.tzutc())
+        local = utc.astimezone(tz.tzlocal())
+
+        power_readings.append({"timestamp": local,
+                               "power": total_power / current_delta,
+                               "duration": current_delta,
+                               "source": source})
 
     power_readings.reverse()
     return power_readings
@@ -141,7 +191,7 @@ def get_power_readings_for_date(date, source):
         ORDER BY datetime(timestamp) ASC
     """, params)
 
-    return calc_power(raw_pulses)
+    return calc_power_with_resolution(raw_pulses, source, timedelta(seconds=60))
 
 
 def ensure_power_over_day_cache_table_created():
@@ -208,7 +258,6 @@ def render_power_over_day_chart(date):
     fig = px.line(df,
                   x="timestamp",
                   y="power",
-                  range_y=[0, 7500],
                   color="source",
                   title="Power consumption on {:%A, %x}:".format(date),
                   labels={"timestamp": "Time of Day", "power": "Power (W)", "source": "Consumer"})
@@ -236,7 +285,7 @@ def get_latest_pulses(count, source):
 def get_latest_power_reading(source):
     raw_pulses = get_latest_pulses(count=2, source=source)
 
-    return calc_power(raw_pulses)[0]
+    return calc_power(raw_pulses, source)[0]
 
 
 @timed
