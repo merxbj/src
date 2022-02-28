@@ -316,21 +316,23 @@ def ensure_summary_table_created():
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS total_power_daily (
                         date        TEXT,
+                        source      INTEGER,
                         total_power REAL,
                         final       INTEGER,
-                        PRIMARY KEY (date)
+                        PRIMARY KEY (date, source)
                        );
                 """)
     cur.close()
     con.commit()
 
 
-def get_total_power_reading(day):
+def get_total_power_reading(day, source):
     raw_total = query_db("""
                       SELECT * 
                         FROM total_power_daily
                        WHERE date(date) = date(:day)
-                """, {"day": day.isoformat()}, one=True)
+                         AND source = :source
+                """, {"day": day.isoformat(), "source": source}, one=True)
     return raw_total
 
 
@@ -353,20 +355,21 @@ def get_pulse_count_for_date(date, source):
     return raw_total_pulses["total_pulses"]
 
 
-def store_total_power(total, date, final):
+def store_total_power(total, date, source, final):
     params = {
         "total_power": total,
         "day": date.isoformat(),
+        "source": source,
         "final": 1 if final else 0
     }
     cur = get_db().cursor()
-    cur.execute("INSERT OR REPLACE INTO total_power_daily VALUES(:day, :total_power, :final)", params)
+    cur.execute("INSERT OR REPLACE INTO total_power_daily VALUES(:day, :source, :total_power, :final)", params)
     cur.close()
     get_db().commit()
 
 
 @timed
-def get_daily_total_readings(day_from, day_to):
+def get_daily_total_readings(day_from, day_to, source):
 
     daily_total_readings = []
 
@@ -374,13 +377,13 @@ def get_daily_total_readings(day_from, day_to):
 
     for day in date_range(day_from, day_to + timedelta(days=1)):
         total = 0.0
-        raw_total = get_total_power_reading(day)
+        raw_total = get_total_power_reading(day, source)
         if raw_total is None or raw_total["final"] == 0:
-            pulse_count = get_pulse_count_for_date(day, source=23)
+            pulse_count = get_pulse_count_for_date(day, source)
             if pulse_count > 0:
                 total = pulse_count
                 final = datetime.today().date() > day.date()  # if we are calculating for previous date, it's final
-                store_total_power(total, day, final)
+                store_total_power(total, day, source, final)
         else:
             total = raw_total["total_power"]
 
@@ -401,7 +404,7 @@ def render_power_over_month_chart():
     day_to = datetime.now()
     day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    daily_total_readings = get_daily_total_readings(day_from, day_to)
+    daily_total_readings = get_daily_total_readings(day_from, day_to, source=23)
     df = pd.DataFrame.from_records(daily_total_readings)
     fig = px.bar(df,
                  x="date",
