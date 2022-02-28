@@ -369,7 +369,7 @@ def store_total_power(total, date, source, final):
 
 
 @timed
-def get_daily_total_readings(day_from, day_to, source):
+def get_daily_total_readings(day_from, day_to, source, description):
 
     daily_total_readings = []
 
@@ -390,7 +390,7 @@ def get_daily_total_readings(day_from, day_to, source):
         # calculate kWh from total Wh for a day
         total = total / 1000.0
 
-        daily_total_readings.append({"date": day, "total_power": total})
+        daily_total_readings.append({"date": day, "source": description, "total_power": total})
 
     return daily_total_readings
 
@@ -404,13 +404,20 @@ def render_power_over_month_chart():
     day_to = datetime.now()
     day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    daily_total_readings = get_daily_total_readings(day_from, day_to, source=23)
-    df = pd.DataFrame.from_records(daily_total_readings)
+    df = pd.DataFrame()
+
+    sources = get_power_reading_sources()
+    for source in sources:
+        daily_total_readings = get_daily_total_readings(day_from, day_to, source["source"], source["description"])
+        df = df.append(daily_total_readings)
+
     fig = px.bar(df,
                  x="date",
                  y="total_power",
+                 color="source",
+                 barmode="group",
                  title="Power Totals over last 30 days",
-                 labels={"date": "Date", "total_power": "Power (kWh)"})
+                 labels={"date": "Date", "total_power": "Power (kWh)", "source": "Consumer"})
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
