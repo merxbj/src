@@ -379,11 +379,9 @@ def get_daily_total_readings(day_from, day_to, source, description):
         total = 0.0
         raw_total = get_total_power_reading(day, source)
         if raw_total is None or raw_total["final"] == 0:
-            pulse_count = get_pulse_count_for_date(day, source)
-            if pulse_count > 0:
-                total = pulse_count
-                final = datetime.today().date() > day.date()  # if we are calculating for previous date, it's final
-                store_total_power(total, day, source, final)
+            total = get_pulse_count_for_date(day, source)
+            final = datetime.today().date() > day.date()  # if we are calculating for previous date, it's final
+            store_total_power(total, day, source, final)
         else:
             total = raw_total["total_power"]
 
@@ -415,7 +413,7 @@ def render_power_over_month_chart():
                  x="date",
                  y="total_power",
                  color="source",
-                 barmode="group",
+                 #barmode="group",
                  title="Power Totals over last 30 days",
                  labels={"date": "Date", "total_power": "Power (kWh)", "source": "Consumer"})
 
