@@ -427,7 +427,6 @@ def get_available_dates():
           SELECT DISTINCT date(timestamp) AS date
             FROM pulse
         ORDER BY date(timestamp) DESC
-        LIMIT 7
     """)
 
     available_dates.reverse()
