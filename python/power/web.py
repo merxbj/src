@@ -435,13 +435,7 @@ def get_available_dates():
 
 
 def render_main_page(date):
-
-    #pod_json = render_power_over_day_chart(date)
-    #pb_json = render_power_bar()
-    #pom_json = render_power_over_month_chart()
-    available_dates = get_available_dates()
-
-    return render_template("index.html", availableDates=available_dates)
+    return render_template("index.html", availableDates=get_available_dates())
 
 
 @app.route('/power')
