@@ -5,6 +5,7 @@ from functools import wraps
 
 # date & time stuff
 from datetime import timedelta, datetime
+from turtle import bgcolor
 from dateutil import tz
 import time
 
@@ -240,9 +241,9 @@ def get_power_reading_sources():
     return sources_raw
 
 
-@timed
+@app.route('/pod/<date>')
 def render_power_over_day_chart(date):
-
+    date = datetime.fromisoformat(date)
     cached_fig_json = get_cached_fig_json(date)
     if cached_fig_json is not None:
         logging.info("Power over day chart for {:%A, %x} found in the cache!".format(date))
@@ -288,7 +289,7 @@ def get_latest_power_reading(source):
     return calc_power(raw_pulses, source)[0]
 
 
-@timed
+@app.route('/pb')
 def render_power_bar():
     latest_power_readings = []
 
@@ -393,7 +394,7 @@ def get_daily_total_readings(day_from, day_to, source, description):
     return daily_total_readings
 
 
-@timed
+@app.route('/pom')
 def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
@@ -435,16 +436,12 @@ def get_available_dates():
 
 def render_main_page(date):
 
-    pod_json = render_power_over_day_chart(date)
-    pb_json = render_power_bar()
-    pom_json = render_power_over_month_chart()
+    #pod_json = render_power_over_day_chart(date)
+    #pb_json = render_power_bar()
+    #pom_json = render_power_over_month_chart()
     available_dates = get_available_dates()
 
-    return render_template("index.html",
-                           podJson=pod_json,
-                           pbJson=pb_json,
-                           pomJson=pom_json,
-                           availableDates=available_dates)
+    return render_template("index.html", availableDates=available_dates)
 
 
 @app.route('/power')
