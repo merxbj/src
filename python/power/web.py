@@ -267,6 +267,8 @@ def render_power_over_day_chart(date):
         source = next((source for source in sources if str(source["source"]) == data.name), None)
         if source is not None:
             data.name = source["description"]
+            data.hovertemplate = data.hovertemplate.replace("Consumer={}".format(source["source"]),
+                                                            "Consumer={}".format(source["description"]))
 
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
