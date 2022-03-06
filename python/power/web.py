@@ -1,12 +1,9 @@
-from calendar import month
 import os
-import re
 import logging
 from functools import wraps
 
 # date & time stuff
 from datetime import timedelta, datetime
-from turtle import bgcolor
 from dateutil import tz
 import time
 
@@ -440,7 +437,7 @@ def get_available_dates():
 
     available_dates = []
     for row in available_dates_raw:
-        available_dates.append(datetime.strptime(row["date"], "%Y-%m-%d").date())
+        available_dates.append(datetime.fromisoformat(row["date"]).date())
 
     # if "today" wasn't generated yet, add it manually - it still has to be available on the page
     if datetime.today().date() not in available_dates:
@@ -452,12 +449,12 @@ def get_available_dates():
 
 def get_months_and_days(available_dates):
     months = {}
-    for date in available_dates:
-        month = date.strftime("%B")
-        if (month not in months):
+    for available_date in available_dates:
+        month = available_date.strftime("%B")
+        if month not in months:
             months[month] = []
             
-        months[month].append(date)
+        months[month].append(available_date)
     return months
 
 
