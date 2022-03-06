@@ -8,3 +8,8 @@
     border-style: solid;
     background-color: black;
 }
+
+.nav-item
+{
+    padding-right: 20px;
+}

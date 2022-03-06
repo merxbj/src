@@ -1,3 +1,4 @@
+from calendar import month
 import os
 import re
 import logging
@@ -439,18 +440,30 @@ def get_available_dates():
 
     available_dates = []
     for row in available_dates_raw:
-        available_dates.append(row["date"])
+        available_dates.append(datetime.strptime(row["date"], "%Y-%m-%d").date())
 
     # if "today" wasn't generated yet, add it manually - it still has to be available on the page
-    if datetime.today().date().isoformat() not in available_dates:
-        available_dates.append(datetime.today().date().isoformat())
+    if datetime.today().date() not in available_dates:
+        available_dates.append(datetime.today().date())
 
     available_dates.reverse()
     return available_dates
 
 
+def get_months_and_days(available_dates):
+    months = {}
+    for date in available_dates:
+        month = date.strftime("%B")
+        if (month not in months):
+            months[month] = []
+            
+        months[month].append(date)
+    return months
+
+
 def render_main_page():
-    return render_template("index.html", availableDates=get_available_dates())
+    
+    return render_template("index.html", months_and_days=get_months_and_days(get_available_dates()))
 
 
 @app.route('/power')
