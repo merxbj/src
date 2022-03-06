@@ -263,7 +263,13 @@ def render_power_over_day_chart(date):
                   title="Power consumption on {:%A, %x}:".format(date),
                   labels={"timestamp": "Time of Day", "power": "Power (W)", "source": "Consumer"})
 
+    for data in fig.data:
+        source = next((source for source in sources if str(source["source"]) == data.name), None)
+        if source is not None:
+            data.name = source["description"]
+
     fig_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
     if datetime.today().date() > date.date():
         cache_fig_json(date, fig_json)
 
@@ -414,7 +420,7 @@ def render_power_over_month_chart():
                  x="date",
                  y="total_power",
                  color="source",
-                 #barmode="group",
+                 barmode="relative",
                  title="Power Totals over last 30 days",
                  labels={"date": "Date", "total_power": "Power (kWh)", "source": "Consumer"})
 
@@ -423,32 +429,32 @@ def render_power_over_month_chart():
 
 @timed
 def get_available_dates():
-    available_dates = query_db("""
+    available_dates_raw = query_db("""
           SELECT DISTINCT date(timestamp) AS date
             FROM pulse
-        ORDER BY date(timestamp) DESC
+        ORDER BY date(timestamp)
     """)
+
+    available_dates = []
+    for row in available_dates_raw:
+        available_dates.append(row["date"])
+
+    # if "today" wasn't generated yet, add it manually - it still has to be available on the page
+    if datetime.today().date().isoformat() not in available_dates:
+        available_dates.append(datetime.today().date().isoformat())
 
     available_dates.reverse()
     return available_dates
 
 
-def render_main_page(date):
+def render_main_page():
     return render_template("index.html", availableDates=get_available_dates())
 
 
 @app.route('/power')
 def power_today():
 
-    return render_main_page(datetime.now())
-
-
-@app.route('/power/<day_specifier>')
-def power_relative_date(day_specifier):
-    if re.match("^[+-]?\d+$", day_specifier) is not None:
-        return render_main_page(datetime.now() + timedelta(int(day_specifier)))
-    else:
-        return render_main_page(datetime.fromisoformat(day_specifier))
+    return render_main_page()
 
 
 if __name__ == "__main__":

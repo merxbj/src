@@ -33,8 +33,8 @@
                   Dates
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                    {% for date in availableDates[::-1] %}
-                    <li><a class="dropdown-item" href="#">{{ date['date'] }}</a></li>
+                    {% for date in availableDates %}
+                    <li><a class="dropdown-item" href="#">{{ date }}</a></li>
                     {% endfor %}
                 </ul>
             </li>

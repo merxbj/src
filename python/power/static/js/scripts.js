@@ -20,8 +20,6 @@ Plotly.plot('power_over_month', null, layout);
 $('.dropdown-menu a').click(function () { 
     var selectedDate = $(this).text();
     $.getJSON('pod/' + selectedDate).done(function(data) {
-        data["data"][0]["name"] = "House and pool";
-        data["data"][1]["name"] = "Heat pump";
         Plotly.react('power_over_day', data["data"], $.extend(true, {}, layout));
     });
     $('#selected-date').text(selectedDate);
