@@ -182,7 +182,7 @@ def get_power_readings_for_date(date, source):
                     )
             )
         ORDER BY timestamp ASC
-    """, filter_from, filter_to, source, filter_from, filter_to, source)
+    """, (filter_from, filter_to, source, filter_from, filter_to, source))
 
     return calc_power_with_resolution(raw_pulses, source, timedelta(seconds=60))
 
