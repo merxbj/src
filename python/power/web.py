@@ -12,7 +12,7 @@ from flask import Flask, render_template, g
 
 # database access
 from pathlib import Path
-import sqlite3
+import mariadb
 
 # chart rendering
 import plotly
@@ -23,28 +23,24 @@ import json
 app = Flask(__name__)
 
 
-def get_data_path():
-    return os.path.join(str(Path.home()), "data/power/")
-
-
 def get_log_path():
     return os.path.join(str(Path.home()), "log/power/")
 
 
 def create_connection():
-    return sqlite3.connect(os.path.join(get_data_path(), "power.dat"))
+    return mariadb.connect(user='root', host='localhost', database='power')
 
 
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = create_connection()
-        db.row_factory = sqlite3.Row
     return db
 
 
 def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
+    cur = get_db().cursor( buffered=True , dictionary=True)
+    cur.execute(query, args)
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
@@ -84,7 +80,7 @@ def calc_power(raw_pulses, source):
         if source != raw_pulse["source"]:
             continue
 
-        timestamp = datetime.fromisoformat(raw_pulse["timestamp"])
+        timestamp = raw_pulse["timestamp"]
 
         if last_timestamp is not None:
             duration = (timestamp - last_timestamp).total_seconds()
@@ -158,8 +154,6 @@ def get_power_readings_for_date(date, source):
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat(), "source": source}
-
     raw_pulses = query_db("""
           SELECT * 
             FROM (
@@ -168,10 +162,10 @@ def get_power_readings_for_date(date, source):
                     FROM (
                           SELECT *
                             FROM pulse
-                           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from, '- 1 day') 
-                                                         AND datetime(:timestamp_to, '- 1 day')
-                             AND source = :source
-                        ORDER BY datetime(timestamp) DESC
+                           WHERE timestamp BETWEEN SUBDATE(?, 1) 
+                                                         AND SUBDATE(?, 1)
+                             AND source = ?
+                        ORDER BY timestamp DESC
                            LIMIT 1
                     )
                   
@@ -182,13 +176,13 @@ def get_power_readings_for_date(date, source):
                     FROM (
                           SELECT * 
                             FROM pulse 
-                           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) 
-                                                         AND datetime(:timestamp_to)
-                             AND source = :source
+                           WHERE timestamp BETWEEN ?
+                                                         AND ?
+                             AND source = ?
                     )
             )
-        ORDER BY datetime(timestamp) ASC
-    """, params)
+        ORDER BY timestamp ASC
+    """, filter_from, filter_to, source, filter_from, filter_to, source)
 
     return calc_power_with_resolution(raw_pulses, source, timedelta(seconds=60))
 
@@ -213,19 +207,15 @@ def get_cached_fig_json(date):
     fig_json_raw = query_db("""
                       SELECT fig_json 
                         FROM power_over_day_cache
-                       WHERE date(date) = date(:date)
-                """, {"date": date}, one=True)
+                       WHERE date = ?
+                """, (date,), one=True)
 
     return fig_json_raw["fig_json"] if fig_json_raw is not None else fig_json_raw
 
 
 def cache_fig_json(date, fig_json):
-    params = {
-        "date": date,
-        "fig_json": fig_json
-    }
     cur = get_db().cursor()
-    cur.execute("INSERT OR REPLACE INTO power_over_day_cache VALUES(:date, :fig_json)", params)
+    cur.execute("REPLACE INTO power_over_day_cache VALUES(?,?)", date, fig_json)
     cur.close()
     get_db().commit()
 
@@ -280,10 +270,10 @@ def get_latest_pulses(count, source):
     raw_pulses = query_db("""
                   SELECT * 
                     FROM pulse
-                   WHERE source = :source
-                ORDER BY datetime(timestamp) DESC
-                LIMIT :count
-            """, {"count": count, "source": source})
+                   WHERE source = ?
+                ORDER BY timestamp DESC
+                LIMIT ?
+            """, (source, count))
     raw_pulses.reverse()
     return raw_pulses
 
@@ -337,9 +327,9 @@ def get_total_power_reading(day, source):
     raw_total = query_db("""
                       SELECT * 
                         FROM total_power_daily
-                       WHERE date(date) = date(:day)
-                         AND source = :source
-                """, {"day": day.isoformat(), "source": source}, one=True)
+                       WHERE date(date) = ?
+                         AND source = ?
+                """, (day, source), one=True)
     return raw_total
 
 
@@ -350,27 +340,20 @@ def get_pulse_count_for_date(date, source):
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
-    params = {"timestamp_from": filter_from.isoformat(), "timestamp_to": filter_to.isoformat(), "source": source}
-
     raw_total_pulses = query_db("""          
           SELECT COUNT(*) AS total_pulses 
             FROM pulse 
-           WHERE datetime(timestamp) BETWEEN datetime(:timestamp_from) AND datetime(:timestamp_to)
-             AND source = :source
-    """, params, one=True)
+           WHERE timestamp BETWEEN ? AND ?
+             AND source = ?
+    """, (filter_from, filter_to, source), one=True)
 
     return raw_total_pulses["total_pulses"]
 
 
 def store_total_power(total, date, source, final):
-    params = {
-        "total_power": total,
-        "day": date.isoformat(),
-        "source": source,
-        "final": 1 if final else 0
-    }
+    final = 1 if final else 0
     cur = get_db().cursor()
-    cur.execute("INSERT OR REPLACE INTO total_power_daily VALUES(:day, :source, :total_power, :final)", params)
+    cur.execute("REPLACE INTO total_power_daily VALUES(?, ?, ?, ?)", (date, source, total, final))
     cur.close()
     get_db().commit()
 
@@ -437,7 +420,7 @@ def get_available_dates():
 
     available_dates = []
     for row in available_dates_raw:
-        available_dates.append(datetime.fromisoformat(row["date"]).date())
+        available_dates.append(row["date"])
 
     # if "today" wasn't generated yet, add it manually - it still has to be available on the page
     if datetime.today().date() not in available_dates:
