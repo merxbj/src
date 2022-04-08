@@ -81,39 +81,39 @@ def db_thread():
 
 
 def create_connection():
-    return mariadb.connect(user='root', host='localhost', database='power')
+    return mariadb.connect(host='localhost', database='power')
 
 
 def setup_database():
     con = create_connection()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS pulse (
-                        source      INTEGER,
-                        timestamp   TEXT,
-                        PRIMARY KEY (source, timestamp)
-                       );
+    cur.execute("""CREATE TABLE IF NOT EXISTS `pulse` (
+                      `source`      int(11) NOT NULL,
+                      `timestamp`   datetime(6) NOT NULL,
+                      PRIMARY KEY (`source`,`timestamp`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
 
     cur.close()
     con.commit()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS pulse_source (
-                        source      INTEGER,
-                        description TEXT,
-                        PRIMARY KEY (source)
-                       );
+    cur.execute("""CREATE TABLE IF NOT EXISTS `pulse_source` (
+                      `source`      int(11) NOT NULL,
+                      `description` varchar(100) DEFAULT NULL,
+                      PRIMARY KEY (`source`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
     cur.close()
     con.commit()
 
     cur = con.cursor()
     cur.execute("""REPLACE 
-                                INTO pulse_source 
-                              VALUES 
-                                     (23, "House and Pool"),
-                                     (24, "Heat Pump")
+                      INTO pulse_source 
+                    VALUES 
+                           (23, "House and Pool"),
+                           (24, "Heat Pump")
                     """)
     cur.close()
     con.commit()

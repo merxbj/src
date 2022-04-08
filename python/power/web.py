@@ -28,7 +28,7 @@ def get_log_path():
 
 
 def create_connection():
-    return mariadb.connect(user='root', host='localhost', database='power')
+    return mariadb.connect(host='localhost', database='power')
 
 
 def get_db():
@@ -110,7 +110,7 @@ def calc_power_with_resolution(raw_pulses, source, resolution: timedelta):
         if source != raw_pulse["source"]:
             continue
 
-        timestamp = datetime.fromisoformat(raw_pulse["timestamp"])
+        timestamp = raw_pulse["timestamp"]
 
         if last_timestamp is not None:
             duration = (timestamp - last_timestamp).total_seconds()
@@ -155,7 +155,7 @@ def get_power_readings_for_date(date, source):
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
 
     raw_pulses = query_db("""
-          SELECT * 
+          SELECT PULSE.* 
             FROM (
                   -- get the last pulse from the day before
                   SELECT *
@@ -167,7 +167,7 @@ def get_power_readings_for_date(date, source):
                              AND source = ?
                         ORDER BY timestamp DESC
                            LIMIT 1
-                    )
+                    ) AS PREVIOUS_DAY
                   
                    UNION
                   
@@ -179,8 +179,8 @@ def get_power_readings_for_date(date, source):
                            WHERE timestamp BETWEEN ?
                                                          AND ?
                              AND source = ?
-                    )
-            )
+                    ) AS DAY
+            ) PULSE
         ORDER BY timestamp ASC
     """, (filter_from, filter_to, source, filter_from, filter_to, source))
 
@@ -191,11 +191,11 @@ def ensure_power_over_day_cache_table_created():
     con = get_db()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS power_over_day_cache (
-                        date        TEXT,
-                        fig_json    TEXT,
-                        PRIMARY KEY (date)
-                       );
+    cur.execute("""CREATE TABLE IF NOT EXISTS `power_over_day_cache` (
+                      `date`     date NOT NULL,
+                      `fig_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`fig_json`)),
+                      PRIMARY KEY (`date`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
     cur.close()
     con.commit()
@@ -215,7 +215,7 @@ def get_cached_fig_json(date):
 
 def cache_fig_json(date, fig_json):
     cur = get_db().cursor()
-    cur.execute("REPLACE INTO power_over_day_cache VALUES(?,?)", date, fig_json)
+    cur.execute("REPLACE INTO power_over_day_cache VALUES(?,?)", (date, fig_json))
     cur.close()
     get_db().commit()
 
@@ -311,13 +311,13 @@ def ensure_summary_table_created():
     con = get_db()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS total_power_daily (
-                        date        TEXT,
-                        source      INTEGER,
-                        total_power REAL,
-                        final       INTEGER,
-                        PRIMARY KEY (date, source)
-                       );
+    cur.execute("""CREATE TABLE IF NOT EXISTS `total_power_daily` (
+                      `date`        date NOT NULL,
+                      `source`      int(11) NOT NULL,
+                      `total_power` double DEFAULT NULL,
+                      `final`       int(11) DEFAULT NULL,
+                      PRIMARY KEY (`date`,`source`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
     cur.close()
     con.commit()
