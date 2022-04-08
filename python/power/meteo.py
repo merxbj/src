@@ -33,7 +33,6 @@ def get_initial_values(host, user_name, password):
 def get_sensor_value(data):
     for obj in data['objects']:
         if obj['id'] == sensor:
-            print(str(obj))
             return decode_fixed_decimal(obj['datahex'])
 
 
@@ -52,9 +51,9 @@ if __name__ == '__main__':
 
     sensor = args.sensor
 
-    data = json.loads(get_initial_values(args.host, args.user, args.password))
-    print(get_sensor_value(data))
+    payload = json.loads(get_initial_values(args.host, args.user, args.password))
+    print(get_sensor_value(payload))
 
-    auth = data["auth"]
+    auth = payload["auth"]
     wsapp = websocket.WebSocketApp(f"ws://{args.host}/apps/localbus.lp?auth={auth}", on_message=on_message)
     wsapp.run_forever()
