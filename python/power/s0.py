@@ -4,7 +4,7 @@ from dateutil import tz
 import pigpio
 from threading import Thread
 from threading import Condition
-import sqlite3
+import mariadb
 from pathlib import Path
 import argparse
 
@@ -50,12 +50,8 @@ def print_pulse(pulse, previous_pulse):
 
 def store_pulse(pulse, db_conn):
     g, l, t, time = pulse
-    params = {
-        "source": g,
-        "timestamp": time.isoformat()
-    }
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO pulse VALUES(:source, :timestamp)", params)
+    cur.execute("INSERT INTO pulse VALUES(?, ?)", (g, time))
     cur.close()
     db_conn.commit()
 
@@ -84,19 +80,11 @@ def db_thread():
             last_handled_pulse = pulse
 
 
-def get_data_path():
-    return os.path.join(str(Path.home()), "data/power/")
-
-
 def create_connection():
-    return sqlite3.connect(os.path.join(get_data_path(), "power.dat"), timeout=120)
+    return mariadb.connect(user='root', host='localhost', database='power')
 
 
 def setup_database():
-    data_path = get_data_path()
-    if not os.path.exists(data_path):
-        os.makedirs(data_path)
-
     con = create_connection()
 
     cur = con.cursor()
@@ -121,7 +109,7 @@ def setup_database():
     con.commit()
 
     cur = con.cursor()
-    cur.execute("""INSERT OR REPLACE 
+    cur.execute("""REPLACE 
                                 INTO pulse_source 
                               VALUES 
                                      (23, "House and Pool"),
