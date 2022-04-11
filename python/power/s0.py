@@ -1,23 +1,36 @@
-import datetime
 import os
-from dateutil import tz
+import argparse
+import logging
+from pathlib import Path
+
+# hardware access
 import pigpio
+
+# date & time stuff
+from datetime import datetime, timedelta
+from dateutil import tz
+
+# threading
 from threading import Thread
 from threading import Condition
+
+# database
 import mariadb
-from pathlib import Path
-import argparse
 
 pulses = []
 pulse_event = Condition()
 
 
-def callback(g, l, t):
+def get_log_path():
+    return os.path.join(str(Path.home()), "log/power/")
+
+
+def callback(gpio, level, tick):
     if len(pulses) >= 552000:
         del pulses[0]
 
     pulse_event.acquire()
-    pulses.append({"values": (g, l, t, datetime.datetime.utcnow().replace(tzinfo=tz.tzutc())), "handled": False})
+    pulses.append({"values": (gpio, level, tick, datetime.utcnow().replace(tzinfo=tz.tzutc())), "handled": False})
     pulse_event.notify()
     pulse_event.release()
 
@@ -30,10 +43,10 @@ def setup_pulse_monitoring(pin):
     pi.set_mode(pin, pigpio.INPUT)
     pi.set_pull_up_down(pin, pigpio.PUD_UP)
 
-    cb1 = pi.callback(pin, pigpio.FALLING_EDGE, callback)
+    pi.callback(pin, pigpio.FALLING_EDGE, callback)
 
 
-def print_pulse(pulse, previous_pulse):
+def log_pulse(pulse, previous_pulse):
     g, l, t, time = pulse
     pg, pl, pt, time = previous_pulse
 
@@ -43,9 +56,10 @@ def print_pulse(pulse, previous_pulse):
     ticks_since_callback = t - pt
 
     average_watts = (1 * 60 * 60 * 1000 * 1000) / ticks_since_callback
-    time_period = datetime.timedelta(microseconds=ticks_since_callback)
+    time_period = timedelta(microseconds=ticks_since_callback)
 
-    print("Average power at source " + str(g) + " = " + str(average_watts) + "W over " + str(time_period.total_seconds()) + "s")
+    logging.info("Average power at source {} = {:.2f}W over {:.3f}s".format(
+        g, average_watts, time_period.total_seconds()))
 
 
 def store_pulse(pulse, db_conn):
@@ -76,7 +90,7 @@ def db_thread():
 
         for pulse in pulses_to_handle:
             store_pulse(pulse, db_conn)
-            print_pulse(pulse, last_handled_pulse)
+            log_pulse(pulse, last_handled_pulse)
             last_handled_pulse = pulse
 
 
@@ -129,16 +143,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    print("Setting up the database ...")
+    if not os.path.exists(get_log_path()):
+        os.makedirs(get_log_path())
+
+    logging.basicConfig(filename=os.path.join(get_log_path(), "power_{}.log".format(args.pin)),
+                        level=logging.DEBUG,
+                        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+
+    logging.info("Setting up the database ...")
     setup_database()
 
-    print("Setting up the database update thread ...")
+    logging.info("Setting up the database update thread ...")
     db_thread = Thread(target=db_thread)
     db_thread.start()
 
-    print("Setting up the pulse monitoring on pin {}".format(str(args.pin)))
+    logging.info("Setting up the pulse monitoring on pin {}".format(str(args.pin)))
     setup_pulse_monitoring(args.pin)
 
-    print("Monitoring pulses ... ")
+    logging.info("Monitoring pulses ... ")
 
     db_thread.join()

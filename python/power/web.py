@@ -39,7 +39,7 @@ def get_db():
 
 
 def query_db(query, args=(), one=False):
-    cur = get_db().cursor( buffered=True , dictionary=True)
+    cur = get_db().cursor(buffered=True, dictionary=True)
     cur.execute(query, args)
     rv = cur.fetchall()
     cur.close()
@@ -69,10 +69,10 @@ def timed(func):
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
+        logging.info("Closing the database connection (exception: {})".format(str(exception)))
         db.close()
 
 
-@timed
 def calc_power(raw_pulses, source):
     power_readings = []
     last_timestamp = None
@@ -97,7 +97,6 @@ def calc_power(raw_pulses, source):
     return power_readings
 
 
-@timed
 def calc_power_with_resolution(raw_pulses, source, resolution: timedelta):
     power_readings = []
 
@@ -146,13 +145,14 @@ def calc_power_with_resolution(raw_pulses, source, resolution: timedelta):
     return power_readings
 
 
-@timed
 def get_power_readings_for_date(date, source):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+    filter_from = filter_from.astimezone(tz.tzutc())
 
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+    filter_from = filter_from.astimezone(tz.tzutc())
 
     raw_pulses = query_db("""
           SELECT PULSE.* 
@@ -191,11 +191,12 @@ def ensure_power_over_day_cache_table_created():
     con = get_db()
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS `power_over_day_cache` (
-                      `date`     date NOT NULL,
-                      `fig_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`fig_json`)),
-                      PRIMARY KEY (`date`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+    cur.execute("""
+            CREATE TABLE IF NOT EXISTS `power_over_day_cache` (
+              `date`     date NOT NULL,
+              `fig_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`fig_json`)),
+              PRIMARY KEY (`date`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
     cur.close()
     con.commit()
@@ -230,6 +231,7 @@ def get_power_reading_sources():
 
 
 @app.route('/pod/<date>')
+@timed
 def render_power_over_day_chart(date):
     date = datetime.fromisoformat(date)
     cached_fig_json = get_cached_fig_json(date)
@@ -278,7 +280,6 @@ def get_latest_pulses(count, source):
     return raw_pulses
 
 
-@timed
 def get_latest_power_reading(source):
     raw_pulses = get_latest_pulses(count=2, source=source)
 
@@ -286,6 +287,7 @@ def get_latest_power_reading(source):
 
 
 @app.route('/pb')
+@timed
 def render_power_bar():
     latest_power_readings = []
 
@@ -358,7 +360,6 @@ def store_total_power(total, date, source, final):
     get_db().commit()
 
 
-@timed
 def get_daily_total_readings(day_from, day_to, source, description):
 
     daily_total_readings = []
@@ -366,7 +367,6 @@ def get_daily_total_readings(day_from, day_to, source, description):
     ensure_summary_table_created()
 
     for day in date_range(day_from, day_to + timedelta(days=1)):
-        total = 0.0
         raw_total = get_total_power_reading(day, source)
         if raw_total is None or raw_total["final"] == 0:
             total = get_pulse_count_for_date(day, source)
@@ -384,6 +384,7 @@ def get_daily_total_readings(day_from, day_to, source, description):
 
 
 @app.route('/pom')
+@timed
 def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
@@ -410,7 +411,6 @@ def render_power_over_month_chart():
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-@timed
 def get_available_dates():
     available_dates_raw = query_db("""
           SELECT DISTINCT date(timestamp) AS date
@@ -459,4 +459,5 @@ if __name__ == "__main__":
     logging.basicConfig(filename=os.path.join(get_log_path(), "web.log"),
                         level=logging.DEBUG,
                         format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+
     app.run(debug=True, host="0.0.0.0", port=8081)
