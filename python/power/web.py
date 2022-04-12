@@ -430,20 +430,26 @@ def get_available_dates():
     return available_dates
 
 
-def get_months_and_days(available_dates):
-    months = {}
+def get_years_months_and_days(available_dates):
+    years = {}
     for available_date in available_dates:
+
+        year = available_date.year
+        if year not in years:
+            years[year] = {}
+
         month = available_date.strftime("%B")
-        if month not in months:
-            months[month] = []
+        if month not in years[year]:
+            years[year][month] = []
             
-        months[month].append(available_date)
-    return months
+        years[year][month].append(available_date)
+
+    return years
 
 
 def render_main_page():
     
-    return render_template("index.html", months_and_days=get_months_and_days(get_available_dates()))
+    return render_template("index.html", years_months_and_days=get_years_months_and_days(get_available_dates()))
 
 
 @app.route('/power')

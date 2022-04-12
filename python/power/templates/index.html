@@ -23,23 +23,39 @@
             <img src="/static/android-chrome-192x192.png" alt="" width="40" height="40" class="d-inline-block align-text-top">
             Birch Hill Power
         </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <li class="nav-item">
-            <button type="button" class="btn btn-outline-success" id="selected-date">Success</button>
-          </li>
-          {% for month in months_and_days %}
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ month }}</button>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                {% for date in months_and_days[month] %}
-                    <li><a class="dropdown-item" href="#">{{ date }}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-          </ul>
-        {% endfor %}
-      </div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <button class="btn btn-outline-success" id="selected-date">Success</button>
+                </li>
+                <li class="nav-item dropdown">
+                    <button class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">Select Date</button>
+                    <ul class="dropdown-menu">
+                        {% for year in years_months_and_days %}
+                        <li>
+                            <a class="dropdown-item" href="#">{{ year }}</a>
+                            <ul class="submenu dropdown-menu">
+                                {% for month in years_months_and_days[year] %}
+                                <li>
+                                    <a class="dropdown-item" href="#">{{ month }}</a>
+                                    <ul class="submenu dropdown-menu" >
+                                    {% for date in years_months_and_days[year][month] %}
+                                        <li class="date-selector"><a class="dropdown-item" href="#">{{ date }}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
 <body class="bg-dark">
     <div class="container-fluid">
