@@ -4,6 +4,8 @@ from functools import wraps
 
 # date & time stuff
 from datetime import timedelta, datetime
+from dateutil.relativedelta import relativedelta
+import calendar
 from dateutil import tz
 import time
 
@@ -389,9 +391,11 @@ def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
     day_from = day_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+    day_from = day_from.astimezone(tz.tzutc())
 
     day_to = datetime.now()
     day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+    day_to = day_to.astimezone(tz.tzutc())
 
     df = pd.DataFrame()
 
@@ -407,6 +411,103 @@ def render_power_over_month_chart():
                  barmode="relative",
                  title="Power Totals over last 30 days",
                  labels={"date": "Date", "total_power": "Power (kWh)", "source": "Consumer"})
+
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+def ensure_monthly_summary_table_created():
+    con = get_db()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS `total_power_monthly` (
+                      `year`        smallint NOT NULL,
+                      `month`       tinyint NOT NULL,
+                      `source`      int(11) NOT NULL,
+                      `total_power` double DEFAULT NULL,
+                      `final`       int(11) DEFAULT NULL,
+                      PRIMARY KEY (`year`,`month`,`source`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+                """)
+    cur.close()
+    con.commit()
+
+
+def get_monthly_total_power(year, month, source):
+    raw_total = query_db("""
+                      SELECT * 
+                        FROM total_power_monthly
+                       WHERE year = ?
+                         AND month = ?
+                         AND source = ?
+                """, (year, month, source), one=True)
+    return raw_total
+
+
+def store_monthly_total_power(total, year, month, source, final):
+    final = 1 if final else 0
+    cur = get_db().cursor()
+    cur.execute("REPLACE INTO total_power_monthly VALUES(?, ?, ?, ?, ?)", (year, month, source, total, final))
+    cur.close()
+    get_db().commit()
+
+
+def get_monthly_total_readings(day_from, day_to, source, description):
+
+    monthly_total_readings = []
+
+    ensure_monthly_summary_table_created()
+
+    rd = relativedelta(day_to, day_from)
+    for month_delta in range(rd.years * 12 + rd.months):
+        current_month = day_to - relativedelta(months=month_delta)
+
+        raw_monthly_total = get_monthly_total_power(current_month.year, current_month.month, source)
+        if raw_monthly_total is None or raw_monthly_total["final"] == 0:
+            fwd, days_in_month = calendar.monthrange(current_month.year, current_month.month)
+            daily_total_readings = get_daily_total_readings(current_month.replace(day=1),
+                                                            current_month.replace(day=days_in_month),
+                                                            source,
+                                                            description)
+            monthly_total = sum(dtr["total_power"] for dtr in daily_total_readings)
+            final = datetime.today().month > current_month.month  # if we are calculating for previous month, it's final
+            store_monthly_total_power(monthly_total, current_month.year, current_month.month, source, final)
+        else:
+            monthly_total = raw_monthly_total["total_power"]
+
+        monthly_total_readings.append({"month": "{} {}".format(current_month.strftime("%b"), current_month.year),
+                                       "source": description,
+                                       "total_power": monthly_total})
+
+    monthly_total_readings.reverse()
+    return monthly_total_readings
+
+
+@app.route('/poy')
+@timed
+def render_power_over_year_chart():
+
+    day_from = datetime.now() - relativedelta(months=12)
+    day_from = day_from.replace(day=1, tzinfo=tz.tzlocal())
+    day_from = day_from.astimezone(tz.tzutc())
+
+    day_to = datetime.now()
+    day_to = day_to.replace(day=1, tzinfo=tz.tzlocal())
+    day_to = day_to.astimezone(tz.tzutc())
+
+    df = pd.DataFrame()
+
+    sources = get_power_reading_sources()
+    for source in sources:
+        monthly_total_readings = get_monthly_total_readings(day_from, day_to, source["source"], source["description"])
+        df = df.append(monthly_total_readings)
+
+    fig = px.bar(df,
+                 x="month",
+                 y="total_power",
+                 color="source",
+                 barmode="relative",
+                 title="Power Totals over last 12 months",
+                 labels={"month": "Month", "total_power": "Power (kWh)", "source": "Consumer"})
 
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
