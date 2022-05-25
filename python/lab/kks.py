@@ -269,10 +269,10 @@ def solve_board(board, words):
             x, y = advance(x, y, len_x, backtracking)
             continue
 
-        #os.system("clear")
-        #print_board(board)
-        #print_debug(board, words, field, conflicting_field, backtracking)
-        #input("Press Enter to continue...")
+        # os.system("clear")
+        # print_board(board)
+        # print_debug(board, words, field, conflicting_field, backtracking)
+        # input("Press Enter to continue...")
 
         if backtracking:
             if field.word_length_horizontal > 0:
@@ -311,9 +311,14 @@ def solve_board(board, words):
                     field.word_validated_horizontal = True
                     field.word_idx_vertical = -1
                     field.word_validated_vertical = False
+                    conflicting_field = cf # should be None
                 else:
                     if cf is not None:
-                        conflicting_field = cf
+                        if conflicting_field is not None:
+                            if cf.x > conflicting_field.x:
+                                conflicting_field = cf
+                        else:
+                            conflicting_field = cf
 
         # we have a field where there is a start of a word in a column
         elif field.word_length_vertical > 0 and not field.word_validated_vertical:
@@ -332,9 +337,14 @@ def solve_board(board, words):
                 success, cf = add_word_vertical(field, candidates, board)
                 if success:
                     field.word_validated_vertical = True
+                    conflicting_field = cf  # should be None
                 else:
                     if cf is not None:
-                        conflicting_field = cf
+                        if conflicting_field is not None:
+                            if cf.y > conflicting_field.y:
+                                conflicting_field = cf
+                        else:
+                            conflicting_field = cf
 
         else:
             os.system("clear")
@@ -342,6 +352,7 @@ def solve_board(board, words):
             x, y = advance(x, y, len_x, backtracking)
 
     os.system("clear")
+
 
 def main():
     parser = ArgumentParser()
