@@ -1,5 +1,4 @@
 import os
-import time
 from argparse import ArgumentParser
 
 
@@ -64,12 +63,52 @@ def parse_board(dx, dy, layout):
     return board
 
 
-def print_board_raw(board):
-    os.system("clear")
+def print_board(board):
     for line in board:
         for field in line:
             print("{}".format(str(field)), end="")
         print("")
+    print("")
+
+
+def print_debug(board, words, current_field, conflicting_field, backtracking):
+    print("")
+    for line in board:
+        for field in line:
+            print("(", end="")
+            if field.word_length_vertical > 0:
+                print("{},".format(field.word_idx_vertical + 1), end="")
+            else:
+                print(" ,", end="")
+            if field.word_length_horizontal > 0:
+                print("{}".format(field.word_idx_horizontal + 1), end="")
+            else:
+                print(" ", end="")
+            print(")  ", end="")
+        print("")
+    print("")
+
+    for word_length, word_list in words.items():
+        print("{}: ".format(word_length), end="")
+        for word in word_list:
+            if not word["used"]:
+                print("{}, ".format(word["word"]), end="")
+        print("")
+    print("")
+
+    print("Backtracking: {}".format("Yes" if backtracking else "No"))
+
+    print("Conflicting Field: ", end="")
+    if conflicting_field is not None:
+        print("({},{})".format(conflicting_field.x, conflicting_field.y))
+    else:
+        print("None")
+
+    print("Current Field: ", end="")
+    if current_field is not None:
+        print("({},{})".format(current_field.x, current_field.y))
+    else:
+        print("None")
     print("")
 
 
@@ -222,13 +261,18 @@ def solve_board(board, words):
     backtracking = False
     conflicting_field = None
 
-    while y < len_y and x < len_x:
+    while 0 <= y < len_y and 0 <= x < len_x:
         field = board[y][x]
 
         # skip fields where there is not start of a word
         if field.word_length_vertical == 0 and field.word_length_horizontal == 0:
             x, y = advance(x, y, len_x, backtracking)
             continue
+
+        #os.system("clear")
+        #print_board(board)
+        #print_debug(board, words, field, conflicting_field, backtracking)
+        #input("Press Enter to continue...")
 
         if backtracking:
             if field.word_length_horizontal > 0:
@@ -239,16 +283,16 @@ def solve_board(board, words):
                 candidates = words[field.word_length_vertical]
                 remove_word_vertical(board, field, candidates)
                 field.word_validated_vertical = False
-            # if conflicting_field is not None:
-            #     # we know which field we had a most recent conflict with, we need to backtrack all the way there
-            #     # and invalidate everything along the way
-            #     if field.x != conflicting_field.x or field.y != conflicting_field.y:
-            #         field.word_idx_vertical = -1
-            #         field.word_idx_horizontal = -1
-            #         x, y = advance(x, y, len_x, backtracking)
-            #         continue
-            #     else:
-            #         conflicting_field = None
+            if conflicting_field is not None:
+                # we know which field we had a most recent conflict with, we need to backtrack all the way there
+                # and invalidate everything along the way
+                if field.x != conflicting_field.x or field.y != conflicting_field.y:
+                    field.word_idx_vertical = -1
+                    field.word_validated_vertical = False
+                    field.word_idx_horizontal = -1
+                    field.word_validated_horizontal = False
+                    x, y = advance(x, y, len_x, backtracking)
+                    continue
 
 
         # we have a field where there is a start of a word in a line
@@ -262,10 +306,14 @@ def solve_board(board, words):
             else:
                 backtracking = False
                 field.word_idx_horizontal += 1
-                success, conflicting_field = add_word_horizontal(field, candidates, board)
+                success, cf = add_word_horizontal(field, candidates, board)
                 if success:
                     field.word_validated_horizontal = True
                     field.word_idx_vertical = -1
+                    field.word_validated_vertical = False
+                else:
+                    if cf is not None:
+                        conflicting_field = cf
 
         # we have a field where there is a start of a word in a column
         elif field.word_length_vertical > 0 and not field.word_validated_vertical:
@@ -281,15 +329,19 @@ def solve_board(board, words):
             else:
                 backtracking = False
                 field.word_idx_vertical += 1
-                success, conflicting_field = add_word_vertical(field, candidates, board)
+                success, cf = add_word_vertical(field, candidates, board)
                 if success:
                     field.word_validated_vertical = True
+                else:
+                    if cf is not None:
+                        conflicting_field = cf
 
         else:
-            print_board_raw(board)
-            #time.sleep(0.1)
+            os.system("clear")
+            print_board(board)
             x, y = advance(x, y, len_x, backtracking)
 
+    os.system("clear")
 
 def main():
     parser = ArgumentParser()
@@ -309,7 +361,7 @@ def main():
     board = parse_board(args.dx, args.dy, args.layout)
     initialize_board(board, words)
     solve_board(board, words)
-    print_board_raw(board)
+    print_board(board)
 
 
 if __name__ == "__main__":
