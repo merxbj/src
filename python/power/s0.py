@@ -1,6 +1,7 @@
 import os
 import argparse
 import logging
+import sys
 from pathlib import Path
 
 # hardware access
@@ -146,9 +147,12 @@ if __name__ == '__main__':
     if not os.path.exists(get_log_path()):
         os.makedirs(get_log_path())
 
-    logging.basicConfig(filename=os.path.join(get_log_path(), "power_{}.log".format(args.pin)),
-                        level=logging.DEBUG,
-                        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+    logging.basicConfig(handlers=[
+        logging.FileHandler(os.path.join(get_log_path(), "power_{}.log".format(args.pin))),
+        logging.StreamHandler(stream=sys.stdout)
+    ],
+        level=logging.DEBUG,
+        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     logging.info("Setting up the database ...")
     setup_database()

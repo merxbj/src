@@ -1,5 +1,6 @@
 import os
 import logging
+import sys
 from functools import wraps
 
 # date & time stuff
@@ -563,8 +564,11 @@ if __name__ == "__main__":
     if not os.path.exists(get_log_path()):
         os.makedirs(get_log_path())
 
-    logging.basicConfig(filename=os.path.join(get_log_path(), "web.log"),
-                        level=logging.DEBUG,
-                        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+    logging.basicConfig(handlers=[
+        logging.FileHandler(os.path.join(get_log_path(), "web.log")),
+        logging.StreamHandler(stream=sys.stdout)
+    ],
+        level=logging.DEBUG,
+        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     app.run(debug=True, host="0.0.0.0", port=8081)
