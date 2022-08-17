@@ -515,9 +515,9 @@ def render_power_over_year_chart():
 
 def get_available_dates():
     available_dates_raw = query_db("""
-          SELECT DISTINCT date(timestamp) AS date
-            FROM pulse
-        ORDER BY date(timestamp)
+          SELECT DISTINCT available_date AS date
+            FROM available_date
+        ORDER BY available_date
     """)
 
     available_dates = []

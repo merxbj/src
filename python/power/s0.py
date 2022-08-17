@@ -71,6 +71,14 @@ def store_pulse(pulse, db_conn):
     db_conn.commit()
 
 
+def register_available_date(pulse, db_conn):
+    g, l, t, time = pulse
+    cur = db_conn.cursor()
+    cur.execute("REPLACE INTO available_date VALUES(?, ?)", (g, time.date()))
+    cur.close()
+    db_conn.commit()
+
+
 def db_thread():
     db_conn = create_connection()
     while True:
@@ -91,6 +99,7 @@ def db_thread():
 
         for pulse in pulses_to_handle:
             store_pulse(pulse, db_conn)
+            register_available_date(pulse, db_conn)
             log_pulse(pulse, last_handled_pulse)
             last_handled_pulse = pulse
 
@@ -118,6 +127,14 @@ def setup_database():
                       `source`      int(11) NOT NULL,
                       `description` varchar(100) DEFAULT NULL,
                       PRIMARY KEY (`source`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+                """)
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS `available_date` (
+                      `source`          int(11) NOT NULL,
+                      `available_date`   date NOT NULL,
+                      PRIMARY KEY (`source`, `available_date`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
                 """)
     cur.close()
