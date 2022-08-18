@@ -341,9 +341,11 @@ def get_total_power_reading(day, source):
 def get_pulse_count_for_date(date, source):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+    filter_from = filter_from.astimezone(tz.tzutc())
 
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+    filter_to = filter_to.astimezone(tz.tzutc())
 
     raw_total_pulses = query_db("""          
           SELECT COUNT(*) AS total_pulses 
@@ -392,11 +394,9 @@ def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
     day_from = day_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
-    day_from = day_from.astimezone(tz.tzutc())
 
     day_to = datetime.now()
     day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
-    day_to = day_to.astimezone(tz.tzutc())
 
     df = pd.DataFrame()
 
@@ -489,11 +489,9 @@ def render_power_over_year_chart():
 
     day_from = datetime.now() - relativedelta(months=12)
     day_from = day_from.replace(day=1, tzinfo=tz.tzlocal())
-    day_from = day_from.astimezone(tz.tzutc())
 
     day_to = datetime.now()
     day_to = day_to.replace(day=1, tzinfo=tz.tzlocal())
-    day_to = day_to.astimezone(tz.tzutc())
 
     df = pd.DataFrame()
 
