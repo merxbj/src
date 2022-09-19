@@ -1,5 +1,6 @@
 import os
 import logging
+import sys
 from functools import wraps
 
 # date & time stuff
@@ -340,9 +341,11 @@ def get_total_power_reading(day, source):
 def get_pulse_count_for_date(date, source):
     filter_from = date
     filter_from = filter_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
+    filter_from = filter_from.astimezone(tz.tzutc())
 
     filter_to = date
     filter_to = filter_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
+    filter_to = filter_to.astimezone(tz.tzutc())
 
     raw_total_pulses = query_db("""          
           SELECT COUNT(*) AS total_pulses 
@@ -391,11 +394,9 @@ def render_power_over_month_chart():
 
     day_from = datetime.now() - timedelta(days=30)
     day_from = day_from.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=tz.tzlocal())
-    day_from = day_from.astimezone(tz.tzutc())
 
     day_to = datetime.now()
     day_to = day_to.replace(hour=23, minute=59, second=59, microsecond=999999, tzinfo=tz.tzlocal())
-    day_to = day_to.astimezone(tz.tzutc())
 
     df = pd.DataFrame()
 
@@ -488,11 +489,9 @@ def render_power_over_year_chart():
 
     day_from = datetime.now() - relativedelta(months=12)
     day_from = day_from.replace(day=1, tzinfo=tz.tzlocal())
-    day_from = day_from.astimezone(tz.tzutc())
 
     day_to = datetime.now()
     day_to = day_to.replace(day=1, tzinfo=tz.tzlocal())
-    day_to = day_to.astimezone(tz.tzutc())
 
     df = pd.DataFrame()
 
@@ -514,9 +513,9 @@ def render_power_over_year_chart():
 
 def get_available_dates():
     available_dates_raw = query_db("""
-          SELECT DISTINCT date(timestamp) AS date
-            FROM pulse
-        ORDER BY date(timestamp)
+          SELECT DISTINCT available_date AS date
+            FROM available_date
+        ORDER BY available_date
     """)
 
     available_dates = []
@@ -563,8 +562,11 @@ if __name__ == "__main__":
     if not os.path.exists(get_log_path()):
         os.makedirs(get_log_path())
 
-    logging.basicConfig(filename=os.path.join(get_log_path(), "web.log"),
-                        level=logging.DEBUG,
-                        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+    logging.basicConfig(handlers=[
+        logging.FileHandler(os.path.join(get_log_path(), "web.log")),
+        logging.StreamHandler(stream=sys.stdout)
+    ],
+        level=logging.DEBUG,
+        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     app.run(debug=True, host="0.0.0.0", port=8081)
