@@ -43,6 +43,8 @@ def on_message(wsapp, message):
         object_info = objects[address]
         object_value = decode_object_value(msg["datahex"], object_info["datatype"])
         logging.info("Object: {} -> Value: {}".format(object_info["path"], object_value))
+    else:
+        logging.warning("Unknown address {}: {}".format(address, message))
 
 
 def get_initial_values(host, user_name, password):
@@ -52,14 +54,14 @@ def get_initial_values(host, user_name, password):
     return r.content
 
 
-def get_config(host, user_name, password):
+def get_home_config(host, user_name, password):
     x = (user_name + ":" + password)
     header = {'Authorization': "Basic " + base64.b64encode(x.encode()).decode()}
     r = requests.post(f"http://{host}/apps/data/touch/api/?a=config", headers=header)
     return r.content
 
 
-def preprocess_config(cfg):
+def preprocess_home_config(cfg):
     for floor_config in cfg["floors"]:
         floor_name = floor_config["title"]
         for room_config in floor_config["rooms"]:
@@ -73,6 +75,24 @@ def preprocess_config(cfg):
 
                     object_path = "{} / {} / {} / {}".format(floor_name, room_name, widget_name, object_name)
                     objects[object_address] = {"path": object_path, "datatype": object_datatype}
+
+
+def get_object_config(host, user_name, password):
+    x = (user_name + ":" + password)
+    header = {'Authorization': "Basic " + base64.b64encode(x.encode()).decode()}
+    r = requests.post(f"http://{host}/apps/data/touch/api/?a=objects&dt=%5B%5D", headers=header)
+    return r.content
+
+
+def preprocess_object_config(cfg):
+    for object_config in cfg:
+        object_address = object_config["id"]
+        object_name = object_config["text"].replace(object_address, "").strip()
+        object_datatype = object_config["datatype"]
+
+        if object_address not in objects:
+            logging.debug("Object {} on address {} not placed into any room.".format(object_name, object_address))
+            objects[object_address] = {"path": object_name, "datatype": object_datatype}
 
 
 if __name__ == '__main__':
@@ -101,10 +121,12 @@ if __name__ == '__main__':
     payload = json.loads(get_initial_values(args.host, args.user, args.password))
 
     logging.debug("Getting home configuration ...")
-    config = json.loads(get_config(args.host, args.user, args.password))
+    home_cfg = json.loads(get_home_config(args.host, args.user, args.password))
+    preprocess_home_config(home_cfg)
 
-    logging.debug("Preprocessing home configuration ...")
-    preprocess_config(config)
+    logging.debug("Getting object configuration ...")
+    object_cfg = json.loads(get_object_config(args.host, args.user, args.password))
+    preprocess_object_config(object_cfg)
 
     logging.debug("Starting the web socket client ...")
     wsapp = websocket.WebSocketApp(f"ws://{args.host}/apps/localbus.lp?auth={payload['auth']}", on_message=on_message)
