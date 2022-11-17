@@ -21,6 +21,9 @@ import mariadb
 
 from pathlib import Path
 
+messages = []
+messages_event = Condition()
+
 monitored = ["6/0/1", "6/0/2", "6/0/0"]
 objects = {}
 
@@ -49,12 +52,13 @@ def decode_object_value(hex_encoded, datatype):
 
 
 def on_message(wsapp, message):
-    msg = json.loads(message)
-    address = msg["dst"].replace("\\", "")
-    if address in objects:
-        object_info = objects[address]
-        object_value = decode_object_value(msg["datahex"], object_info["datatype"])
-        logging.info("Object: {} -> Value: {}".format(object_info["path"], object_value))
+    if len(messages) >= 552000:
+        del messages[0]
+
+    messages_event.acquire()
+    messages.append({"values": (message, datetime.utcnow().replace(tzinfo=tz.tzutc())), "handled": False})
+    messages_event.notify()
+    messages_event.release()
 
 
 def get_initial_values(host, user_name, password):
@@ -64,27 +68,148 @@ def get_initial_values(host, user_name, password):
     return r.content
 
 
-def get_config(host, user_name, password):
+def get_home_config(host, user_name, password):
     x = (user_name + ":" + password)
     header = {'Authorization': "Basic " + base64.b64encode(x.encode()).decode()}
     r = requests.post(f"http://{host}/apps/data/touch/api/?a=config", headers=header)
     return r.content
 
 
-def preprocess_config(cfg):
+def preprocess_home_config(cfg):
     for floor_config in cfg["floors"]:
-        floor_name = floor_config["title"]
         for room_config in floor_config["rooms"]:
-            room_name = room_config["title"]
             for widget_config in room_config["widgets"]:
-                widget_name = widget_config["title"]
                 for object_config in widget_config["objects"].values():
                     object_name = object_config["name"]
                     object_address = object_config["address"]
                     object_datatype = object_config["datatype"]
 
-                    object_path = "{} / {} / {} / {}".format(floor_name, room_name, widget_name, object_name)
-                    objects[object_address] = {"path": object_path, "datatype": object_datatype}
+                    objects[object_address] = {"name": object_name, "datatype": object_datatype}
+
+
+def get_object_config(host, user_name, password):
+    x = (user_name + ":" + password)
+    header = {'Authorization': "Basic " + base64.b64encode(x.encode()).decode()}
+    r = requests.post(f"http://{host}/apps/data/touch/api/?a=objects&dt=%5B%5D", headers=header)
+    return r.content
+
+
+def preprocess_object_config(cfg):
+    for object_config in cfg:
+        object_address = object_config["id"]
+        object_name = object_config["text"].replace(object_address, "").strip()
+        object_datatype = object_config["datatype"]
+
+        if object_address not in objects:
+            logging.debug("Object {} on address {} not placed into any room.".format(object_name, object_address))
+            objects[object_address] = {"name": object_name, "datatype": object_datatype}
+
+
+def log_message(msg):
+    address = msg["dst"].replace("\\", "")
+    object_info = objects[address]
+    object_value = decode_object_value(msg["datahex"], object_info["datatype"])
+
+    logging.info("Object: {} -> Value: {}".format(object_info["name"], object_value))
+
+
+def store_message(msg, timestamp, db_conn):
+    address = msg["dst"].replace("\\", "")
+    object_info = objects[address]
+    object_value = decode_object_value(msg["datahex"], object_info["datatype"])
+
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO meteo_event VALUES(?, ?, ?)", (address, timestamp, object_value))
+    cur.close()
+    db_conn.commit()
+
+
+def register_available_date(msg, timestamp, db_conn):
+    address = msg["dst"].replace("\\", "")
+    cur = db_conn.cursor()
+    cur.execute("REPLACE INTO available_date VALUES(?, ?)", (address, timestamp.date()))
+    cur.close()
+    db_conn.commit()
+
+
+def db_thread():
+    db_conn = create_connection()
+    while True:
+        messages_event.acquire()
+        messages_event.wait()
+
+        messages_to_handle = []
+
+        for index in range(len(messages) - 1, -1, -1):
+            if not messages[index]["handled"]:
+                messages_to_handle.insert(0, messages[index]["values"])
+                messages[index]["handled"] = True
+
+        messages_event.release()
+
+        for message in messages_to_handle:
+            msg_raw, timestamp = message
+            msg = json.loads(msg_raw)
+            address = msg["dst"].replace("\\", "")
+            if address in monitored and address in objects:
+                store_message(msg, timestamp, db_conn)
+                register_available_date(msg, timestamp, db_conn)
+                log_message(msg)
+
+
+def create_connection():
+    return mariadb.connect(host='localhost', database='power')
+
+
+def setup_database():
+    con = create_connection()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS `meteo_event` (
+                      `address`      varchar(20) NOT NULL,
+                      `timestamp`   datetime(6) NOT NULL,
+                      `value`       double(10,2) NOT NULL,
+                      PRIMARY KEY (`address`,`timestamp`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+                """)
+
+    cur.close()
+    con.commit()
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS `meteo_event_address` (
+                      `address`      varchar(12) NOT NULL,
+                      `description` varchar(100) DEFAULT NULL,
+                      PRIMARY KEY (`address`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+                """)
+
+    cur = con.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS `available_date` (
+                      `address`          int(11) NOT NULL,
+                      `available_date`   date NOT NULL,
+                      PRIMARY KEY (`address`, `available_date`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+                """)
+    cur.close()
+    con.commit()
+
+    con.close()
+
+
+def register_monitored_objects():
+    db_conn = create_connection()
+    for address in monitored:
+        if address in objects:
+            object_info = objects[address]
+
+            logging.debug("Registering {} at {}".format(object_info["name"], address))
+
+            cur = db_conn.cursor()
+            cur.execute("REPLACE INTO meteo_event_address VALUES(?, ?)", (address, object_info["name"]))
+            cur.close()
+            db_conn.commit()
+
 
 
 if __name__ == '__main__':
@@ -109,15 +234,31 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    logging.info("Setting up the database ...")
+    setup_database()
+
+    logging.info("Setting up the database update thread ...")
+    db_thread = Thread(target=db_thread)
+    db_thread.start()
+
     logging.debug("Getting initial values ...")
     payload = json.loads(get_initial_values(args.host, args.user, args.password))
 
     logging.debug("Getting home configuration ...")
-    config = json.loads(get_config(args.host, args.user, args.password))
+    home_cfg = json.loads(get_home_config(args.host, args.user, args.password))
+    preprocess_home_config(home_cfg)
 
-    logging.debug("Preprocessing home configuration ...")
-    preprocess_config(config)
+    logging.debug("Getting object configuration ...")
+    object_cfg = json.loads(get_object_config(args.host, args.user, args.password))
+    preprocess_object_config(object_cfg)
+
+    logging.debug("Registering monitored objects ...")
+    register_monitored_objects()
 
     logging.debug("Starting the web socket client ...")
     wsapp = websocket.WebSocketApp(f"ws://{args.host}/apps/localbus.lp?auth={payload['auth']}", on_message=on_message)
     wsapp.run_forever()
+
+    logging.info("Monitoring meteo updates ... ")
+
+    db_thread.join()
