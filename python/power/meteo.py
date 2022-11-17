@@ -8,9 +8,21 @@ import base64
 import argparse
 import logging
 
+# date & time stuff
+from datetime import datetime, timedelta
+from dateutil import tz
+
+# threading
+from threading import Thread
+from threading import Condition
+
+# database
+import mariadb
+
 from pathlib import Path
 
-sensor = 0
+monitored = ["6/0/1", "6/0/2", "6/0/0"]
+objects = {}
 
 
 def get_log_path():
@@ -27,17 +39,22 @@ def decode_fixed_decimal(hex_encoded):
     return value
 
 
+def decode_object_value(hex_encoded, datatype):
+    if datatype == 1:
+        return "Off" if int(hex_encoded) == 0 else "On"
+    elif datatype == 9:
+        return decode_fixed_decimal(hex_encoded)
+    else:
+        return hex_encoded
+
+
 def on_message(wsapp, message):
-
-    j = json.loads(message)
-
-    if j['dstraw'] == sensor:
-        logging.debug(message)
-        logging.info("Temperature Change: {}C".format(str(decode_fixed_decimal(j['datahex']))))
-
-    if j['dst'] == dst:
-        logging.debug(message)
-        logging.info("Wind Speed Change: {}m/s".str(decode_fixed_decimal(j['datahex'])))
+    msg = json.loads(message)
+    address = msg["dst"].replace("\\", "")
+    if address in objects:
+        object_info = objects[address]
+        object_value = decode_object_value(msg["datahex"], object_info["datatype"])
+        logging.info("Object: {} -> Value: {}".format(object_info["path"], object_value))
 
 
 def get_initial_values(host, user_name, password):
@@ -47,16 +64,27 @@ def get_initial_values(host, user_name, password):
     return r.content
 
 
-def get_sensor_value(data):
-    for obj in data['objects']:
-        if obj['id'] == sensor:
-            return decode_fixed_decimal(obj['datahex'])
+def get_config(host, user_name, password):
+    x = (user_name + ":" + password)
+    header = {'Authorization': "Basic " + base64.b64encode(x.encode()).decode()}
+    r = requests.post(f"http://{host}/apps/data/touch/api/?a=config", headers=header)
+    return r.content
 
 
-def get_dst_value(data):
-    for obj in data['objects']:
-        if obj['id'] == 12290:
-            return decode_fixed_decimal(obj['datahex'])
+def preprocess_config(cfg):
+    for floor_config in cfg["floors"]:
+        floor_name = floor_config["title"]
+        for room_config in floor_config["rooms"]:
+            room_name = room_config["title"]
+            for widget_config in room_config["widgets"]:
+                widget_name = widget_config["title"]
+                for object_config in widget_config["objects"].values():
+                    object_name = object_config["name"]
+                    object_address = object_config["address"]
+                    object_datatype = object_config["datatype"]
+
+                    object_path = "{} / {} / {} / {}".format(floor_name, room_name, widget_name, object_name)
+                    objects[object_address] = {"path": object_path, "datatype": object_datatype}
 
 
 if __name__ == '__main__':
@@ -65,17 +93,13 @@ if __name__ == '__main__':
         os.makedirs(get_log_path())
 
     logging.basicConfig(handlers=[
-        logging.FileHandler(os.path.join(get_log_path(), "meteo.log")),
+        logging.FileHandler(os.path.join(get_log_path(), "meteo.log"), encoding="utf-8"),
         logging.StreamHandler(stream=sys.stdout)
     ],
         level=logging.DEBUG,
         format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     parser = argparse.ArgumentParser(description='Monitor meteorological data.')
-    parser.add_argument("-s" "--sensor", dest="sensor", default="12289", type=int,
-                        help="Sensor to pull data from")
-    parser.add_argument("-d" "--dst", dest="dst", default="6\\/0\\/2", type=str,
-                        help="Sensor to pull data from")
     parser.add_argument("-u" "--user", dest="user", type=str,
                         help="User name to connect to the meteorological station")
     parser.add_argument("-p" "--password", dest="password", type=str,
@@ -85,13 +109,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    sensor = args.sensor
-    dst = args.dst
-
+    logging.debug("Getting initial values ...")
     payload = json.loads(get_initial_values(args.host, args.user, args.password))
-    logging.info("Initial Temperature: {}C".format(get_sensor_value(payload)))
-    logging.info("Initial Wind Speed: {}m/s".format(get_dst_value(payload)))
 
-    auth = payload["auth"]
-    wsapp = websocket.WebSocketApp(f"ws://{args.host}/apps/localbus.lp?auth={auth}", on_message=on_message)
+    logging.debug("Getting home configuration ...")
+    config = json.loads(get_config(args.host, args.user, args.password))
+
+    logging.debug("Preprocessing home configuration ...")
+    preprocess_config(config)
+
+    logging.debug("Starting the web socket client ...")
+    wsapp = websocket.WebSocketApp(f"ws://{args.host}/apps/localbus.lp?auth={payload['auth']}", on_message=on_message)
     wsapp.run_forever()
