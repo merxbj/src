@@ -127,7 +127,7 @@ def store_message(msg, timestamp, db_conn):
 def register_available_date(msg, timestamp, db_conn):
     address = msg["dst"].replace("\\", "")
     cur = db_conn.cursor()
-    cur.execute("REPLACE INTO available_date VALUES(?, ?)", (address, timestamp.date()))
+    cur.execute("REPLACE INTO meteo_event_available_date VALUES(?, ?)", (address, timestamp.date()))
     cur.close()
     db_conn.commit()
 
@@ -166,7 +166,7 @@ def setup_database():
 
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS `meteo_event` (
-                      `address`      varchar(20) NOT NULL,
+                      `address`      varchar(12) NOT NULL,
                       `timestamp`   datetime(6) NOT NULL,
                       `value`       double(10,2) NOT NULL,
                       PRIMARY KEY (`address`,`timestamp`)
@@ -185,8 +185,8 @@ def setup_database():
                 """)
 
     cur = con.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS `available_date` (
-                      `address`          int(11) NOT NULL,
+    cur.execute("""CREATE TABLE IF NOT EXISTS `meteo_event_available_date` (
+                      `address`          varchar(12) NOT NULL,
                       `available_date`   date NOT NULL,
                       PRIMARY KEY (`address`, `available_date`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -209,7 +209,6 @@ def register_monitored_objects():
             cur.execute("REPLACE INTO meteo_event_address VALUES(?, ?)", (address, object_info["name"]))
             cur.close()
             db_conn.commit()
-
 
 
 if __name__ == '__main__':
