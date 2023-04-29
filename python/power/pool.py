@@ -1,4 +1,5 @@
 import argparse
+from datetime import datetime, timedelta
 import logging
 import os
 import sys
@@ -6,10 +7,114 @@ from pathlib import Path
 
 import growattServer
 import ShellyPy
+import schedule
+import time
+import functools
+
+
+# let's define the Growatt API on a global level for easier access
+growatt_api = growattServer.GrowattApi()
+
+filtration_started_at = None
 
 
 def get_log_path():
     return os.path.join(str(Path.home()), "log/pool/")
+
+
+def catch_exceptions(cancel_on_failure=False):
+    def catch_exceptions_decorator(job_func):
+        @functools.wraps(job_func)
+        def wrapper(*args, **kwargs):
+            try:
+                return job_func(*args, **kwargs)
+            except:
+                import traceback
+                print(traceback.format_exc())
+                if cancel_on_failure:
+                    return schedule.CancelJob
+        return wrapper
+    return catch_exceptions_decorator
+
+
+@catch_exceptions(cancel_on_failure=False)
+def evaluate_power_availability():
+
+    # There is a fixed schedule on the Shelly, to run the filtration (pump):
+    #   From 7:00 to 9:00
+    #   From 20:00 to 22:00
+    # Additionally, the pool heating is set to only run:
+    #   From 11:00 to 18:00
+    # Therefore, the fixed schedule is to ensure the pool water is cleaned up
+    # Finally, our window for OPTIONAL filtration (including the heating) is:
+    #   From 11:00 to 18:00 (includes intentional 2hrs around the fixed schedule)
+
+    now = datetime.now()
+
+    if now.hour >= 18 or now.hour <= 10:
+        logging.debug("Not evaluating available power at this time ...")
+        return
+
+    mix_system_status = growatt_api.mix_system_status(args.mix_id, args.plant_id)
+    logging.info("Current Inverter Values: {}".format(mix_system_status))
+
+    battery_level = float(mix_system_status["SOC"])
+    solar_production = float(mix_system_status["ppv"])
+    local_load = float(mix_system_status["pLocalLoad"])
+
+    global filtration_started_at
+
+    # unused for now but leaving this here for future reference
+    #export_to_grid = float(mix_system_status["pactogrid"])
+    #batter_charge_power = float(mix_system_status["chargePower"])
+    #batter_discharge_power = float(mix_system_status["pdisCharge1"])
+
+    # If the battery is almost charged, and we still have power left, let's turn on the filtration
+    # Note that 1kw of leftover power will not cover the entire load of pool (800W pump + maybe 3.5kw of heat pump)
+    # But better to spend a little bit of money to keep the pool clean and warm than give even 1.0kW to grid
+    if filtration_started_at is None and battery_level >= 98.0 and (solar_production - local_load) > 1.0:
+
+        # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
+        if now.hour == 17 and now.minute > 15:
+            logging.info("It's too late! Leftover solar power {}kW with {}% battery level.".format(
+                solar_production - local_load,
+                battery_level
+            ))
+            return
+
+        device = ShellyPy.Shelly(args.relay_ip)
+        device.relay(0, turn=True)
+        filtration_started_at = now
+
+        logging.info("Started filtration! Leftover solar power {}kW with {}% battery level.".format(
+            solar_production - local_load,
+            battery_level
+        ))
+
+    # If the filtration has already been started but there is not enough leftover power, consider stopping it
+    # Note that based on the battery level we have been clearly discharging for some time
+    # Also the 2.5kW difference is likely to turn into a surplus (if we have been heating as well) that will help
+    # recharge the battery.
+    elif filtration_started_at is not None and battery_level < 80.0 and (solar_production - local_load) < -2.5:
+        filtration_runtime = now - filtration_started_at
+
+        # Let's also give the filtration some time to run, once we started it, even if it is from grid
+        if filtration_runtime >= timedelta(hours=1):
+            device = ShellyPy.Shelly(args.relay_ip)
+            device.relay(0, turn=False)
+            filtration_started_at = None
+
+            logging.info("Stopped filtration! Leftover solar power {}kW with {}% battery level. Runtime: {}".format(
+                solar_production - local_load,
+                battery_level,
+                str(filtration_runtime)
+            ))
+        else:
+            logging.info("Kept filtration on! Leftover solar power {}kW with {}% battery level. Runtime: {}".format(
+                solar_production - local_load,
+                battery_level,
+                str(filtration_runtime)
+            ))
 
 
 if __name__ == '__main__':
@@ -38,13 +143,17 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    api = growattServer.GrowattApi()
-    api.server_url = r"https://server.growatt.com/"
-    login_response = api.login(args.growatt_user, args.growatt_password)
+    # First, let's log in with the Growatt API
+    growatt_api.server_url = r"https://server.growatt.com/"
+    login_response = growatt_api.login(args.growatt_user, args.growatt_password)
 
-    print(api.mix_system_status(args.mix_id, args.plant_id))
+    # Then, schedule a job to check the Solar status every 15 minutes
+    schedule.every(15).minutes.do(evaluate_power_availability)
 
-    device = ShellyPy.Shelly(args.relay_ip)
-    device.relay(0, turn=False)
+    # Run the job immediately after a startup
+    schedule.run_all()
 
-    # 'ppv': '0.24', 'pactogrid': '0.03', 'SOC': '42', 'pLocalLoad': '0.72' 'pdisCharge1': '0.19' 'chargePower': '0'
+    # And finally, according to a schedule
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
