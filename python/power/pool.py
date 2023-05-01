@@ -119,9 +119,11 @@ def evaluate_power_availability():
             ))
             
     else:
-        logging.info("Kept filtration off! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
+        logging.info("Kept filtration {}}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{}".format(
+                "on" if filtration_started_at is not None else "off",
                 solar_production - local_load,
-                battery_level
+                battery_level,
+                " Runtime: {}".format(now - filtration_started_at) if filtration_started_at is not None else ""
             ))
 
 
