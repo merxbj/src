@@ -14,6 +14,7 @@ import functools
 
 # let's define the Growatt API on a global level for easier access
 growatt_api = growattServer.GrowattApi()
+growatt_api.server_url = r"https://server.growatt.com/"
 
 filtration_started_at = None
 
@@ -55,6 +56,7 @@ def evaluate_power_availability():
         logging.debug("Not evaluating available power at this time ...")
         return
 
+    login_response = growatt_api.login(args.growatt_user, args.growatt_password)
     mix_system_status = growatt_api.mix_system_status(args.mix_id, args.plant_id)
     logging.info("Current Inverter Values: {}".format(mix_system_status))
 
@@ -76,7 +78,7 @@ def evaluate_power_availability():
 
         # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
         if now.hour == 17 and now.minute > 15:
-            logging.info("It's too late! Leftover solar power {}kW with {}% battery level.".format(
+            logging.info("It's too late! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
                 solar_production - local_load,
                 battery_level
             ))
@@ -86,7 +88,7 @@ def evaluate_power_availability():
         device.relay(0, turn=True)
         filtration_started_at = now
 
-        logging.info("Started filtration! Leftover solar power {}kW with {}% battery level.".format(
+        logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
             solar_production - local_load,
             battery_level
         ))
@@ -104,16 +106,22 @@ def evaluate_power_availability():
             device.relay(0, turn=False)
             filtration_started_at = None
 
-            logging.info("Stopped filtration! Leftover solar power {}kW with {}% battery level. Runtime: {}".format(
+            logging.info("Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
                 solar_production - local_load,
                 battery_level,
                 str(filtration_runtime)
             ))
         else:
-            logging.info("Kept filtration on! Leftover solar power {}kW with {}% battery level. Runtime: {}".format(
+            logging.info("Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
                 solar_production - local_load,
                 battery_level,
                 str(filtration_runtime)
+            ))
+            
+    else:
+        logging.info("Kept filtration off! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
+                solar_production - local_load,
+                battery_level
             ))
 
 
@@ -142,10 +150,6 @@ if __name__ == '__main__':
                         help="IP Address of the Shelly relay controlling the pump.")
 
     args = parser.parse_args()
-
-    # First, let's log in with the Growatt API
-    growatt_api.server_url = r"https://server.growatt.com/"
-    login_response = growatt_api.login(args.growatt_user, args.growatt_password)
 
     # Then, schedule a job to check the Solar status every 15 minutes
     schedule.every(15).minutes.do(evaluate_power_availability)
