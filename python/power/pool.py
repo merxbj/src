@@ -53,12 +53,12 @@ def evaluate_power_availability():
     now = datetime.now()
 
     if now.hour >= 18 or now.hour <= 10:
-        logging.debug("Not evaluating available power at this time ...")
+        logging.info("Not evaluating available power at this time ...")
         return
 
     login_response = growatt_api.login(args.growatt_user, args.growatt_password)
     mix_system_status = growatt_api.mix_system_status(args.mix_id, args.plant_id)
-    logging.info("Current Inverter Values: {}".format(mix_system_status))
+    logging.debug("Current Inverter Values: {}".format(mix_system_status))
 
     battery_level = float(mix_system_status["SOC"])
     solar_production = float(mix_system_status["ppv"])
@@ -119,7 +119,7 @@ def evaluate_power_availability():
             ))
             
     else:
-        logging.info("Kept filtration {}}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{}".format(
+        logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{}".format(
                 "on" if filtration_started_at is not None else "off",
                 solar_production - local_load,
                 battery_level,
@@ -136,7 +136,7 @@ if __name__ == '__main__':
         logging.FileHandler(os.path.join(get_log_path(), "pool.log"), encoding="utf-8"),
         logging.StreamHandler(stream=sys.stdout)
     ],
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     parser = argparse.ArgumentParser(description='Controls the pool filtration pump.')
