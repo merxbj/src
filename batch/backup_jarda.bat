@@ -1,3 +1,5 @@
+robocopy /MIR /v C:\Photography\2022 "D:\Jarda Backup\2022"
+robocopy /MIR /v C:\Photography\2021 "D:\Jarda Backup\2021"
 robocopy /MIR /v C:\Photography\2020 "D:\Jarda Backup\2020"
 robocopy /MIR /v C:\Photography\2019 "D:\Jarda Backup\2019"
 robocopy /MIR /v C:\Photography\2018 "D:\Jarda Backup\2018"
