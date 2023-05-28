@@ -51,8 +51,10 @@ def evaluate_power_availability():
     #   From 11:00 to 18:00 (includes intentional 2hrs around the fixed schedule)
 
     now = datetime.now()
+    
+    global filtration_started_at
 
-    if now.hour >= 18 or now.hour <= 10:
+    if filtration_started_at is None and now.hour >= 18 or now.hour <= 10:
         logging.info("Not evaluating available power at this time ...")
         return
 
@@ -63,8 +65,6 @@ def evaluate_power_availability():
     battery_level = float(mix_system_status["SOC"])
     solar_production = float(mix_system_status["ppv"])
     local_load = float(mix_system_status["pLocalLoad"])
-
-    global filtration_started_at
 
     # unused for now but leaving this here for future reference
     #export_to_grid = float(mix_system_status["pactogrid"])
