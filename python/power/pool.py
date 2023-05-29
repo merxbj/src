@@ -74,7 +74,7 @@ def evaluate_power_availability():
     # If the battery is almost charged, and we still have power left, let's turn on the filtration
     # Note that 1kw of leftover power will not cover the entire load of pool (800W pump + maybe 3.5kw of heat pump)
     # But better to spend a little bit of money to keep the pool clean and warm than give even 1.0kW to grid
-    if filtration_started_at is None and battery_level >= 98.0 and (solar_production - local_load) > 1.0:
+    if filtration_started_at is None and battery_level >= 95.0 and (solar_production - local_load) > 1.0:
 
         # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
         if now.hour == 17 and now.minute > 15:
@@ -98,6 +98,30 @@ def evaluate_power_availability():
     # Also the 2.5kW difference is likely to turn into a surplus (if we have been heating as well) that will help
     # recharge the battery.
     elif filtration_started_at is not None and battery_level < 80.0 and (solar_production - local_load) < -2.5:
+        filtration_runtime = now - filtration_started_at
+
+        # Let's also give the filtration some time to run, once we started it, even if it is from grid
+        if filtration_runtime >= timedelta(hours=1):
+            device = ShellyPy.Shelly(args.relay_ip)
+            device.relay(0, turn=False)
+            filtration_started_at = None
+
+            logging.info("Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
+                solar_production - local_load,
+                battery_level,
+                str(filtration_runtime)
+            ))
+        else:
+            logging.info("Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
+                solar_production - local_load,
+                battery_level,
+                str(filtration_runtime)
+            ))
+            
+    # If the filtration has already been started but there is not enough leftover power, consider stopping it
+    # Note that based on the battery level we have been clearly discharging for some time
+    # In this case, we already managed to bring the battery level under 70% - let's switch of filtration and start recharging
+    elif filtration_started_at is not None and battery_level < 70.0:
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
@@ -150,8 +174,13 @@ if __name__ == '__main__':
                         help="Mix ID of the Inventor withing Growatt API")
     parser.add_argument("-rip" "--relay_ip_address", dest="relay_ip", type=str,
                         help="IP Address of the Shelly relay controlling the pump.")
+    parser.add_argument("-fsa" "--filtration_started_at", dest="fsa", type=str,
+                        help="Specify when the filtration was started at (useful for restarts)")
 
     args = parser.parse_args()
+    
+    if args.fsa is not None or args.fsa != '':
+        filtration_started_at = datetime.fromisoformat(args.fsa)
 
     # Then, schedule a job to check the Solar status every 15 minutes
     schedule.every(15).minutes.do(evaluate_power_availability)
