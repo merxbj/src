@@ -1,6 +1,7 @@
 import os
 import argparse
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
 from pathlib import Path
 
@@ -165,7 +166,8 @@ if __name__ == '__main__':
         os.makedirs(get_log_path())
 
     logging.basicConfig(handlers=[
-        logging.FileHandler(os.path.join(get_log_path(), "power_{}.log".format(args.pin))),
+        RotatingFileHandler(os.path.join(get_log_path(), "power_{}.log".format(args.pin)), encoding="utf-8",
+                            maxBytes=10485760, backupCount=20),
         logging.StreamHandler(stream=sys.stdout)
     ],
         level=logging.DEBUG,

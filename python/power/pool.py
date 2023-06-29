@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from logging.handlers import RotatingFileHandler
 
 import growattServer
 import ShellyPy
@@ -157,7 +158,8 @@ if __name__ == '__main__':
         os.makedirs(get_log_path())
 
     logging.basicConfig(handlers=[
-        logging.FileHandler(os.path.join(get_log_path(), "pool.log"), encoding="utf-8"),
+        RotatingFileHandler(os.path.join(get_log_path(), "pool.log"), encoding="utf-8",
+                            maxBytes=10485760, backupCount=20),
         logging.StreamHandler(stream=sys.stdout)
     ],
         level=logging.INFO,
@@ -179,7 +181,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    if args.fsa is not None or args.fsa != '':
+    if args.fsa is not None and args.fsa != '':
         filtration_started_at = datetime.fromisoformat(args.fsa)
 
     # Then, schedule a job to check the Solar status every 15 minutes
