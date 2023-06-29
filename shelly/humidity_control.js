@@ -3,6 +3,16 @@
 */
 let currentSwitchStatus = "Off";
 
+function debugMessage(message) {
+    print(message);
+    
+    if (MQTT.isConnected()) {
+        MQTT.publish("power/pool", message, 0, true);
+    } else {
+        print("MQTT NOT Connected");
+    }
+}
+
 /*
     Updates the switch status (global variable) based on the actual state
 */
@@ -34,44 +44,41 @@ function timerCode() {
         },
         function(result, error_code, error_message) {
             if (error_code !== 0) {
-                // The HTTP.GET failed critically (e.g. connection timeout)
-                print("Cannot access humidity sensor! Error Code:", 
-                      error_code, ", Error Message:",
-                      error_message);
+                debugMessage("Cannot access humidity sensor! Error Code:" + error_code + 
+                             ", Error Message:" + error_message);
                 return;
             }
             if (result.code !== 200) {
-                // The HTTP.GET failed gracefully, we got some bad response from the sensor
-                print("Humidity sensor is unavailable! HTTP Status Code: ", result.code);
+                debugMessage("Humidity sensor is unavailable! HTTP Status Code: " + result.code);
                 return;
             }
             
             // get the humidity value first from the sensor
             let sensorData = JSON.parse(result.body);
-            let humidityValue = sensorData.multiSensor.sensors[0].value / 100;
+            let humidity = sensorData.multiSensor.sensors[0].value / 100;
+            let humidityStr = JSON.stringify(humidity);
 
             // update the current switch status to know what to do with the dehumidifer
             updateCurrentSwitchStatus();
 
-            if ((humidityValue > 69.0) && (currentSwitchStatus === "Off")) {
+            if ((humidity > 60.0) && (currentSwitchStatus === "Off")) {
                 // We are over our threshold and the switch is off, we need to start dehumi.
                 Shelly.call("Switch.set", {
                     'id': 0,
                     'on': true
                 });
-                print("Humidity Value:", humidityValue, "%. Turning ON dehumidifier!");
-            } else if ((humidityValue < 60.0) && (currentSwitchStatus === "On")) {
+                debugMessage("Humidity: " + humidityStr + "%. Turning ON dehumidifier!");
+            } else if ((humidity < 50.0) && (currentSwitchStatus === "On")) {
                 // We are under our threshold and the switch is on, we need to stop dehumi.
                 Shelly.call("Switch.set", {
                     'id': 0,
                     'on': false
                 });
-                print("Humidity Value:", humidityValue, "%. Turning OFF dehumidifier!");
+                debugMessage("Humidity: " + humidityStr + "%. Turning OFF dehumidifier!");
             } else {
                 // Otherwise, nothing to do
-                print("Humidity Value:", humidityValue,
-                    "%. And Switch is:", currentSwitchStatus,
-                    ". Not doing anything!");
+                debugMessage("Humidity: " + humidityStr + "% and Switch is: " + 
+                             currentSwitchStatus + ". Not doing anything!");
             }
         }
     );
@@ -86,7 +93,4 @@ Timer.set(
     timerCode
 );
 
-/*
-    Run immediatelly
-*/
 timerCode();
