@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    if args.fsa is not None or args.fsa != '':
+    if args.fsa is not None and args.fsa != '':
         filtration_started_at = datetime.fromisoformat(args.fsa)
 
     # Then, schedule a job to check the Solar status every 15 minutes
