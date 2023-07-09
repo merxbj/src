@@ -69,7 +69,7 @@ def evaluate_power_availability():
 
     # unused for now but leaving this here for future reference
     #export_to_grid = float(mix_system_status["pactogrid"])
-    #batter_charge_power = float(mix_system_status["chargePower"])
+    #battery_charge_power = float(mix_system_status["chargePower"])
     #batter_discharge_power = float(mix_system_status["pdisCharge1"])
 
     # If the battery is almost charged, and we still have power left, let's turn on the filtration
