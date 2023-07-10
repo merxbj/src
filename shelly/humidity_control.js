@@ -23,8 +23,8 @@ function updateCurrentSwitchStatus() {
         },
         function(result, error_code, error_message) {
             if (error_code !== 0) {
-                debugMessage("Cannot update switch status! Error Code:" + 
-                             JSON.stringify(error_code) + ", Error Message:" + error_message);
+                debugMessage("Cannot update switch status! Error Code: " + 
+                             JSON.stringify(error_code) + ", Error Message: " + error_message);
                 return;
             }
  
@@ -54,8 +54,8 @@ function timerCode() {
         },
         function(result, error_code, error_message) {
             if (error_code !== 0) {
-                debugMessage("Cannot access humidity sensor! Error Code:" + 
-                             JSON.stringify(error_code) + ", Error Message:" + error_message);
+                debugMessage("Cannot access humidity sensor! Error Code: " + 
+                             JSON.stringify(error_code) + ", Error Message: " + error_message);
                 return;
             }
             if (result.code !== 200) {
@@ -101,4 +101,5 @@ Timer.set(
     timerCode
 );
 
+// Run on startup
 timerCode();
