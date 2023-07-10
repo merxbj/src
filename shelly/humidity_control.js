@@ -22,6 +22,12 @@ function updateCurrentSwitchStatus() {
             id: 0,
         },
         function(result, error_code, error_message) {
+            if (error_code !== 0) {
+                debugMessage("Cannot update switch status! Error Code:" + 
+                             JSON.stringify(error_code) + ", Error Message:" + error_message);
+                return;
+            }
+ 
             if (result.output === true) {
                 currentSwitchStatus = "On";
             } else {
@@ -38,18 +44,23 @@ function updateCurrentSwitchStatus() {
     The goal is to keep the humidity between 60 and 69 percent
 */
 function timerCode() {
+    
+    // update the current switch status to know what to do with the dehumidifer
+    updateCurrentSwitchStatus();
+
     Shelly.call(
         "HTTP.GET", {
             "url": "http://192.168.88.76/state",
         },
         function(result, error_code, error_message) {
             if (error_code !== 0) {
-                debugMessage("Cannot access humidity sensor! Error Code:" + error_code + 
-                             ", Error Message:" + error_message);
+                debugMessage("Cannot access humidity sensor! Error Code:" + 
+                             JSON.stringify(error_code) + ", Error Message:" + error_message);
                 return;
             }
             if (result.code !== 200) {
-                debugMessage("Humidity sensor is unavailable! HTTP Status Code: " + result.code);
+                debugMessage("Humidity sensor is unavailable! HTTP Status Code: " + 
+                             JSON.stringify(result.code));
                 return;
             }
             
@@ -58,17 +69,14 @@ function timerCode() {
             let humidity = sensorData.multiSensor.sensors[0].value / 100;
             let humidityStr = JSON.stringify(humidity);
 
-            // update the current switch status to know what to do with the dehumidifer
-            updateCurrentSwitchStatus();
-
-            if ((humidity > 60.0) && (currentSwitchStatus === "Off")) {
+            if ((humidity > 65.0) && (currentSwitchStatus === "Off")) {
                 // We are over our threshold and the switch is off, we need to start dehumi.
                 Shelly.call("Switch.set", {
                     'id': 0,
                     'on': true
                 });
                 debugMessage("Humidity: " + humidityStr + "%. Turning ON dehumidifier!");
-            } else if ((humidity < 50.0) && (currentSwitchStatus === "On")) {
+            } else if ((humidity < 55.0) && (currentSwitchStatus === "On")) {
                 // We are under our threshold and the switch is on, we need to stop dehumi.
                 Shelly.call("Switch.set", {
                     'id': 0,
