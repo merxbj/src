@@ -12,12 +12,35 @@ import schedule
 import time
 import functools
 
-
 # let's define the Growatt API on a global level for easier access
 growatt_api = growattServer.GrowattApi()
 growatt_api.server_url = r"https://server.growatt.com/"
 
 filtration_started_at = None
+
+
+class SolarData:
+
+    def __init__(self):
+        self.battery_level = 0.0
+        self.solar_production = 0.0
+        self.local_load = 0.0
+        self.export_to_grid = 0.0
+        self.battery_charge_power = 0.0
+        self.batter_discharge_power = 0.0
+
+    def parse(self, mix_system_status):
+        self.battery_level = float(mix_system_status["SOC"])
+        self.solar_production = float(mix_system_status["ppv"])
+        self.local_load = float(mix_system_status["pLocalLoad"])
+
+        # unused for now but leaving this here for future reference
+        self.export_to_grid = float(mix_system_status["pactogrid"])
+        self.battery_charge_power = float(mix_system_status["chargePower"])
+        self.batter_discharge_power = float(mix_system_status["pdisCharge1"])
+
+    def leftover_power(self):
+        return self.solar_production - self.local_load
 
 
 def get_log_path():
@@ -35,29 +58,49 @@ def catch_exceptions(cancel_on_failure=False):
                 print(traceback.format_exc())
                 if cancel_on_failure:
                     return schedule.CancelJob
+
         return wrapper
+
     return catch_exceptions_decorator
 
 
-def has_sufficient_power(battery_level, solar_production, local_load):
+def has_sufficient_power(solar_data):
     # If the battery is almost charged, and we still have power left, let's turn on the filtration
-    # Note that 1kw of leftover power will not cover the entire load of pool (800W pump + maybe 3.5kw of heat pump)
+    # Note that 1kW of leftover power will not cover the entire load of pool (0.8kW pump + maybe 3.5kw of heat pump)
     # But better to spend a little bit of money to keep the pool clean and warm than give even 1.0kW to grid
-    return battery_level >= 95.0 and (solar_production - local_load) > 1.0
+    almost_charged = solar_data.battery_level >= 95.0 and solar_data.leftover_power() > 1.0
+
+    # If the battery is clearly charging up rapidly, let's start the filtration a little bit sooner
+    # The idea is that within the next evaluation cycle, the battery might already be charged and
+    # It also takes at least 5 more minutes before the heating kicks in
+    # This usually happens during the sunny days
+    charging_rapidly = solar_data.battery_level >= 85.0 and solar_data.leftover_power() > 2.5
+
+    # TODO: Calculate using the battery_charge_power, battery_level and capacity (4*2.56) to come up with better est.
+
+    return almost_charged or charging_rapidly
 
 
-def has_insufficient_power(battery_level, solar_production, local_load):
-    # If the filtration has already been started but there is not enough leftover power, consider stopping it
+def has_insufficient_power(solar_data, after_hours):
     # Note that based on the battery level we have been clearly discharging for some time
     # Also the 2.5kW difference is likely to turn into a surplus (if we have been heating as well) that will help
     # recharge the battery.
+    discharging_rapidly = solar_data.battery_level < 80.0 and solar_data.leftover_power() < -2.5
+
     # Or, we already managed to bring the battery level under 70% - let's switch of filtration and start recharging
-    return (battery_level < 80.0 and (solar_production - local_load) < -2.5) or (battery_level < 70.0)
+    battery_low = solar_data.battery_level < 70.0
+
+    # Or, we are already outside our optional filtration window (after_hours) which is likely in the evening
+    # Then, 90% battery is already not enough
+    might_not_recharge = after_hours and solar_data.battery_level < 90.0
+
+    # TODO: Calculate using the battery_discharge_power and battery_level to come up with better est.
+
+    return discharging_rapidly or battery_low or might_not_recharge
 
 
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_power_availability():
-
     # There is a fixed schedule on the Shelly, to run the filtration (pump):
     #   From 7:00 to 9:00
     #   From 20:00 to 22:00
@@ -68,33 +111,30 @@ def evaluate_power_availability():
     #   From 11:00 to 18:00 (includes intentional 2hrs around the fixed schedule)
 
     now = datetime.now()
-
     global filtration_started_at
+    after_hours = False
 
-    if filtration_started_at is None and now.hour >= 18 or now.hour <= 10:
-        logging.info("Not evaluating available power at this time ...")
-        return
+    if now.hour >= 18 or now.hour <= 10:
+        if filtration_started_at is None:
+            logging.info("Not evaluating available power at this time ...")
+            return
+        else:
+            after_hours = True
 
     login_response = growatt_api.login(args.growatt_user, args.growatt_password)
     mix_system_status = growatt_api.mix_system_status(args.mix_id, args.plant_id)
     logging.debug("Current Inverter Values: {}".format(mix_system_status))
 
-    battery_level = float(mix_system_status["SOC"])
-    solar_production = float(mix_system_status["ppv"])
-    local_load = float(mix_system_status["pLocalLoad"])
+    solar_data = SolarData()
+    solar_data.parse(mix_system_status)
 
-    # unused for now but leaving this here for future reference
-    # export_to_grid = float(mix_system_status["pactogrid"])
-    # battery_charge_power = float(mix_system_status["chargePower"])
-    # batter_discharge_power = float(mix_system_status["pdisCharge1"])
-
-    if filtration_started_at is None and has_sufficient_power(battery_level, solar_production, local_load):
+    if filtration_started_at is None and has_sufficient_power(solar_data):
 
         # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
         if now.hour == 17 and now.minute > 15:
             logging.info("It's too late! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
-                solar_production - local_load,
-                battery_level
+                solar_data.leftover_power(),
+                solar_data.battery_level
             ))
             return
 
@@ -103,11 +143,11 @@ def evaluate_power_availability():
         filtration_started_at = now
 
         logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
-            solar_production - local_load,
-            battery_level
+            solar_data.leftover_power(),
+            solar_data.battery_level
         ))
 
-    elif filtration_started_at is not None and has_insufficient_power(battery_level, solar_production, local_load):
+    elif filtration_started_at is not None and has_insufficient_power(solar_data, after_hours):
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
@@ -118,23 +158,23 @@ def evaluate_power_availability():
 
             logging.info(
                 "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
-                    solar_production - local_load,
-                    battery_level,
+                    solar_data.leftover_power(),
+                    solar_data.battery_level,
                     str(filtration_runtime)
                 ))
         else:
             logging.info(
                 "Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
-                    solar_production - local_load,
-                    battery_level,
+                    solar_data.leftover_power(),
+                    solar_data.battery_level,
                     str(filtration_runtime)
                 ))
 
     else:
         logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{}".format(
             "on" if filtration_started_at is not None else "off",
-            solar_production - local_load,
-            battery_level,
+            solar_data.leftover_power(),
+            solar_data.battery_level,
             " Runtime: {}".format(now - filtration_started_at) if filtration_started_at is not None else ""
         ))
 
