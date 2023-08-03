@@ -55,7 +55,7 @@ def catch_exceptions(cancel_on_failure=False):
                 return job_func(*args, **kwargs)
             except:
                 import traceback
-                print(traceback.format_exc())
+                logging.error(traceback.format_exc())
                 if cancel_on_failure:
                     return schedule.CancelJob
 
