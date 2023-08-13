@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 import sys
+import traceback
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
@@ -15,6 +16,9 @@ import functools
 # let's define the Growatt API on a global level for easier access
 growatt_api = growattServer.GrowattApi()
 growatt_api.server_url = r"https://server.growatt.com/"
+
+# let's also the Shelly API on a global level for easier access
+shelly = None
 
 filtration_started_at = None
 
@@ -54,7 +58,6 @@ def catch_exceptions(cancel_on_failure=False):
             try:
                 return job_func(*args, **kwargs)
             except:
-                import traceback
                 logging.error(traceback.format_exc())
                 if cancel_on_failure:
                     return schedule.CancelJob
@@ -99,6 +102,37 @@ def has_insufficient_power(solar_data, after_hours):
     return discharging_rapidly or battery_low or might_not_recharge
 
 
+def get_switch_status():
+    relay_status = shelly.relay(args.relay_index)
+    return relay_status["output"]
+
+def toggle_switch(current_status, new_status):
+    if current_status == new_status:
+        logging.warning("Requested to change switch status to {} but switch status already {}. Not doing anything!".format(
+        "ON" if current_status else "OFF",
+        "ON" if new_status else "OFF"))
+        return
+
+    toggle_attempts = 10
+    while (new_status != current_status) and (toggle_attempts >= 0):
+        try:
+            shelly.relay(args.relay_index, turn=new_status)
+            current_status = get_switch_status()
+        except:
+            logging.error(traceback.format_exc())
+
+        if (new_status != current_status) and (toggle_attempts >= 0):
+            toggle_attempts -= 1
+
+            logging.warning(
+                "Failed to toggle switch! Will try again {} times.".format(
+                    toggle_attempts))
+
+            time.sleep(5)
+
+    return current_status == new_status
+
+
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_power_availability():
     # There is a fixed schedule on the Shelly, to run the filtration (pump):
@@ -114,9 +148,12 @@ def evaluate_power_availability():
     global filtration_started_at
     after_hours = False
 
+    switch_on = get_switch_status()
+
     if now.hour >= 18 or now.hour <= 10:
         if filtration_started_at is None:
-            logging.info("Not evaluating available power at this time ...")
+            logging.info("Not evaluating available power at this time. Switch is {}.".format(
+                "ON" if switch_on else "OFF"))
             return
         else:
             after_hours = True
@@ -132,50 +169,68 @@ def evaluate_power_availability():
 
         # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
         if now.hour == 17 and now.minute > 15:
-            logging.info("It's too late! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
+            logging.info("It's too late! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch is {}.".format(
                 solar_data.leftover_power(),
-                solar_data.battery_level
+                solar_data.battery_level,
+                "ON" if switch_on else "OFF"
             ))
             return
 
-        device = ShellyPy.Shelly(args.relay_ip)
-        device.relay(0, turn=True)
-        filtration_started_at = now
+        if toggle_switch(current_status=switch_on, new_status=True):
+            filtration_started_at = now
 
-        logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level.".format(
-            solar_data.leftover_power(),
-            solar_data.battery_level
-        ))
+            logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch was {}.".format(
+                solar_data.leftover_power(),
+                solar_data.battery_level,
+                "ON" if switch_on else "OFF"
+            ))
+        else:
+            logging.warning(
+                "Failed to start filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch was {}.".format(
+                    solar_data.leftover_power(),
+                    solar_data.battery_level,
+                    "ON" if switch_on else "OFF"
+                ))
 
     elif filtration_started_at is not None and has_insufficient_power(solar_data, after_hours):
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
         if filtration_runtime >= timedelta(hours=1):
-            device = ShellyPy.Shelly(args.relay_ip)
-            device.relay(0, turn=False)
-            filtration_started_at = None
+            if toggle_switch(current_status=switch_on, new_status=False):
+                filtration_started_at = None
 
-            logging.info(
-                "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
-                    solar_data.leftover_power(),
-                    solar_data.battery_level,
-                    str(filtration_runtime)
-                ))
+                logging.info(
+                    "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Switch was {}.".format(
+                        solar_data.leftover_power(),
+                        solar_data.battery_level,
+                        str(filtration_runtime),
+                        "ON" if switch_on else "OFF"
+                    ))
+            else:
+                logging.warning(
+                    "Failed to stop filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Switch was {}.".format(
+                        solar_data.leftover_power(),
+                        solar_data.battery_level,
+                        str(filtration_runtime),
+                        "ON" if switch_on else "OFF"
+                    ))
         else:
             logging.info(
-                "Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}".format(
+                "Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}, switch was {}.".format(
                     solar_data.leftover_power(),
                     solar_data.battery_level,
-                    str(filtration_runtime)
+                    str(filtration_runtime),
+                    "ON" if switch_on else "OFF"
                 ))
 
     else:
-        logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{}".format(
+        logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{} Switch is {}.".format(
             "on" if filtration_started_at is not None else "off",
             solar_data.leftover_power(),
             solar_data.battery_level,
-            " Runtime: {}".format(now - filtration_started_at) if filtration_started_at is not None else ""
+            " Runtime: {}.".format(now - filtration_started_at) if filtration_started_at is not None else "",
+            "ON" if switch_on else "OFF"
         ))
 
 
@@ -203,6 +258,8 @@ if __name__ == '__main__':
                         help="Mix ID of the Inventor withing Growatt API")
     parser.add_argument("-rip" "--relay_ip_address", dest="relay_ip", type=str,
                         help="IP Address of the Shelly relay controlling the pump.")
+    parser.add_argument("-ridx" "--relay_index", dest="relay_index", type=int,
+                        help="Relay index of the Shelly relay controlling the pump.")
     parser.add_argument("-fsa" "--filtration_started_at", dest="fsa", type=str,
                         help="Specify when the filtration was started at (useful for restarts)")
 
@@ -210,6 +267,12 @@ if __name__ == '__main__':
 
     if args.fsa is not None and args.fsa != '':
         filtration_started_at = datetime.fromisoformat(args.fsa)
+
+    while shelly is None:
+        try:
+            shelly = ShellyPy.Shelly(args.relay_ip)
+        except Exception as ex:
+            logging.error("Failed to initialize Shelly: {}. Will keep trying ...".format(str(ex)))
 
     # Then, schedule a job to check the Solar status every 15 minutes
     schedule.every(15).minutes.do(evaluate_power_availability)
