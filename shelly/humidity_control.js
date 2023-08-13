@@ -4,21 +4,30 @@
 let currentSensorData = null;
 
 /*
-    Assume initial door status as closed to ensure we are dehumidifying
-    unless we are explicitly told that the door is open.
+    Assume initial door status as open to ensure we are not dehumidifying
+    unnecessarily. If there is an issue, the sensor itself will send a push
+    notification when we go above certain threshold.
     
     Note that we do not have a direct access to the door sensor - it's
     mostly sleeping, reporting only changes. It's also battery driven so
     running out of battery should not result in wet walls :-)
 */
-let lastKnownDoorStatus = "close";
+let lastKnownDoorStatus = "open";
+
+/*
+    How often do we check the humidity level?
+*/
+let timerPeriod = 60000;
+
+let doorStatusMqttTopic = "shellies/shellydw2-D741F2/sensor/state";
 
 function debugMessage(message) {
     print(message);
     
     if (MQTT.isConnected()) {
-        MQTT.publish("power/pool", message, 0, true);
+        MQTT.publish("power/pool", message, 2, true);
     } else {
+        
         print("MQTT NOT Connected");
     }
 }
@@ -121,22 +130,26 @@ function timerCode() {
     );
 };
 
+debugMessage("Setting up a timer with period: " + JSON.stringify(timerPeriod) + "ms");
+
 Timer.set(
     /* number of miliseconds */
-    60000,
+    timerPeriod,
     /* repeat? */
     true,
     /* callback */
     timerCode
 );
 
-MQTT.subscribe("shellies/shellydw2-73C13B/sensor/state", 
+debugMessage("Subsribing to MQTT topic: " + doorStatusMqttTopic);
+
+MQTT.subscribe(doorStatusMqttTopic, 
     function(topic, message) {
         debugMessage("Received Door Sensor status update: " + lastKnownDoorStatus + 
                      " -> " + message);
         lastKnownDoorStatus = message;
     }
- );
+);
 
 // Run on startup
 timerCode();
