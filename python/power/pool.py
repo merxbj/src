@@ -13,6 +13,8 @@ import schedule
 import time
 import functools
 
+import paho.mqtt.client as mqtt
+
 # let's define the Growatt API on a global level for easier access
 growatt_api = growattServer.GrowattApi()
 growatt_api.server_url = r"https://server.growatt.com/"
@@ -22,6 +24,27 @@ shelly = None
 
 filtration_started_at = None
 
+CONFIG = {
+    "battery_levels": {
+        "almost_charged": 95.0,
+        "rapidly_charging": 85.0,
+        "rapidly_discharging": 80.0,
+        "low": 70.0,
+        "might_not_recharge_afterhours": 90.0
+    },
+    "leftover_power": {
+        "almost_charged": 1.0,
+        "rapidly_charging": 2.5,
+        "rapidly_discharging": -2.5,
+    },
+    "scheduler": {
+        "period_minutes": 15,
+        "control_window_closed_from": 18,
+        "control_window_closed_to": 10,
+        "minimum_runtime_minutes": 60,
+
+    }
+}
 
 class SolarData:
 
@@ -188,15 +211,6 @@ def evaluate_power_availability():
 
     if filtration_started_at is None and has_sufficient_power(solar_data):
 
-        # Make sure we run the filtration for at least 45 minutes (at 18:00 the window closes)
-        if now.hour == 17 and now.minute > 15:
-            logging.info("It's too late! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch is {}.".format(
-                solar_data.leftover_power(),
-                solar_data.battery_level,
-                "ON" if switch_on else "OFF"
-            ))
-            return
-
         if toggle_switch(current_status=switch_on, new_status=True):
             filtration_started_at = now
 
@@ -217,7 +231,7 @@ def evaluate_power_availability():
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
-        if filtration_runtime >= timedelta(hours=1):
+        if filtration_runtime >= timedelta(minutes=60):
             if toggle_switch(current_status=switch_on, new_status=False):
                 filtration_started_at = None
 
