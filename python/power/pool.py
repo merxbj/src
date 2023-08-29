@@ -103,8 +103,23 @@ def has_insufficient_power(solar_data, after_hours):
 
 
 def get_switch_status():
-    relay_status = shelly.relay(args.relay_index)
-    return relay_status["output"]
+    get_switch_status_attempts = 10
+    while get_switch_status_attempts >= 0:
+        try:
+            relay_status = shelly.relay(args.relay_index)
+            return relay_status["output"]
+        except Exception as ex:
+            get_switch_status_attempts -= 1
+
+            logging.warning(
+                "Failed to get switch status: {}! Will try again {} times.".format(
+                    str(ex),
+                    get_switch_status_attempts))
+
+            if get_switch_status_attempts < 0:
+                raise
+
+            time.sleep(5)
 
 def toggle_switch(current_status, new_status):
     if current_status == new_status:
@@ -119,7 +134,7 @@ def toggle_switch(current_status, new_status):
             shelly.relay(args.relay_index, turn=new_status)
             current_status = get_switch_status()
         except:
-            logging.error(traceback.format_exc())
+            logging.debug(traceback.format_exc())
 
         if (new_status != current_status) and (toggle_attempts >= 0):
             toggle_attempts -= 1
@@ -148,7 +163,13 @@ def evaluate_power_availability():
     global filtration_started_at
     after_hours = False
 
-    switch_on = get_switch_status()
+    # Without access to the switch, there is no point continuing ...
+    while True:
+        try:
+            switch_on = get_switch_status()
+            break
+        except:
+            time.sleep(5)
 
     if now.hour >= 18 or now.hour <= 10:
         if filtration_started_at is None:
@@ -271,8 +292,10 @@ if __name__ == '__main__':
     while shelly is None:
         try:
             shelly = ShellyPy.Shelly(args.relay_ip)
+
         except Exception as ex:
             logging.error("Failed to initialize Shelly: {}. Will keep trying ...".format(str(ex)))
+            time.sleep(5)
 
     # Then, schedule a job to check the Solar status every 15 minutes
     schedule.every(15).minutes.do(evaluate_power_availability)
