@@ -1,4 +1,25 @@
 /*
+    Configuration to be retrieved from the power/config MQTT topic and it's default
+*/
+let CONFIG = {
+    
+    /*
+        How often do we check the humidity level?
+    */
+    timer_period_ms: 60000,
+    
+    /*
+        The upper bound of allowed humidity in the pool room
+    */
+    max_humidity: 66.0,
+    
+    /*
+        The lower bound of allowed humidity in the pool room
+    */
+    min_humidity: 57.0
+};
+
+/*
     Global variable to hold the parsed sensor data
 */
 let currentSensorData = null;
@@ -14,12 +35,8 @@ let currentSensorData = null;
 */
 let lastKnownDoorStatus = "open";
 
-/*
-    How often do we check the humidity level?
-*/
-let timerPeriod = 60000;
-
 let doorStatusMqttTopic = "shellies/shellydw2-D741F2/sensor/state";
+let configMqttTopic = "power/config";
 
 function debugMessage(message) {
     print(message);
@@ -42,7 +59,7 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
     let humidity = sensorData.multiSensor.sensors[0].value / 100;
     let humidityStr = JSON.stringify(humidity);
 
-    if ((humidity > 66.0) && (currentSwitchStatus === "Off")) {
+    if ((humidity > CONFIG.max_humidity) && (currentSwitchStatus === "Off")) {
         if (doorStatus === "close") {
             // We are over our threshold and the switch is off, we need to start dehumi.
             Shelly.call("Switch.set", {
@@ -53,7 +70,7 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
         } else {
             debugMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
         }
-    } else if ((humidity < 57.0) && (currentSwitchStatus === "On")) {
+    } else if ((humidity < CONFIG.min_humidity) && (currentSwitchStatus === "On")) {
         // We are under our threshold and the switch is on, we need to stop dehumi.
         Shelly.call("Switch.set", {
             'id': 0,
@@ -130,11 +147,11 @@ function timerCode() {
     );
 };
 
-debugMessage("Setting up a timer with period: " + JSON.stringify(timerPeriod) + "ms");
+debugMessage("Setting up a timer with period: " + JSON.stringify(CONFIG.timer_period_ms) + "ms");
 
-Timer.set(
+let timerHandle = Timer.set(
     /* number of miliseconds */
-    timerPeriod,
+    CONFIG.timer_period_ms,
     /* repeat? */
     true,
     /* callback */
@@ -148,6 +165,25 @@ MQTT.subscribe(doorStatusMqttTopic,
         debugMessage("Received Door Sensor status update: " + lastKnownDoorStatus + 
                      " -> " + message);
         lastKnownDoorStatus = message;
+    }
+);
+
+debugMessage("Subsribing to MQTT topic: " + configMqttTopic);
+
+MQTT.subscribe(configMqttTopic, 
+    function(topic, message) {
+        let newConfig = JSON.parse(message);
+        if ((newConfig !== null) && newConfig.Dehumidifier !== null) {
+            debugMessage("Received Configuration: " + JSON.stringify(newConfig.Dehumidifier));
+            
+            if (newConfig.Dehumidifier.timer_period_ms !== CONFIG.timer_period_ms) {
+                debugMessage("Setting up a timer with period: " + JSON.stringify(newConfig.Dehumidifier.timer_period_ms) + "ms");
+                Timer.clear(timerHandle);
+                timerHandle = Timer.set(newConfig.Dehumidifier.timer_period_ms, true, timerCode);
+            }
+            
+            CONFIG = newConfig.Dehumidifier;
+        }
     }
 );
 
