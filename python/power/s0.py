@@ -145,8 +145,8 @@ def setup_database():
     cur.execute("""REPLACE 
                       INTO pulse_source 
                     VALUES 
-                           (23, "House and Pool"),
-                           (24, "Heat Pump")
+                           (21, "House and Pool"),
+                           (16, "Heat Pump")
                     """)
     cur.close()
     con.commit()
