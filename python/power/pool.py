@@ -7,6 +7,9 @@ import traceback
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
+import json
+from types import SimpleNamespace
+
 import growattServer
 import ShellyPy
 import schedule
@@ -23,7 +26,8 @@ shelly = None
 
 filtration_started_at = None
 
-CONFIG = {
+default_config = """
+{
     "battery_levels": {
         "almost_charged": 95.0,
         "rapidly_charging": 85.0,
@@ -34,16 +38,18 @@ CONFIG = {
     "leftover_power": {
         "almost_charged": 1.0,
         "rapidly_charging": 2.5,
-        "rapidly_discharging": -2.5,
+        "rapidly_discharging": -2.5
     },
     "scheduler": {
         "period_minutes": 15,
         "control_window_closed_from": 18,
         "control_window_closed_to": 10,
-        "minimum_runtime_minutes": 60,
-
+        "minimum_runtime_minutes": 60
     }
 }
+"""
+
+CONFIG = json.loads(default_config, object_hook=lambda d: SimpleNamespace(**d))
 
 class SolarData:
 
@@ -92,36 +98,36 @@ def catch_exceptions(cancel_on_failure=False):
 def has_sufficient_power(solar_data):
     # If the battery is almost charged, and we still have power left, let's turn on the filtration
     # Note that 1kW of leftover power will not cover the entire load of pool (0.8kW pump + maybe 3.5kw of heat pump)
-    # But better to spend a little bit of money to keep the pool clean and warm than give even 1.0kW to grid
-    almost_charged = solar_data.battery_level >= 95.0 and solar_data.leftover_power() > 1.0
+    # But better to spend a bit of money to keep the pool clean and warm than give even 1.0kW to grid
+    almost_charged = solar_data.battery_level >= CONFIG.battery_levels.almost_charged and solar_data.leftover_power() > CONFIG.leftover_power.almost_charged
 
-    # If the battery is clearly charging up rapidly, let's start the filtration a little bit sooner
+    # If the battery is clearly charging up rapidly, let's start the filtration a bit sooner
     # The idea is that within the next evaluation cycle, the battery might already be charged and
     # It also takes at least 5 more minutes before the heating kicks in
     # This usually happens during the sunny days
-    charging_rapidly = solar_data.battery_level >= 85.0 and solar_data.leftover_power() > 2.5
+    rapidly_charging = solar_data.battery_level >= CONFIG.battery_levels.rapidly_charging and solar_data.leftover_power() > CONFIG.leftover_power.rapidly_charging
 
     # TODO: Calculate using the battery_charge_power, battery_level and capacity (4*2.56) to come up with better est.
 
-    return almost_charged or charging_rapidly
+    return almost_charged or rapidly_charging
 
 
 def has_insufficient_power(solar_data, after_hours):
     # Note that based on the battery level we have been clearly discharging for some time
     # Also the 2.5kW difference is likely to turn into a surplus (if we have been heating as well) that will help
     # recharge the battery.
-    discharging_rapidly = solar_data.battery_level < 80.0 and solar_data.leftover_power() < -2.5
+    rapidly_discharging = solar_data.battery_level < CONFIG.battery_levels.rapidly_discharging and solar_data.leftover_power() < CONFIG.leftover_power.rapidly_discharging
 
     # Or, we already managed to bring the battery level under 70% - let's switch of filtration and start recharging
-    battery_low = solar_data.battery_level < 70.0
+    battery_low = solar_data.battery_level < CONFIG.battery_levels.low
 
     # Or, we are already outside our optional filtration window (after_hours) which is likely in the evening
     # Then, 90% battery is already not enough
-    might_not_recharge = after_hours and solar_data.battery_level < 90.0
+    might_not_recharge = after_hours and solar_data.battery_level < CONFIG.battery_levels.might_not_recharge_afterhours
 
     # TODO: Calculate using the battery_discharge_power and battery_level to come up with better est.
 
-    return discharging_rapidly or battery_low or might_not_recharge
+    return rapidly_discharging or battery_low or might_not_recharge
 
 
 def get_switch_status():
@@ -194,7 +200,7 @@ def evaluate_power_availability():
         except:
             time.sleep(5)
 
-    if now.hour >= 18 or now.hour <= 10:
+    if now.hour >= CONFIG.scheduler.control_window_closed_from or now.hour <= CONFIG.scheduler.control_window_closed_to:
         if filtration_started_at is None:
             logging.info("Not evaluating available power at this time. Switch is {}.".format(
                 "ON" if switch_on else "OFF"))
@@ -231,7 +237,7 @@ def evaluate_power_availability():
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
-        if filtration_runtime >= timedelta(minutes=60):
+        if filtration_runtime >= timedelta(minutes=CONFIG.scheduler.minimum_runtime_minutes):
             if toggle_switch(current_status=switch_on, new_status=False):
                 filtration_started_at = None
 
@@ -315,7 +321,7 @@ if __name__ == '__main__':
             time.sleep(5)
 
     # Then, schedule a job to check the Solar status every 15 minutes
-    schedule.every(15).minutes.do(evaluate_power_availability)
+    schedule.every(CONFIG.scheduler.period_minutes).minutes.do(evaluate_power_availability)
 
     # Run the job immediately after a startup
     schedule.run_all()
