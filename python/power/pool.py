@@ -143,6 +143,7 @@ def get_switch_status():
 
             time.sleep(5)
 
+
 def toggle_switch(current_status, new_status):
     if current_status == new_status:
         logging.warning("Requested to change switch status to {} but switch status already {}. Not doing anything!".format(
