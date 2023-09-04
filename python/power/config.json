@@ -3,5 +3,25 @@
         "timer_period_ms": 60000,
         "max_humidity": 66.0,
         "min_humidity": 57.0
+    },
+    "Pool": {
+        "battery_levels": {
+            "almost_charged": 95.0,
+            "rapidly_charging": 85.0,
+            "rapidly_discharging": 80.0,
+            "low": 70.0,
+            "might_not_recharge_afterhours": 90.0
+        },
+        "leftover_power": {
+            "almost_charged": 1.0,
+            "rapidly_charging": 2.5,
+            "rapidly_discharging": -2.5
+        },
+        "scheduler": {
+            "period_minutes": 15,
+            "control_window_closed_from": 18,
+            "control_window_closed_to": 10,
+            "minimum_runtime_minutes": 60
+        }
     }
 }
