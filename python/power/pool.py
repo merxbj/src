@@ -16,8 +16,7 @@ import functools
 import paho.mqtt.client as mqtt
 
 # let's define the Growatt API on a global level for easier access
-growatt_api = growattServer.GrowattApi()
-growatt_api.server_url = r"https://server.growatt.com/"
+growatt_api = None
 
 # let's also the Shelly API on a global level for easier access
 shelly = None
@@ -302,6 +301,9 @@ if __name__ == '__main__':
 
     if args.fsa is not None and args.fsa != '':
         filtration_started_at = datetime.fromisoformat(args.fsa)
+
+    growatt_api = growattServer.GrowattApi(False, args.growatt_user)
+    growatt_api.server_url = r"https://server.growatt.com/"
 
     while shelly is None:
         try:
