@@ -394,4 +394,7 @@ if __name__ == '__main__':
             # And finally, run immediately, just to recheck with the new configuration
             schedule.run_all()
 
+        # Just to prevent a tight-loop
+        time.sleep(1)
+
     mqtt_client.loop_stop(force=False)
