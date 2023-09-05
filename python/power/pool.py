@@ -337,9 +337,9 @@ if __name__ == '__main__':
     parser.add_argument("-fsa" "--filtration_started_at", dest="fsa", type=str,
                         help="Specify when the filtration was started at (useful for restarts)")
     parser.add_argument("-qip" "--mqtt_ip", dest="mqtt_ip", type=str,
-                        help="IP Address of the MQTT broker for Power system configuration.")
+                        help="IP Address of the MQTT broker for various integrations.")
     parser.add_argument("-qp" "--mqtt_port", dest="mqtt_port", type=int,
-                        help="Port of the MQTT broker for Power system configuration.")
+                        help="Port of the MQTT broker for various integrations.")
 
     args = parser.parse_args()
 
@@ -364,7 +364,7 @@ if __name__ == '__main__':
     mqtt_client.loop_start()
 
     # Then, schedule a job to check the Solar status every 15 minutes
-    main_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
+    filtration_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
 
     # Run the job immediately after a startup
     schedule.run_all()
@@ -388,8 +388,8 @@ if __name__ == '__main__':
             updated_config_sync.release()
 
             # Reschedule the main job (in case the period has changed)
-            schedule.cancel_job(main_job)
-            main_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
+            schedule.cancel_job(filtration_job)
+            filtration_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
 
             # And finally, run immediately, just to recheck with the new configuration
             schedule.run_all()

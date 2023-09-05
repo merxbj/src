@@ -23,7 +23,7 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe("shellypro1pm-ec62608ab640/debug/log")
-    client.subscribe("power/pool")
+    client.subscribe("power/pool/#")
 
 
 # The callback for when a PUBLISH message is received from the server.
