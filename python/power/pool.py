@@ -108,12 +108,21 @@ def catch_exceptions(cancel_on_failure=False):
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected to MQTT with result code {}".format(rc))
     client.subscribe("power/config")
+    client.subscribe("power/pool/heating")
 
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    if msg.topic == "power/config":
+        handle_config_update(msg.payload)
+    elif msg.topic == "power/pool/heating":
+        handle_heating_input_update(msg.payload)
+
+
+
+def handle_config_update(message):
     try:
-        new_config = json.loads(msg.payload, object_hook=lambda d: SimpleNamespace(**d))
+        new_config = json.loads(message, object_hook=lambda d: SimpleNamespace(**d))
     except Exception as ex:
         logging.warning("Failed to parse configuration update message: {}!".format(str(ex)))
         return
@@ -126,6 +135,24 @@ def on_message(client, userdata, msg):
             updated_config_sync.acquire()
             updated_config = new_config
             updated_config_sync.release()
+
+
+def handle_heating_input_update(message):
+    try:
+        input_status_event = json.loads(message, object_hook=lambda d: SimpleNamespace(**d))
+        input_status = input_status_event.delta.state
+        old_switch_status = get_switch_status(args.heating_relay_index)
+
+        logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
+            "ON" if input_status else "OFF",
+            "ON" if old_switch_status else "OFF"
+        ))
+
+        if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
+            logging.info("Successfully toggled the heating switch based on the heating input!")
+
+    except Exception as ex:
+        logging.warning("Failed to parse heating input state update message: {}!".format(str(ex)))
 
 
 def has_sufficient_power(solar_data):
@@ -163,11 +190,11 @@ def has_insufficient_power(solar_data, after_hours):
     return rapidly_discharging or battery_low or might_not_recharge
 
 
-def get_switch_status():
+def get_switch_status(relay_index):
     get_switch_status_attempts = 10
     while get_switch_status_attempts >= 0:
         try:
-            relay_status = shelly.relay(args.relay_index)
+            relay_status = shelly.relay(relay_index)
             return relay_status["output"]
         except Exception as ex:
             get_switch_status_attempts -= 1
@@ -183,18 +210,21 @@ def get_switch_status():
             time.sleep(5)
 
 
-def toggle_switch(current_status, new_status):
+def toggle_switch(relay_index, current_status, new_status):
     if current_status == new_status:
-        logging.warning("Requested to change switch status to {} but switch status already {}. Not doing anything!".format(
-        "ON" if current_status else "OFF",
-        "ON" if new_status else "OFF"))
-        return
+        logging.warning("Requested to change switch {} status to {} but switch status already {}. Not doing anything!".format(
+            relay_index,
+            "ON" if current_status else "OFF",
+            "ON" if new_status else "OFF"))
+
+        # switch is already in the requested state, indicate success
+        return True
 
     toggle_attempts = 10
     while (new_status != current_status) and (toggle_attempts >= 0):
         try:
-            shelly.relay(args.relay_index, turn=new_status)
-            current_status = get_switch_status()
+            shelly.relay(relay_index, turn=new_status)
+            current_status = get_switch_status(relay_index)
         except:
             logging.debug(traceback.format_exc())
 
@@ -202,7 +232,8 @@ def toggle_switch(current_status, new_status):
             toggle_attempts -= 1
 
             logging.warning(
-                "Failed to toggle switch! Will try again {} times.".format(
+                "Failed to toggle switch {}! Will try again {} times.".format(
+                    relay_index,
                     toggle_attempts))
 
             time.sleep(5)
@@ -228,15 +259,17 @@ def evaluate_power_availability():
     # Without access to the switch, there is no point continuing ...
     while True:
         try:
-            switch_on = get_switch_status()
+            filtration_switch_on = get_switch_status(args.pump_relay_index)
+            heating_switch_on = get_switch_status(args.heating_relay_index)
             break
         except:
             time.sleep(5)
 
     if now.hour >= config.scheduler.control_window_closed_from or now.hour <= config.scheduler.control_window_closed_to:
         if filtration_started_at is None:
-            logging.info("Not evaluating available power at this time. Switch is {}.".format(
-                "ON" if switch_on else "OFF"))
+            logging.info("Not evaluating available power at this time. Pump switch is {}. Heating switch is {}.".format(
+                "ON" if filtration_switch_on else "OFF",
+                "ON" if heating_switch_on else "OFF"))
             return
         else:
             after_hours = True
@@ -250,20 +283,22 @@ def evaluate_power_availability():
 
     if filtration_started_at is None and has_sufficient_power(solar_data):
 
-        if toggle_switch(current_status=switch_on, new_status=True):
+        if toggle_switch(args.pump_relay_index, current_status=filtration_switch_on, new_status=True):
             filtration_started_at = now
 
-            logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch was {}.".format(
+            logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Pump switch was {}. Heating switch was {}.".format(
                 solar_data.leftover_power(),
                 solar_data.battery_level,
-                "ON" if switch_on else "OFF"
+                "ON" if filtration_switch_on else "OFF",
+                "ON" if heating_switch_on else "OFF"
             ))
         else:
             logging.warning(
-                "Failed to start filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Switch was {}.".format(
+                "Failed to start filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Pump switch was {}. Heating switch was {}. ".format(
                     solar_data.leftover_power(),
                     solar_data.battery_level,
-                    "ON" if switch_on else "OFF"
+                    "ON" if filtration_switch_on else "OFF",
+                    "ON" if heating_switch_on else "OFF"
                 ))
 
     elif filtration_started_at is not None and has_insufficient_power(solar_data, after_hours):
@@ -271,40 +306,44 @@ def evaluate_power_availability():
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
         if filtration_runtime >= timedelta(minutes=config.scheduler.minimum_runtime_minutes):
-            if toggle_switch(current_status=switch_on, new_status=False):
+            if toggle_switch(args.pump_relay_index, current_status=filtration_switch_on, new_status=False):
                 filtration_started_at = None
 
                 logging.info(
-                    "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Switch was {}.".format(
+                    "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Pump switch was {}. Heating switch was {}.".format(
                         solar_data.leftover_power(),
                         solar_data.battery_level,
                         str(filtration_runtime),
-                        "ON" if switch_on else "OFF"
+                        "ON" if filtration_switch_on else "OFF",
+                        "ON" if heating_switch_on else "OFF"
                     ))
             else:
                 logging.warning(
-                    "Failed to stop filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Switch was {}.".format(
+                    "Failed to stop filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Pump switch was {}. Heating switch was {}.".format(
                         solar_data.leftover_power(),
                         solar_data.battery_level,
                         str(filtration_runtime),
-                        "ON" if switch_on else "OFF"
+                        "ON" if filtration_switch_on else "OFF",
+                        "ON" if heating_switch_on else "OFF"
                     ))
         else:
             logging.info(
-                "Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}, switch was {}.".format(
+                "Kept filtration on! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}, pump switch is {}, heating switch is {}.".format(
                     solar_data.leftover_power(),
                     solar_data.battery_level,
                     str(filtration_runtime),
-                    "ON" if switch_on else "OFF"
+                    "ON" if filtration_switch_on else "OFF",
+                    "ON" if heating_switch_on else "OFF"
                 ))
 
     else:
-        logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{} Switch is {}.".format(
+        logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{} Pump switch is {}. Heating switch is {}.".format(
             "on" if filtration_started_at is not None else "off",
             solar_data.leftover_power(),
             solar_data.battery_level,
             " Runtime: {}.".format(now - filtration_started_at) if filtration_started_at is not None else "",
-            "ON" if switch_on else "OFF"
+            "ON" if filtration_switch_on else "OFF",
+            "ON" if heating_switch_on else "OFF"
         ))
 
 
@@ -332,8 +371,10 @@ if __name__ == '__main__':
                         help="Mix ID of the Inventor withing Growatt API")
     parser.add_argument("-rip" "--relay_ip_address", dest="relay_ip", type=str,
                         help="IP Address of the Shelly relay controlling the pump.")
-    parser.add_argument("-ridx" "--relay_index", dest="relay_index", type=int,
+    parser.add_argument("-pridx" "--pump_relay_index", dest="pump_relay_index", type=int,
                         help="Relay index of the Shelly relay controlling the pump.")
+    parser.add_argument("-eridx" "--heating_relay_index", dest="heating_relay_index", type=int,
+                        help="Relay index of the Shelly relay controlling the heating.")
     parser.add_argument("-fsa" "--filtration_started_at", dest="fsa", type=str,
                         help="Specify when the filtration was started at (useful for restarts)")
     parser.add_argument("-qip" "--mqtt_ip", dest="mqtt_ip", type=str,
