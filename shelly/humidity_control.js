@@ -38,11 +38,19 @@ let lastKnownDoorStatus = "open";
 let doorStatusMqttTopic = "shellies/shellydw2-D741F2/sensor/state";
 let configMqttTopic = "power/config";
 
+function statusMessage(message) {
+    logMessage(message, "pool/humidity");
+}
+
 function debugMessage(message) {
+    logMessage(message, "pool/debug");
+}
+
+function logMessage(message, subtopic) {
     print(message);
     
     if (MQTT.isConnected()) {
-        MQTT.publish("power/pool", message, 2, true);
+        MQTT.publish("power/" + subtopic, message, 2, true);
     } else {
         
         print("MQTT NOT Connected");
@@ -66,9 +74,9 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
                 'id': 0,
                 'on': true
             });
-            debugMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning ON dehumidifier!");
+            statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning ON dehumidifier!");
         } else {
-            debugMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
+            statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
         }
     } else if ((humidity < CONFIG.min_humidity) && (currentSwitchStatus === "On")) {
         // We are under our threshold and the switch is on, we need to stop dehumi.
@@ -76,18 +84,18 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
             'id': 0,
             'on': false
         });
-        debugMessage("Humidity: " + humidityStr + "%. Turning OFF dehumidifier!");
+        statusMessage("Humidity: " + humidityStr + "%. Turning OFF dehumidifier!");
     } else if ((currentSwitchStatus === "On") && (doorStatus === "open")) {
         // Dehumidifier is running but the door is open now, we need to stop!
         Shelly.call("Switch.set", {
             'id': 0,
             'on': false
         });
-        debugMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning OFF dehumidifier!");
+        statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning OFF dehumidifier!");
     }
     else {
         // Otherwise, nothing to do
-        debugMessage("Humidity: " + humidityStr + "% and Switch is: " + 
+        statusMessage("Humidity: " + humidityStr + "% and Switch is: " + 
                      currentSwitchStatus + ". Not doing anything!");
     }
 }
@@ -109,12 +117,12 @@ function timerCode() {
         },
         function(result, error_code, error_message) {
             if (error_code !== 0) {
-                debugMessage("Cannot access humidity sensor! Error Code: " + 
+                statusMessage("Cannot access humidity sensor! Error Code: " + 
                              JSON.stringify(error_code) + ", Error Message: " + error_message);
                 return;
             }
             if (result.code !== 200) {
-                debugMessage("Humidity sensor is unavailable! HTTP Status Code: " + 
+                statusMessage("Humidity sensor is unavailable! HTTP Status Code: " + 
                              JSON.stringify(result.code));
                 return;
             }
@@ -128,7 +136,7 @@ function timerCode() {
                 },
                 function(switch_result, switch_error_code, switch_error_message) {
                     if (switch_error_code !== 0) {
-                        debugMessage("Cannot update switch status! Error Code: " + 
+                        statusMessage("Cannot update switch status! Error Code: " + 
                                      JSON.stringify(switch_error_code) + ", Error Message: " + switch_error_message);
                         return;
                     }
@@ -147,7 +155,7 @@ function timerCode() {
     );
 };
 
-debugMessage("Setting up a timer with period: " + JSON.stringify(CONFIG.timer_period_ms) + "ms");
+debugMessage("Setting up a timer to check humidity with period: " + JSON.stringify(CONFIG.timer_period_ms) + "ms");
 
 let timerHandle = Timer.set(
     /* number of miliseconds */
@@ -174,10 +182,10 @@ MQTT.subscribe(configMqttTopic,
     function(topic, message) {
         let newConfig = JSON.parse(message);
         if ((newConfig !== null) && newConfig.Dehumidifier !== null) {
-            debugMessage("Received Configuration: " + JSON.stringify(newConfig.Dehumidifier));
+            debugMessage("Received Dehumidification Configuration: " + JSON.stringify(newConfig.Dehumidifier));
             
             if (newConfig.Dehumidifier.timer_period_ms !== CONFIG.timer_period_ms) {
-                debugMessage("Setting up a timer with period: " + JSON.stringify(newConfig.Dehumidifier.timer_period_ms) + "ms");
+                debugMessage("Setting up a timer to check humidity with period: " + JSON.stringify(newConfig.Dehumidifier.timer_period_ms) + "ms");
                 Timer.clear(timerHandle);
                 timerHandle = Timer.set(newConfig.Dehumidifier.timer_period_ms, true, timerCode);
             }
