@@ -6,7 +6,7 @@ import aioaseko
 
 async def main():
     async with ClientSession() as session:
-        account = aioaseko.MobileAccount(session, "usr", "pwd")
+        account = aioaseko.MobileAccount(session, "user", "password")
         try:
             await account.login()
         except aioaseko.InvalidAuthCredentials:
@@ -19,6 +19,11 @@ async def main():
             print(f"Water flow: {unit.water_flow}")
             for variable in unit.variables:
                 print(variable.name, variable.current_value, variable.unit)
+
+            if unit.has_error:
+                for error in unit.errors:
+                    print(error.type, error.title, error.content)
+
         await account.logout()
 
 run(main())
