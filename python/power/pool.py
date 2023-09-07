@@ -20,6 +20,10 @@ import paho.mqtt.client as mqtt
 
 from threading import Condition
 
+from aiohttp import ClientSession
+import asyncio
+import aioaseko
+
 # let's define the Growatt API on a global level for easier access
 growatt_api = None
 
@@ -60,6 +64,8 @@ config = json.loads(default_config, object_hook=lambda d: SimpleNamespace(**d))
 # an updated configuration that was just received from MQTT and its synchronization object
 updated_config = None
 updated_config_sync = Condition()
+
+heating_job = None
 
 class SolarData:
 
@@ -138,21 +144,127 @@ def handle_config_update(message):
 
 
 def handle_heating_input_update(message):
+    global heating_job
     try:
         input_status_event = json.loads(message, object_hook=lambda d: SimpleNamespace(**d))
         input_status = input_status_event.delta.state
-        old_switch_status = get_switch_status(args.heating_relay_index)
 
-        logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
-            "ON" if input_status else "OFF",
-            "ON" if old_switch_status else "OFF"
-        ))
+        if not input_status:
+            # Pool unit wants to stop heating the water (water flow stopped most likely) - lets comply
 
-        if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
-            logging.info("Successfully toggled the heating switch based on the heating input!")
+            old_switch_status = get_switch_status(args.heating_relay_index)
+
+            logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
+                "ON" if input_status else "OFF",
+                "ON" if old_switch_status else "OFF"
+            ))
+
+            if heating_job is not None:
+                schedule.cancel_job(heating_job)
+
+            if old_switch_status != input_status:
+                if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
+                    logging.info("Stopped heating the pool water based on a request from the control unit!")
+
+        else:
+            # Pool unit wants to start heating the water (water flow started most likely)
+            if heating_job is None:
+
+                # Run once heating evaluation immediately
+                evaluate_pool_water_heating()
+
+                # And then schedule a regular job to keep track of the temperature
+                heating_job = schedule.every(5).minutes.do(evaluate_pool_water_heating)
+
 
     except Exception as ex:
         logging.warning("Failed to parse heating input state update message: {}!".format(str(ex)))
+
+
+def evaluate_pool_water_heating():
+
+    pool_water_temperature = get_pool_water_temperature()
+    current_switch_status = get_switch_status(args.heating_relay_index)
+
+    if pool_water_temperature == float("nan"):
+        logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
+            "ON" if current_switch_status else "OFF"
+        ))
+        return
+
+    if current_switch_status:
+        # Pool water is being heated right now - let's see if we should stop ...
+        if pool_water_temperature >= 28.0:
+            if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=False):
+                logging.info("Stopped heating the pool water! Current temperature is: {}".format(
+                    pool_water_temperature
+                ))
+            else:
+                logging.info("Failed to stop heating the pool water! Current temperature is: {}".format(
+                    pool_water_temperature
+                ))
+        else:
+            logging.info("Kept heating the pool water! Current temperature is: {}".format(
+                pool_water_temperature
+            ))
+    else:
+        # Pool water is NOT being heated right now - let's see if we should start ...
+        if pool_water_temperature < 27.0:
+            if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=True):
+                logging.info("Started heating the pool water! Current temperature is: {}".format(
+                    pool_water_temperature
+                ))
+            else:
+                logging.info("Failed to start heating the pool water! Current temperature is: {}".format(
+                    pool_water_temperature
+                ))
+        else:
+            logging.info("Kept NOT heating the pool water! Current temperature is: {}".format(
+                pool_water_temperature
+            ))
+
+
+def get_pool_water_temperature():
+    return asyncio.run(get_pool_water_temperature_async())
+
+async def get_pool_water_temperature_async():
+    async with ClientSession() as session:
+        account = aioaseko.MobileAccount(session, args.aseko_user, args.aseko_password)
+        try:
+            await account.login()
+        except aioaseko.InvalidAuthCredentials:
+            logging.error("The username or password for Aseko Pool Controller is wrong!")
+            return
+
+        temperature = await find_pool_water_temperature_async(account)
+
+        await account.logout()
+
+        return temperature
+
+async def find_pool_water_temperature_async(account):
+    units = await account.get_units()
+
+    if len(units) != 1:
+        logging.error("Expected 1 pool unit but got {} units!".format(len(units)))
+        return float("nan")
+
+    if units[0].name != "bazen":
+        logging.error("Expected pool unit with name 'bazen' but found '{}' !".format(units[0].name))
+        return float("nan")
+
+    bazen = units[0]
+    await bazen.get_state()
+
+    if bazen.has_error:
+        for error in bazen.errors:
+            if error.type == "noFlow":
+                logging.warning("{} Unable to retrieve a reliable temperature reading!".format(error.title))
+                return float("nan")
+
+    for variable in bazen.variables:
+        if variable.name == "Water temp.":
+            return variable.current_value
 
 
 def has_sufficient_power(solar_data):
@@ -361,26 +473,30 @@ if __name__ == '__main__':
         format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     parser = argparse.ArgumentParser(description='Controls the pool filtration pump.')
-    parser.add_argument("-gu" "--growatt_user", dest="growatt_user", type=str,
+    parser.add_argument("--growatt_user", dest="growatt_user", type=str,
                         help="User name to connect to the Growatt API")
-    parser.add_argument("-gp" "--growatt_password", dest="growatt_password", type=str,
+    parser.add_argument("--growatt_password", dest="growatt_password", type=str,
                         help="Password to connect to the Growatt API")
-    parser.add_argument("-pi" "--plant_id", dest="plant_id", type=str,
+    parser.add_argument("--plant_id", dest="plant_id", type=str,
                         help="Plant ID of the Solar Plant withing Growatt API")
-    parser.add_argument("-mi" "--mix_id", dest="mix_id", type=str,
+    parser.add_argument("--mix_id", dest="mix_id", type=str,
                         help="Mix ID of the Inventor withing Growatt API")
-    parser.add_argument("-rip" "--relay_ip_address", dest="relay_ip", type=str,
+    parser.add_argument("--relay_ip_address", dest="relay_ip", type=str,
                         help="IP Address of the Shelly relay controlling the pump.")
-    parser.add_argument("-pridx" "--pump_relay_index", dest="pump_relay_index", type=int,
+    parser.add_argument("--pump_relay_index", dest="pump_relay_index", type=int,
                         help="Relay index of the Shelly relay controlling the pump.")
-    parser.add_argument("-eridx" "--heating_relay_index", dest="heating_relay_index", type=int,
+    parser.add_argument("--heating_relay_index", dest="heating_relay_index", type=int,
                         help="Relay index of the Shelly relay controlling the heating.")
-    parser.add_argument("-fsa" "--filtration_started_at", dest="fsa", type=str,
+    parser.add_argument("--filtration_started_at", dest="fsa", type=str,
                         help="Specify when the filtration was started at (useful for restarts)")
-    parser.add_argument("-qip" "--mqtt_ip", dest="mqtt_ip", type=str,
+    parser.add_argument("--mqtt_ip", dest="mqtt_ip", type=str,
                         help="IP Address of the MQTT broker for various integrations.")
-    parser.add_argument("-qp" "--mqtt_port", dest="mqtt_port", type=int,
+    parser.add_argument("--mqtt_port", dest="mqtt_port", type=int,
                         help="Port of the MQTT broker for various integrations.")
+    parser.add_argument("--aseko_user", dest="aseko_user", type=str,
+                        help="User name to connect to the Aseko API")
+    parser.add_argument("--aseko_password", dest="aseko_password", type=str,
+                        help="Password to connect to the Aseko API")
 
     args = parser.parse_args()
 
