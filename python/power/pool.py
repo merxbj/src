@@ -161,6 +161,7 @@ def handle_heating_input_update(message):
 
             if heating_job is not None:
                 schedule.cancel_job(heating_job)
+                heating_job = None
 
             if old_switch_status != input_status:
                 if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
