@@ -148,44 +148,56 @@ def handle_heating_input_update(message):
     try:
         input_status_event = json.loads(message, object_hook=lambda d: SimpleNamespace(**d))
         input_status = input_status_event.delta.state
-
-        if not input_status:
-            # Pool unit wants to stop heating the water (water flow stopped most likely) - lets comply
-
-            old_switch_status = get_switch_status(args.heating_relay_index)
-
-            logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
-                "ON" if input_status else "OFF",
-                "ON" if old_switch_status else "OFF"
-            ))
-
-            if heating_job is not None:
-                schedule.cancel_job(heating_job)
-                heating_job = None
-
-            if old_switch_status != input_status:
-                if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
-                    logging.info("Stopped heating the pool water based on a request from the control unit!")
-
-        else:
-            # Pool unit wants to start heating the water (water flow started most likely)
-            if heating_job is None:
-
-                # Run once heating evaluation immediately
-                evaluate_pool_water_heating()
-
-                # And then schedule a regular job to keep track of the temperature
-                heating_job = schedule.every(5).minutes.do(evaluate_pool_water_heating)
-
-
     except Exception as ex:
         logging.warning("Failed to parse heating input state update message: {}!".format(str(ex)))
+        return
+
+    if not input_status:
+        # Pool unit wants to stop heating the water (water flow stopped most likely) - lets comply
+
+        # Without access to the switch, there is no point continuing ...
+        while True:
+            try:
+                old_switch_status = get_switch_status(args.heating_relay_index)
+                break
+            except:
+                time.sleep(5)
+
+        logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
+            "ON" if input_status else "OFF",
+            "ON" if old_switch_status else "OFF"
+        ))
+
+        if heating_job is not None:
+            schedule.cancel_job(heating_job)
+            heating_job = None
+
+        if old_switch_status != input_status:
+            if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
+                logging.info("Stopped heating the pool water based on a request from the control unit!")
+
+    else:
+        # Pool unit wants to start heating the water (water flow started most likely)
+        if heating_job is None:
+
+            # Run once heating evaluation immediately
+            evaluate_pool_water_heating()
+
+            # And then schedule a regular job to keep track of the temperature
+            heating_job = schedule.every(5).minutes.do(evaluate_pool_water_heating)
 
 
+@catch_exceptions(cancel_on_failure=False)
 def evaluate_pool_water_heating():
 
-    pool_water_temperature = get_pool_water_temperature()
-    current_switch_status = get_switch_status(args.heating_relay_index)
+    # Without access to the switch or the pool temperature, there is no point continuing ...
+    while True:
+        try:
+            pool_water_temperature = get_pool_water_temperature()
+            current_switch_status = get_switch_status(args.heating_relay_index)
+            break
+        except:
+            time.sleep(5)
 
     if pool_water_temperature == float("nan"):
         logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
@@ -305,7 +317,7 @@ def has_insufficient_power(solar_data, after_hours):
 
 def get_switch_status(relay_index):
     get_switch_status_attempts = 10
-    while get_switch_status_attempts >= 0:
+    while get_switch_status_attempts > 0:
         try:
             relay_status = shelly.relay(relay_index)
             return relay_status["output"]
@@ -317,7 +329,7 @@ def get_switch_status(relay_index):
                     str(ex),
                     get_switch_status_attempts))
 
-            if get_switch_status_attempts < 0:
+            if get_switch_status_attempts <= 0:
                 raise
 
             time.sleep(5)
@@ -334,7 +346,7 @@ def toggle_switch(relay_index, current_status, new_status):
         return True
 
     toggle_attempts = 10
-    while (new_status != current_status) and (toggle_attempts >= 0):
+    while (new_status != current_status) and (toggle_attempts > 0):
         try:
             shelly.relay(relay_index, turn=new_status)
             current_status = get_switch_status(relay_index)
