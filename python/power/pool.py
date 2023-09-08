@@ -49,11 +49,18 @@ default_config = """
         "rapidly_charging": 2.5,
         "rapidly_discharging": -2.5
     },
-    "scheduler": {
+    "heating": {
+        "temperature_min": 27.0,
+        "temperature_max": 28.0
+    },
+    "filtration_scheduler": {
         "period_minutes": 15,
         "control_window_closed_from": 18,
         "control_window_closed_to": 10,
         "minimum_runtime_minutes": 60
+    },
+    "heating_scheduler": {
+        "period_minutes": 5
     }
 }
 """
@@ -179,7 +186,7 @@ def handle_heating_input_update(message):
             evaluate_pool_water_heating()
 
             # And then schedule a regular job to keep track of the temperature
-            heating_job = schedule.every(5).minutes.do(evaluate_pool_water_heating)
+            heating_job = schedule.every(config.heating_scheduler.period_minutes).minutes.do(evaluate_pool_water_heating)
 
 
 @catch_exceptions(cancel_on_failure=False)
@@ -196,7 +203,7 @@ def evaluate_pool_water_heating():
 
     if current_switch_status:
         # Pool water is being heated right now - let's see if we should stop ...
-        if pool_water_temperature >= 28.0:
+        if pool_water_temperature >= config.heating.temperature_max:
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=False):
                 logging.info("Stopped heating the pool water! Current temperature is: {}".format(
                     pool_water_temperature
@@ -211,7 +218,7 @@ def evaluate_pool_water_heating():
             ))
     else:
         # Pool water is NOT being heated right now - let's see if we should start ...
-        if pool_water_temperature < 27.0:
+        if pool_water_temperature < config.heating.temperature_min:
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=True):
                 logging.info("Started heating the pool water! Current temperature is: {}".format(
                     pool_water_temperature
@@ -398,7 +405,7 @@ def evaluate_power_availability():
     heating_switch_on = get_switch_status_guaranteed(args.heating_relay_index)
 
 
-    if now.hour >= config.scheduler.control_window_closed_from or now.hour <= config.scheduler.control_window_closed_to:
+    if now.hour >= config.filtration_scheduler.control_window_closed_from or now.hour <= config.filtration_scheduler.control_window_closed_to:
         if filtration_started_at is None:
             logging.info("Not evaluating available power at this time. Pump switch is {}. Heating switch is {}.".format(
                 "ON" if filtration_switch_on else "OFF",
@@ -438,7 +445,7 @@ def evaluate_power_availability():
         filtration_runtime = now - filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
-        if filtration_runtime >= timedelta(minutes=config.scheduler.minimum_runtime_minutes):
+        if filtration_runtime >= timedelta(minutes=config.filtration_scheduler.minimum_runtime_minutes):
             if toggle_switch(args.pump_relay_index, current_status=filtration_switch_on, new_status=False):
                 filtration_started_at = None
 
@@ -542,7 +549,7 @@ if __name__ == '__main__':
     mqtt_client.loop_start()
 
     # Then, schedule a job to check the Solar status every 15 minutes
-    filtration_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
+    filtration_job = schedule.every(config.filtration_scheduler.period_minutes).minutes.do(evaluate_power_availability)
 
     # Run the job immediately after a startup
     schedule.run_all()
@@ -567,7 +574,7 @@ if __name__ == '__main__':
 
             # Reschedule the main job (in case the period has changed)
             schedule.cancel_job(filtration_job)
-            filtration_job = schedule.every(config.scheduler.period_minutes).minutes.do(evaluate_power_availability)
+            filtration_job = schedule.every(config.filtration_scheduler.period_minutes).minutes.do(evaluate_power_availability)
 
             # And finally, run immediately, just to recheck with the new configuration
             schedule.run_all()

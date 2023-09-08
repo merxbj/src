@@ -17,11 +17,18 @@
             "rapidly_charging": 2.5,
             "rapidly_discharging": -2.5
         },
-        "scheduler": {
+        "heating": {
+            "temperature_min": 27.0,
+            "temperature_max": 28.0
+        },
+        "filtration_scheduler": {
             "period_minutes": 15,
             "control_window_closed_from": 18,
             "control_window_closed_to": 10,
             "minimum_runtime_minutes": 60
+        },
+        "heating_scheduler": {
+            "period_minutes": 5
         }
     }
 }
