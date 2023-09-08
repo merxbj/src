@@ -576,9 +576,13 @@ if __name__ == '__main__':
 
             updated_config_sync.release()
 
-            # Reschedule the main job (in case the period has changed)
+            # Reschedule the jobs (in case the period has changed)
             schedule.cancel_job(filtration_job)
             filtration_job = schedule.every(config.filtration_scheduler.period_minutes).minutes.do(evaluate_power_availability)
+
+            if heating_job is not None:
+                schedule.cancel_job(heating_job)
+                schedule.every(config.heating_scheduler.period_minutes).minutes.do(evaluate_pool_water_heating)
 
             # And finally, run immediately, just to recheck with the new configuration
             schedule.run_all()
