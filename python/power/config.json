@@ -19,7 +19,8 @@
         },
         "heating": {
             "temperature_min": 27.0,
-            "temperature_max": 28.0
+            "temperature_max": 28.0,
+            "temperature_comfort": 34.0
         },
         "filtration_scheduler": {
             "period_minutes": 15,
