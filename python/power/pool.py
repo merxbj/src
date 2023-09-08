@@ -51,7 +51,8 @@ default_config = """
     },
     "heating": {
         "temperature_min": 27.0,
-        "temperature_max": 28.0
+        "temperature_max": 28.0,
+        "temperature_comfort": 34.0
     },
     "filtration_scheduler": {
         "period_minutes": 15,
@@ -195,6 +196,9 @@ def evaluate_pool_water_heating():
     pool_water_temperature = get_pool_water_temperature()
     current_switch_status = get_switch_status(args.heating_relay_index)
 
+    now = datetime.now()
+    comfort_mode = (now.hour < config.filtration_scheduler.control_window_closed_from) or (now.hour > config.filtration_scheduler.control_window_closed_to)
+
     if pool_water_temperature == float("nan"):
         logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
             "ON" if current_switch_status else "OFF"
@@ -203,7 +207,7 @@ def evaluate_pool_water_heating():
 
     if current_switch_status:
         # Pool water is being heated right now - let's see if we should stop ...
-        if pool_water_temperature >= config.heating.temperature_max:
+        if pool_water_temperature >= config.heating.temperature_comfort if comfort_mode else config.heating.temperature_max:
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=False):
                 logging.info("Stopped heating the pool water! Current temperature is: {}".format(
                     pool_water_temperature
