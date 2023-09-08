@@ -156,12 +156,7 @@ def handle_heating_input_update(message):
         # Pool unit wants to stop heating the water (water flow stopped most likely) - lets comply
 
         # Without access to the switch, there is no point continuing ...
-        while True:
-            try:
-                old_switch_status = get_switch_status(args.heating_relay_index)
-                break
-            except:
-                time.sleep(5)
+        old_switch_status = get_switch_status_guaranteed(args.heating_relay_index)
 
         logging.info("Received heating input state update! Input state is {}. Current switch status is {}.".format(
             "ON" if input_status else "OFF",
@@ -173,7 +168,7 @@ def handle_heating_input_update(message):
             heating_job = None
 
         if old_switch_status != input_status:
-            if toggle_switch(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
+            if toggle_switch_guaranteed(args.heating_relay_index, current_status=old_switch_status, new_status=input_status):
                 logging.info("Stopped heating the pool water based on a request from the control unit!")
 
     else:
@@ -190,14 +185,8 @@ def handle_heating_input_update(message):
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_pool_water_heating():
 
-    # Without access to the switch or the pool temperature, there is no point continuing ...
-    while True:
-        try:
-            pool_water_temperature = get_pool_water_temperature()
-            current_switch_status = get_switch_status(args.heating_relay_index)
-            break
-        except:
-            time.sleep(5)
+    pool_water_temperature = get_pool_water_temperature()
+    current_switch_status = get_switch_status(args.heating_relay_index)
 
     if pool_water_temperature == float("nan"):
         logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
@@ -236,6 +225,15 @@ def evaluate_pool_water_heating():
                 pool_water_temperature
             ))
 
+
+def get_pool_water_temperature_guaranteed():
+    temperature = float("nan")
+    while temperature == float("nan"):
+        try:
+            temperature = get_pool_water_temperature()
+        except:
+            time.sleep(5)
+    return temperature
 
 def get_pool_water_temperature():
     return asyncio.run(get_pool_water_temperature_async())
@@ -366,6 +364,20 @@ def toggle_switch(relay_index, current_status, new_status):
     return current_status == new_status
 
 
+def get_switch_status_guaranteed(relay_index):
+    while True:
+        try:
+            return get_switch_status(relay_index)
+        except:
+            time.sleep(5)
+
+def toggle_switch_guaranteed(relay_index, current_status, new_status):
+    while not toggle_switch(relay_index, current_status, new_status):
+        time.sleep(5)
+
+    return True
+
+
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_power_availability():
     # There is a fixed schedule on the Shelly, to run the filtration (pump):
@@ -382,13 +394,9 @@ def evaluate_power_availability():
     after_hours = False
 
     # Without access to the switch, there is no point continuing ...
-    while True:
-        try:
-            filtration_switch_on = get_switch_status(args.pump_relay_index)
-            heating_switch_on = get_switch_status(args.heating_relay_index)
-            break
-        except:
-            time.sleep(5)
+    filtration_switch_on = get_switch_status_guaranteed(args.pump_relay_index)
+    heating_switch_on = get_switch_status_guaranteed(args.heating_relay_index)
+
 
     if now.hour >= config.scheduler.control_window_closed_from or now.hour <= config.scheduler.control_window_closed_to:
         if filtration_started_at is None:
