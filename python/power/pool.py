@@ -197,7 +197,7 @@ def evaluate_pool_water_heating():
     current_switch_status = get_switch_status(args.heating_relay_index)
 
     now = datetime.now()
-    comfort_mode = (now.hour < config.filtration_scheduler.control_window_closed_from) or (now.hour > config.filtration_scheduler.control_window_closed_to)
+    comfort_mode = (now.hour < config.filtration_scheduler.control_window_closed_from) and (now.hour > config.filtration_scheduler.control_window_closed_to)
 
     if pool_water_temperature == float("nan"):
         logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
@@ -582,7 +582,7 @@ if __name__ == '__main__':
 
             if heating_job is not None:
                 schedule.cancel_job(heating_job)
-                schedule.every(config.heating_scheduler.period_minutes).minutes.do(evaluate_pool_water_heating)
+                heating_job = schedule.every(config.heating_scheduler.period_minutes).minutes.do(evaluate_pool_water_heating)
 
             # And finally, run immediately, just to recheck with the new configuration
             schedule.run_all()
