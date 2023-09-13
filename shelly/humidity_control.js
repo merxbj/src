@@ -46,6 +46,10 @@ function debugMessage(message) {
     logMessage(message, "pool/debug");
 }
 
+function traceMessage(message) {
+    logMessage(message, "pool/debug/trace");
+}
+
 function logMessage(message, subtopic) {
     print(message);
     
@@ -110,12 +114,15 @@ function timerCode() {
     // reset the sensor data from the previous iteration
     currentSensorData = null;
     
+    traceMessage("Before getting the sensor state");
+    
     // first, request the humidity sensor values
     Shelly.call(
         "HTTP.GET", {
             "url": "http://192.168.88.76/state",
         },
         function(result, error_code, error_message) {
+            traceMessage("In sensor state callback - Begin");
             if (error_code !== 0) {
                 statusMessage("Cannot access humidity sensor! Error Code: " + 
                              JSON.stringify(error_code) + ", Error Message: " + error_message);
@@ -126,8 +133,11 @@ function timerCode() {
                              JSON.stringify(result.code));
                 return;
             }
+            traceMessage("In sensor state callback - After sanity checks");
             
             currentSensorData = JSON.parse(result.body);
+            
+            traceMessage("In sensor state callback - After pasring the body");
             
             // second, update the current switch status to know what to do with the dehumidifer
             Shelly.call(
@@ -135,11 +145,14 @@ function timerCode() {
                     id: 0,
                 },
                 function(switch_result, switch_error_code, switch_error_message) {
+                    traceMessage("In switch status callback - Begin");
                     if (switch_error_code !== 0) {
                         statusMessage("Cannot update switch status! Error Code: " + 
                                      JSON.stringify(switch_error_code) + ", Error Message: " + switch_error_message);
                         return;
                     }
+                    
+                    traceMessage("In switch status callback - After sanity checks");
                     
                     let currentSwitchStatus = "Off";
                     if (switch_result.output === true) {
@@ -148,6 +161,8 @@ function timerCode() {
                         currentSwitchStatus = "Off";
                     }
                     
+                    traceMessage("In switch status callback - After determining the switch status");
+
                     controlDehumidifer(currentSwitchStatus, currentSensorData, lastKnownDoorStatus);
                 }
             );
@@ -170,9 +185,11 @@ debugMessage("Subsribing to MQTT topic: " + doorStatusMqttTopic);
 
 MQTT.subscribe(doorStatusMqttTopic, 
     function(topic, message) {
-        debugMessage("Received Door Sensor status update: " + lastKnownDoorStatus + 
-                     " -> " + message);
-        lastKnownDoorStatus = message;
+        if (message)
+        {
+            debugMessage("Received Door Sensor status update: " + lastKnownDoorStatus + " -> " + message);
+            lastKnownDoorStatus = message;
+        }
     }
 );
 
@@ -180,6 +197,9 @@ debugMessage("Subsribing to MQTT topic: " + configMqttTopic);
 
 MQTT.subscribe(configMqttTopic, 
     function(topic, message) {
+        if (!message) {
+            return;
+        }
         let newConfig = JSON.parse(message);
         if ((newConfig !== null) && newConfig.Dehumidifier !== null) {
             debugMessage("Received Dehumidification Configuration: " + JSON.stringify(newConfig.Dehumidifier));
