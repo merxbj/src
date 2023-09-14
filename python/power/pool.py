@@ -207,7 +207,7 @@ def evaluate_pool_water_heating():
 
     if current_switch_status:
         # Pool water is being heated right now - let's see if we should stop ...
-        if pool_water_temperature >= config.heating.temperature_comfort if comfort_mode else config.heating.temperature_max:
+        if pool_water_temperature >= (config.heating.temperature_comfort if comfort_mode else config.heating.temperature_max):
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=False):
                 logging.info("Stopped heating the pool water! Current temperature is: {}".format(
                     pool_water_temperature
