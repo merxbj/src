@@ -50,9 +50,26 @@ default_config = """
         "rapidly_discharging": -2.5
     },
     "heating": {
-        "temperature_min": 27.0,
-        "temperature_max": 28.0,
-        "temperature_comfort": 34.0
+        "active_heating_mode": "economy",
+        "heating_modes": {
+            "keep-alive": {
+                "temperature_min": 15.5,
+                "temperature_max": 16.0
+            },
+            "economy": {
+                "temperature_min": 21.0,
+                "temperature_max": 22.0
+            },
+            "standard": {
+                "temperature_min": 27.5,
+                "temperature_max": 28.0
+            },
+            "comfort": {
+                "temperature_min": 33.5,
+                "temperature_max": 34.0
+            }
+
+        }
     },
     "filtration_scheduler": {
         "period_minutes": 15,
@@ -74,6 +91,7 @@ updated_config = None
 updated_config_sync = Condition()
 
 heating_job = None
+
 
 class SolarData:
 
@@ -133,7 +151,6 @@ def on_message(client, userdata, msg):
         handle_heating_input_update(msg.payload)
 
 
-
 def handle_config_update(message):
     try:
         new_config = json.loads(message, object_hook=lambda d: SimpleNamespace(**d))
@@ -190,14 +207,29 @@ def handle_heating_input_update(message):
             heating_job = schedule.every(config.heating_scheduler.period_minutes).minutes.do(evaluate_pool_water_heating)
 
 
+def determine_heating_mode():
+    if is_window_for_optional_filtration(datetime.now()):
+        return "comfort"
+    return config.heating.active_heating_mode
+
+
+def determine_heating_temperatures(heating_mode):
+    if heating_mode not in config.heating.heating_modes:
+        logging.warning("Invalid heating mode '{}'! Reverting to default keep-alive mode!".format(heating_mode))
+        return 15.5, 16.0
+
+    heating_mode_config = config.heating.heating_modes[heating_mode]
+    return heating_mode_config.temperature_min, heating_mode_config.temperature_max
+
+
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_pool_water_heating():
 
     pool_water_temperature = get_pool_water_temperature()
     current_switch_status = get_switch_status(args.heating_relay_index)
 
-    now = datetime.now()
-    comfort_mode = (now.hour < config.filtration_scheduler.control_window_closed_from) and (now.hour > config.filtration_scheduler.control_window_closed_to)
+    heating_mode = determine_heating_mode()
+    min_temp, max_temp = determine_heating_temperatures(heating_mode)
 
     if pool_water_temperature == float("nan"):
         logging.warning("Unable to evaluate pool water heating! Temperature unavailable! Heating switch is {}".format(
@@ -207,33 +239,33 @@ def evaluate_pool_water_heating():
 
     if current_switch_status:
         # Pool water is being heated right now - let's see if we should stop ...
-        if pool_water_temperature >= (config.heating.temperature_comfort if comfort_mode else config.heating.temperature_max):
+        if pool_water_temperature >= max_temp:
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=False):
-                logging.info("Stopped heating the pool water! Current temperature is: {}".format(
-                    pool_water_temperature
+                logging.info("Stopped heating the pool water! Current temperature is: {} >= {}".format(
+                    pool_water_temperature, max_temp
                 ))
             else:
-                logging.info("Failed to stop heating the pool water! Current temperature is: {}".format(
-                    pool_water_temperature
+                logging.info("Failed to stop heating the pool water! Current temperature is: {} >= {}".format(
+                    pool_water_temperature, max_temp
                 ))
         else:
-            logging.info("Kept heating the pool water! Current temperature is: {}".format(
-                pool_water_temperature
+            logging.info("Kept heating the pool water! Current temperature is: {} < {}".format(
+                pool_water_temperature, max_temp
             ))
     else:
         # Pool water is NOT being heated right now - let's see if we should start ...
-        if pool_water_temperature < config.heating.temperature_min:
+        if pool_water_temperature < min_temp:
             if toggle_switch(args.heating_relay_index, current_status=current_switch_status, new_status=True):
-                logging.info("Started heating the pool water! Current temperature is: {}".format(
-                    pool_water_temperature
+                logging.info("Started heating the pool water! Current temperature is: {} < {}".format(
+                    pool_water_temperature, min_temp
                 ))
             else:
-                logging.info("Failed to start heating the pool water! Current temperature is: {}".format(
-                    pool_water_temperature
+                logging.info("Failed to start heating the pool water! Current temperature is: {} < {}".format(
+                    pool_water_temperature, min_temp
                 ))
         else:
-            logging.info("Kept NOT heating the pool water! Current temperature is: {}".format(
-                pool_water_temperature
+            logging.info("Kept NOT heating the pool water! Current temperature is: {} >= {}".format(
+                pool_water_temperature, min_temp
             ))
 
 
@@ -246,8 +278,10 @@ def get_pool_water_temperature_guaranteed():
             time.sleep(5)
     return temperature
 
+
 def get_pool_water_temperature():
     return asyncio.run(get_pool_water_temperature_async())
+
 
 async def get_pool_water_temperature_async():
     async with ClientSession() as session:
@@ -263,6 +297,7 @@ async def get_pool_water_temperature_async():
         await account.logout()
 
         return temperature
+
 
 async def find_pool_water_temperature_async(account):
     units = await account.get_units()
@@ -287,6 +322,11 @@ async def find_pool_water_temperature_async(account):
     for variable in bazen.variables:
         if variable.name == "Water temp.":
             return variable.current_value
+
+
+def is_window_for_optional_filtration(timestamp):
+    return (timestamp.hour < config.filtration_scheduler.control_window_closed_from) and (
+            timestamp.hour > config.filtration_scheduler.control_window_closed_to)
 
 
 def has_sufficient_power(solar_data):
@@ -408,8 +448,7 @@ def evaluate_power_availability():
     filtration_switch_on = get_switch_status_guaranteed(args.pump_relay_index)
     heating_switch_on = get_switch_status_guaranteed(args.heating_relay_index)
 
-
-    if now.hour >= config.filtration_scheduler.control_window_closed_from or now.hour <= config.filtration_scheduler.control_window_closed_to:
+    if not is_window_for_optional_filtration(now):
         if filtration_started_at is None:
             logging.info("Not evaluating available power at this time. Pump switch is {}. Heating switch is {}.".format(
                 "ON" if filtration_switch_on else "OFF",

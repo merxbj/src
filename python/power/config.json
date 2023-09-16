@@ -18,9 +18,26 @@
             "rapidly_discharging": -2.5
         },
         "heating": {
-            "temperature_min": 27.0,
-            "temperature_max": 28.0,
-            "temperature_comfort": 34.0
+            "active_heating_mode": "economy",
+            "heating_modes": {
+                "keep-alive": {
+                    "temperature_min": 15.5,
+                    "temperature_max": 16.0
+                },
+                "economy": {
+                    "temperature_min": 21.0,
+                    "temperature_max": 22.0
+                },
+                "standard": {
+                    "temperature_min": 27.5,
+                    "temperature_max": 28.0
+                },
+                "comfort": {
+                    "temperature_min": 33.5,
+                    "temperature_max": 34.0
+                }
+
+            }
         },
         "filtration_scheduler": {
             "period_minutes": 15,
