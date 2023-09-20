@@ -1,0 +1,5 @@
+{
+    "timer_period_ms": 60000,
+    "max_humidity": 66.0,
+    "min_humidity": 57.0
+}
