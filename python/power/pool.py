@@ -139,13 +139,13 @@ def catch_exceptions(cancel_on_failure=False):
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected to MQTT with result code {}".format(rc))
-    client.subscribe("power/config")
+    client.subscribe("power/config/pool")
     client.subscribe("power/pool/heating")
 
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    if msg.topic == "power/config":
+    if msg.topic == "power/config/pool":
         handle_config_update(msg.payload)
     elif msg.topic == "power/pool/heating":
         handle_heating_input_update(msg.payload)
@@ -158,14 +158,12 @@ def handle_config_update(message):
         logging.warning("Failed to parse configuration update message: {}!".format(str(ex)))
         return
 
-    if hasattr(new_config, "Pool"):
-        new_config = new_config.Pool
-        if new_config != config:
-            global updated_config
+    if new_config != config:
+        global updated_config
 
-            updated_config_sync.acquire()
-            updated_config = new_config
-            updated_config_sync.release()
+        updated_config_sync.acquire()
+        updated_config = new_config
+        updated_config_sync.release()
 
 
 def handle_heating_input_update(message):

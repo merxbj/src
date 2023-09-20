@@ -2,7 +2,7 @@
     Configuration to be retrieved from the power/config MQTT topic and it's default
 */
 let CONFIG = {
-    
+
     /*
         How often do we check the humidity level?
     */
@@ -36,7 +36,7 @@ let currentSensorData = null;
 let lastKnownDoorStatus = "open";
 
 let doorStatusMqttTopic = "shellies/shellydw2-D741F2/sensor/state";
-let configMqttTopic = "power/config";
+let configMqttTopic = "power/config/dehumidifier";
 
 function statusMessage(message) {
     logMessage(message, "pool/humidity");
@@ -47,16 +47,15 @@ function debugMessage(message) {
 }
 
 function traceMessage(message) {
-    logMessage(message, "pool/debug/trace");
+    //logMessage(message, "pool/debug/trace");
 }
 
 function logMessage(message, subtopic) {
     print(message);
-    
+
     if (MQTT.isConnected()) {
         MQTT.publish("power/" + subtopic, message, 2, true);
     } else {
-        
         print("MQTT NOT Connected");
     }
 }
@@ -113,9 +112,9 @@ function timerCode() {
     
     // reset the sensor data from the previous iteration
     currentSensorData = null;
-    
+
     traceMessage("Before getting the sensor state");
-    
+
     // first, request the humidity sensor values
     Shelly.call(
         "HTTP.GET", {
@@ -134,11 +133,15 @@ function timerCode() {
                 return;
             }
             traceMessage("In sensor state callback - After sanity checks");
-            
-            currentSensorData = JSON.parse(result.body);
-            
+
+            try {
+                currentSensorData = JSON.parse(result.body);
+            } catch (e) {
+                debugMessage("Failed to load the sensor data! Error: " + JSON.stringify(e))
+            }
+
             traceMessage("In sensor state callback - After pasring the body");
-            
+
             // second, update the current switch status to know what to do with the dehumidifer
             Shelly.call(
                 "Switch.GetStatus", {
@@ -151,16 +154,16 @@ function timerCode() {
                                      JSON.stringify(switch_error_code) + ", Error Message: " + switch_error_message);
                         return;
                     }
-                    
+
                     traceMessage("In switch status callback - After sanity checks");
-                    
+
                     let currentSwitchStatus = "Off";
                     if (switch_result.output === true) {
                         currentSwitchStatus = "On";
                     } else {
                         currentSwitchStatus = "Off";
                     }
-                    
+
                     traceMessage("In switch status callback - After determining the switch status");
 
                     controlDehumidifer(currentSwitchStatus, currentSensorData, lastKnownDoorStatus);
@@ -200,17 +203,24 @@ MQTT.subscribe(configMqttTopic,
         if (!message) {
             return;
         }
-        let newConfig = JSON.parse(message);
-        if ((newConfig !== null) && newConfig.Dehumidifier !== null) {
-            debugMessage("Received Dehumidification Configuration: " + JSON.stringify(newConfig.Dehumidifier));
-            
-            if (newConfig.Dehumidifier.timer_period_ms !== CONFIG.timer_period_ms) {
-                debugMessage("Setting up a timer to check humidity with period: " + JSON.stringify(newConfig.Dehumidifier.timer_period_ms) + "ms");
+
+        let newConfig = null;
+        try {
+            newConfig = JSON.parse(message);
+        } catch (e) {
+            debugMessage("Failed to load the new configuration! Error: " + JSON.stringify(e))
+        }
+
+        if (newConfig !== null) {
+            debugMessage("Received Dehumidification Configuration: " + JSON.stringify(newConfig));
+
+            if (newConfig.timer_period_ms !== CONFIG.timer_period_ms) {
+                debugMessage("Setting up a timer to check humidity with period: " + JSON.stringify(newConfig.timer_period_ms) + "ms");
                 Timer.clear(timerHandle);
-                timerHandle = Timer.set(newConfig.Dehumidifier.timer_period_ms, true, timerCode);
+                timerHandle = Timer.set(newConfig.timer_period_ms, true, timerCode);
             }
-            
-            CONFIG = newConfig.Dehumidifier;
+
+            CONFIG = newConfig;
         }
     }
 );
