@@ -212,11 +212,11 @@ def determine_heating_mode():
 
 
 def determine_heating_temperatures(heating_mode):
-    if heating_mode not in config.heating.heating_modes:
+    if not hasattr(config.heating.heating_modes, heating_mode):
         logging.warning("Invalid heating mode '{}'! Reverting to default keep-alive mode!".format(heating_mode))
         return 15.5, 16.0
 
-    heating_mode_config = config.heating.heating_modes[heating_mode]
+    heating_mode_config = getattr(config.heating.heating_modes, heating_mode)
     return heating_mode_config.temperature_min, heating_mode_config.temperature_max
 
 
