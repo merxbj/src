@@ -24,7 +24,8 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe("shellypro1pm-ec62608ab640/debug/log")
     client.subscribe("shellypro4pm-c8f09e83efa8/debug/log")
-    client.subscribe("shellyplusht-b0b21c135e18/debug/log")
+    client.subscribe("shellyplusht-b0b21c135e18/status/temperature")
+    client.subscribe("shellyplusht-b0b21c135e18/status/humidity")
     client.subscribe("shellies/shellydw2-D741F2/debug/log")
     client.subscribe("power/log/#")
 
