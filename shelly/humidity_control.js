@@ -39,22 +39,22 @@ let doorStatusMqttTopic = "shellies/shellydw2-D741F2/sensor/state";
 let configMqttTopic = "power/config/dehumidifier";
 
 function statusMessage(message) {
-    logMessage(message, "pool/humidity");
+    logMessage(message, "info/humidity_control");
 }
 
 function debugMessage(message) {
-    logMessage(message, "pool/debug");
+    logMessage(message, "debug/humidity_control");
 }
 
 function traceMessage(message) {
-    //logMessage(message, "pool/debug/trace");
+    //logMessage(message, "trace/humidity_control");
 }
 
 function logMessage(message, subtopic) {
     print(message);
 
     if (MQTT.isConnected()) {
-        MQTT.publish("power/" + subtopic, message, 2, true);
+        MQTT.publish("power/log/" + subtopic, message, 2, true);
     } else {
         print("MQTT NOT Connected");
     }

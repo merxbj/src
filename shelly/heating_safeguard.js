@@ -4,22 +4,22 @@ let CONFIG = {
 }
 
 function statusMessage(message) {
-    logMessage(message, "pool/heating");
+    logMessage(message, "info/heating_safeguard");
 }
 
 function debugMessage(message) {
-    logMessage(message, "pool/heating/debug");
+    logMessage(message, "debug/heating_safeguard");
 }
 
 function traceMessage(message) {
-    //logMessage(message, "pool/heating/debug/trace");
+    //logMessage(message, "trace/heating_safeguard");
 }
 
 function logMessage(message, subtopic) {
     print(message);
 
     if (MQTT.isConnected()) {
-        MQTT.publish("power/" + subtopic, message, 2, true);
+        MQTT.publish("power/log/" + subtopic, message, 2, true);
     } else {
         print("MQTT NOT Connected");
     }

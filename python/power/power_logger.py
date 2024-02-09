@@ -13,7 +13,7 @@ mqtt_client = mqtt.Client()
 
 
 def get_log_path():
-    return os.path.join(str(Path.home()), "log/shelly/")
+    return os.path.join(str(Path.home()), "log/mqtt/")
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -23,13 +23,38 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     client.subscribe("shellypro1pm-ec62608ab640/debug/log")
-    client.subscribe("power/pool/#")
+    client.subscribe("shellypro4pm-c8f09e83efa8/debug/log")
+    client.subscribe("shellyplusht-b0b21c135e18/debug/log")
+    client.subscribe("shellies/shellydw2-D741F2/debug/log")
+    client.subscribe("power/log/#")
+
+
+def parse_log_level(log_level_str):
+    if log_level_str == "debug":
+        return logging.DEBUG
+    elif log_level_str == "info":
+        return logging.INFO
+    elif log_level_str == "error":
+        return logging.ERROR
+    elif log_level_str == "warn":
+        return logging.WARN
+    else:
+        return logging.DEBUG
 
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-    logger = logging.getLogger(msg.topic)
-    logger.info(msg.payload)
+    module = str(msg.topic)
+    log_level = logging.DEBUG
+
+    if module.startswith("power/log"):
+        topic_path_components = module.split("/")
+        if len(topic_path_components) == 4:
+            module = topic_path_components[3]
+            log_level = parse_log_level(topic_path_components[2])
+
+    logger = logging.getLogger(module)
+    logger.log(log_level, msg.payload.decode("utf-8"))
 
 
 if __name__ == '__main__':
@@ -38,11 +63,11 @@ if __name__ == '__main__':
         os.makedirs(get_log_path())
 
     logging.basicConfig(handlers=[
-        RotatingFileHandler(os.path.join(get_log_path(), "shelly.log"), encoding="utf-8",
+        RotatingFileHandler(os.path.join(get_log_path(), "mqtt.log"), encoding="utf-8",
                             maxBytes=10485760, backupCount=20),
         logging.StreamHandler(stream=sys.stdout)
     ],
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(asctime)s | %(name)s | %(levelname)s | %(message)s")
 
     parser = argparse.ArgumentParser(description='Monitors various Shelly MQTT topics and logs them in file.')

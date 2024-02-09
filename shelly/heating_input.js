@@ -7,9 +7,8 @@ function debugMessage(message) {
     print(message);
     
     if (MQTT.isConnected()) {
-        MQTT.publish("power/pool/debug", message, 2, false);
+        MQTT.publish("power/log/debug/heating_input", message, 2, false);
     } else {
-        
         print("MQTT NOT Connected");
     }
 }
