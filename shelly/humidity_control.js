@@ -54,7 +54,23 @@ function logMessage(message, subtopic) {
     print(message);
 
     if (MQTT.isConnected()) {
-        MQTT.publish("power/log/" + subtopic, message, 2, true);
+        MQTT.publish("power/log/" + subtopic, message, 2, false);
+    } else {
+        print("MQTT NOT Connected");
+    }
+}
+
+function publishHumidityData(humidityValue, temperatureValue, doorStatus, switchStatus) {
+    
+    let humidityData = {
+        humidity: humidityValue,
+        temperature: temperatureValue,
+        door_status: doorStatus,
+        switch_on: switchStatus === "on"
+    };
+
+    if (MQTT.isConnected()) {
+        MQTT.publish("power/pool/humidity/data", JSON.stringify(humidityData), 2, true);
     } else {
         print("MQTT NOT Connected");
     }
@@ -66,9 +82,12 @@ function logMessage(message, subtopic) {
     The goal is to keep the humidity between 57 and 66 percent
 */
 function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
-    // get the humidity value first from the sensor
+    // get the humidity and temperature values first from the sensor
     let humidity = sensorData.multiSensor.sensors[0].value / 100;
     let humidityStr = JSON.stringify(humidity);
+    let temperature = sensorData.multiSensor.sensors[1].value / 100;
+    let temperatureStr = JSON.stringify(temperature);
+    let newSwitchStatus = currentSwitchStatus;
 
     if ((humidity > CONFIG.max_humidity) && (currentSwitchStatus === "Off")) {
         if (doorStatus === "close") {
@@ -77,9 +96,10 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
                 'id': 0,
                 'on': true
             });
-            statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning ON dehumidifier!");
+            statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C. Door: " + doorStatus + ". Turning ON dehumidifier!");
+            newSwitchStatus = true;
         } else {
-            statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
+            statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
         }
     } else if ((humidity < CONFIG.min_humidity) && (currentSwitchStatus === "On")) {
         // We are under our threshold and the switch is on, we need to stop dehumi.
@@ -87,20 +107,24 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
             'id': 0,
             'on': false
         });
-        statusMessage("Humidity: " + humidityStr + "%. Turning OFF dehumidifier!");
+        statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C. Turning OFF dehumidifier!");
+        newSwitchStatus = false;
     } else if ((currentSwitchStatus === "On") && (doorStatus === "open")) {
         // Dehumidifier is running but the door is open now, we need to stop!
         Shelly.call("Switch.set", {
             'id': 0,
             'on': false
         });
-        statusMessage("Humidity: " + humidityStr + "%. Door: " + doorStatus + ". Turning OFF dehumidifier!");
+        statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C. Door: " + doorStatus + ". Turning OFF dehumidifier!");
+        newSwitchStatus = false;
     }
     else {
         // Otherwise, nothing to do
-        statusMessage("Humidity: " + humidityStr + "% and Switch is: " + 
+        statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C and Switch is: " + 
                      currentSwitchStatus + ". Not doing anything!");
     }
+    
+    publishHumidityData(humidity, temperature, doorStatus, newSwitchStatus);
 }
 
 /*
