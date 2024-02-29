@@ -33,7 +33,7 @@ shelly = None
 # and finally, define the MQTT Client on a global level for easier access
 mqtt_client = mqtt.Client()
 
-filtration_started_at = None
+optional_filtration_started_at = None
 
 default_config = """
 {
@@ -102,6 +102,7 @@ class SolarData:
         self.export_to_grid = 0.0
         self.battery_charge_power = 0.0
         self.batter_discharge_power = 0.0
+        self.timestamp = datetime.utcnow().isoformat()
 
     def parse(self, mix_system_status):
         self.battery_level = float(mix_system_status["SOC"])
@@ -206,7 +207,8 @@ def handle_heating_input_update(message):
 
 
 def determine_heating_mode():
-    if is_window_for_optional_filtration(datetime.now()):
+    if optional_filtration_started_at is not None:
+        # The optional filtration-heating has been requested (we have enough solar power) - let's do comfort
         return "comfort"
     return config.heating.active_heating_mode
 
@@ -234,6 +236,18 @@ def evaluate_pool_water_heating():
             "ON" if current_switch_status else "OFF"
         ))
         return
+
+    # Publish the current pool water heating data to MQTT
+    pool_data = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "temperature": pool_water_temperature,
+        "current_switch_status": current_switch_status,
+        "heating_mode": heating_mode,
+        "min_temp": min_temp,
+        "max_temp": max_temp
+    }
+
+    mqtt_client.publish("power/pool/heating/data", json.dumps(pool_data), qos=2, retain=True)
 
     if current_switch_status:
         # Pool water is being heated right now - let's see if we should stop ...
@@ -420,6 +434,7 @@ def get_switch_status_guaranteed(relay_index):
         except:
             time.sleep(5)
 
+
 def toggle_switch_guaranteed(relay_index, current_status, new_status):
     while not toggle_switch(relay_index, current_status, new_status):
         time.sleep(5)
@@ -427,19 +442,29 @@ def toggle_switch_guaranteed(relay_index, current_status, new_status):
     return True
 
 
+def publish_pool_filtration_data(switch_on, after_hours, filtration_started_at):
+    pool_filtration_data = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "switch_on": switch_on,
+        "after_hours": after_hours,
+        "optional_filtration_started_at": filtration_started_at
+    }
+    mqtt_client.publish("power/pool/filtration/data", json.dumps(pool_filtration_data), qos=2, retain=True)
+
+
 @catch_exceptions(cancel_on_failure=False)
 def evaluate_power_availability():
     # There is a fixed schedule on the Shelly, to run the filtration (pump):
-    #   From 7:00 to 9:00
+    #   From 07:00 to 09:00
     #   From 20:00 to 22:00
-    # Additionally, the pool heating is set to only run:
-    #   From 11:00 to 18:00
-    # Therefore, the fixed schedule is to ensure the pool water is cleaned up
-    # Finally, our window for OPTIONAL filtration (including the heating) is:
+    #   From 02:00 to 05:00
+    # The pool heating and filtration is set to run all the time, so it's only driven by this script
+    # The fixed schedule is to ensure the pool water is cleaned up
+    # Finally, our window for OPTIONAL filtration is:
     #   From 11:00 to 18:00 (includes intentional 2hrs around the fixed schedule)
 
     now = datetime.now()
-    global filtration_started_at
+    global optional_filtration_started_at
     after_hours = False
 
     # Without access to the switch, there is no point continuing ...
@@ -447,10 +472,11 @@ def evaluate_power_availability():
     heating_switch_on = get_switch_status_guaranteed(args.heating_relay_index)
 
     if not is_window_for_optional_filtration(now):
-        if filtration_started_at is None:
+        if optional_filtration_started_at is None:
             logging.info("Not evaluating available power at this time. Pump switch is {}. Heating switch is {}.".format(
                 "ON" if filtration_switch_on else "OFF",
                 "ON" if heating_switch_on else "OFF"))
+            publish_pool_filtration_data(filtration_switch_on, after_hours, optional_filtration_started_at)
             return
         else:
             after_hours = True
@@ -462,17 +488,21 @@ def evaluate_power_availability():
     solar_data = SolarData()
     solar_data.parse(mix_system_status)
 
-    if filtration_started_at is None and has_sufficient_power(solar_data):
+    # Publish the current solar data to MQTT
+    mqtt_client.publish("power/solar/data", json.dumps(solar_data), qos=2, retain=True)
+
+    if optional_filtration_started_at is None and has_sufficient_power(solar_data):
 
         if toggle_switch(args.pump_relay_index, current_status=filtration_switch_on, new_status=True):
-            filtration_started_at = now
-
             logging.info("Started filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Pump switch was {}. Heating switch was {}.".format(
                 solar_data.leftover_power(),
                 solar_data.battery_level,
                 "ON" if filtration_switch_on else "OFF",
                 "ON" if heating_switch_on else "OFF"
             ))
+
+            optional_filtration_started_at = now
+            filtration_switch_on = True
         else:
             logging.warning(
                 "Failed to start filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Pump switch was {}. Heating switch was {}. ".format(
@@ -482,14 +512,12 @@ def evaluate_power_availability():
                     "ON" if heating_switch_on else "OFF"
                 ))
 
-    elif filtration_started_at is not None and has_insufficient_power(solar_data, after_hours):
-        filtration_runtime = now - filtration_started_at
+    elif optional_filtration_started_at is not None and has_insufficient_power(solar_data, after_hours):
+        filtration_runtime = now - optional_filtration_started_at
 
         # Let's also give the filtration some time to run, once we started it, even if it is from grid
         if filtration_runtime >= timedelta(minutes=config.filtration_scheduler.minimum_runtime_minutes):
             if toggle_switch(args.pump_relay_index, current_status=filtration_switch_on, new_status=False):
-                filtration_started_at = None
-
                 logging.info(
                     "Stopped filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Pump switch was {}. Heating switch was {}.".format(
                         solar_data.leftover_power(),
@@ -498,6 +526,9 @@ def evaluate_power_availability():
                         "ON" if filtration_switch_on else "OFF",
                         "ON" if heating_switch_on else "OFF"
                     ))
+
+                optional_filtration_started_at = None
+                filtration_switch_on = False
             else:
                 logging.warning(
                     "Failed to stop filtration! Leftover solar power {:.2f}kW with {:.2f}% battery level. Runtime: {}. Pump switch was {}. Heating switch was {}.".format(
@@ -519,13 +550,15 @@ def evaluate_power_availability():
 
     else:
         logging.info("Kept filtration {}! Leftover solar power {:.2f}kW with {:.2f}% battery level.{} Pump switch is {}. Heating switch is {}.".format(
-            "on" if filtration_started_at is not None else "off",
+            "on" if optional_filtration_started_at is not None else "off",
             solar_data.leftover_power(),
             solar_data.battery_level,
-            " Runtime: {}.".format(now - filtration_started_at) if filtration_started_at is not None else "",
+            " Runtime: {}.".format(now - optional_filtration_started_at) if optional_filtration_started_at is not None else "",
             "ON" if filtration_switch_on else "OFF",
             "ON" if heating_switch_on else "OFF"
         ))
+
+    publish_pool_filtration_data(filtration_switch_on, after_hours, optional_filtration_started_at)
 
 
 if __name__ == '__main__':
@@ -570,7 +603,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.fsa is not None and args.fsa != '':
-        filtration_started_at = datetime.fromisoformat(args.fsa)
+        optional_filtration_started_at = datetime.fromisoformat(args.fsa)
 
     growatt_api = growattServer.GrowattApi(False, args.growatt_user)
     growatt_api.server_url = r"https://server.growatt.com/"
