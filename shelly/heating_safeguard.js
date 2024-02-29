@@ -19,7 +19,7 @@ function logMessage(message, subtopic) {
     print(message);
 
     if (MQTT.isConnected()) {
-        MQTT.publish("power/log/" + subtopic, message, 2, true);
+        MQTT.publish("power/log/" + subtopic, message, 2, false);
     } else {
         print("MQTT NOT Connected");
     }
