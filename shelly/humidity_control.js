@@ -66,7 +66,7 @@ function publishHumidityData(humidityValue, temperatureValue, doorStatus, switch
         humidity: humidityValue,
         temperature: temperatureValue,
         door_status: doorStatus,
-        switch_on: switchStatus === "on"
+        switch_on: switchStatus === "On"
     };
 
     if (MQTT.isConnected()) {

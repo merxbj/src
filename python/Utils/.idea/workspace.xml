@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="a0b0c383-bffc-4245-9040-4928ce42ebd6" name="Default" comment="Python - Added network scan script">
+      <change afterPath="$PROJECT_DIR$/knxtoha.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../power/aseko.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../power/pool.py" beforeDir="false" afterPath="$PROJECT_DIR$/../power/pool.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../shelly/humidity_control.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../shelly/humidity_control.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +93,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/mysrc/src/python/Utils",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
