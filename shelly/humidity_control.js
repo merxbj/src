@@ -16,7 +16,17 @@ let CONFIG = {
     /*
         The lower bound of allowed humidity in the pool room
     */
-    min_humidity: 57.0
+    min_humidity: 57.0,
+    
+    /*
+        Minimum operation temperature for the dehumidifier
+    */
+    min_temp: 15.0,
+    
+    /*
+        Humidity level adjustment upon reaching minimum temperature
+    */
+    low_temp_adj: 10.0
 };
 
 /*
@@ -88,8 +98,13 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
     let temperature = sensorData.multiSensor.sensors[1].value / 100;
     let temperatureStr = JSON.stringify(temperature);
     let newSwitchStatus = currentSwitchStatus;
+    
+    // set (adjusted) humidity levels based on temperature
+    let belowOperatingTemperature = temperature < CONFIG.min_temp;
+    let minHumidity = belowOperatingTemperature ? CONFIG.min_humidity + CONFIG.low_temp_adj : CONFIG.min_humidity;
+    let maxHumidity = belowOperatingTemperature ? CONFIG.max_humidity + CONFIG.low_temp_adj : CONFIG.max_humidity;
 
-    if ((humidity > CONFIG.max_humidity) && (currentSwitchStatus === "Off")) {
+    if ((humidity > maxHumidity) && (currentSwitchStatus === "Off")) {
         if (doorStatus === "close") {
             // We are over our threshold and the switch is off, we need to start dehumi.
             Shelly.call("Switch.set", {
@@ -101,7 +116,7 @@ function controlDehumidifer(currentSwitchStatus, sensorData, doorStatus) {
         } else {
             statusMessage("Humidity: " + humidityStr + "%, Temperature: " + temperatureStr + "C. Door: " + doorStatus + ". Will NOT turn on dehumidifier!");
         }
-    } else if ((humidity < CONFIG.min_humidity) && (currentSwitchStatus === "On")) {
+    } else if ((humidity < minHumidity) && (currentSwitchStatus === "On")) {
         // We are under our threshold and the switch is on, we need to stop dehumi.
         Shelly.call("Switch.set", {
             'id': 0,
