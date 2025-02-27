@@ -1,0 +1,9 @@
+##Home & assigned to: me & today & @Quick,
+##Home & assigned to: me & today & p1 & (!@Routine & !@Waiting_For & !@Quick),
+##Home & assigned to: me & overdue,
+##Home & assigned to: me & today & (@Routine & @Morning), 
+##Home & assigned to: me & today & (@Focus | @Code) & !p1,
+##Home & assigned to: me & today & @Outlook & !p1,
+##Home & assigned to: me & today & (!@Focus & !@Outlook & !@Routine & !@Waiting_For & !@Quick & !@Code) & !p1,
+##Home & assigned to: me & @Waiting_For,
+##Home & assigned to: me & today & (@Routine & @Evening)
