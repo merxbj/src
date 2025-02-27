@@ -8,6 +8,7 @@ from pathlib import Path
 from logging.handlers import RotatingFileHandler
 
 import json
+import jsonpickle
 from types import SimpleNamespace
 
 import growattServer
@@ -447,7 +448,7 @@ def publish_pool_filtration_data(switch_on, after_hours, filtration_started_at):
         "timestamp": datetime.utcnow().isoformat(),
         "switch_on": switch_on,
         "after_hours": after_hours,
-        "optional_filtration_started_at": filtration_started_at
+        "optional_filtration_started_at": None if filtration_started_at is None else filtration_started_at.isoformat()
     }
     mqtt_client.publish("power/pool/filtration/data", json.dumps(pool_filtration_data), qos=2, retain=True)
 
@@ -489,7 +490,7 @@ def evaluate_power_availability():
     solar_data.parse(mix_system_status)
 
     # Publish the current solar data to MQTT
-    mqtt_client.publish("power/solar/data", json.dumps(solar_data), qos=2, retain=True)
+    mqtt_client.publish("power/solar/data", jsonpickle.encode(solar_data), qos=2, retain=True)
 
     if optional_filtration_started_at is None and has_sufficient_power(solar_data):
 

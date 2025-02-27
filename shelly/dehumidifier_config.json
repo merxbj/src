@@ -1,5 +1,7 @@
 {
     "timer_period_ms": 60000,
     "max_humidity": 66.0,
-    "min_humidity": 57.0
+    "min_humidity": 57.0,
+	"min_temp": 12.0,
+	"low_temp_adj": 10.0
 }
