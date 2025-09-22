@@ -30,16 +30,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for team_member in ws.keys() %}
+                {% for author in ws["authors"].keys() %}
                     <tr>
-                        <th nowrap="nowrap" scope="row">{{team_member}}</th>
-                        <td nowrap="nowrap">{{'{:0.2f}'.format(ws[team_member])}}</td>
+                        <th nowrap="nowrap" scope="row">{{author}}</th>
+                        <td nowrap="nowrap">{{'{:0.2f}'.format(ws["authors"][author])}}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
                 <tfoot class="tfoot-dark">
                     <th>Total</th>
-                    <th>{{'{:0.2f}'.format(e2a["actual"])}}</th>
+                    <th>{{'{:0.2f}'.format(ws["total"])}}</th>
                 </tfoot>
             </table>
         </div>
