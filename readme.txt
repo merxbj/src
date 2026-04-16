@@ -13,3 +13,6 @@ Unfinished Projects List:
 	* SwarmSimulator - [75%] - Working. More stuff to be added.
 
 Jaroslav Merxauer @ Prague, 13/09/2010, merxbj@hotmail.com
+
+Birch Hill Power smart home project has been extracted to a dedicated repository:
+https://github.com/merxbj/birch-hill-power

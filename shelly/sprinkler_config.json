@@ -1,6 +1,0 @@
-{
-    "weatherEndpoint": "https://api.open-meteo.com/v1/forecast?latitude=50.4868021&longitude=13.439999&timezone=Europe%2FBerlin&daily=precipitation_sum,sunshine_duration,weather_code&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,is_day,soil_moisture_1_to_3cm,soil_moisture_0_to_1cm&past_days=3&forecast_days=1",
-    "timer_period_ms": 3600000,
-    "required_lawn_precipitation_avg": 0.6,
-    "required_lawn_precipitation_today": 0.8
-}
